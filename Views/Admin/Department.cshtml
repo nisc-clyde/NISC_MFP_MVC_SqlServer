@@ -5,6 +5,10 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@section DepartmentJS{
+    <script src="~/Scripts/AdminPartialViewScripts/department.js"></script>
+}
+
 <div class="d-grid gap-4">
     @*欄位搜尋選項 - First Container - Start*@
     <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
@@ -23,7 +27,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDepartment_DepartmentID">
+                        <input id="searchDepartment_DepartmentID" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -34,18 +38,18 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDepartment_DepartmentName">
+                        <input id="searchDepartment_DepartmentName" type="text" class="form-control">
                     </div>
                 </div>
             </div>
 
             <div class="col border-end border-2 ">
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">
-                    可用點數上線
+                    可用點數上限
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDepartment_Point">
+                        <input id="searchDepartment_AvailablePointLimit" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -56,7 +60,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDepartment_Add">
+                        <input id="searchDepartment_AvailableBalance" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -67,10 +71,10 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <select class="form-select">
-                            <option selected value="0">---</option>
-                            <option value="1">停用</option>
-                            <option value="2">啟用</option>
+                        <select id="searchDepartment_StatueSelect" class="form-select">
+                            <option id="searchDepartment_StatueAll" selected value="0">預設</option>
+                            <option id="searchDepartment_StatueDisable" value="1">停用</option>
+                            <option id="searchDepartment_StatueEnable" value="2">啟用</option>
                         </select>
                     </div>
                 </div>
@@ -82,7 +86,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDepartment_Mail">
+                        <input id="searchDepartment_Mail" type="text" class="form-control">
                     </div>
                 </div>
             </div>

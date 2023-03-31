@@ -34,7 +34,7 @@ namespace NISC_MFP_MVC.Controllers
         }
 
         [ActionName("cardreader")]
-        public ActionResult Cardreader()
+        public ActionResult CardReader()
         {
             return View();
         }

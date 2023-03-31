@@ -5,6 +5,10 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@section OutputReportJS{
+    <script src="~/Scripts/AdminPartialViewScripts/outputreport.js"></script>
+}
+
 <div class="d-grid gap-4">
     @*報表選項 - First Container - Start*@
     <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
@@ -16,74 +20,74 @@
         <div class="row border-x border-bottom border-2  bg-secondary bg-opacity-10">
 
             <div class="col border-start border-end border-2">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">報表種類</div>
-                <div class="row h-75 align-items-center">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">報表種類</div>
+                <div class="row align-items-center">
                     <div class="col pt-2 pb-2">
-                        <select class="form-select">
-                            <option selected value="0">部門總使用量報表</option>
-                            <option value="1">部門影印使用量報表</option>
-                            <option value="2">部門列印使用量報表</option>
-                            <option value="3">部門影列印使用量報表</option>
-                            <option value="4">部門掃描使用量報表</option>
-                            <option value="5">部門傳真使用量報表</option>
-                            <option value="6">使用者總使用量報表</option>
-                            <option value="7">使用者影印使用量報表</option>
-                            <option value="8">使用者列印使用量報表</option>
-                            <option value="9">使用者掃描使用量報表</option>
-                            <option value="10">使用者傳真使用量報表</option>
+                        <select id="generateOutputReport_ReportTypeSeelct" class="form-select">
+                            <option id="generateOutputReport_ReportType1" selected value="0">部門總使用量報表</option>
+                            <option id="generateOutputReport_ReportType2" value="1">部門影印使用量報表</option>
+                            <option id="generateOutputReport_ReportType3" value="2">部門列印使用量報表</option>
+                            <option id="generateOutputReport_ReportType4" value="3">部門影列印使用量報表</option>
+                            <option id="generateOutputReport_ReportType5" value="4">部門掃描使用量報表</option>
+                            <option id="generateOutputReport_ReportType6" value="5">部門傳真使用量報表</option>
+                            <option id="generateOutputReport_ReportType7" value="6">使用者總使用量報表</option>
+                            <option id="generateOutputReport_ReportType8" value="7">使用者影印使用量報表</option>
+                            <option id="generateOutputReport_ReportType9" value="8">使用者列印使用量報表</option>
+                            <option id="generateOutputReport_ReportType10" value="9">使用者掃描使用量報表</option>
+                            <option id="generateOutputReport_ReportType11" value="10">使用者傳真使用量報表</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">顏色</div>
-                <div class="row h-75 align-items-center">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <select class="form-select">
-                            <option selected value="0">全部</option>
-                            <option value="1">黑白</option>
-                            <option value="2">彩色</option>
+                <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">顏色</div>
+                <div class="row align-items-center">
+                    <div class="col pt-2 pb-2">
+                        <select id="generateOutputReport_ColorSelect" class="form-select">
+                            <option id="generateOutputReport_ColorAll" selected value="0">全部</option>
+                            <option id="generateOutputReport_ColorRGB" value="1">彩色</option>
+                            <option id="generateOutputReport_ColorWB" value="2">黑白</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">部門</div>
-                <div class="row h-75 align-items-center">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <select class="form-select">
-                            <option selected value="0">---</option>
-                            <option value="1">Admin</option>
-                            <option value="2">B15封裝製程工程部</option>
-                            <option value="3">測試工程研發部</option>
-                            <option value="4">倉管／會計</option>
-                            <option value="5">研發部</option>
-                            <option value="6">封裝研發部</option>
+                <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">部門</div>
+                <div class="row align-items-center">
+                    <div class="col pt-2 pb-2">
+                        <select id="generateOutputReport_DepartmentSelect" class="form-select">
+                            <option id="generateOutputReport_DepartmentAll" selected value="0">預設</option>
+                            <option id="generateOutputReport_DepartmentAdmin" value="1">Admin</option>
+                            <option id="generateOutputReport_DepartmentPPE" value="2">B15封裝製程工程部</option>
+                            <option id="generateOutputReport_DepartmentTE" value="3">測試工程研發部</option>
+                            <option id="generateOutputReport_DepartmentAccount" value="4">倉管／會計</option>
+                            <option id="generateOutputReport_DepartmentRD" value="5">研發部</option>
+                            <option id="generateOutputReport_DepartmentPRD" value="6">封裝研發部</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">使用者</div>
-                <div class="row h-75 align-items-center">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <select class="form-select">
-                            <option selected value="0">---</option>
+                <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">使用者</div>
+                <div class="row align-items-center">
+                    <div class="col pt-2 pb-2">
+                        <select id="generateOutputReport_User" class="form-select">
+                            <option id="generateOutputReport_UserAll" selected value="0">預設</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">事務機IP</div>
-                <div class="row h-75 align-items-center">
-                    <div class="col align-self-center pt-2 pb-2">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">事務機IP</div>
+                <div class="row align-items-center">
+                    <div class="col pt-2 pb-2">
                         @*Dynamic binding the using ip from machine*@
-                        <select class="form-select">
-                            <option selected value="0">---</option>
+                        <select id="generateOutputReport_MachineIPSelect" class="form-select">
+                            <option id="generateOutputReport_MachineIPAll" selected value="0">預設</option>
                         </select>
                         @*Dynamic binding the using ip from machine*@
                     </div>
@@ -91,27 +95,43 @@
             </div>
 
             <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">期間</div>
-                <div class="row h-75 align-items-center">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <select class="form-select">
-                            <option selected value="0">今天</option>
-                            <option value="1">一週</option>
-                            <option value="2">一個月</option>
-                            <option value="3">全部</option>
-                            <option value="3">自訂</option>
+                <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">期間</div>
+                <div class="row align-items-center">
+                    <div class="col pt-2 pb-2">
+                        <select id="generateOutputReport_PeriodSelect" class="form-select">
+                            <option id="generateOutputReport_PeriodToday" selected value="0">今天</option>
+                            <option id="generateOutputReport_PeriodWeek" value="1">一週</option>
+                            <option id="generateOutputReport_PeriodMonth" value="2">一個月</option>
+                            <option id="generateOutputReport_PeriodAll" value="3">全部</option>
+                            <option id="generateOutputReport_PeriodCustom" value="4">自訂</option>
                             @*Add the date range - start*@
                             @*Add the date range - end*@
                         </select>
+
+                        <div id="generateOutputReport_PeriodCustomBlock" class="mt-3" style="display:none">
+                            <div class="input-group justify-content-center">
+                                <span class="input-group-text" id="basic-addon1">自</span>
+                                <input id="generateOutputReport_PeriodCustomStart" type="text" class="form-control text-center">
+                            </div>
+
+                            <i class="fa-solid fa-arrow-down"></i>
+
+                            <div class="input-group justify-content-center">
+                                <span class="input-group-text" id="basic-addon1">到</span>
+                                <input id="generateOutputReport_PeriodCustomEnd" type="text" class="form-control text-center">
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>
 
             <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">產生報表</div>
-                <div class="row h-75 align-items-center">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">產生報表</div>
+                <div class="row align-items-center">
+                    <div class="col pt-2 pb-2">
+                        <div class="btn-group" role="group" aria-label="Vertical button group">
                             <button type="button" class="btn btn-primary">用量報表</button>
                             <button type="button" class="btn btn-warning">紀錄報表</button>
                         </div>

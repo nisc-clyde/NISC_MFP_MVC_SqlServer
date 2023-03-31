@@ -5,6 +5,10 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@section UserJS{
+    <script src="~/Scripts/AdminPartialViewScripts/user.js"></script>
+}
+
 <div class="d-grid gap-4">
     @*欄位搜尋選項 - First Container - Start*@
     <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
@@ -21,7 +25,7 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">帳號</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchUser_Account">
+                        <input id="searchUser_Account" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -30,7 +34,7 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">密碼</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchUser_Password">
+                        <input id="searchUser_Password" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -39,7 +43,7 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">工號</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchUser_WorkNumber">
+                        <input id="searchUser_WorkNumber" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -48,7 +52,7 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">姓名</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchUser_Name">
+                        <input id="searchUser_Name" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -57,7 +61,7 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">部門編號</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchUser_DepartmentID">
+                        <input id="searchUser_DepartmentID" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -66,7 +70,7 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">部門名稱</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchUser_DepartmentName">
+                        <input id="searchUser_DepartmentName" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -75,10 +79,10 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">彩色使用權限</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <select class="form-select">
-                            <option selected value="0">---</option>
-                            <option value="1">無</option>
-                            <option value="2">有</option>
+                        <select id="searchUser_ColorPermissionSelect" class="form-select">
+                            <option id="searchUser_ColorPermissionAll" selected value="0">預設</option>
+                            <option id="searchUser_ColorPermissionNo" value="1">無</option>
+                            <option id="searchUser_ColorPermissionYes" value="2">有</option>
                         </select>
                     </div>
                 </div>
@@ -88,7 +92,7 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold">信箱</div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchUser_Mail">
+                        <input id="searchUser_Mail" type="text" class="form-control">
                     </div>
                 </div>
             </div>

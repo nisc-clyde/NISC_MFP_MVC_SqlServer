@@ -5,6 +5,10 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@section DepositeJS{
+    <script src="@Url.Content("~/Scripts/AdminPartialViewScripts/deposite.js")"></script>
+}
+
 <div class="d-grid gap-4">
     @*欄位搜尋選項 - First Container - Start*@
     <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
@@ -23,7 +27,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_Name">
+                        <input id="searchDeposite_Name" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -34,7 +38,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_Account">
+                        <input id="searchDeposite_Account" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -45,7 +49,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_CardNumber">
+                        <input id="searchDeposite_CardNumber" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -56,7 +60,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_CardOwnerAccount">
+                        <input id="searchDeposite_CardOwnerAccount" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -67,7 +71,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_CardOwnerName">
+                        <input id="searchDeposite_CardOwnerName" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -78,7 +82,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_BeforePoint">
+                        <input id="searchDeposite_BeforePoint" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -89,7 +93,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_Point">
+                        <input id="searchDeposite_Point" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -100,7 +104,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_AfterPoint">
+                        <input id="searchDeposite_AfterPoint" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -111,7 +115,7 @@
                 </div>
                 <div class="row">
                     <div class="col align-self-center pt-2 pb-2">
-                        <input type="text" class="form-control" id="searchDeposite_Time">
+                        <input id="searchDeposite_Time" type="text" class="form-control">
                     </div>
                 </div>
             </div>

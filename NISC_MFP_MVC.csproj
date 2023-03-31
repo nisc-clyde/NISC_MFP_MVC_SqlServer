@@ -194,6 +194,14 @@
     <Content Include="lib\font-awesome\sprites\brands.svg" />
     <Content Include="lib\font-awesome\sprites\regular.svg" />
     <Content Include="lib\font-awesome\sprites\solid.svg" />
+    <Content Include="Scripts\AdminPartialViewScripts\card.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\cardreader.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\department.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\deposite.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\outputreport.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\print.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\user.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\watermark.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -268,7 +276,7 @@
     <Content Include="Views\Admin\Deposite.cshtml" />
     <Content Include="Views\Admin\Department.cshtml" />
     <Content Include="Views\Admin\User.cshtml" />
-    <Content Include="Views\Admin\Cardreader.cshtml" />
+    <Content Include="Views\Admin\CardReader.cshtml" />
     <Content Include="Views\Admin\Card.cshtml" />
     <Content Include="Views\Admin\Watermark.cshtml" />
     <Content Include="Views\Admin\History.cshtml" />

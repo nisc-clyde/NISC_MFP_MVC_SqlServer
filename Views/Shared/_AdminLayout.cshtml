@@ -8,7 +8,6 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    @*@Styles.Render("~/lib/daterangepicker/css")*@
 </head>
 
 <body class="bg-black bg-gradient">
@@ -31,6 +30,7 @@
         <div class="card text-center m-3 ">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                    @RenderSection("DateRangePickerPopUp", required: false)
                     <li class="nav-item" role="presentation">
                         <button class="@(ViewBag.ActiveNav == "Print" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
                                 aria-selected=false onclick="location.href = '@Url.Action("Print","Admin")'">
@@ -56,8 +56,8 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="@(ViewBag.ActiveNav == "Cardreader" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
-                                aria-selected="false" onclick="location.href='@Url.Action("Cardreader","Admin")'">
+                        <button class="@(ViewBag.ActiveNav == "CardReader" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
+                                aria-selected="false" onclick="location.href='@Url.Action("CardReader","Admin")'">
                             <i class="fa-solid fa-desktop"></i>&ensp;事務機管理
                         </button>
                     </li>
@@ -118,5 +118,14 @@
     @Scripts.Render("~/bundles/bootstrap")
 
     @RenderSection("scripts", required: false)
+    @RenderSection("PrintJS", required: false)
+    @RenderSection("DepositeJS", required: false)
+    @RenderSection("DepartmentJS", required: false)
+    @RenderSection("UserJS", required: false)
+    @RenderSection("CardReaderJS", required: false)
+    @RenderSection("CardJS", required: false)
+    @RenderSection("WatermarkJS", required: false)
+    @RenderSection("OutputReportJS", required: false)
+
 </body>
 </html>
