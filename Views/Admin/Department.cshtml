@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "部門管理";
+    ViewBag.ActiveNav = "Department";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-grid gap-4">
+    @*欄位搜尋選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+                欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+
+        <div class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    部門編號
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDepartment_DepartmentID">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    部門名稱
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDepartment_DepartmentName">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    可用點數上線
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDepartment_Point">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    可用遞增餘額
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDepartment_Add">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    狀態
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                            <option value="1">停用</option>
+                            <option value="2">啟用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    信箱
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDepartment_Mail">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*欄位搜尋選項 - First Container - End*@
+
+    @*部門列表 - Third Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col text-start fs-5 fw-bold" style="color: #1565C0">部門列表&nbsp;<i class="fa-solid fa-list"></i></div>
+        </div>
+
+        <div class="row">
+        </div>
+    </div>
+    @*部門列表 - Third Cotainer - End*@
+
+</div>

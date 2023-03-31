@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "事務機管理";
+    ViewBag.ActiveNav = "Cardreader";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-grid gap-4">
+    @*欄位搜尋選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+                欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+
+        <div class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">卡機編號</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCardreader_CardreaderID">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">IP位址</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCardreader_IPAddress">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">PORT</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCardreader_Port">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">卡機種類</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <div class="dropdown">
+                            <select class="form-select">
+                                <option selected value="0">---</option>
+                                <option value="1">事務機</option>
+                                <option value="2">影印機</option>
+                                <option value="3">印表機</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">運作模式</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                            <option value="1">離線</option>
+                            <option value="2">連線</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">卡號判斷開關</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                            <option value="1">關閉</option>
+                            <option value="2">開啟</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">狀態</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                            <option value="1">線上</option>
+                            <option value="2">離線</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*欄位搜尋選項 - First Container - End*@
+
+    @*事務機列表 - Third Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col text-start fs-5 fw-bold" style="color: #1565C0">事務機列表&nbsp;<i class="fa-solid fa-list"></i></div>
+        </div>
+
+        <div class="row">
+        </div>
+    </div>
+    @*事務機列表 - Third Cotainer - End*@
+
+</div>
+

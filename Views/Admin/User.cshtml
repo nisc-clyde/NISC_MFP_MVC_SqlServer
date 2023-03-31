@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewBag.Title = "使用者管理";
+    ViewBag.ActiveNav = "User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-grid gap-4">
+    @*欄位搜尋選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+                欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+
+        <div class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">帳號</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchUser_Account">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">密碼</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchUser_Password">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">工號</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchUser_WorkNumber">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">姓名</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchUser_Name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">部門編號</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchUser_DepartmentID">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">部門名稱</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchUser_DepartmentName">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">彩色使用權限</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                            <option value="1">無</option>
+                            <option value="2">有</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">信箱</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchUser_Mail">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*欄位搜尋選項 - First Container - End*@
+
+    @*使用者列表 - Third Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2" style="color: #1565C0">
+            <div class="col text-start fs-5 fw-bold">使用者列表&nbsp;<i class="fa-solid fa-list"></i></div>
+        </div>
+
+        <div class="row">
+        </div>
+    </div>
+    @*使用者列表 - Third Cotainer - End*@
+
+</div>
+

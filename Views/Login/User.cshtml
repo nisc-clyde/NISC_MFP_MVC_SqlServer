@@ -1,0 +1,46 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "新印科技影印列印控管系統";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            background: #000 url(../img/wb.jpg) center center fixed no-repeat;
+        }
+
+        #index_main {
+            background-image: url(../img/earth_02.png);
+        }
+    </style>
+    @Styles.Render("~/Content/LoginCSS")
+</head>
+<body>
+    <div id="wapper">
+        <div id="index_main">
+            <div id="logo">
+                <img src="~/img/logo_b.png" width="400" height="70" />
+            </div>
+
+            @model NISC_MFP_MVC.Models.LoginTO
+            @using (Html.BeginForm("User", "Login", FormMethod.Post, new { @class = "form-inline" }))
+            {
+                <div id="login">
+                    @Html.TextBoxFor(a => a.account, new { placeholder = "使用者帳號", @class = "form-control mb-2 mr-sm-2" })
+                    @Html.TextBoxFor(p => p.password, new { placeholder = "Password", @class = "form-control mb-2 mr-sm-2" })
+                    <button type="button" class="btn btn-outline-secondary">Log In</button>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>
+
+

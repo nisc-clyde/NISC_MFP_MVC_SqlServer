@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewBag.Title = "浮水印管理";
+    ViewBag.ActiveNav = "Watermark";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-grid gap-4">
+    @*欄位搜尋選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i></div>
+        </div>
+
+        <div class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">類別</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">圖片</option>
+                            <option value="1">文字</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">左邊偏移</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_LeftBias">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">右邊偏移</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_RightBias">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">上邊偏移</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_TopBias">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">下邊偏移</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_BottomBias">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">浮水印位置</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">左上</option>
+                            <option value="1">左下</option>
+                            <option value="2">右上</option>
+                            <option value="3">右下</option>
+                            <option value="4">中間</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">填滿方式</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">無</option>
+                            <option value="1">依原圖比例多餘裁切</option>
+                            <option value="2">依原圖比例不裁切</option>
+                            <option value="3">依紙張比例</option>
+                            <option value="4">重覆填滿</option>
+                            <option value="4">置中，並依原圖比例多餘裁切</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">文字</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_Text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">圖片位置</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_ImageLocation">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">旋轉角度</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_Rotate">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">顏色</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchWatermark_Color">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*欄位搜尋選項 - First Container - End*@
+
+    @*浮水印列表 - Third Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col text-start fs-5 fw-bold" style="color: #1565C0">浮水印列表&nbsp;<i class="fa-solid fa-list"></i></div>
+        </div>
+
+        <div class="row">
+        </div>
+    </div>
+    @*浮水印列表 - Third Cotainer - End*@
+
+</div>
+

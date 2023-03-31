@@ -1,0 +1,151 @@
+﻿
+@{
+    ViewBag.Title = "儲值紀錄";
+    ViewBag.ActiveNav = "Deposite";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-grid gap-4">
+    @*欄位搜尋選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+                欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+
+        <div class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    儲值人員
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_Name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    儲值帳號
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_Account">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    儲值卡號
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_CardNumber">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    卡片持有者帳號
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_CardOwnerAccount">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    卡片持有者姓名
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_CardOwnerName">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    儲值前點數
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_BeforePoint">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    儲值點數
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_Point">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    儲值後點數
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_AfterPoint">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                    儲值時間
+                </div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchDeposite_Time">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*欄位搜尋選項 - First Container - End*@
+
+    @*儲值紀錄列表 - Second Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">儲值紀錄列表&nbsp;<i class="fa-solid fa-clock-rotate-left"></i></div>
+        </div>
+
+        <div class="row">
+            <div class="col-6 border-start border-2 align-self-center text-start pt-3 pb-3">
+                <a class="btn btn-outline-secondary" href="#" role="button">EXCEL</a>
+                <a class="btn btn-outline-secondary" href="#" role="button">CSV</a>
+                <a class="btn btn-outline-secondary" href="#" role="button">Print</a>
+            </div>
+
+            <div class="col-6 border-end border-2 pt-3 pb-3">
+                <div class="col align-self-center">
+                    <input type="text" class="form-control float-end" id="searchDeposite_AllColumn" placeholder="全部欄位搜尋">
+                </div>
+            </div>
+        </div>
+
+        <div class="row border-start border-bottom border-end border-2">
+            <p>GridView</p>
+        </div>
+
+    </div>
+    @*儲值紀錄列表 - Second Cotainer - End*@
+
+</div>

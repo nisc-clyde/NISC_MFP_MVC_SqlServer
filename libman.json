@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "font-awesome@6.4.0",
+      "destination": "lib/font-awesome/"
+    },
+    {
+      "library": "bootstrap-daterangepicker@3.0.5",
+      "destination": "lib/bootstrap-daterangepicker/"
+    }
+  ]
+}

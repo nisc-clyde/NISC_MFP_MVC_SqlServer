@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "報表選項";
+    ViewBag.ActiveNav = "OutputReport";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-grid gap-4">
+    @*報表選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">報表選項&nbsp;<i class="fa-solid fa-bars-staggered"></i></div>
+        </div>
+
+        <div class="row border-x border-bottom border-2  bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">報表種類</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">部門總使用量報表</option>
+                            <option value="1">部門影印使用量報表</option>
+                            <option value="2">部門列印使用量報表</option>
+                            <option value="3">部門影列印使用量報表</option>
+                            <option value="4">部門掃描使用量報表</option>
+                            <option value="5">部門傳真使用量報表</option>
+                            <option value="6">使用者總使用量報表</option>
+                            <option value="7">使用者影印使用量報表</option>
+                            <option value="8">使用者列印使用量報表</option>
+                            <option value="9">使用者掃描使用量報表</option>
+                            <option value="10">使用者傳真使用量報表</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">顏色</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">全部</option>
+                            <option value="1">黑白</option>
+                            <option value="2">彩色</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">部門</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                            <option value="1">Admin</option>
+                            <option value="2">B15封裝製程工程部</option>
+                            <option value="3">測試工程研發部</option>
+                            <option value="4">倉管／會計</option>
+                            <option value="5">研發部</option>
+                            <option value="6">封裝研發部</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">使用者</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">事務機IP</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        @*Dynamic binding the using ip from machine*@
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                        </select>
+                        @*Dynamic binding the using ip from machine*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">期間</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">今天</option>
+                            <option value="1">一週</option>
+                            <option value="2">一個月</option>
+                            <option value="3">全部</option>
+                            <option value="3">自訂</option>
+                            @*Add the date range - start*@
+                            @*Add the date range - end*@
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">產生報表</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                            <button type="button" class="btn btn-primary">用量報表</button>
+                            <button type="button" class="btn btn-warning">紀錄報表</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*報表選項 - First Container - End*@
+
+    @*報表 - Third Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col text-start fs-5 fw-bold" style="color: #1565C0">報表&nbsp;<i class="fa-solid fa-file"></i></div>
+        </div>
+
+        <div class="row">
+        </div>
+    </div>
+    @*報表 - Third Cotainer - End*@
+
+</div>
+

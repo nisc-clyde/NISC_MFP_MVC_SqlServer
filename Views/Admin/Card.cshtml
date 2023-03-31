@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "卡片管理";
+    ViewBag.ActiveNav = "Card";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-grid gap-4">
+    @*欄位搜尋選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">欄位搜尋選項(name=C總管預設管理者)&nbsp;<i class="fa-solid fa-magnifying-glass"></i></div>
+        </div>
+
+        <div class="row border-bottom border-2 bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">卡片編號</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCard_CardID">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">點數</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCard_Point">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">免費點數</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCard_FreePort">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">使用者帳號</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCard_Account">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">使用者姓名</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input type="text" class="form-control" id="searchCard_Name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">屬性</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select class="form-select">
+                            <option selected value="0">---</option>
+                            <option value="1">遞減</option>
+                            <option value="2">遞增</option>
+                            <option value="3">未知</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">使用狀態</div>
+                <div class="row h-75 align-items-center">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <div class="dropdown">
+                            <select class="form-select">
+                                <option selected value="0">---</option>
+                                <option value="1">停用</option>
+                                <option value="2">可用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*欄位搜尋選項 - First Container - End*@
+
+    @*卡片列表 - Third Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2">
+            <div class="col text-start fs-5 fw-bold" style="color: #1565C0">卡片列表&nbsp;<i class="fa-solid fa-list"></i></div>
+        </div>
+
+        <div class="row">
+        </div>
+    </div>
+    @*卡片列表 - Third Cotainer - End*@
+
+</div>
