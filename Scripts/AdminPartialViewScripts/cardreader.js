@@ -54,6 +54,13 @@ function SearchCardReaderDataTableInitial() {
                 next: "下一頁"
             },
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆"
+        },
+        rowCallback: function (row, data) {
+            if (data.cr_mode == "連線") {
+                $('td:eq(4)', row).html("<b class='text-success'>連線</b>");
+            } else {
+                $('td:eq(4)', row).html("<b class='text-success'>連線</b>");
+            }
         }
     });
 }
