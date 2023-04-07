@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MFP_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="doc_detail">
+    <Key>
+      <PropertyRef Name="doc_uid" />
+      <PropertyRef Name="iseq" />
+    </Key>
+    <Property Name="doc_uid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="iseq" Type="Int32" Nullable="false" />
+    <Property Name="page_nos" Type="Int32" />
+    <Property Name="page_noe" Type="Int32" />
+    <Property Name="doc" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="is_print" Type="Int32" />
+  </EntityType>
+  <EntityType Name="doc_mng">
+    <Key>
+      <PropertyRef Name="doc_uid" />
+    </Key>
+    <Property Name="doc_uid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ntime" Type="DateTime" />
+    <Property Name="doc_name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="doc_ext" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="page_size" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="page_count" Type="Int32" />
+    <Property Name="is_user_del" Type="Int32" />
+    <Property Name="detail_count" Type="Int32" />
+    <Property Name="pkg_per" Type="Int32" />
+    <Property Name="duplexing" Type="Int32" />
+    <Property Name="inputbin" Type="Int32" />
+    <Property Name="copycount" Type="Int32" />
+    <Property Name="pageorientation" Type="Int32" />
+    <Property Name="is_print" Type="Int32" />
+    <Property Name="bc_print" Type="Int32" />
+    <Property Name="data_source" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="file_ext" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="prn_device" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="is_upload" Type="Int32" Nullable="false" />
+    <Property Name="loc_no" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_card">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="card_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="card_password" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+    <Property Name="card_type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="card_type2" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="value" Type="Int32" />
+    <Property Name="freevalue" Type="Int32" Nullable="false" />
+    <Property Name="enable" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="import_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="if_deleted" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_cardreader">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="cr_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cr_ip" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="cr_port" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cr_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cr_mode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cr_card_switch" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="history_date" Type="DateTime" />
+    <Property Name="card_update_date" Type="DateTime" />
+    <Property Name="cr_status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="cr_version" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="cr_relay_status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tb_department">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="dept_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="dept_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="dept_value" Type="Int32" />
+    <Property Name="dept_month_sum" Type="Int32" />
+    <Property Name="dept_usable" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="dept_email" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="if_deleted" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tb_group">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="group_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="group_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="group_quota" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tb_logs_deposit">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="user_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="card_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="card_user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="card_user_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="deposit_value" Type="Int32" />
+    <Property Name="pbalance" Type="Int32" />
+    <Property Name="final_value" Type="Int32" />
+    <Property Name="deposit_date" Type="DateTime" />
+    <Property Name="group_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tb_logs_history">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="login_user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="login_user_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="operation" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="affected_data" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="date_time" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="tb_logs_remote_history">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="remote_server_ip" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="remote_server_name" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="logs_serial_start" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="logs_serial_end" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="total_collect_num" Type="Int32" Nullable="false" />
+    <Property Name="start_date_time" Type="DateTime" Nullable="false" />
+    <Property Name="end_date_time" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_logs_sentmail">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="dept_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="dept_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="dest_mail" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="message" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="sent_date" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_pdfback">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="timestamp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="jobType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="serverName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="serverVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="printerAddr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="file" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_scan">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="sender" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="subject" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="content" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_use_page">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="file_name" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_user">
+    <Key>
+      <PropertyRef Name="user_id" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="user_password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="work_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="user_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="authority" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="depositor" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="dept_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="import_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="color_enable_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="reserve_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="scan_reserve_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="personal_water_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="personal_water_depth" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="e_mail" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="if_deleted" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="group_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="copy_enable_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="print_enable_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="scan_enable_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="fax_enable_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_watermark">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="Int32" Nullable="false" />
+    <Property Name="left_offset" Type="Int32" Nullable="false" />
+    <Property Name="right_offset" Type="Int32" Nullable="false" />
+    <Property Name="top_offset" Type="Int32" Nullable="false" />
+    <Property Name="bottom_offset" Type="Int32" Nullable="false" />
+    <Property Name="position_mode" Type="Int32" Nullable="false" />
+    <Property Name="image_path" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="fill_mode" Type="Int32" />
+    <Property Name="text" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="horizontal_alignment" Type="Int32" />
+    <Property Name="vertical_alignment" Type="Int32" />
+    <Property Name="color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="font_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="font_height" Type="Int32" />
+    <Property Name="rotation" Type="Single" />
+  </EntityType>
+  <EntityType Name="tb_logs_cardreader">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="cr_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="card_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="value" Type="Int32" />
+    <Property Name="seq_no" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+    <Property Name="login_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="log_time" Type="DateTime" />
+    <Property Name="mfp_serial" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tb_logs_import">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="file_name" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="import_type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="import_date" Type="DateTime" />
+    <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tb_logs_print">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="dept_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="dept_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="dept_value" Type="Int32" />
+    <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="user_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="work_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="card_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="card_type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="mfp_ip" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="mfp_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="computer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="user_computer_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="driver_number" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="value" Type="Int32" />
+    <Property Name="page" Type="Int32" />
+    <Property Name="copies" Type="Int32" />
+    <Property Name="page_color" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="page_size" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Name="duplex" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="usage_type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="print_date" Type="DateTime" />
+    <Property Name="scan_destination" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="document_name" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="file_path" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="file_name" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="backup_label" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ocr" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="remote_server_ip" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="remote_server_name" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="remote_server_serial" Type="Int32" />
+    <Property Name="mfp_meter_num_start" Type="Int32" />
+    <Property Name="mfp_meter_num_end" Type="Int32" />
+    <Property Name="upload_server" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="job_id" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tb_mfp">
+    <Key>
+      <PropertyRef Name="serial" />
+      <PropertyRef Name="printer_id" />
+      <PropertyRef Name="driver_number" />
+      <PropertyRef Name="mfp_color" />
+      <PropertyRef Name="mfp_status" />
+      <PropertyRef Name="meter_num" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="cr_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="printer_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="driver_number" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="mfp_ip" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="mfp_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="mfp_jt_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="mfp_color" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="mfp_status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="meter_num" Type="Int32" Nullable="false" />
+    <Property Name="meter_current" Type="Int32" />
+    <Property Name="meter_adjust_time" Type="DateTime" />
+    <Property Name="login_card_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tb_print_price">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="page_size" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="color" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="price" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tb_token">
+    <Key>
+      <PropertyRef Name="token" />
+      <PropertyRef Name="ctime" />
+    </Key>
+    <Property Name="token" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ctime" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblusers">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="FULLNAME" />
+      <PropertyRef Name="EMAIL" />
+      <PropertyRef Name="IS_ACTIVE" />
+      <PropertyRef Name="PWD" />
+      <PropertyRef Name="LOGIN_TOKEN" />
+      <PropertyRef Name="SCANSTORAGE" />
+      <PropertyRef Name="CREDIT" />
+      <PropertyRef Name="CODE" />
+      <PropertyRef Name="SYNCSOURCE" />
+      <PropertyRef Name="LANG" />
+      <PropertyRef Name="SESSIONREFCNT" />
+      <PropertyRef Name="QUOTAACTIVE" />
+      <PropertyRef Name="PHONE" />
+      <PropertyRef Name="NOTES" />
+      <PropertyRef Name="AUTHSERVER" />
+      <PropertyRef Name="USEAUTHSERVER" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="FULLNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="IS_ACTIVE" Type="Int32" Nullable="false" />
+    <Property Name="PWD" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LOGIN_TOKEN" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SCANSTORAGE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CREDIT" Type="Int32" Nullable="false" />
+    <Property Name="CODE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SYNCSOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LANG" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SESSIONREFCNT" Type="Int32" Nullable="false" />
+    <Property Name="QUOTAACTIVE" Type="Int32" Nullable="false" />
+    <Property Name="PHONE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="NOTES" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="AUTHSERVER" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="USEAUTHSERVER" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="watermark">
+    <Key>
+      <PropertyRef Name="pkey" />
+    </Key>
+    <Property Name="pkey" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="page_size" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="wname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="wspeci" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ntime" Type="DateTime" />
+    <Property Name="ver" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="watermark1" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="is_active" Type="Int32" />
+  </EntityType>
+  <EntityContainer Name="MFP_DBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="doc_detail" EntityType="Self.doc_detail" />
+    <EntitySet Name="doc_mng" EntityType="Self.doc_mng" />
+    <EntitySet Name="tb_card" EntityType="Self.tb_card" />
+    <EntitySet Name="tb_cardreader" EntityType="Self.tb_cardreader" />
+    <EntitySet Name="tb_department" EntityType="Self.tb_department" />
+    <EntitySet Name="tb_group" EntityType="Self.tb_group" />
+    <EntitySet Name="tb_logs_deposit" EntityType="Self.tb_logs_deposit" />
+    <EntitySet Name="tb_logs_history" EntityType="Self.tb_logs_history" />
+    <EntitySet Name="tb_logs_remote_history" EntityType="Self.tb_logs_remote_history" />
+    <EntitySet Name="tb_logs_sentmail" EntityType="Self.tb_logs_sentmail" />
+    <EntitySet Name="tb_pdfback" EntityType="Self.tb_pdfback" />
+    <EntitySet Name="tb_scan" EntityType="Self.tb_scan" />
+    <EntitySet Name="tb_use_page" EntityType="Self.tb_use_page" />
+    <EntitySet Name="tb_user" EntityType="Self.tb_user" />
+    <EntitySet Name="tb_watermark" EntityType="Self.tb_watermark" />
+    <EntitySet Name="tb_logs_cardreader" EntityType="Self.tb_logs_cardreader" />
+    <EntitySet Name="tb_logs_import" EntityType="Self.tb_logs_import" />
+    <EntitySet Name="tb_logs_print" EntityType="Self.tb_logs_print" />
+    <EntitySet Name="tb_mfp" EntityType="Self.tb_mfp" />
+    <EntitySet Name="tb_print_price" EntityType="Self.tb_print_price" />
+    <EntitySet Name="tb_token" EntityType="Self.tb_token" />
+    <EntitySet Name="tblusers" EntityType="Self.tblusers" />
+    <EntitySet Name="watermark" EntityType="Self.watermark" />
+  </EntityContainer>
+</Schema>

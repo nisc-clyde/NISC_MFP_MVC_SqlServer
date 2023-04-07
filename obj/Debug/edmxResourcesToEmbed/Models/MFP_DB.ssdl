@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MFP_DBModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="8.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="doc_detail">
+    <Key>
+      <PropertyRef Name="doc_uid" />
+      <PropertyRef Name="iseq" />
+    </Key>
+    <Property Name="doc_uid" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="iseq" Type="int" Nullable="false" />
+    <Property Name="page_nos" Type="int" />
+    <Property Name="page_noe" Type="int" />
+    <Property Name="doc" Type="longblob" />
+    <Property Name="is_print" Type="int" />
+  </EntityType>
+  <EntityType Name="doc_mng">
+    <Key>
+      <PropertyRef Name="doc_uid" />
+    </Key>
+    <Property Name="doc_uid" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="user_id" Type="varchar" MaxLength="50" />
+    <Property Name="ntime" Type="datetime" Precision="0" />
+    <Property Name="doc_name" Type="varchar" MaxLength="20" />
+    <Property Name="doc_ext" Type="varchar" MaxLength="20" />
+    <Property Name="page_size" Type="varchar" MaxLength="50" />
+    <Property Name="page_count" Type="int" />
+    <Property Name="is_user_del" Type="int" />
+    <Property Name="detail_count" Type="int" />
+    <Property Name="pkg_per" Type="int" />
+    <Property Name="duplexing" Type="int" />
+    <Property Name="inputbin" Type="int" />
+    <Property Name="copycount" Type="int" />
+    <Property Name="pageorientation" Type="int" />
+    <Property Name="is_print" Type="int" />
+    <Property Name="bc_print" Type="int" />
+    <Property Name="data_source" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="file_ext" Type="char" MaxLength="5" Nullable="false" />
+    <Property Name="prn_device" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="is_upload" Type="int" Nullable="false" />
+    <Property Name="loc_no" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_card">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="card_id" Type="char" MaxLength="10" Nullable="false" />
+    <Property Name="card_password" Type="varchar" MaxLength="4" />
+    <Property Name="card_type" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="card_type2" Type="varchar" MaxLength="1" />
+    <Property Name="value" Type="int" />
+    <Property Name="freevalue" Type="int" Nullable="false" />
+    <Property Name="enable" Type="char" MaxLength="1" />
+    <Property Name="user_id" Type="char" MaxLength="50" />
+    <Property Name="import_flag" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="if_deleted" Type="varchar" MaxLength="1" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_cardreader">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="cr_id" Type="char" MaxLength="10" Nullable="false" />
+    <Property Name="cr_ip" Type="char" MaxLength="15" />
+    <Property Name="cr_port" Type="char" MaxLength="5" Nullable="false" />
+    <Property Name="cr_type" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="cr_mode" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="cr_card_switch" Type="varchar" MaxLength="10" />
+    <Property Name="history_date" Type="datetime" Precision="0" />
+    <Property Name="card_update_date" Type="datetime" Precision="0" />
+    <Property Name="cr_status" Type="varchar" MaxLength="20" />
+    <Property Name="cr_version" Type="varchar" MaxLength="20" />
+    <Property Name="cr_relay_status" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="tb_department">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="dept_id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="dept_name" Type="varchar" MaxLength="100" />
+    <Property Name="dept_value" Type="int" />
+    <Property Name="dept_month_sum" Type="int" />
+    <Property Name="dept_usable" Type="varchar" MaxLength="1" />
+    <Property Name="dept_email" Type="text" />
+    <Property Name="if_deleted" Type="varchar" MaxLength="1" />
+  </EntityType>
+  <EntityType Name="tb_group">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="group_id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="group_name" Type="varchar" MaxLength="100" />
+    <Property Name="group_quota" Type="int" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.tb_logs_cardreader' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="tb_logs_cardreader">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="cr_id" Type="varchar" MaxLength="10" />
+    <Property Name="card_id" Type="varchar" MaxLength="10" />
+    <Property Name="value" Type="int" />
+    <Property Name="seq_no" Type="varchar" MaxLength="12" />
+    <Property Name="login_type" Type="varchar" MaxLength="20" />
+    <Property Name="log_time" Type="datetime" Precision="0" />
+    <Property Name="mfp_serial" Type="int" />
+  </EntityType>
+  <EntityType Name="tb_logs_deposit">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="varchar" MaxLength="50" />
+    <Property Name="user_name" Type="varchar" MaxLength="100" />
+    <Property Name="card_id" Type="varchar" MaxLength="10" />
+    <Property Name="card_user_id" Type="varchar" MaxLength="50" />
+    <Property Name="card_user_name" Type="varchar" MaxLength="100" />
+    <Property Name="deposit_value" Type="int" />
+    <Property Name="pbalance" Type="int" />
+    <Property Name="final_value" Type="int" />
+    <Property Name="deposit_date" Type="datetime" Precision="0" />
+    <Property Name="group_id" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tb_logs_history">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="login_user_id" Type="varchar" MaxLength="50" />
+    <Property Name="login_user_name" Type="varchar" MaxLength="100" />
+    <Property Name="operation" Type="text" />
+    <Property Name="affected_data" Type="text" />
+    <Property Name="date_time" Type="datetime" Precision="0" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.tb_logs_import' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="tb_logs_import">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="file_name" Type="text" />
+    <Property Name="import_type" Type="varchar" MaxLength="50" />
+    <Property Name="import_date" Type="datetime" Precision="0" />
+    <Property Name="user_id" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.tb_logs_print' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="tb_logs_print">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="dept_id" Type="varchar" MaxLength="50" />
+    <Property Name="dept_name" Type="varchar" MaxLength="100" />
+    <Property Name="dept_value" Type="int" />
+    <Property Name="user_id" Type="varchar" MaxLength="50" />
+    <Property Name="user_name" Type="varchar" MaxLength="100" />
+    <Property Name="work_id" Type="varchar" MaxLength="50" />
+    <Property Name="card_id" Type="varchar" MaxLength="10" />
+    <Property Name="card_type" Type="varchar" MaxLength="1" />
+    <Property Name="mfp_ip" Type="varchar" MaxLength="15" />
+    <Property Name="mfp_name" Type="varchar" MaxLength="100" />
+    <Property Name="computer" Type="varchar" MaxLength="50" />
+    <Property Name="user_computer_name" Type="varchar" MaxLength="50" />
+    <Property Name="driver_number" Type="varchar" MaxLength="10" />
+    <Property Name="value" Type="int" />
+    <Property Name="page" Type="int" />
+    <Property Name="copies" Type="int" />
+    <Property Name="page_color" Type="varchar" MaxLength="1" />
+    <Property Name="page_size" Type="varchar" MaxLength="2" />
+    <Property Name="duplex" Type="varchar" MaxLength="1" />
+    <Property Name="usage_type" Type="varchar" MaxLength="1" />
+    <Property Name="print_date" Type="datetime" Precision="0" />
+    <Property Name="scan_destination" Type="text" />
+    <Property Name="document_name" Type="text" />
+    <Property Name="file_path" Type="text" />
+    <Property Name="file_name" Type="text" />
+    <Property Name="backup_label" Type="varchar" MaxLength="50" />
+    <Property Name="ocr" Type="text" />
+    <Property Name="remote_server_ip" Type="text" />
+    <Property Name="remote_server_name" Type="text" />
+    <Property Name="remote_server_serial" Type="int" />
+    <Property Name="mfp_meter_num_start" Type="int" />
+    <Property Name="mfp_meter_num_end" Type="int" />
+    <Property Name="upload_server" Type="varchar" MaxLength="50" />
+    <Property Name="job_id" Type="int" />
+  </EntityType>
+  <EntityType Name="tb_logs_remote_history">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="remote_server_ip" Type="varchar" MaxLength="15" />
+    <Property Name="remote_server_name" Type="text" />
+    <Property Name="logs_serial_start" Type="text" />
+    <Property Name="logs_serial_end" Type="text" />
+    <Property Name="total_collect_num" Type="int" Nullable="false" />
+    <Property Name="start_date_time" Type="datetime" Precision="0" Nullable="false" />
+    <Property Name="end_date_time" Type="datetime" Precision="0" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_logs_sentmail">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="dept_id" Type="varchar" MaxLength="50" />
+    <Property Name="dept_name" Type="varchar" MaxLength="100" />
+    <Property Name="dest_mail" Type="text" />
+    <Property Name="message" Type="text" />
+    <Property Name="sent_date" Type="datetime" Precision="0" Nullable="false" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.tb_mfp' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="tb_mfp">
+    <Key>
+      <PropertyRef Name="serial" />
+      <PropertyRef Name="printer_id" />
+      <PropertyRef Name="driver_number" />
+      <PropertyRef Name="mfp_color" />
+      <PropertyRef Name="mfp_status" />
+      <PropertyRef Name="meter_num" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="cr_id" Type="varchar" MaxLength="10" />
+    <Property Name="printer_id" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="driver_number" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="mfp_ip" Type="varchar" MaxLength="15" />
+    <Property Name="mfp_name" Type="varchar" MaxLength="100" />
+    <Property Name="mfp_jt_name" Type="varchar" MaxLength="50" />
+    <Property Name="mfp_color" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="mfp_status" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="meter_num" Type="int" Nullable="false" />
+    <Property Name="meter_current" Type="int" />
+    <Property Name="meter_adjust_time" Type="datetime" Precision="0" />
+    <Property Name="login_card_id" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="tb_pdfback">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="timestamp" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="jobType" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="serverName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="serverVersion" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="printerAddr" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="file" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.tb_print_price' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="tb_print_price">
+    <Key>
+      <PropertyRef Name="serial" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="page_size" Type="varchar" MaxLength="10" />
+    <Property Name="color" Type="varchar" MaxLength="1" />
+    <Property Name="price" Type="int" />
+  </EntityType>
+  <EntityType Name="tb_scan">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="sender" Type="text" Nullable="false" />
+    <Property Name="subject" Type="text" Nullable="false" />
+    <Property Name="content" Type="text" Nullable="false" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.tb_token' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="tb_token">
+    <Key>
+      <PropertyRef Name="token" />
+      <PropertyRef Name="ctime" />
+    </Key>
+    <Property Name="token" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ctime" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_use_page">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="file_name" Type="text" Nullable="false" />
+    <Property Name="description" Type="text" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_user">
+    <Key>
+      <PropertyRef Name="user_id" />
+    </Key>
+    <Property Name="serial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="user_password" Type="varchar" MaxLength="50" />
+    <Property Name="work_id" Type="varchar" MaxLength="50" />
+    <Property Name="user_name" Type="varchar" MaxLength="100" />
+    <Property Name="authority" Type="text" />
+    <Property Name="depositor" Type="varchar" MaxLength="1" />
+    <Property Name="dept_id" Type="varchar" MaxLength="50" />
+    <Property Name="import_flag" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="color_enable_flag" Type="varchar" MaxLength="1" />
+    <Property Name="reserve_flag" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="scan_reserve_flag" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="personal_water_flag" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="personal_water_depth" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="e_mail" Type="text" />
+    <Property Name="if_deleted" Type="varchar" MaxLength="1" />
+    <Property Name="group_id" Type="varchar" MaxLength="50" />
+    <Property Name="copy_enable_flag" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="print_enable_flag" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="scan_enable_flag" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="fax_enable_flag" Type="char" MaxLength="1" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tb_watermark">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type" Type="int" Nullable="false" />
+    <Property Name="left_offset" Type="int" Nullable="false" />
+    <Property Name="right_offset" Type="int" Nullable="false" />
+    <Property Name="top_offset" Type="int" Nullable="false" />
+    <Property Name="bottom_offset" Type="int" Nullable="false" />
+    <Property Name="position_mode" Type="int" Nullable="false" />
+    <Property Name="image_path" Type="varchar" MaxLength="100" />
+    <Property Name="fill_mode" Type="int" />
+    <Property Name="text" Type="varchar" MaxLength="100" />
+    <Property Name="horizontal_alignment" Type="int" />
+    <Property Name="vertical_alignment" Type="int" />
+    <Property Name="color" Type="varchar" MaxLength="50" />
+    <Property Name="font_name" Type="varchar" MaxLength="50" />
+    <Property Name="font_height" Type="int" />
+    <Property Name="rotation" Type="float" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.tblusers' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="tblusers">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="FULLNAME" />
+      <PropertyRef Name="EMAIL" />
+      <PropertyRef Name="IS_ACTIVE" />
+      <PropertyRef Name="PWD" />
+      <PropertyRef Name="LOGIN_TOKEN" />
+      <PropertyRef Name="SCANSTORAGE" />
+      <PropertyRef Name="CREDIT" />
+      <PropertyRef Name="CODE" />
+      <PropertyRef Name="SYNCSOURCE" />
+      <PropertyRef Name="LANG" />
+      <PropertyRef Name="SESSIONREFCNT" />
+      <PropertyRef Name="QUOTAACTIVE" />
+      <PropertyRef Name="PHONE" />
+      <PropertyRef Name="NOTES" />
+      <PropertyRef Name="AUTHSERVER" />
+      <PropertyRef Name="USEAUTHSERVER" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="FULLNAME" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="EMAIL" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="IS_ACTIVE" Type="int" Nullable="false" />
+    <Property Name="PWD" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="LOGIN_TOKEN" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="SCANSTORAGE" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="CREDIT" Type="int" Nullable="false" />
+    <Property Name="CODE" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="SYNCSOURCE" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="LANG" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="SESSIONREFCNT" Type="int" Nullable="false" />
+    <Property Name="QUOTAACTIVE" Type="int" Nullable="false" />
+    <Property Name="PHONE" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="NOTES" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="AUTHSERVER" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="USEAUTHSERVER" Type="int" Nullable="false" />
+  </EntityType>
+  <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'def.mywebni1_managerc.watermark' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+  <EntityType Name="watermark">
+    <Key>
+      <PropertyRef Name="pkey" />
+    </Key>
+    <Property Name="pkey" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="page_size" Type="varchar" MaxLength="50" />
+    <Property Name="wname" Type="varchar" MaxLength="50" />
+    <Property Name="wspeci" Type="varchar" MaxLength="50" />
+    <Property Name="ntime" Type="datetime" Precision="0" />
+    <Property Name="ver" Type="varchar" MaxLength="50" />
+    <Property Name="watermark" Type="longblob" />
+    <Property Name="is_active" Type="int" />
+  </EntityType>
+  <EntityContainer Name="MFP_DBModelStoreContainer">
+    <EntitySet Name="doc_detail" EntityType="Self.doc_detail" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="doc_mng" EntityType="Self.doc_mng" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_card" EntityType="Self.tb_card" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_cardreader" EntityType="Self.tb_cardreader" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_department" EntityType="Self.tb_department" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_group" EntityType="Self.tb_group" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_logs_deposit" EntityType="Self.tb_logs_deposit" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_logs_history" EntityType="Self.tb_logs_history" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_logs_remote_history" EntityType="Self.tb_logs_remote_history" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_logs_sentmail" EntityType="Self.tb_logs_sentmail" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_pdfback" EntityType="Self.tb_pdfback" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_scan" EntityType="Self.tb_scan" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_use_page" EntityType="Self.tb_use_page" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_user" EntityType="Self.tb_user" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_watermark" EntityType="Self.tb_watermark" Schema="mywebni1_managerc" store:Type="Tables" />
+    <EntitySet Name="tb_logs_cardreader" EntityType="Self.tb_logs_cardreader" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`tb_logs_cardreader`.`serial`, 
+`tb_logs_cardreader`.`cr_id`, 
+`tb_logs_cardreader`.`card_id`, 
+`tb_logs_cardreader`.`value`, 
+`tb_logs_cardreader`.`seq_no`, 
+`tb_logs_cardreader`.`login_type`, 
+`tb_logs_cardreader`.`log_time`, 
+`tb_logs_cardreader`.`mfp_serial`
+ FROM `tb_logs_cardreader` AS `tb_logs_cardreader`</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tb_logs_import" EntityType="Self.tb_logs_import" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`tb_logs_import`.`serial`, 
+`tb_logs_import`.`file_name`, 
+`tb_logs_import`.`import_type`, 
+`tb_logs_import`.`import_date`, 
+`tb_logs_import`.`user_id`
+ FROM `tb_logs_import` AS `tb_logs_import`</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tb_logs_print" EntityType="Self.tb_logs_print" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`tb_logs_print`.`serial`, 
+`tb_logs_print`.`dept_id`, 
+`tb_logs_print`.`dept_name`, 
+`tb_logs_print`.`dept_value`, 
+`tb_logs_print`.`user_id`, 
+`tb_logs_print`.`user_name`, 
+`tb_logs_print`.`work_id`, 
+`tb_logs_print`.`card_id`, 
+`tb_logs_print`.`card_type`, 
+`tb_logs_print`.`mfp_ip`, 
+`tb_logs_print`.`mfp_name`, 
+`tb_logs_print`.`computer`, 
+`tb_logs_print`.`user_computer_name`, 
+`tb_logs_print`.`driver_number`, 
+`tb_logs_print`.`value`, 
+`tb_logs_print`.`page`, 
+`tb_logs_print`.`copies`, 
+`tb_logs_print`.`page_color`, 
+`tb_logs_print`.`page_size`, 
+`tb_logs_print`.`duplex`, 
+`tb_logs_print`.`usage_type`, 
+`tb_logs_print`.`print_date`, 
+`tb_logs_print`.`scan_destination`, 
+`tb_logs_print`.`document_name`, 
+`tb_logs_print`.`file_path`, 
+`tb_logs_print`.`file_name`, 
+`tb_logs_print`.`backup_label`, 
+`tb_logs_print`.`ocr`, 
+`tb_logs_print`.`remote_server_ip`, 
+`tb_logs_print`.`remote_server_name`, 
+`tb_logs_print`.`remote_server_serial`, 
+`tb_logs_print`.`mfp_meter_num_start`, 
+`tb_logs_print`.`mfp_meter_num_end`, 
+`tb_logs_print`.`upload_server`, 
+`tb_logs_print`.`job_id`
+ FROM `tb_logs_print` AS `tb_logs_print`</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tb_mfp" EntityType="Self.tb_mfp" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`tb_mfp`.`serial`, 
+`tb_mfp`.`cr_id`, 
+`tb_mfp`.`printer_id`, 
+`tb_mfp`.`driver_number`, 
+`tb_mfp`.`mfp_ip`, 
+`tb_mfp`.`mfp_name`, 
+`tb_mfp`.`mfp_jt_name`, 
+`tb_mfp`.`mfp_color`, 
+`tb_mfp`.`mfp_status`, 
+`tb_mfp`.`meter_num`, 
+`tb_mfp`.`meter_current`, 
+`tb_mfp`.`meter_adjust_time`, 
+`tb_mfp`.`login_card_id`
+ FROM `tb_mfp` AS `tb_mfp`</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tb_print_price" EntityType="Self.tb_print_price" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`tb_print_price`.`serial`, 
+`tb_print_price`.`page_size`, 
+`tb_print_price`.`color`, 
+`tb_print_price`.`price`
+ FROM `tb_print_price` AS `tb_print_price`</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tb_token" EntityType="Self.tb_token" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`tb_token`.`token`, 
+`tb_token`.`ctime`
+ FROM `tb_token` AS `tb_token`</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tblusers" EntityType="Self.tblusers" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`tblusers`.`ID`, 
+`tblusers`.`FULLNAME`, 
+`tblusers`.`EMAIL`, 
+`tblusers`.`IS_ACTIVE`, 
+`tblusers`.`PWD`, 
+`tblusers`.`LOGIN_TOKEN`, 
+`tblusers`.`SCANSTORAGE`, 
+`tblusers`.`CREDIT`, 
+`tblusers`.`CODE`, 
+`tblusers`.`SYNCSOURCE`, 
+`tblusers`.`LANG`, 
+`tblusers`.`SESSIONREFCNT`, 
+`tblusers`.`QUOTAACTIVE`, 
+`tblusers`.`PHONE`, 
+`tblusers`.`NOTES`, 
+`tblusers`.`AUTHSERVER`, 
+`tblusers`.`USEAUTHSERVER`
+ FROM `tblusers` AS `tblusers`</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="watermark" EntityType="Self.watermark" store:Type="Tables" store:Schema="mywebni1_managerc">
+      <DefiningQuery>SELECT 
+`watermark`.`pkey`, 
+`watermark`.`page_size`, 
+`watermark`.`wname`, 
+`watermark`.`wspeci`, 
+`watermark`.`ntime`, 
+`watermark`.`ver`, 
+`watermark`.`watermark`, 
+`watermark`.`is_active`
+ FROM `watermark` AS `watermark`</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

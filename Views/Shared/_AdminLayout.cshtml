@@ -6,11 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/lib/datatable-css")
+
 </head>
 
-<body class="bg-black bg-gradient">
+<body class="bg-black bg-gradient pt-0 pb-0">
     <header class=" header p-3 mb-2 bg-dark bg-gradient">
 
         <a href="@Url.Action("Print","Admin")" class="logo">
@@ -19,9 +21,9 @@
 
         <style>
             .gridline {
-                outline: 3px fa-solid #9E9E9E;
+                outline: 3px solid #9E9E9E;
                 text-align: center;
-                marign: 1px;
+                margin: 1px;
             }
         </style>
     </header>
@@ -34,7 +36,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="@(ViewBag.ActiveNav == "Print" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
                                 aria-selected=false onclick="location.href = '@Url.Action("Print","Admin")'">
-                            <i class="fa-solid fa-wallet"></i>&ensp;使用紀錄
+                            <i class="fa-solid fa-fingerprint"></i>&ensp;使用紀錄
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -107,7 +109,7 @@
         </div>
     </div>
 
-    <footer class="bg-light text-center text-lg-start fixed-bottom">
+    <footer class="footer bg-light text-lg-start sticky-bottom">
         <div class="text-left p-3" style="background-color: #3693cf; ">
             © 2005 Copyright:
             <a class="text-dark" href="https://www.nisc.com.tw/">新印科技股份有限公司</a>
@@ -116,6 +118,8 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/lib/datatable-js")
 
     @RenderSection("scripts", required: false)
     @RenderSection("PrintJS", required: false)
@@ -125,6 +129,7 @@
     @RenderSection("CardReaderJS", required: false)
     @RenderSection("CardJS", required: false)
     @RenderSection("WatermarkJS", required: false)
+    @RenderSection("HistoryJS", required: false)
     @RenderSection("OutputReportJS", required: false)
 
 </body>

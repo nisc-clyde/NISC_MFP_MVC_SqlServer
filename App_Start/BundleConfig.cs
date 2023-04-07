@@ -20,23 +20,28 @@ namespace NISC_MFP_MVC
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.bundle.min.js",
-                      "~/Scripts/moment.min.js",
-                      "~/Scripts/daterangepicker.js"
+                      "~/Scripts/bootstrap.bundle.min.js"
                       ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/Login.css",
-                      "~/lib/font-awesome/css/all.css",
-                      "~/Content/daterangepicker.css"
+                      "~/lib/font-awesome/css/all.css"
                       ));
 
             bundles.Add(new StyleBundle("~/Content/LoginCSS").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/Login.css"));
+
+            bundles.Add(new StyleBundle("~/lib/daterangepicker-css").Include("~/lib/daterangepicker/daterangepicker.css"));
+            bundles.Add(new ScriptBundle("~/lib/daterangepicker-js").Include(
+                "~/lib/daterangepicker/moment.min.js",
+                "~/lib/daterangepicker/daterangepicker.js"));
+
+            bundles.Add(new StyleBundle("~/lib/datatable-css").Include("~/lib/datatables/datatables.min.css"));
+            bundles.Add(new Bundle("~/lib/datatable-js").Include("~/lib/datatables/datatables.min.js"));
+
         }
     }
 }

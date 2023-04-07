@@ -1,5 +1,5 @@
 ﻿function DateRangePickerInitial_Start() {
-    $('input[id="dateRangePickerStart"]').daterangepicker({
+    $("#dateRangePickerStart").daterangepicker({
         "singleDatePicker": true,
         "minYear": 2015,
         "maxYear": 2023,
@@ -47,7 +47,7 @@
 }
 
 function DateRangePickerInitial_End() {
-    $('input[id="dateRangePickerEnd"]').daterangepicker({
+    $("#dateRangePickerEnd").daterangepicker({
         "singleDatePicker": true,
         "minYear": 2015,
         "maxYear": 2023,
@@ -139,10 +139,56 @@ function FormSelect_Select() {
     })
 }
 
+function SearchPrintDataTableInitial() {
+    $("#searchPrintDataTable").DataTable({
+        ajax: {
+            url: "/Admin/Print",
+            type: "POST",
+            dataType: "json",
+        },
+        columns: [
+            { data: "mfp_name", name: "事務機" },
+            { data: "user_name", name: "使用人員" },
+            { data: "dept_name", name: "部門" },
+            { data: "card_id", name: "卡號" },
+            { data: "card_type", name: "屬性" },
+            { data: "usage_type", name: "動作" },
+            { data: "page_color", name: "顏色" },
+            { data: "page", name: "張數" },
+            { data: "value", name: "使用點數" },
+            { data: "print_date", name: "列印時間" },
+            { data: "document_name", name: "文件名稱" }
+        ],
+        dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
+        buttons: [
+            { extend: "excel", className: "btn btn-success buttons-excel buttons-html5" },
+            { extend: "csv", className: "btn btn-success buttons-csv buttons-html5" },
+            { extend: "print", className: "btn btn-success buttons-print buttons-html5" }
+        ],
+        order: [9, "desc"],
+        paging: true,
+        deferRender: true,
+        serverSide: true,
+        processing: true,
+        pagingType: 'full_numbers',
+        language: {
+            processing: "資料載入中...請稍後",
+            paginate: {
+                first: "首頁",
+                last: "尾頁",
+                previous: "上一頁",
+                next:"下一頁"
+            },
+            info:"顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆"
+        }
+    });
+};
+
 
 $(function () {
-    $(document).ready(DateRangePickerInitial_Start);
-    $(document).ready(DateRangePickerInitial_End);
-    $(document).ready(FormSelect_Select);
-    $(document).ready(FormSelect_UnSelect);
+    SearchPrintDataTableInitial();
+    DateRangePickerInitial_Start();
+    DateRangePickerInitial_End();
+    FormSelect_Select();
+    FormSelect_UnSelect();
 });

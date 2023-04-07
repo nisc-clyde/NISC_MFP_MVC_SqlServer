@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MFP_DBModelStoreContainer" CdmEntityContainer="MFP_DBEntities">
+    <EntitySetMapping Name="doc_detail">
+      <EntityTypeMapping TypeName="MFP_DBModel.doc_detail">
+        <MappingFragment StoreEntitySet="doc_detail">
+          <ScalarProperty Name="doc_uid" ColumnName="doc_uid" />
+          <ScalarProperty Name="iseq" ColumnName="iseq" />
+          <ScalarProperty Name="page_nos" ColumnName="page_nos" />
+          <ScalarProperty Name="page_noe" ColumnName="page_noe" />
+          <ScalarProperty Name="doc" ColumnName="doc" />
+          <ScalarProperty Name="is_print" ColumnName="is_print" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="doc_mng">
+      <EntityTypeMapping TypeName="MFP_DBModel.doc_mng">
+        <MappingFragment StoreEntitySet="doc_mng">
+          <ScalarProperty Name="doc_uid" ColumnName="doc_uid" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="ntime" ColumnName="ntime" />
+          <ScalarProperty Name="doc_name" ColumnName="doc_name" />
+          <ScalarProperty Name="doc_ext" ColumnName="doc_ext" />
+          <ScalarProperty Name="page_size" ColumnName="page_size" />
+          <ScalarProperty Name="page_count" ColumnName="page_count" />
+          <ScalarProperty Name="is_user_del" ColumnName="is_user_del" />
+          <ScalarProperty Name="detail_count" ColumnName="detail_count" />
+          <ScalarProperty Name="pkg_per" ColumnName="pkg_per" />
+          <ScalarProperty Name="duplexing" ColumnName="duplexing" />
+          <ScalarProperty Name="inputbin" ColumnName="inputbin" />
+          <ScalarProperty Name="copycount" ColumnName="copycount" />
+          <ScalarProperty Name="pageorientation" ColumnName="pageorientation" />
+          <ScalarProperty Name="is_print" ColumnName="is_print" />
+          <ScalarProperty Name="bc_print" ColumnName="bc_print" />
+          <ScalarProperty Name="data_source" ColumnName="data_source" />
+          <ScalarProperty Name="file_ext" ColumnName="file_ext" />
+          <ScalarProperty Name="prn_device" ColumnName="prn_device" />
+          <ScalarProperty Name="is_upload" ColumnName="is_upload" />
+          <ScalarProperty Name="loc_no" ColumnName="loc_no" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_card">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_card">
+        <MappingFragment StoreEntitySet="tb_card">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="card_id" ColumnName="card_id" />
+          <ScalarProperty Name="card_password" ColumnName="card_password" />
+          <ScalarProperty Name="card_type" ColumnName="card_type" />
+          <ScalarProperty Name="card_type2" ColumnName="card_type2" />
+          <ScalarProperty Name="value" ColumnName="value" />
+          <ScalarProperty Name="freevalue" ColumnName="freevalue" />
+          <ScalarProperty Name="enable" ColumnName="enable" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="import_flag" ColumnName="import_flag" />
+          <ScalarProperty Name="if_deleted" ColumnName="if_deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_cardreader">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_cardreader">
+        <MappingFragment StoreEntitySet="tb_cardreader">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="cr_id" ColumnName="cr_id" />
+          <ScalarProperty Name="cr_ip" ColumnName="cr_ip" />
+          <ScalarProperty Name="cr_port" ColumnName="cr_port" />
+          <ScalarProperty Name="cr_type" ColumnName="cr_type" />
+          <ScalarProperty Name="cr_mode" ColumnName="cr_mode" />
+          <ScalarProperty Name="cr_card_switch" ColumnName="cr_card_switch" />
+          <ScalarProperty Name="history_date" ColumnName="history_date" />
+          <ScalarProperty Name="card_update_date" ColumnName="card_update_date" />
+          <ScalarProperty Name="cr_status" ColumnName="cr_status" />
+          <ScalarProperty Name="cr_version" ColumnName="cr_version" />
+          <ScalarProperty Name="cr_relay_status" ColumnName="cr_relay_status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_department">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_department">
+        <MappingFragment StoreEntitySet="tb_department">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+          <ScalarProperty Name="dept_name" ColumnName="dept_name" />
+          <ScalarProperty Name="dept_value" ColumnName="dept_value" />
+          <ScalarProperty Name="dept_month_sum" ColumnName="dept_month_sum" />
+          <ScalarProperty Name="dept_usable" ColumnName="dept_usable" />
+          <ScalarProperty Name="dept_email" ColumnName="dept_email" />
+          <ScalarProperty Name="if_deleted" ColumnName="if_deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_group">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_group">
+        <MappingFragment StoreEntitySet="tb_group">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="group_name" ColumnName="group_name" />
+          <ScalarProperty Name="group_quota" ColumnName="group_quota" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_logs_deposit">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_logs_deposit">
+        <MappingFragment StoreEntitySet="tb_logs_deposit">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="user_name" ColumnName="user_name" />
+          <ScalarProperty Name="card_id" ColumnName="card_id" />
+          <ScalarProperty Name="card_user_id" ColumnName="card_user_id" />
+          <ScalarProperty Name="card_user_name" ColumnName="card_user_name" />
+          <ScalarProperty Name="deposit_value" ColumnName="deposit_value" />
+          <ScalarProperty Name="pbalance" ColumnName="pbalance" />
+          <ScalarProperty Name="final_value" ColumnName="final_value" />
+          <ScalarProperty Name="deposit_date" ColumnName="deposit_date" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_logs_history">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_logs_history">
+        <MappingFragment StoreEntitySet="tb_logs_history">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="login_user_id" ColumnName="login_user_id" />
+          <ScalarProperty Name="login_user_name" ColumnName="login_user_name" />
+          <ScalarProperty Name="operation" ColumnName="operation" />
+          <ScalarProperty Name="affected_data" ColumnName="affected_data" />
+          <ScalarProperty Name="date_time" ColumnName="date_time" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_logs_remote_history">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_logs_remote_history">
+        <MappingFragment StoreEntitySet="tb_logs_remote_history">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="remote_server_ip" ColumnName="remote_server_ip" />
+          <ScalarProperty Name="remote_server_name" ColumnName="remote_server_name" />
+          <ScalarProperty Name="logs_serial_start" ColumnName="logs_serial_start" />
+          <ScalarProperty Name="logs_serial_end" ColumnName="logs_serial_end" />
+          <ScalarProperty Name="total_collect_num" ColumnName="total_collect_num" />
+          <ScalarProperty Name="start_date_time" ColumnName="start_date_time" />
+          <ScalarProperty Name="end_date_time" ColumnName="end_date_time" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_logs_sentmail">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_logs_sentmail">
+        <MappingFragment StoreEntitySet="tb_logs_sentmail">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+          <ScalarProperty Name="dept_name" ColumnName="dept_name" />
+          <ScalarProperty Name="dest_mail" ColumnName="dest_mail" />
+          <ScalarProperty Name="message" ColumnName="message" />
+          <ScalarProperty Name="sent_date" ColumnName="sent_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_pdfback">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_pdfback">
+        <MappingFragment StoreEntitySet="tb_pdfback">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="timestamp" ColumnName="timestamp" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="jobType" ColumnName="jobType" />
+          <ScalarProperty Name="serverName" ColumnName="serverName" />
+          <ScalarProperty Name="serverVersion" ColumnName="serverVersion" />
+          <ScalarProperty Name="printerAddr" ColumnName="printerAddr" />
+          <ScalarProperty Name="file" ColumnName="file" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_scan">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_scan">
+        <MappingFragment StoreEntitySet="tb_scan">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="sender" ColumnName="sender" />
+          <ScalarProperty Name="subject" ColumnName="subject" />
+          <ScalarProperty Name="content" ColumnName="content" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_use_page">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_use_page">
+        <MappingFragment StoreEntitySet="tb_use_page">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="file_name" ColumnName="file_name" />
+          <ScalarProperty Name="description" ColumnName="description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_user">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_user">
+        <MappingFragment StoreEntitySet="tb_user">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="user_password" ColumnName="user_password" />
+          <ScalarProperty Name="work_id" ColumnName="work_id" />
+          <ScalarProperty Name="user_name" ColumnName="user_name" />
+          <ScalarProperty Name="authority" ColumnName="authority" />
+          <ScalarProperty Name="depositor" ColumnName="depositor" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+          <ScalarProperty Name="import_flag" ColumnName="import_flag" />
+          <ScalarProperty Name="color_enable_flag" ColumnName="color_enable_flag" />
+          <ScalarProperty Name="reserve_flag" ColumnName="reserve_flag" />
+          <ScalarProperty Name="scan_reserve_flag" ColumnName="scan_reserve_flag" />
+          <ScalarProperty Name="personal_water_flag" ColumnName="personal_water_flag" />
+          <ScalarProperty Name="personal_water_depth" ColumnName="personal_water_depth" />
+          <ScalarProperty Name="e_mail" ColumnName="e_mail" />
+          <ScalarProperty Name="if_deleted" ColumnName="if_deleted" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="copy_enable_flag" ColumnName="copy_enable_flag" />
+          <ScalarProperty Name="print_enable_flag" ColumnName="print_enable_flag" />
+          <ScalarProperty Name="scan_enable_flag" ColumnName="scan_enable_flag" />
+          <ScalarProperty Name="fax_enable_flag" ColumnName="fax_enable_flag" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_watermark">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_watermark">
+        <MappingFragment StoreEntitySet="tb_watermark">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="left_offset" ColumnName="left_offset" />
+          <ScalarProperty Name="right_offset" ColumnName="right_offset" />
+          <ScalarProperty Name="top_offset" ColumnName="top_offset" />
+          <ScalarProperty Name="bottom_offset" ColumnName="bottom_offset" />
+          <ScalarProperty Name="position_mode" ColumnName="position_mode" />
+          <ScalarProperty Name="image_path" ColumnName="image_path" />
+          <ScalarProperty Name="fill_mode" ColumnName="fill_mode" />
+          <ScalarProperty Name="text" ColumnName="text" />
+          <ScalarProperty Name="horizontal_alignment" ColumnName="horizontal_alignment" />
+          <ScalarProperty Name="vertical_alignment" ColumnName="vertical_alignment" />
+          <ScalarProperty Name="color" ColumnName="color" />
+          <ScalarProperty Name="font_name" ColumnName="font_name" />
+          <ScalarProperty Name="font_height" ColumnName="font_height" />
+          <ScalarProperty Name="rotation" ColumnName="rotation" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_logs_cardreader">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_logs_cardreader">
+        <MappingFragment StoreEntitySet="tb_logs_cardreader">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="cr_id" ColumnName="cr_id" />
+          <ScalarProperty Name="card_id" ColumnName="card_id" />
+          <ScalarProperty Name="value" ColumnName="value" />
+          <ScalarProperty Name="seq_no" ColumnName="seq_no" />
+          <ScalarProperty Name="login_type" ColumnName="login_type" />
+          <ScalarProperty Name="log_time" ColumnName="log_time" />
+          <ScalarProperty Name="mfp_serial" ColumnName="mfp_serial" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_logs_import">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_logs_import">
+        <MappingFragment StoreEntitySet="tb_logs_import">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="file_name" ColumnName="file_name" />
+          <ScalarProperty Name="import_type" ColumnName="import_type" />
+          <ScalarProperty Name="import_date" ColumnName="import_date" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_logs_print">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_logs_print">
+        <MappingFragment StoreEntitySet="tb_logs_print">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+          <ScalarProperty Name="dept_name" ColumnName="dept_name" />
+          <ScalarProperty Name="dept_value" ColumnName="dept_value" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="user_name" ColumnName="user_name" />
+          <ScalarProperty Name="work_id" ColumnName="work_id" />
+          <ScalarProperty Name="card_id" ColumnName="card_id" />
+          <ScalarProperty Name="card_type" ColumnName="card_type" />
+          <ScalarProperty Name="mfp_ip" ColumnName="mfp_ip" />
+          <ScalarProperty Name="mfp_name" ColumnName="mfp_name" />
+          <ScalarProperty Name="computer" ColumnName="computer" />
+          <ScalarProperty Name="user_computer_name" ColumnName="user_computer_name" />
+          <ScalarProperty Name="driver_number" ColumnName="driver_number" />
+          <ScalarProperty Name="value" ColumnName="value" />
+          <ScalarProperty Name="page" ColumnName="page" />
+          <ScalarProperty Name="copies" ColumnName="copies" />
+          <ScalarProperty Name="page_color" ColumnName="page_color" />
+          <ScalarProperty Name="page_size" ColumnName="page_size" />
+          <ScalarProperty Name="duplex" ColumnName="duplex" />
+          <ScalarProperty Name="usage_type" ColumnName="usage_type" />
+          <ScalarProperty Name="print_date" ColumnName="print_date" />
+          <ScalarProperty Name="scan_destination" ColumnName="scan_destination" />
+          <ScalarProperty Name="document_name" ColumnName="document_name" />
+          <ScalarProperty Name="file_path" ColumnName="file_path" />
+          <ScalarProperty Name="file_name" ColumnName="file_name" />
+          <ScalarProperty Name="backup_label" ColumnName="backup_label" />
+          <ScalarProperty Name="ocr" ColumnName="ocr" />
+          <ScalarProperty Name="remote_server_ip" ColumnName="remote_server_ip" />
+          <ScalarProperty Name="remote_server_name" ColumnName="remote_server_name" />
+          <ScalarProperty Name="remote_server_serial" ColumnName="remote_server_serial" />
+          <ScalarProperty Name="mfp_meter_num_start" ColumnName="mfp_meter_num_start" />
+          <ScalarProperty Name="mfp_meter_num_end" ColumnName="mfp_meter_num_end" />
+          <ScalarProperty Name="upload_server" ColumnName="upload_server" />
+          <ScalarProperty Name="job_id" ColumnName="job_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_mfp">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_mfp">
+        <MappingFragment StoreEntitySet="tb_mfp">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="cr_id" ColumnName="cr_id" />
+          <ScalarProperty Name="printer_id" ColumnName="printer_id" />
+          <ScalarProperty Name="driver_number" ColumnName="driver_number" />
+          <ScalarProperty Name="mfp_ip" ColumnName="mfp_ip" />
+          <ScalarProperty Name="mfp_name" ColumnName="mfp_name" />
+          <ScalarProperty Name="mfp_jt_name" ColumnName="mfp_jt_name" />
+          <ScalarProperty Name="mfp_color" ColumnName="mfp_color" />
+          <ScalarProperty Name="mfp_status" ColumnName="mfp_status" />
+          <ScalarProperty Name="meter_num" ColumnName="meter_num" />
+          <ScalarProperty Name="meter_current" ColumnName="meter_current" />
+          <ScalarProperty Name="meter_adjust_time" ColumnName="meter_adjust_time" />
+          <ScalarProperty Name="login_card_id" ColumnName="login_card_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_print_price">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_print_price">
+        <MappingFragment StoreEntitySet="tb_print_price">
+          <ScalarProperty Name="serial" ColumnName="serial" />
+          <ScalarProperty Name="page_size" ColumnName="page_size" />
+          <ScalarProperty Name="color" ColumnName="color" />
+          <ScalarProperty Name="price" ColumnName="price" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tb_token">
+      <EntityTypeMapping TypeName="MFP_DBModel.tb_token">
+        <MappingFragment StoreEntitySet="tb_token">
+          <ScalarProperty Name="token" ColumnName="token" />
+          <ScalarProperty Name="ctime" ColumnName="ctime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblusers">
+      <EntityTypeMapping TypeName="MFP_DBModel.tblusers">
+        <MappingFragment StoreEntitySet="tblusers">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="FULLNAME" ColumnName="FULLNAME" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="IS_ACTIVE" ColumnName="IS_ACTIVE" />
+          <ScalarProperty Name="PWD" ColumnName="PWD" />
+          <ScalarProperty Name="LOGIN_TOKEN" ColumnName="LOGIN_TOKEN" />
+          <ScalarProperty Name="SCANSTORAGE" ColumnName="SCANSTORAGE" />
+          <ScalarProperty Name="CREDIT" ColumnName="CREDIT" />
+          <ScalarProperty Name="CODE" ColumnName="CODE" />
+          <ScalarProperty Name="SYNCSOURCE" ColumnName="SYNCSOURCE" />
+          <ScalarProperty Name="LANG" ColumnName="LANG" />
+          <ScalarProperty Name="SESSIONREFCNT" ColumnName="SESSIONREFCNT" />
+          <ScalarProperty Name="QUOTAACTIVE" ColumnName="QUOTAACTIVE" />
+          <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+          <ScalarProperty Name="NOTES" ColumnName="NOTES" />
+          <ScalarProperty Name="AUTHSERVER" ColumnName="AUTHSERVER" />
+          <ScalarProperty Name="USEAUTHSERVER" ColumnName="USEAUTHSERVER" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="watermark">
+      <EntityTypeMapping TypeName="MFP_DBModel.watermark">
+        <MappingFragment StoreEntitySet="watermark">
+          <ScalarProperty Name="pkey" ColumnName="pkey" />
+          <ScalarProperty Name="page_size" ColumnName="page_size" />
+          <ScalarProperty Name="wname" ColumnName="wname" />
+          <ScalarProperty Name="wspeci" ColumnName="wspeci" />
+          <ScalarProperty Name="ntime" ColumnName="ntime" />
+          <ScalarProperty Name="ver" ColumnName="ver" />
+          <ScalarProperty Name="watermark1" ColumnName="watermark" />
+          <ScalarProperty Name="is_active" ColumnName="is_active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

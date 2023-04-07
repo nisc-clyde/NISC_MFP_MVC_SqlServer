@@ -4,8 +4,9 @@
     ViewBag.ActiveNav = "Print";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
 @section PrintJS{
+    @Styles.Render("~/lib/daterangepicker-css")
+    @Scripts.Render("~/lib/daterangepicker-js")
     <script src="@Url.Content("~/Scripts/AdminPartialViewScripts/print.js")"></script>
 }
 
@@ -168,10 +169,10 @@
                     <div class="col align-self-center pt-2 pb-2">
                         <select id="searchPrint_ActionSelect" class="form-select">
                             <option id="searchPrint_ActionAll" selected value="0">預設</option>
-                            <option id="searchPrint_ActionCopy" value="1">影印</option>
-                            <option id="searchPrint_ActionPrint" value="2">列印</option>
-                            <option id="searchPrint_ActionScan" value="3">掃描</option>
-                            <option id="searchPrint_ActionFox" value="4">傳真</option>
+                            <option id="searchPrint_ActionCopy" value="C">影印</option>
+                            <option id="searchPrint_ActionPrint" value="P">列印</option>
+                            <option id="searchPrint_ActionScan" value="S">掃描</option>
+                            <option id="searchPrint_ActionFox" value="F">傳真</option>
                         </select>
                     </div>
                 </div>
@@ -183,8 +184,8 @@
                     <div class="col align-self-center pt-2 pb-2">
                         <select id="searchPrint_ColorSelect" class="form-select">
                             <option id="searchPrint_ColorAll" selected value="0">預設</option>
-                            <option id="searchPrint_ColorRGB" value="1">C(彩色)</option>
-                            <option id="searchPrint_ColorWB" value="2">M(單色)</option>
+                            <option id="searchPrint_ColorRGB" value="C">C(彩色)</option>
+                            <option id="searchPrint_ColorWB" value="M">M(單色)</option>
                         </select>
                     </div>
                 </div>
@@ -237,7 +238,24 @@
             <div class="col text-start fs-5 fw-bold" style="color: #1565C0">使用紀錄&nbsp;<i class="fa-solid fa-clock-rotate-left"></i></div>
         </div>
 
-        <div class="row">
+        <div class="row p-2">
+            <table id="searchPrintDataTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>事務機</th>
+                        <th>使用人員</th>
+                        <th>部門</th>
+                        <th>卡號</th>
+                        <th>屬性</th>
+                        <th>動作</th>
+                        <th>顏色</th>
+                        <th>張數</th>
+                        <th>使用點數</th>
+                        <th>列印時間</th>
+                        <th>文件名稱</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
     @*使用紀錄 - Third Cotainer - End*@

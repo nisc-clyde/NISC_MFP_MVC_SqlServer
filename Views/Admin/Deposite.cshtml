@@ -131,22 +131,22 @@
             <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">儲值紀錄列表&nbsp;<i class="fa-solid fa-clock-rotate-left"></i></div>
         </div>
 
-        <div class="row">
-            <div class="col-6 border-start border-2 align-self-center text-start pt-3 pb-3">
-                <a class="btn btn-outline-secondary" href="#" role="button">EXCEL</a>
-                <a class="btn btn-outline-secondary" href="#" role="button">CSV</a>
-                <a class="btn btn-outline-secondary" href="#" role="button">Print</a>
-            </div>
-
-            <div class="col-6 border-end border-2 pt-3 pb-3">
-                <div class="col align-self-center">
-                    <input type="text" class="form-control float-end" id="searchDeposite_AllColumn" placeholder="全部欄位搜尋">
-                </div>
-            </div>
-        </div>
-
-        <div class="row border-start border-bottom border-end border-2">
-            <p>GridView</p>
+        <div class="row p-2">
+            <table id="searchDepositeDataTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>儲值人員</th>
+                        <th>儲值帳號</th>
+                        <th>儲值卡號</th>
+                        <th>卡號持有者帳號</th>
+                        <th>卡號持有者姓名</th>
+                        <th>儲值前點數</th>
+                        <th>儲值點數</th>
+                        <th>儲值後點數</th>
+                        <th>儲值時間</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
 
     </div>

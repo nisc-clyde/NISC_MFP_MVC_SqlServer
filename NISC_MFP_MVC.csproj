@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -45,10 +46,55 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.21.9.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>packages\Google.Protobuf.3.21.9\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=8.0.32.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>packages\MySql.Data.8.0.32.1\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.EntityFramework, Version=8.0.32.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>packages\MySql.Data.EntityFramework.8.0.32\lib\net452\MySql.Data.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -123,11 +169,104 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PrintController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\doc_detail.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\doc_mng.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DTO\DataTableRequest.cs" />
+    <Compile Include="Models\DTO\SearchCardReaderDTO.cs" />
+    <Compile Include="Models\DTO\SearchDepartmentDTO.cs" />
+    <Compile Include="Models\DTO\SearchDepositeDTO.cs" />
+    <Compile Include="Models\DTO\SearchHistoryDTO.cs" />
+    <Compile Include="Models\DTO\SearchPrintDTO.cs" />
+    <Compile Include="Models\AbstractSearchDTO.cs" />
+    <Compile Include="Models\DTO\SearchUserDTO.cs" />
     <Compile Include="Models\LoginTO.cs" />
+    <Compile Include="Models\MFP_DB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MFP_DB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MFP_DB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MFP_DB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MFP_DB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblusers.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_card.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_cardreader.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_department.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_group.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_logs_cardreader.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_logs_deposit.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_logs_history.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_logs_import.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_logs_print.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_logs_remote_history.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_logs_sentmail.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_mfp.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_pdfback.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_print_price.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_scan.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_token.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_user.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_use_page.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tb_watermark.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\watermark.cs">
+      <DependentUpon>MFP_DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +286,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
-    <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\Login.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -159,6 +297,558 @@
     <Content Include="img\logo_b.png" />
     <Content Include="img\logo_w.png" />
     <Content Include="img\wb.jpg" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bootstrap.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bootstrap.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bootstrap4.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bootstrap4.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bootstrap5.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bootstrap5.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bulma.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.bulma.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.dataTables.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.dataTables.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.foundation.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.foundation.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.jqueryui.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.jqueryui.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.semanticui.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\css\autoFill.semanticui.min.css" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bootstrap.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bootstrap.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bootstrap4.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bootstrap4.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bootstrap5.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bootstrap5.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bulma.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.bulma.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.dataTables.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.dataTables.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.foundation.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.foundation.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.jqueryui.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.jqueryui.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.semanticui.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\autoFill.semanticui.min.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\dataTables.autoFill.js" />
+    <Content Include="lib\datatables\AutoFill-2.5.3\js\dataTables.autoFill.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bootstrap.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bootstrap.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bootstrap4.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bootstrap4.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bootstrap5.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bootstrap5.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bulma.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.bulma.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.dataTables.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.dataTables.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.foundation.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.foundation.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.jqueryui.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.jqueryui.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.semanticui.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\buttons.semanticui.min.css" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bootstrap.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bootstrap.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bootstrap4.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bootstrap4.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bootstrap5.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bootstrap5.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bulma.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.bulma.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.colVis.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.colVis.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.dataTables.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.dataTables.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.foundation.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.foundation.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.html5.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.html5.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.jqueryui.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.jqueryui.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.print.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.print.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.semanticui.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\buttons.semanticui.min.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\dataTables.buttons.js" />
+    <Content Include="lib\datatables\Buttons-2.3.6\js\dataTables.buttons.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bootstrap.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bootstrap.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bootstrap4.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bootstrap4.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bootstrap5.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bootstrap5.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bulma.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.bulma.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.dataTables.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.dataTables.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.foundation.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.foundation.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.jqueryui.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.jqueryui.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.semanticui.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\css\colReorder.semanticui.min.css" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bootstrap.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bootstrap.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bootstrap4.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bootstrap4.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bootstrap5.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bootstrap5.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bulma.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.bulma.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.dataTables.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.dataTables.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.foundation.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.foundation.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.jqueryui.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.jqueryui.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.semanticui.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\colReorder.semanticui.min.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\dataTables.colReorder.js" />
+    <Content Include="lib\datatables\ColReorder-1.6.2\js\dataTables.colReorder.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bootstrap.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bootstrap.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bootstrap4.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bootstrap4.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bootstrap5.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bootstrap5.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bulma.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.bulma.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.dataTables.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.dataTables.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.foundation.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.foundation.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.jqueryui.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.jqueryui.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.semanticui.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\dataTables.semanticui.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\jquery.dataTables.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\css\jquery.dataTables.min.css" />
+    <Content Include="lib\datatables\DataTables-1.13.4\images\sort_asc.png" />
+    <Content Include="lib\datatables\DataTables-1.13.4\images\sort_asc_disabled.png" />
+    <Content Include="lib\datatables\DataTables-1.13.4\images\sort_both.png" />
+    <Content Include="lib\datatables\DataTables-1.13.4\images\sort_desc.png" />
+    <Content Include="lib\datatables\DataTables-1.13.4\images\sort_desc_disabled.png" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bootstrap.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bootstrap.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bootstrap4.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bootstrap4.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bootstrap5.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bootstrap5.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bulma.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.bulma.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.dataTables.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.dataTables.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.foundation.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.foundation.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.jqueryui.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.jqueryui.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.semanticui.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\dataTables.semanticui.min.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\jquery.dataTables.js" />
+    <Content Include="lib\datatables\DataTables-1.13.4\js\jquery.dataTables.min.js" />
+    <Content Include="lib\datatables\datatables.css" />
+    <Content Include="lib\datatables\datatables.js" />
+    <Content Include="lib\datatables\datatables.min.css" />
+    <Content Include="lib\datatables\datatables.min.js" />
+    <Content Include="lib\datatables\DateTime-1.4.0\css\dataTables.dateTime.css" />
+    <Content Include="lib\datatables\DateTime-1.4.0\css\dataTables.dateTime.min.css" />
+    <Content Include="lib\datatables\DateTime-1.4.0\js\dataTables.dateTime.js" />
+    <Content Include="lib\datatables\DateTime-1.4.0\js\dataTables.dateTime.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bootstrap.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bootstrap.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bootstrap4.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bootstrap4.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bootstrap5.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bootstrap5.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bulma.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.bulma.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.dataTables.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.dataTables.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.foundation.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.foundation.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.jqueryui.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.jqueryui.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.semanticui.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\css\fixedColumns.semanticui.min.css" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\dataTables.fixedColumns.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\dataTables.fixedColumns.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bootstrap.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bootstrap.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bootstrap4.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bootstrap4.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bootstrap5.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bootstrap5.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bulma.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.bulma.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.dataTables.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.dataTables.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.foundation.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.foundation.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.jqueryui.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.jqueryui.min.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.semanticui.js" />
+    <Content Include="lib\datatables\FixedColumns-4.2.2\js\fixedColumns.semanticui.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bootstrap.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bootstrap.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bootstrap4.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bootstrap4.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bootstrap5.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bootstrap5.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bulma.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.bulma.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.dataTables.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.dataTables.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.foundation.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.foundation.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.jqueryui.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.jqueryui.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.semanticui.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\css\fixedHeader.semanticui.min.css" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\dataTables.fixedHeader.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\dataTables.fixedHeader.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bootstrap.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bootstrap.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bootstrap4.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bootstrap4.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bootstrap5.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bootstrap5.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bulma.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.bulma.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.dataTables.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.dataTables.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.foundation.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.foundation.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.jqueryui.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.jqueryui.min.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.semanticui.js" />
+    <Content Include="lib\datatables\FixedHeader-3.3.2\js\fixedHeader.semanticui.min.js" />
+    <Content Include="lib\datatables\JSZip-2.5.0\jszip.js" />
+    <Content Include="lib\datatables\JSZip-2.5.0\jszip.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bootstrap.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bootstrap.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bootstrap4.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bootstrap4.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bootstrap5.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bootstrap5.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bulma.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.bulma.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.dataTables.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.dataTables.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.foundation.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.foundation.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.jqueryui.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.jqueryui.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.semanticui.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\css\keyTable.semanticui.min.css" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\dataTables.keyTable.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\dataTables.keyTable.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bootstrap.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bootstrap.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bootstrap4.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bootstrap4.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bootstrap5.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bootstrap5.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bulma.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.bulma.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.dataTables.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.dataTables.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.foundation.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.foundation.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.jqueryui.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.jqueryui.min.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.semanticui.js" />
+    <Content Include="lib\datatables\KeyTable-2.8.2\js\keyTable.semanticui.min.js" />
+    <Content Include="lib\datatables\pdfmake-0.1.36\pdfmake.js" />
+    <Content Include="lib\datatables\pdfmake-0.1.36\pdfmake.min.js" />
+    <Content Include="lib\datatables\pdfmake-0.1.36\vfs_fonts.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bootstrap.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bootstrap.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bootstrap4.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bootstrap4.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bootstrap5.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bootstrap5.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bulma.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.bulma.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.dataTables.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.dataTables.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.foundation.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.foundation.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.jqueryui.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.jqueryui.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.semanticui.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\css\responsive.semanticui.min.css" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\dataTables.responsive.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\dataTables.responsive.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bootstrap.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bootstrap.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bootstrap4.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bootstrap4.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bootstrap5.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bootstrap5.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bulma.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.bulma.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.dataTables.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.dataTables.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.foundation.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.foundation.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.jqueryui.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.jqueryui.min.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.semanticui.js" />
+    <Content Include="lib\datatables\Responsive-2.4.1\js\responsive.semanticui.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bootstrap.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bootstrap.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bootstrap4.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bootstrap4.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bootstrap5.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bootstrap5.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bulma.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.bulma.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.dataTables.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.dataTables.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.foundation.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.foundation.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.jqueryui.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.jqueryui.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.semanticui.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\css\rowGroup.semanticui.min.css" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\dataTables.rowGroup.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\dataTables.rowGroup.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bootstrap.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bootstrap.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bootstrap4.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bootstrap4.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bootstrap5.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bootstrap5.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bulma.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.bulma.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.dataTables.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.dataTables.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.foundation.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.foundation.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.jqueryui.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.jqueryui.min.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.semanticui.js" />
+    <Content Include="lib\datatables\RowGroup-1.3.1\js\rowGroup.semanticui.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bootstrap.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bootstrap.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bootstrap4.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bootstrap4.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bootstrap5.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bootstrap5.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bulma.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.bulma.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.dataTables.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.dataTables.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.foundation.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.foundation.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.jqueryui.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.jqueryui.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.semanticui.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\css\rowReorder.semanticui.min.css" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\dataTables.rowReorder.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\dataTables.rowReorder.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bootstrap.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bootstrap.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bootstrap4.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bootstrap4.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bootstrap5.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bootstrap5.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bulma.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.bulma.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.dataTables.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.dataTables.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.foundation.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.foundation.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.jqueryui.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.jqueryui.min.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.semanticui.js" />
+    <Content Include="lib\datatables\RowReorder-1.3.3\js\rowReorder.semanticui.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bootstrap.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bootstrap.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bootstrap4.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bootstrap4.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bootstrap5.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bootstrap5.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bulma.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.bulma.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.dataTables.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.dataTables.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.foundation.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.foundation.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.jqueryui.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.jqueryui.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.semanticui.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\css\scroller.semanticui.min.css" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\dataTables.scroller.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\dataTables.scroller.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bootstrap.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bootstrap.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bootstrap4.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bootstrap4.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bootstrap5.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bootstrap5.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bulma.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.bulma.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.dataTables.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.dataTables.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.foundation.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.foundation.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.jqueryui.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.jqueryui.min.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.semanticui.js" />
+    <Content Include="lib\datatables\Scroller-2.1.1\js\scroller.semanticui.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bootstrap.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bootstrap.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bootstrap4.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bootstrap4.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bootstrap5.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bootstrap5.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bulma.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.bulma.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.dataTables.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.dataTables.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.foundation.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.foundation.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.jqueryui.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.jqueryui.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.semanticui.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\css\searchBuilder.semanticui.min.css" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\dataTables.searchBuilder.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\dataTables.searchBuilder.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bootstrap.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bootstrap.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bootstrap4.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bootstrap4.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bootstrap5.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bootstrap5.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bulma.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.bulma.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.dataTables.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.dataTables.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.foundation.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.foundation.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.jqueryui.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.jqueryui.min.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.semanticui.js" />
+    <Content Include="lib\datatables\SearchBuilder-1.4.2\js\searchBuilder.semanticui.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bootstrap.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bootstrap.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bootstrap4.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bootstrap4.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bootstrap5.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bootstrap5.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bulma.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.bulma.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.dataTables.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.dataTables.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.foundation.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.foundation.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.jqueryui.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.jqueryui.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.semanticui.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\css\searchPanes.semanticui.min.css" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\dataTables.searchPanes.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\dataTables.searchPanes.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bootstrap.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bootstrap.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bootstrap4.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bootstrap4.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bootstrap5.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bootstrap5.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bulma.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.bulma.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.dataTables.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.dataTables.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.foundation.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.foundation.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.jqueryui.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.jqueryui.min.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.semanticui.js" />
+    <Content Include="lib\datatables\SearchPanes-2.1.2\js\searchPanes.semanticui.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bootstrap.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bootstrap.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bootstrap4.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bootstrap4.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bootstrap5.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bootstrap5.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bulma.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.bulma.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.dataTables.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.dataTables.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.foundation.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.foundation.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.jqueryui.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.jqueryui.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.semanticui.css" />
+    <Content Include="lib\datatables\Select-1.6.2\css\select.semanticui.min.css" />
+    <Content Include="lib\datatables\Select-1.6.2\js\dataTables.select.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\dataTables.select.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bootstrap.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bootstrap.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bootstrap4.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bootstrap4.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bootstrap5.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bootstrap5.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bulma.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.bulma.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.dataTables.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.dataTables.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.foundation.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.foundation.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.jqueryui.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.jqueryui.min.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.semanticui.js" />
+    <Content Include="lib\datatables\Select-1.6.2\js\select.semanticui.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bootstrap.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bootstrap.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bootstrap4.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bootstrap4.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bootstrap5.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bootstrap5.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bulma.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.bulma.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.dataTables.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.dataTables.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.foundation.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.foundation.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.jqueryui.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.jqueryui.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.semanticui.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\css\stateRestore.semanticui.min.css" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\dataTables.stateRestore.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\dataTables.stateRestore.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bootstrap.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bootstrap.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bootstrap4.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bootstrap4.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bootstrap5.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bootstrap5.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bulma.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.bulma.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.dataTables.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.dataTables.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.foundation.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.foundation.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.jqueryui.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.jqueryui.min.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.semanticui.js" />
+    <Content Include="lib\datatables\StateRestore-1.2.2\js\stateRestore.semanticui.min.js" />
+    <Content Include="lib\daterangepicker\.gitignore" />
+    <Content Include="lib\daterangepicker\daterangepicker.css" />
+    <Content Include="lib\daterangepicker\daterangepicker.js" />
+    <Content Include="lib\daterangepicker\demo.html" />
+    <Content Include="lib\daterangepicker\drp.png" />
+    <Content Include="lib\daterangepicker\example\amd\index.html" />
+    <Content Include="lib\daterangepicker\example\amd\main.js" />
+    <Content Include="lib\daterangepicker\example\amd\require.js" />
+    <Content Include="lib\daterangepicker\example\browserify\bundle.js" />
+    <Content Include="lib\daterangepicker\example\browserify\index.html" />
+    <Content Include="lib\daterangepicker\example\browserify\main.js" />
+    <Content Include="lib\daterangepicker\moment.min.js" />
+    <Content Include="lib\daterangepicker\package.js" />
+    <Content Include="lib\daterangepicker\website\index.html" />
+    <Content Include="lib\daterangepicker\website\website.css" />
+    <Content Include="lib\daterangepicker\website\website.js" />
     <Content Include="lib\font-awesome\css\all.css" />
     <Content Include="lib\font-awesome\css\all.min.css" />
     <Content Include="lib\font-awesome\css\brands.css" />
@@ -194,10 +884,21 @@
     <Content Include="lib\font-awesome\sprites\brands.svg" />
     <Content Include="lib\font-awesome\sprites\regular.svg" />
     <Content Include="lib\font-awesome\sprites\solid.svg" />
+    <Content Include="Models\MFP_DB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MFP_DB.Context.cs</LastGenOutput>
+      <DependentUpon>MFP_DB.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\MFP_DB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MFP_DB.edmx</DependentUpon>
+      <LastGenOutput>MFP_DB.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\AdminPartialViewScripts\card.js" />
     <Content Include="Scripts\AdminPartialViewScripts\cardreader.js" />
     <Content Include="Scripts\AdminPartialViewScripts\department.js" />
     <Content Include="Scripts\AdminPartialViewScripts\deposite.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\history.js" />
     <Content Include="Scripts\AdminPartialViewScripts\outputreport.js" />
     <Content Include="Scripts\AdminPartialViewScripts\print.js" />
     <Content Include="Scripts\AdminPartialViewScripts\user.js" />
@@ -239,8 +940,20 @@
     <Content Include="lib\font-awesome\webfonts\fa-solid-900.woff2" />
     <Content Include="lib\font-awesome\webfonts\fa-v4compatibility.ttf" />
     <Content Include="lib\font-awesome\webfonts\fa-v4compatibility.woff2" />
+    <EntityDeploy Include="Models\MFP_DB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MFP_DB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\MFP_DB.edmx.diagram">
+      <DependentUpon>MFP_DB.edmx</DependentUpon>
+    </Content>
+    <Content Include="lib\datatables\Buttons-2.3.6\css\common.scss" />
+    <Content Include="lib\datatables\Buttons-2.3.6\css\mixins.scss" />
+    <Content Include="lib\daterangepicker\bower.json" />
+    <Content Include="lib\daterangepicker\example\browserify\README.md" />
+    <Content Include="lib\daterangepicker\package.json" />
+    <Content Include="lib\daterangepicker\README.md" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
-    <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -288,11 +1001,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Print\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -327,7 +1044,10 @@
       <ErrorText>此專案參考這部電腦上所缺少的 NuGet 套件。請啟用 NuGet 套件還原，以下載該套件。如需詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的檔案是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
