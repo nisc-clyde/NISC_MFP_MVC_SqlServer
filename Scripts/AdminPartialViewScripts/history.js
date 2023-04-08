@@ -1,7 +1,7 @@
 ﻿function SearchHistoryDataTableInitial() {
 
     //$date_time, $login_user_id, $login_user_name, $operation, $affected_data
-    var datatable = $("#searchHistoryDataTable").DataTable({
+    $("#searchHistoryDataTable").DataTable({
         ajax: {
             url: "/Admin/History",
             type: "POST",
@@ -15,6 +15,7 @@
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
+            { text: "輸出：", className: 'btn btn-secondary disabled' },
             { extend: "excel", className: "btn btn-success buttons-excel buttons-html5" },
             { extend: "csv", className: "btn btn-success buttons-csv buttons-html5" },
             { extend: "print", className: "btn btn-success buttons-print buttons-html5" }
