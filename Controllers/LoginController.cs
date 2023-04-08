@@ -19,15 +19,5 @@ namespace NISC_MFP_MVC.Controllers
             return View();
         }
 
-        public void UserSignIn()
-        {
-            
-        }
-
-        public void AdminSignIn()
-        {
-            
-        }
-
     }
 }

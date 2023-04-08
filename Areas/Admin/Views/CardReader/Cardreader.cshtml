@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "事務機管理";
+    ViewBag.ActiveNav = "CardReader";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section CardReaderJS{
+    <script src="~/Scripts/AdminPartialViewScripts/cardreader.js"></script>
+}
+
+<div class="d-grid gap-4">
+    @*欄位搜尋選項 - First Container - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+                欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+
+        <div class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
+
+            <div class="col border-start border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">卡機編號</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input id="searchCardReader_CardreaderID" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">IP位址</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input id="searchCardReader_IPAddress" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">PORT</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <input id="searchCardReader_Port" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">卡機種類</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <div class="dropdown">
+                            <select id="searchCardReader_CardMachineTypeSelect" class="form-select">
+                                <option id="searchCardReader_CardMachineTypeAll" selected value="0">預設</option>
+                                <option id="searchCardReader_CardMachineTypeBusiness" value="1">事務機</option>
+                                <option id="searchCardReader_CardMachineTypeCopier" value="2">影印機</option>
+                                <option id="searchCardReader_CardMachineTypePrinter" value="3">印表機</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">運作模式</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select id="searchCardReader_WorkModeSelect" class="form-select">
+                            <option id="searchCardReader_WorkModeAll" selected value="0">預設</option>
+                            <option id="searchCardReader_WorkModeOnline" value="1">連線</option>
+                            <option id="searchCardReader_WorkModeOffline" value="2">離線</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">卡號判斷開關</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select id="searchCardReader_CardOnOffSelect" class="form-select">
+                            <option id="searchCardReader_CardOnOffAll" selected value="0">預設</option>
+                            <option id="searchCardReader_CardOnOffOn" value="1">開啟</option>
+                            <option id="searchCardReader_CardOnOffOff" value="2">關閉</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col border-end border-2 ">
+                <div class="row justify-content-center border-bottom border-2 fw-semibold">狀態</div>
+                <div class="row">
+                    <div class="col align-self-center pt-2 pb-2">
+                        <select id="searchCardReader_CardStatusSelect" class="form-select">
+                            <option id="searchCardReader_CardStatusAll" selected value="0">預設</option>
+                            <option id="searchCardReader_CardStatusOnline" value="1">線上</option>
+                            <option id="searchCardReader_CardStatusOffline" value="2">離線</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*欄位搜尋選項 - First Container - End*@
+
+    @*事務機列表 - Third Cotainer - Start*@
+    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+        <div class="row border-bottom border-2 ">
+            <div class="col text-start fs-5 fw-bold" style="color: #1565C0">事務機列表&nbsp;<i class="fa-solid fa-list"></i></div>
+        </div>
+
+        <div class="row p-2">
+            <table id="searchCardReaderDataTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>卡機編號</th>
+                        <th>IP位置</th>
+                        <th>PORT</th>
+                        <th>卡機種類</th>
+                        <th>運作模式</th>
+                        <th>卡號判斷開關</th>
+                        <th>狀態</th>
+                        @*<th>新增事務機</th>*@
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+    </div>
+    @*事務機列表 - Third Cotainer - End*@
+
+</div>
+

@@ -166,11 +166,21 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\CardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CardReaderController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DepartmentController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DepositeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HistoryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LogOutController.cs" />
+    <Compile Include="Areas\Admin\Controllers\OutputReportController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PrintController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SystemController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\WatermarkController.cs" />
+    <Compile Include="Areas\User\Controllers\UserAreaRegistration.cs" />
+    <Compile Include="Areas\User\Controllers\UserController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\PrintController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -953,6 +963,9 @@
     <Content Include="lib\daterangepicker\example\browserify\README.md" />
     <Content Include="lib\daterangepicker\package.json" />
     <Content Include="lib\daterangepicker\README.md" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\User\Views\web.config" />
+    <Content Include="Areas\User\Views\User\List.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -979,29 +992,26 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Login\User.cshtml" />
     <Content Include="Views\Login\Admin.cshtml" />
-    <Content Include="Views\Admin\Print.cshtml" />
-    <Content Include="Views\Shared\_AdminLayout.cshtml" />
-    <Content Include="Views\Admin\Deposite.cshtml" />
-    <Content Include="Views\Admin\Department.cshtml" />
-    <Content Include="Views\Admin\User.cshtml" />
-    <Content Include="Views\Admin\CardReader.cshtml" />
-    <Content Include="Views\Admin\Card.cshtml" />
-    <Content Include="Views\Admin\Watermark.cshtml" />
-    <Content Include="Views\Admin\History.cshtml" />
-    <Content Include="Views\Admin\System.cshtml" />
-    <Content Include="Views\Admin\OutputReport.cshtml" />
-    <Content Include="Views\Admin\LogOut.cshtml" />
-    <Content Include="Views\Shared\_UserLayout.cshtml" />
-    <Content Include="Views\User\List.cshtml" />
+    <Content Include="Areas\Admin\Views\Print\Print.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Areas\Admin\Views\Deposite\Deposite.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\Department.cshtml" />
+    <Content Include="Areas\Admin\Views\User\User.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\CardReader.cshtml" />
+    <Content Include="Areas\Admin\Views\Card\Card.cshtml" />
+    <Content Include="Areas\Admin\Views\Watermark\Watermark.cshtml" />
+    <Content Include="Areas\Admin\Views\History\History.cshtml" />
+    <Content Include="Areas\Admin\Views\System\System.cshtml" />
+    <Content Include="Areas\Admin\Views\OutputReport\OutputReport.cshtml" />
+    <Content Include="Areas\Admin\Views\LogOut\LogOut.cshtml" />
+    <Content Include="Areas\User\Views\Shared\_UserLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Print\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\User\Data\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
