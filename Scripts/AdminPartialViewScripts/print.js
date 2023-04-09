@@ -125,22 +125,10 @@ function FormSelect_Select() {
         })
 
     })
-
-    $("#searchPrint_AttributeSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-
-    $("#searchPrint_ActionSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-
-    $("#searchPrint_ColorSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
 }
 
 function SearchPrintDataTableInitial() {
-    $("#searchPrintDataTable").DataTable({
+    var printDataTable = $("#searchPrintDataTable").DataTable({
         ajax: {
             url: "/Admin/Print",
             type: "POST",
@@ -178,12 +166,78 @@ function SearchPrintDataTableInitial() {
                 first: "首頁",
                 last: "尾頁",
                 previous: "上一頁",
-                next:"下一頁"
+                next: "下一頁"
             },
-            info:"顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆"
+            info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆"
         }
     });
 };
+
+function ColumnSearchPrint() {
+    $("#searchPrint_Printer").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(0).search($("#searchPrint_Printer").val()).draw();
+
+    });
+
+    $("#searchPrint_User").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(1).search($("#searchPrint_User").val()).draw();
+
+    });
+
+    $("#searchPrint_Department").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(2).search($("#searchPrint_Department").val()).draw();
+
+    });
+
+    $("#searchPrint_Card").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(3).search($("#searchPrint_Card").val()).draw();
+
+    });
+
+    $("#searchPrint_AttributeSelect").change(function () {
+        if ($("#searchPrint_AttributeSelect").val() != "0") {
+            $("#searchPrintDataTable").DataTable().columns(4).search($("#searchPrint_AttributeSelect :selected").text()).draw();
+        } else {
+            $("#searchPrintDataTable").DataTable().columns(4).search("").draw();
+        }
+    });
+
+    $("#searchPrint_ActionSelect").keyup(function () {
+        if ($("#searchPrint_ActionSelect").val() != "0") {
+            $("#searchPrintDataTable").DataTable().columns(5).search($("#searchPrint_ActionSelect :selected").text()).draw();
+        } else {
+            $("#searchPrintDataTable").DataTable().columns(5).search("").draw();
+        }
+    });
+
+    $("#searchPrint_ColorSelect").keyup(function () {
+        if ($("#searchPrint_ColorSelect").val() != "0") {
+            $("#searchPrintDataTable").DataTable().columns(6).search($("#searchPrint_ColorSelect :selected").text()).draw();
+        } else {
+            $("#searchPrintDataTable").DataTable().columns(6).search("").draw();
+        }
+    });
+
+    $("#searchPrint_Count").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(7).search($("#searchPrint_Count").val()).draw();
+
+    });
+
+    $("#searchPrint_Point").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(8).search($("#searchPrint_Point").val()).draw();
+
+    });
+
+    $("#searchPrint_PrintTime").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(9).search($("#searchPrint_PrintTime").val()).draw();
+
+    });
+    $("#searchPrint_DocumentName").keyup(function () {
+        $("#searchPrintDataTable").DataTable().columns(10).search($("#searchPrint_DocumentName").val()).draw();
+    });
+}
+
+
 
 
 $(function () {
@@ -192,4 +246,5 @@ $(function () {
     DateRangePickerInitial_End();
     FormSelect_Select();
     FormSelect_UnSelect();
+    ColumnSearchPrint();
 });
