@@ -202,7 +202,7 @@ function ColumnSearchPrint() {
         }
     });
 
-    $("#searchPrint_ActionSelect").keyup(function () {
+    $("#searchPrint_ActionSelect").change(function () {
         if ($("#searchPrint_ActionSelect").val() != "0") {
             $("#searchPrintDataTable").DataTable().columns(5).search($("#searchPrint_ActionSelect :selected").text()).draw();
         } else {
@@ -210,7 +210,7 @@ function ColumnSearchPrint() {
         }
     });
 
-    $("#searchPrint_ColorSelect").keyup(function () {
+    $("#searchPrint_ColorSelect").change(function () {
         if ($("#searchPrint_ColorSelect").val() != "0") {
             $("#searchPrintDataTable").DataTable().columns(6).search($("#searchPrint_ColorSelect :selected").text()).draw();
         } else {
