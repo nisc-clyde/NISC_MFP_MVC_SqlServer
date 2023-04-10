@@ -127,12 +127,14 @@ function FormSelect_Select() {
     })
 }
 
+var datatable;
 function SearchPrintDataTableInitial() {
-    var printDataTable = $("#searchPrintDataTable").DataTable({
+    datatable = $("#searchPrintDataTable").DataTable({
         ajax: {
             url: "/Admin/Print",
             type: "POST",
             dataType: "json",
+            data: { page: "print" }
         },
         columns: [
             { data: "mfp_name", name: "事務機" },
@@ -173,72 +175,69 @@ function SearchPrintDataTableInitial() {
     });
 };
 
-function ColumnSearchPrint() {
+function ColumnSearch() {
     $("#searchPrint_Printer").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(0).search($("#searchPrint_Printer").val()).draw();
+        datatable.columns(0).search($("#searchPrint_Printer").val()).draw();
 
     });
 
     $("#searchPrint_User").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(1).search($("#searchPrint_User").val()).draw();
+        datatable.columns(1).search($("#searchPrint_User").val()).draw();
 
     });
 
     $("#searchPrint_Department").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(2).search($("#searchPrint_Department").val()).draw();
+        datatable.columns(2).search($("#searchPrint_Department").val()).draw();
 
     });
 
     $("#searchPrint_Card").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(3).search($("#searchPrint_Card").val()).draw();
+        datatable.columns(3).search($("#searchPrint_Card").val()).draw();
 
     });
 
     $("#searchPrint_AttributeSelect").change(function () {
         if ($("#searchPrint_AttributeSelect").val() != "0") {
-            $("#searchPrintDataTable").DataTable().columns(4).search($("#searchPrint_AttributeSelect :selected").text()).draw();
+            datatable.columns(4).search($("#searchPrint_AttributeSelect :selected").text()).draw();
         } else {
-            $("#searchPrintDataTable").DataTable().columns(4).search("").draw();
+            datatable.columns(4).search("").draw();
         }
     });
 
     $("#searchPrint_ActionSelect").change(function () {
         if ($("#searchPrint_ActionSelect").val() != "0") {
-            $("#searchPrintDataTable").DataTable().columns(5).search($("#searchPrint_ActionSelect :selected").text()).draw();
+            datatable.columns(5).search($("#searchPrint_ActionSelect :selected").text()).draw();
         } else {
-            $("#searchPrintDataTable").DataTable().columns(5).search("").draw();
+            datatable.columns(5).search("").draw();
         }
     });
 
     $("#searchPrint_ColorSelect").change(function () {
         if ($("#searchPrint_ColorSelect").val() != "0") {
-            $("#searchPrintDataTable").DataTable().columns(6).search($("#searchPrint_ColorSelect :selected").text()).draw();
+            datatable.columns(6).search($("#searchPrint_ColorSelect :selected").text()).draw();
         } else {
-            $("#searchPrintDataTable").DataTable().columns(6).search("").draw();
+            datatable.columns(6).search("").draw();
         }
     });
 
     $("#searchPrint_Count").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(7).search($("#searchPrint_Count").val()).draw();
+        datatable.columns(7).search($("#searchPrint_Count").val()).draw();
 
     });
 
     $("#searchPrint_Point").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(8).search($("#searchPrint_Point").val()).draw();
+        datatable.columns(8).search($("#searchPrint_Point").val()).draw();
 
     });
 
     $("#searchPrint_PrintTime").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(9).search($("#searchPrint_PrintTime").val()).draw();
+        datatable.columns(9).search($("#searchPrint_PrintTime").val()).draw();
 
     });
     $("#searchPrint_DocumentName").keyup(function () {
-        $("#searchPrintDataTable").DataTable().columns(10).search($("#searchPrint_DocumentName").val()).draw();
+        datatable.columns(10).search($("#searchPrint_DocumentName").val()).draw();
     });
 }
-
-
-
 
 $(function () {
     SearchPrintDataTableInitial();
@@ -246,5 +245,5 @@ $(function () {
     DateRangePickerInitial_End();
     FormSelect_Select();
     FormSelect_UnSelect();
-    ColumnSearchPrint();
+    ColumnSearch();
 });

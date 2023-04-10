@@ -1,28 +1,11 @@
-﻿function FormSelect() {
-
-    $("#searchCardReader_CardMachineTypeSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-
-    $("#searchCardReader_WorkModeSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-
-    $("#searchCardReader_CardOnOffSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-
-    $("#searchCardReader_CardStatusSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-}
-
+﻿var datatable;
 function SearchCardReaderDataTableInitial() {
-    $("#searchCardReaderDataTable").DataTable({
+    datatable = $("#searchCardReaderDataTable").DataTable({
         ajax: {
             url: "/Admin/CardReader",
             type: "POST",
-            datatype: "json"
+            datatype: "json",
+            data: { page: "cardreader" }
         },
         columns: [
             { data: "cr_id", name: "卡機編號" },
@@ -66,7 +49,56 @@ function SearchCardReaderDataTableInitial() {
     });
 }
 
+function ColumnSearch() {
+    $("#searchCardReader_CardreaderID").keyup(function () {
+        datatable.columns(0).search($("#searchCardReader_CardreaderID").val()).draw();
+
+    });
+
+    $("#searchCardReader_IPAddress").keyup(function () {
+        datatable.columns(1).search($("#searchCardReader_IPAddress").val()).draw();
+
+    });
+
+    $("#searchCardReader_Port").keyup(function () {
+        datatable.columns(2).search($("#searchCardReader_Port").val()).draw();
+
+    });
+
+    $("#searchCardReader_CardMachineTypeSelect").change(function () {
+        if ($("#searchCardReader_CardMachineTypeSelect").val() != "0") {
+            datatable.columns(3).search($("#searchCardReader_CardMachineTypeSelect :selected").text()).draw();
+        } else {
+            datatable.columns(3).search("").draw();
+        }
+    });
+
+    $("#searchCardReader_WorkModeSelect").change(function () {
+        if ($("#searchCardReader_WorkModeSelect").val() != "0") {
+            datatable.columns(4).search($("#searchCardReader_WorkModeSelect :selected").text()).draw();
+        } else {
+            datatable.columns(4).search("").draw();
+        }
+    });
+
+    $("#searchCardReader_CardOnOffSelect").change(function () {
+        if ($("#searchCardReader_CardOnOffSelect").val() != "0") {
+            datatable.columns(5).search($("#searchCardReader_CardOnOffSelect :selected").text()).draw();
+        } else {
+            datatable.columns(5).search("").draw();
+        }
+    });
+
+    $("#searchCardReader_CardStatusSelect").change(function () {
+        if ($("#searchCardReader_CardStatusSelect").val() != "0") {
+            datatable.columns(6).search($("#searchCardReader_CardStatusSelect :selected").text()).draw();
+        } else {
+            datatable.columns(6).search("").draw();
+        }
+    });
+}
+
 $(function () {
-    FormSelect();
     SearchCardReaderDataTableInitial();
+    ColumnSearch();
 });

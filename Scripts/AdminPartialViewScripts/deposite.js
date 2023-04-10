@@ -1,9 +1,11 @@
-﻿function SearchDepositeDataTableInitial() {
-    $("#searchDepositeDataTable").DataTable({
+﻿var datatable;
+function SearchDepositeDataTableInitial() {
+    datatable=$("#searchDepositeDataTable").DataTable({
         ajax: {
             url: "/Admin/Deposite",
             type: "POST",
-            datatype: "json"
+            datatype: "json",
+            data: { page: "deposite" }
         }, columns: [
             { data: "user_name", name: "儲值人員" },
             { data: "user_id", name: "儲值帳號" },
@@ -41,6 +43,49 @@
     });
 };
 
+function ColumnSearch() {
+    $("#searchDeposite_Name").keyup(function () {
+        datatable.columns(0).search($("#searchDeposite_Name").val()).draw();
+
+    });
+
+    $("#searchDeposite_Account").keyup(function () {
+        datatable.columns(1).search($("#searchDeposite_Account").val()).draw();
+
+    });
+
+    $("#searchDeposite_CardNumber").keyup(function () {
+        datatable.columns(2).search($("#searchDeposite_CardNumber").val()).draw();
+
+    });
+
+    $("#searchDeposite_CardOwnerAccount").keyup(function () {
+        datatable.columns(3).search($("#searchDeposite_CardOwnerAccount").val()).draw();
+
+    });
+
+    $("#searchDeposite_CardOwnerName").keyup(function () {
+        datatable.columns(4).search($("#searchDeposite_CardOwnerName").val()).draw();
+    });
+
+    $("#searchDeposite_BeforePoint").keyup(function () {
+        datatable.columns(5).search($("#searchDeposite_BeforePoint").val()).draw();
+    });
+
+    $("#searchDeposite_Point").keyup(function () {
+        datatable.columns(6).search($("#searchDeposite_Point").val()).draw();
+    });
+
+    $("#searchDeposite_AfterPoint").keyup(function () {
+        datatable.columns(7).search($("#searchDeposite_AfterPoint").val()).draw();
+    });
+
+    $("#searchDeposite_Time").keyup(function () {
+        datatable.columns(8).search($("#searchDeposite_Time").val()).draw();
+    });
+}
+
 $(function () {
     SearchDepositeDataTableInitial();
+    ColumnSearch();
 })

@@ -100,59 +100,59 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public List<SearchPrintDTO> ColumnSearch(List<SearchPrintDTO> searchData, DataTableRequest searchReauest)
         {
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_Printer))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
             {
-                searchData = searchData.Where(print => print.mfp_name.Contains(searchReauest.ColumnSearchPrint_Printer)).ToList();
+                searchData = searchData.Where(print => print.mfp_name.Contains(searchReauest.ColumnSearch_0)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_User))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_1))
             {
-                searchData = searchData.Where(print => print.user_name.Contains(searchReauest.ColumnSearchPrint_User)).ToList();
+                searchData = searchData.Where(print => print.user_name.Contains(searchReauest.ColumnSearch_1)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_Department))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
             {
-                searchData = searchData.Where(print => print.dept_name.Contains(searchReauest.ColumnSearchPrint_Department)).ToList();
+                searchData = searchData.Where(print => print.dept_name.Contains(searchReauest.ColumnSearch_2)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_Card))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
             {
-                searchData = searchData.Where(print => print.card_id.Contains(searchReauest.ColumnSearchPrint_Card)).ToList();
+                searchData = searchData.Where(print => print.card_id.Contains(searchReauest.ColumnSearch_3)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_AttributeSelect))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_4))
             {
-                searchData = searchData.Where(print => print.card_type.Contains(searchReauest.ColumnSearchPrint_AttributeSelect)).ToList();
+                searchData = searchData.Where(print => print.card_type.Contains(searchReauest.ColumnSearch_4)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_ActionSelect))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
             {
-                searchData = searchData.Where(print => print.usage_type.Contains(searchReauest.ColumnSearchPrint_ActionSelect)).ToList();
+                searchData = searchData.Where(print => print.usage_type.Contains(searchReauest.ColumnSearch_5)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_ColorSelect))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_6))
             {
-                searchData = searchData.Where(print => print.page_color.Contains(searchReauest.ColumnSearchPrint_ColorSelect)).ToList();
+                searchData = searchData.Where(print => print.page_color.Contains(searchReauest.ColumnSearch_6)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_Count))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_7))
             {
-                searchData = searchData.Where(print => print.page.ToString().Contains(searchReauest.ColumnSearchPrint_Count)).ToList();
+                searchData = searchData.Where(print => print.page.ToString().Contains(searchReauest.ColumnSearch_7)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_Point))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_8))
             {
-                searchData = searchData.Where(print => print.value.ToString().Contains(searchReauest.ColumnSearchPrint_Point)).ToList();
+                searchData = searchData.Where(print => print.value.ToString().Contains(searchReauest.ColumnSearch_8)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_PrintTime))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_9))
             {
-                searchData = searchData.Where(print => print.print_date.ToString().Contains(searchReauest.ColumnSearchPrint_PrintTime)).ToList();
+                searchData = searchData.Where(print => print.print_date.ToString().Contains(searchReauest.ColumnSearch_9)).ToList();
             }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearchPrint_DocumentName))
+            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_10))
             {
-                searchData = searchData.Where(print => print.document_name.Contains(searchReauest.ColumnSearchPrint_DocumentName)).ToList();
+                searchData = searchData.Where(print => print.document_name.Contains(searchReauest.ColumnSearch_10)).ToList();
             }
             return searchData;
         }

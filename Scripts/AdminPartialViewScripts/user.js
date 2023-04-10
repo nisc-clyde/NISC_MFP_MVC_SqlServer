@@ -1,15 +1,11 @@
-﻿function FormSelect() {
-    $("#searchUser_ColorPermissionSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-}
-
+﻿var datatable;
 function SearchUserDataTableInitial() {
-    $("#searchUserDataTable").DataTable({
+    datatable = $("#searchUserDataTable").DataTable({
         ajax: {
             url: "/Admin/User",
             type: "POST",
-            datatype: "json"
+            datatype: "json",
+            data: {page:"user"}
         },
         columns: [
             { data: "user_id", name: "帳號" },
@@ -47,7 +43,49 @@ function SearchUserDataTableInitial() {
     });
 }
 
+function ColumnSearch() {
+    $("#searchUser_Account").keyup(function () {
+        datatable.columns(0).search($("#searchUser_Account").val()).draw();
+
+    });
+
+    $("#searchUser_Password").keyup(function () {
+        datatable.columns(1).search($("#searchUser_Password").val()).draw();
+
+    });
+
+    $("#searchUser_WorkNumber").keyup(function () {
+        datatable.columns(2).search($("#searchUser_WorkNumber").val()).draw();
+
+    });
+
+    $("#searchUser_Name").keyup(function () {
+        datatable.columns(3).search($("#searchUser_Name").val()).draw();
+
+    });
+
+    $("#searchUser_DepartmentID").keyup(function () {
+        datatable.columns(4).search($("#searchUser_DepartmentID").val()).draw();
+    });
+
+    $("#searchUser_DepartmentName").keyup(function () {
+        datatable.columns(5).search($("#searchUser_DepartmentName").val()).draw();
+    });
+
+    $("#searchUser_ColorPermissionSelect").change(function () {
+        if ($("#searchUser_ColorPermissionSelect").val() != "0") {
+            datatable.columns(6).search($("#searchUser_ColorPermissionSelect :selected").text()).draw();
+        } else {
+            datatable.columns(6).search("").draw();
+        }
+    });
+
+    $("#searchUser_Mail").keyup(function () {
+        datatable.columns(7).search($("#searchUser_Mail").val()).draw();
+    });
+}
+
 $(function () {
-    FormSelect();
     SearchUserDataTableInitial();
+    ColumnSearch();
 });

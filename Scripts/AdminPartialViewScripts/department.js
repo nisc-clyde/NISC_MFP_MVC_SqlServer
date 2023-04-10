@@ -1,15 +1,11 @@
-﻿function FormSelect() {
-    $("#searchDepartment_StatueSelect").change(function () {
-        console.log($(this).find("option:selected").val());
-    })
-}
-
+﻿var datatable;
 function SearchDepartmentDataTableInitial() {
-    $("#searchDepartmentDataTable").DataTable({
+    datatable = $("#searchDepartmentDataTable").DataTable({
         ajax: {
             url: "/Admin/Department",
             type: "POST",
-            datatype: "json"
+            datatype: "json",
+            data: { page: "department" }
         }, columns: [
             { data: "dept_id", name: "部門編號" },
             { data: "dept_name", name: "部門名稱" },
@@ -44,8 +40,41 @@ function SearchDepartmentDataTableInitial() {
     });
 }
 
+function ColumnSearch() {
+    $("#searchDepartment_DepartmentID").keyup(function () {
+        datatable.columns(0).search($("#searchDepartment_DepartmentID").val()).draw();
+
+    });
+
+    $("#searchDepartment_DepartmentName").keyup(function () {
+        datatable.columns(1).search($("#searchDepartment_DepartmentName").val()).draw();
+
+    });
+
+    $("#searchDepartment_AvailablePointLimit").keyup(function () {
+        datatable.columns(2).search($("#searchDepartment_AvailablePointLimit").val()).draw();
+
+    });
+
+    $("#searchDepartment_AvailableBalance").keyup(function () {
+        datatable.columns(3).search($("#searchDepartment_AvailableBalance").val()).draw();
+
+    });
+
+    $("#searchDepartment_StatueSelect").change(function () {
+        if ($("#searchDepartment_StatueSelect").val() != "0") {
+            datatable.columns(4).search($("#searchDepartment_StatueSelect :selected").text()).draw();
+        } else {
+            datatable.columns(4).search("").draw();
+        }
+    });
+
+    $("#searchDepartment_Mail").keyup(function () {
+        datatable.columns(5).search($("#searchDepartment_Mail").val()).draw();
+    });
+}
 
 $(function () {
-    FormSelect();
     SearchDepartmentDataTableInitial();
+    ColumnSearch();
 });
