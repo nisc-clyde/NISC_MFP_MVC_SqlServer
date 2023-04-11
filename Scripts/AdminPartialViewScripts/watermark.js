@@ -41,7 +41,9 @@ function SearchWatermarkDataTableInitial() {
                 previous: "上一頁",
                 next: "下一頁"
             },
-            info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆"
+            info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+            zeroRecords: "找不到相符資料",
+            search: "全部欄位搜尋："
         },
     });
 }

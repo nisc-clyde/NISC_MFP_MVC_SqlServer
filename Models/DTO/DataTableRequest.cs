@@ -64,7 +64,7 @@ namespace NISC_MFP_MVC.Models.DTO
                     case "cardreader": return SearchCardReaderDTO.ColumnName2Property(SortColumnIndex);
                     case "card": return SearchCardDTO.ColumnName2Property(SortColumnIndex);
                     case "watermark": return SearchWatermarkDTO.ColumnName2Property(SortColumnIndex);
-                    //case "history": return SearchHistoryDTO.ColumnName2Property(SortColumnIndex);
+                    case "history": return SearchHistoryDTO.ColumnName2Property(SortColumnIndex);
                     default: return "";
                 }
             }

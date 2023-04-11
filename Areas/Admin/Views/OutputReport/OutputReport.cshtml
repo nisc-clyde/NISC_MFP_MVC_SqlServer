@@ -1,9 +1,12 @@
-﻿
+﻿@using NISC_MFP_MVC.Models
+@model NISC_MFP_MVC.Models.DTO.SearchDepartmentDTO
+
 @{
     ViewBag.Title = "報表選項";
     ViewBag.ActiveNav = "OutputReport";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+
 
 @section OutputReportJS{
     <script src="~/Scripts/AdminPartialViewScripts/outputreport.js"></script>
@@ -57,16 +60,17 @@
                 <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">部門</div>
                 <div class="row align-items-center">
                     <div class="col pt-2 pb-2">
-                        <select id="generateOutputReport_DepartmentSelect" class="form-select">
-                            <option id="generateOutputReport_DepartmentAll" selected value="0">預設</option>
-                            <option id="generateOutputReport_DepartmentAdmin" value="1">Admin</option>
-                            <option id="generateOutputReport_DepartmentPPE" value="2">B15封裝製程工程部</option>
-                            <option id="generateOutputReport_DepartmentTE" value="3">測試工程研發部</option>
-                            <option id="generateOutputReport_DepartmentAccount" value="4">倉管／會計</option>
-                            <option id="generateOutputReport_DepartmentRD" value="5">研發部</option>
-                            <option id="generateOutputReport_DepartmentPRD" value="6">封裝研發部</option>
-                        </select>
-                    </div>
+                        @*<select id="generateOutputReport_DepartmentSelect" class="form-select">
+                                <option id="generateOutputReport_DepartmentAll" selected value="0">全部</option>
+                                <option id="generateOutputReport_DepartmentAdmin" value="1">Admin</option>
+                                <option id="generateOutputReport_DepartmentPPE" value="2">B15封裝製程工程部</option>
+                                <option id="generateOutputReport_DepartmentTE" value="3">測試工程研發部</option>
+                                <option id="generateOutputReport_DepartmentAccount" value="4">倉管／會計</option>
+                                <option id="generateOutputReport_DepartmentRD" value="5">研發部</option>
+                                <option id="generateOutputReport_DepartmentPRD" value="6">封裝研發部</option>
+                            </select>*@
+                        @*<@Html.DropDownListFor(department => department.dept_name,new SelectList(ViewBag.DeparmtentNameList, "請選擇"))
+                    *@</div>
                 </div>
             </div>
 
@@ -75,7 +79,7 @@
                 <div class="row align-items-center">
                     <div class="col pt-2 pb-2">
                         <select id="generateOutputReport_User" class="form-select">
-                            <option id="generateOutputReport_UserAll" selected value="0">預設</option>
+                            <option id="generateOutputReport_UserAll" selected value="0">全部</option>
                         </select>
                     </div>
                 </div>
@@ -87,7 +91,7 @@
                     <div class="col pt-2 pb-2">
                         @*Dynamic binding the using ip from machine*@
                         <select id="generateOutputReport_MachineIPSelect" class="form-select">
-                            <option id="generateOutputReport_MachineIPAll" selected value="0">預設</option>
+                            <option id="generateOutputReport_MachineIPAll" selected value="0">全部</option>
                         </select>
                         @*Dynamic binding the using ip from machine*@
                     </div>

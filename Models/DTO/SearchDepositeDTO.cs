@@ -50,7 +50,6 @@ namespace NISC_MFP_MVC.Models.DTO
             get { return string.IsNullOrEmpty(_deposit_date) ? "" : _deposit_date; }
             set { _deposit_date = value; }
         }
-
         public static string ColumnName2Property(string index)
         {
             switch (index)

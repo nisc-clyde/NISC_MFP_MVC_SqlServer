@@ -143,7 +143,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_7))
             {
-                searchData = searchData.Where(watermark => watermark.text.Contains(searchReauest.ColumnSearch_7)).ToList();
+                searchData = searchData.Where(watermark => watermark.text.ToUpper().Contains(searchReauest.ColumnSearch_7.ToUpper())).ToList();
             }
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_8))

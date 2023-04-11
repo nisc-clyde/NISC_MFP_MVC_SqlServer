@@ -8,6 +8,8 @@ using Microsoft.Ajax.Utilities;
 using System.Linq.Dynamic.Core;
 using EntityFramework.DynamicLinq;
 using System.Linq;
+using System.Web.WebPages;
+using System.Diagnostics;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -112,7 +114,17 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
             {
-                searchData = searchData.Where(print => print.dept_name.Contains(searchReauest.ColumnSearch_2)).ToList();
+                if (searchReauest.ColumnSearch_2 == "AdvancedEmpty")
+                {
+                    searchData.Clear();
+                }
+                else
+                {
+                    List<string> departmentList = searchReauest.ColumnSearch_2.Split(',').ToList();
+                    searchData = departmentList.Count == 1 ?
+                        searchData.Where(print => print.dept_name.Contains(searchReauest.ColumnSearch_2)).ToList() :
+                        searchData.AsQueryable().Where("@0.Contains(dept_name)", departmentList).ToList();
+                }
             }
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
@@ -127,8 +139,19 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
             {
-                searchData = searchData.Where(print => print.usage_type.Contains(searchReauest.ColumnSearch_5)).ToList();
+                if (searchReauest.ColumnSearch_5 == "AdvancedEmpty")
+                {
+                    searchData.Clear();
+                }
+                else
+                {
+                    List<string> operationList = searchReauest.ColumnSearch_5.Split(',').ToList();
+                    searchData = operationList.Count == 1 ?
+                        searchData.Where(print => print.usage_type.Contains(searchReauest.ColumnSearch_5)).ToList() :
+                        searchData.AsQueryable().Where("@0.Contains(usage_type)", operationList).ToList();
+                }
             }
+
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_6))
             {
@@ -147,7 +170,18 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_9))
             {
-                searchData = searchData.Where(print => print.print_date.ToString().Contains(searchReauest.ColumnSearch_9)).ToList();
+                if (searchReauest.ColumnSearch_9.Contains("~"))
+                {
+                    string[] postDateRange = searchReauest.ColumnSearch_9.Split('~');
+
+                    DateTime startDate = Convert.ToDateTime(postDateRange[0]);
+                    DateTime endDate = Convert.ToDateTime(postDateRange[1]);
+                    searchData = searchData.Where(print => Convert.ToDateTime(print.print_date) >= startDate && Convert.ToDateTime(print.print_date) <= endDate).ToList();
+                }
+                else
+                {
+                    searchData = searchData.Where(print => print.print_date.ToString().Contains(searchReauest.ColumnSearch_9)).ToList();
+                }
             }
 
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_10))
