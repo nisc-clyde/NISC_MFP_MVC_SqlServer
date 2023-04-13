@@ -7,12 +7,14 @@ using System.Web;
 using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
 using Google.Protobuf.WellKnownTypes;
+using System.Diagnostics;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class CardController : Controller
     {
-
+        private static readonly string DISABLE = "1";
+        private static readonly string ENABLE = "1";
         public ActionResult Card()
         {
             return View();
@@ -25,21 +27,21 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             using (MFP_DBEntities db = new MFP_DBEntities())
             {
-                List<SearchCardDTO> searchCardDTO = InitialData(db);
+                List<SearchCardDTO> searchCardResult = InitialData(db);
 
-                dataTableRequest.RecordsTotalGet = searchCardDTO.Count;
+                dataTableRequest.RecordsTotalGet = searchCardResult.Count;
 
-                searchCardDTO = GlobalSearch(searchCardDTO, dataTableRequest.GlobalSearchValue);
+                searchCardResult = GlobalSearch(searchCardResult, dataTableRequest.GlobalSearchValue);
 
-                searchCardDTO = ColumnSearch(searchCardDTO, dataTableRequest);
+                searchCardResult = ColumnSearch(searchCardResult, dataTableRequest);
 
-                searchCardDTO = searchCardDTO.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
+                searchCardResult = searchCardResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
 
-                dataTableRequest.RecordsFilteredGet = searchCardDTO.Count;
+                dataTableRequest.RecordsFilteredGet = searchCardResult.Count;
 
-                searchCardDTO = searchCardDTO.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+                searchCardResult = searchCardResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
 
-                foreach (SearchCardDTO dto in searchCardDTO)
+                foreach (SearchCardDTO dto in searchCardResult)
                 {
                     dataTableRequest.SearchDTO.Add(dto);
                 }
@@ -128,6 +130,23 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 searchData = searchData.Where(card => card.enable.ToUpper().Contains(searchReauest.ColumnSearch_6.ToUpper())).ToList();
             }
             return searchData;
+        }
+
+        [HttpGet]
+        public ActionResult AddCard()
+        {
+            SearchCardDTO initialCardDTO = new SearchCardDTO();
+            initialCardDTO.card_type = DISABLE;
+            initialCardDTO.enable = DISABLE;
+            ViewBag.formTitle = Request["formTitle"];
+            return PartialView(initialCardDTO);
+        }
+
+        [HttpGet]
+        public ActionResult ResetCardFreePoint()
+        {
+            ViewBag.formTitle = Request["formTitle"];
+            return PartialView();
         }
     }
 }

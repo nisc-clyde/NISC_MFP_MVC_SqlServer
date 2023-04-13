@@ -5,7 +5,7 @@ function SearchUserDataTableInitial() {
             url: "/Admin/User",
             type: "POST",
             datatype: "json",
-            data: {page:"user"}
+            data: { page: "user" }
         },
         columns: [
             { data: "user_id", name: "帳號" },
@@ -20,9 +20,9 @@ function SearchUserDataTableInitial() {
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
-            { extend: "excel", className: "btn btn-success buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-success buttons-csv buttons-html5" },
-            { extend: "print", className: "btn btn-success buttons-print buttons-html5" }
+            { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
+            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
@@ -87,7 +87,47 @@ function ColumnSearch() {
     });
 }
 
+function PopupForm() {
+    $("#btnAddUser").on("click", function () {
+        var url = $("#addUserForm").data("url");
+        $.get(
+            url,
+            { formTitle: $(this).text() },
+            function (data) {
+                $("#addUserForm").html(data);
+                $("#addUserForm").modal("show");
+            }
+        )
+    });
+}
+
+function SubmitForm(form) {
+    $.validator.unobtrusive.parse(form);
+    if ($(form).valid()) {
+        $.ajax({
+            type: "POST",
+            url: form.action,
+            data: $(form).serialize(),
+            success: function (data) {
+                if (data.success) {
+                    $("#addUserForm").modal("hide");
+                    datatable.ajax.reload();
+                }
+            }
+        });
+    }
+    return false;
+}
+
+function SearchDepartment() {
+    $("#btnAddUser_SearchDepartment").on("click", function () {
+        
+    });
+}
+
 $(function () {
     SearchUserDataTableInitial();
     ColumnSearch();
+    PopupForm();
+    SearchDepartment();
 });

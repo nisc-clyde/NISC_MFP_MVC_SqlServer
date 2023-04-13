@@ -1,0 +1,28 @@
+﻿@model NISC_MFP_MVC.Models.DTO.SearchCardDTO
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            @using (Html.BeginForm("ResetCardPoint", "Card", FormMethod.Post))
+            {
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.freevalue, "關鍵字查詢", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.freevalue, new { @class = "form-control" })
+                </div>
+            }
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-success">新增</button>
+        </div>
+    </div>
+</div>

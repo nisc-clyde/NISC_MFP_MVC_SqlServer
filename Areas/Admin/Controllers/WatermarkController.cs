@@ -162,5 +162,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
             return searchData;
         }
+
+        [HttpGet]
+        public ActionResult AddWatermark()
+        {
+            ViewBag.formTitle = Request["formTitle"];
+            return View();
+        }
     }
 }

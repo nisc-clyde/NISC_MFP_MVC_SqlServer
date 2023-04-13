@@ -6,11 +6,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
+using System.Diagnostics;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class DepartmentController : Controller
     {
+        private static readonly string DISABLE = "1";
+        private static readonly string ENABLE = "2";
         public ActionResult Department()
         {
             return View();
@@ -58,6 +61,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             List<SearchDepartmentDTO> searchDepartmentResult = db.tb_department
                 .Select(department => new SearchDepartmentDTO
                 {
+                    serial=department.serial,
                     dept_id = department.dept_id,
                     dept_name = department.dept_name,
                     dept_value = department.dept_value,
@@ -120,5 +124,38 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
             return searchData;
         }
+
+        [HttpGet]
+        public ActionResult AddDepartment()
+        {
+            SearchDepartmentDTO initialDepartmentDTO = new SearchDepartmentDTO();
+            initialDepartmentDTO.dept_usable = DISABLE;
+            ViewBag.formTitle = Request["formTitle"];
+            return PartialView(initialDepartmentDTO);
+        }
+
+        [HttpPost]
+        public ActionResult AddDepartment(SearchDepartmentDTO department)
+        {
+            if (ModelState.IsValid)
+            {
+                tb_department result = new tb_department();
+                result.dept_id = string.IsNullOrEmpty(department.dept_id) ? "" : department.dept_id;
+                result.dept_name = string.IsNullOrEmpty(department.dept_name) ? "" : department.dept_name;
+                result.dept_value = department.dept_value == null ? 0 : department.dept_value;
+                result.dept_month_sum = department.dept_month_sum == null ? 0 : department.dept_month_sum;
+                result.dept_usable = string.IsNullOrEmpty(department.dept_usable) ? "" : department.dept_usable;
+                result.dept_email = string.IsNullOrEmpty(department.dept_email) ? "" : department.dept_email;
+
+                using (MFP_DBEntities db = new MFP_DBEntities())
+                {
+                    db.tb_department.Add(result);
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return RedirectToAction("Department");
+        }
+
     }
 }

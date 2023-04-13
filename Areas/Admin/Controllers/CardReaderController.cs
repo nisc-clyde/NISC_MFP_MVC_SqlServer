@@ -11,6 +11,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class CardReaderController : Controller
     {
+        private static readonly string DISABLE = "1";
+        private static readonly string ENABLE = "1";
+
         public ActionResult CardReader()
         {
             return View();
@@ -23,21 +26,21 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             using (MFP_DBEntities db = new MFP_DBEntities())
             {
-                List<SearchCardReaderDTO> searchCardReaderDTO = InitialData(db);
+                List<SearchCardReaderDTO> searchCardReaderResult = InitialData(db);
 
-                dataTableRequest.RecordsTotalGet = searchCardReaderDTO.Count;
+                dataTableRequest.RecordsTotalGet = searchCardReaderResult.Count;
 
-                searchCardReaderDTO = GlobalSearch(searchCardReaderDTO, dataTableRequest.GlobalSearchValue);
+                searchCardReaderResult = GlobalSearch(searchCardReaderResult, dataTableRequest.GlobalSearchValue);
 
-                searchCardReaderDTO = ColumnSearch(searchCardReaderDTO, dataTableRequest);
+                searchCardReaderResult = ColumnSearch(searchCardReaderResult, dataTableRequest);
 
-                searchCardReaderDTO = searchCardReaderDTO.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
+                searchCardReaderResult = searchCardReaderResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
 
-                dataTableRequest.RecordsFilteredGet = searchCardReaderDTO.Count;
+                dataTableRequest.RecordsFilteredGet = searchCardReaderResult.Count;
 
-                searchCardReaderDTO = searchCardReaderDTO.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+                searchCardReaderResult = searchCardReaderResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
 
-                foreach (SearchCardReaderDTO dto in searchCardReaderDTO)
+                foreach (SearchCardReaderDTO dto in searchCardReaderResult)
                 {
                     dataTableRequest.SearchDTO.Add(dto);
                 }
@@ -125,6 +128,16 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 searchData = searchData.Where(cardreader => cardreader.cr_status.ToUpper().Contains(searchReauest.ColumnSearch_6.ToUpper())).ToList();
             }
             return searchData;
+        }
+
+        [HttpGet]
+        public ActionResult AddCardReader()
+        {
+            SearchCardReaderDTO initialCardReaderDTO = new SearchCardReaderDTO();
+            initialCardReaderDTO.cr_mode = DISABLE;
+            initialCardReaderDTO.cr_card_switch = DISABLE;
+            initialCardReaderDTO.cr_status = DISABLE;
+            return PartialView(initialCardReaderDTO);
         }
     }
 }

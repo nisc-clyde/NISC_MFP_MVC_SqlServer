@@ -105,7 +105,12 @@
     <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
         <div class="row border-bottom border-2" style="color: #1565C0">
-            <div class="col text-start fs-5 fw-bold">使用者列表&nbsp;<i class="fa-solid fa-list"></i></div>
+            <div class="col text-start fs-5 fw-bold mb-1">
+                使用者列表&nbsp;<i class="fa-solid fa-list"></i>
+                <button id="btnAddUser" type="button" class="ms-3 btn btn-success mb-1">新增使用者</button>
+                <div class="modal fade" id="addUserForm" role="dialog" data-url='@Url.Action("AddUser","User")'></div>
+            </div>
+            
         </div>
 
         <div class="row p-2">

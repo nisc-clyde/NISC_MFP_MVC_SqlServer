@@ -11,6 +11,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class UserController : Controller
     {
+        private static readonly string DISABLE = "1";
+        private static readonly string ENABLE = "2";
+
         public ActionResult User()
         {
             return View();
@@ -138,5 +141,48 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
             return searchData;
         }
+
+        [HttpGet]
+        public ActionResult AddUser()
+        {
+            SearchUserDTO initialUserDTO = new SearchUserDTO();
+            initialUserDTO.color_enable_flag = DISABLE;
+            initialUserDTO.copy_enable_flag = DISABLE;
+            initialUserDTO.print_enable_flag = DISABLE;
+            initialUserDTO.scan_enable_flag = DISABLE;
+            initialUserDTO.fax_enable_flag = DISABLE;
+            ViewBag.formTitle = Request["formTitle"];
+            return PartialView(initialUserDTO);
+        }
+
+        [HttpPost]
+        public ActionResult AddUser(SearchUserDTO user)
+        {
+            //if (ModelState.IsValid)
+            //{
+            //    tb_user result = new tb_user();
+            //    result.user_id = string.IsNullOrEmpty(department.dept_id) ? "" : department.dept_id;
+            //    result.user_password = string.IsNullOrEmpty(department.dept_name) ? "" : department.dept_name;
+            //    result.work_id = department.dept_value == null ? 0 : department.dept_value;
+            //    result.user_name = department.dept_month_sum == null ? 0 : department.dept_month_sum;
+            //    result.dept_id = string.IsNullOrEmpty(department.dept_usable) ? "" : department.dept_usable;
+            //    result.dept = string.IsNullOrEmpty(department.dept_email) ? "" : department.dept_email;
+
+            //    using (MFP_DBEntities db = new MFP_DBEntities())
+            //    {
+            //        db.tb_department.Add(result);
+            //        db.SaveChanges();
+            //        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+            //    }
+            //}
+            return RedirectToAction("Department");
+        }
+
+        [HttpGet]
+        public ActionResult SearchDepartment()
+        {
+            return PartialView();
+        }
+
     }
 }

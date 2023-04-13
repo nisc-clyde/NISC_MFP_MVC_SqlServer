@@ -23,9 +23,9 @@ function SearchWatermarkDataTableInitial() {
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
-            { extend: "excel", className: "btn btn-success buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-success buttons-csv buttons-html5" },
-            { extend: "print", className: "btn btn-success buttons-print buttons-html5" }
+            { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
+            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
@@ -115,7 +115,22 @@ function ColumnSearch() {
 
 }
 
+function PopupForm() {
+    $("#btnAddWatermark").on("click", function () {
+        var url = $("#addWatermarkForm").data("url");
+        $.get(
+            url,
+            { formTitle: $(this).text() },
+            function (data) {
+                $("#addWatermarkForm").html(data);
+                $("#addWatermarkForm").modal("show");
+            }
+        )
+    });
+};
+
 $(function () {
     SearchWatermarkDataTableInitial();
     ColumnSearch();
+    PopupForm();
 });

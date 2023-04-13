@@ -32,10 +32,29 @@ namespace NISC_MFP_MVC.Areas.Admin
                 new { controller = "Department", action = "Department", id = UrlParameter.Optional }
             );
 
+            //todo
+            context.MapRoute(
+                "Admin_AddDepartment",
+                "Admin/AddDepartment/{id}",
+                new { controller = "Department", action = "AddDepartment", id = UrlParameter.Optional }
+            );
+
             context.MapRoute(
                 "Admin_User",
                 "Admin/User/{id}",
                 new { controller = "User", action = "User", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_AddUser",
+                "Admin/AddUser/{id}",
+                new { controller = "User", action = "AddUser", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_SearchDepartment",
+                "Admin/SearchDepartment/{id}",
+                new { controller = "User", action = "SearchDepartment", id = UrlParameter.Optional }
             );
 
             context.MapRoute(
@@ -45,15 +64,39 @@ namespace NISC_MFP_MVC.Areas.Admin
             );
 
             context.MapRoute(
+                "Admin_AddCardReader",
+                "Admin/AddCardReader/{id}",
+                new { controller = "CardReader", action = "AddCardReader", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
                 "Admin_Card",
                 "Admin/Card/{id}",
                 new { controller = "Card", action = "Card", id = UrlParameter.Optional }
             );
 
             context.MapRoute(
+                "Admin_AddCard",
+                "Admin/AddCard/{id}",
+                new { controller = "Card", action = "AddCard", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_ResetCardFreePoint",
+                "Admin/ResetCardFreePoint/{id}",
+                new { controller = "Card", action = "ResetCardFreePoint", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
                 "Admin_Watermark",
                 "Admin/Watermark/{id}",
                 new { controller = "Watermark", action = "Watermark", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_AddWatermark",
+                "Admin/AddWatermark/{id}",
+                new { controller = "Watermark", action = "AddWatermark", id = UrlParameter.Optional }
             );
 
             context.MapRoute(

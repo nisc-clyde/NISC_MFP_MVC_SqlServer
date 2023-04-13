@@ -1,0 +1,98 @@
+﻿@model NISC_MFP_MVC.Models.tb_watermark
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">新增浮水印</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            @using (Html.BeginForm("AddWatermark", "Watermark", FormMethod.Post))
+            {
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.type, "類別", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.type, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.left_offset, "左邊偏移", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.left_offset, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.right_offset, "右邊偏移", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.right_offset, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.top_offset, "上邊偏移", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.top_offset, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.bottom_offset, "下邊偏移", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.bottom_offset, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.position_mode, "浮水印位置", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.position_mode, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.fill_mode, "填滿方式", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.fill_mode, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.text, "文字", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.text, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.image_path, "圖片位置", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.image_path, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.rotation, "旋轉角度", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.rotation, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.color, "顏色", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.color, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.horizontal_alignment, "水平對齊", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.horizontal_alignment, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.vertical_alignment, "垂直對齊", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.vertical_alignment, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.font_name, "字型", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.font_name, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.font_height, "文字高度", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.font_height, new { @class = "form-control" })
+                </div>
+            }
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-success">新增</button>
+        </div>
+    </div>
+</div>

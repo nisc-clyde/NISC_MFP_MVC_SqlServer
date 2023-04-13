@@ -8,7 +8,7 @@ function SearchCardDataTableInitial() {
             data: { page: "card" }
         },
         columns: [
-            { data: "card_id", name: "卡機編號" },
+            { data: "card_id", name: "卡片編號" },
             { data: "value", name: "點數" },
             { data: "freevalue", name: "免費點數" },
             { data: "user_id", name: "使用者帳號" },
@@ -19,9 +19,9 @@ function SearchCardDataTableInitial() {
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
-            { extend: "excel", className: "btn btn-success buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-success buttons-csv buttons-html5" },
-            { extend: "print", className: "btn btn-success buttons-print buttons-html5" }
+            { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
+            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
@@ -87,7 +87,36 @@ function ColumnSearch() {
     });
 }
 
+function PopupForm() {
+    $("#btnAddCard").on("click", function () {
+        var url = "/Admin/AddCard"
+        $.get(
+            url,
+            { formTitle: $(this).text() },
+            function (data) {
+                $("#CardPopupForm").html(data);
+                $("#CardPopupForm").modal("show");
+            }
+        )
+    });
+
+    $("#btnResetCardFreePoint").on("click", function () {
+        var url = "/Admin/ResetCardFreePoint"
+        $.get(
+            url,
+            { formTitle: $(this).text() },
+            function (data) {
+
+                $("#CardPopupForm").html(data);
+                $("#CardPopupForm").modal("show");
+            })
+    });
+
+};
+
+
 $(function () {
     SearchCardDataTableInitial();
     ColumnSearch();
+    PopupForm();
 });

@@ -1,0 +1,48 @@
+﻿@model NISC_MFP_MVC.Models.DTO.SearchDepartmentDTO
+
+@{
+    Layout = null;
+}
+
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        @using (Html.BeginForm("SearchDepartment", "User", FormMethod.Post, new { @class = "overflow-auto", onsubmit = "return SubmitFormForSearchDepartment(this)" }))
+        {
+
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">查詢部門編號及名稱</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                @*<div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.user_id, "帳號", new { @class = "form-label ps-0 fw-semibold me-2" })
+                        <div class="input-group-addon">
+                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.user_id, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.user_id, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.user_password, "密碼", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.user_password, new { @class = "form-control" })
+                </div>*@
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success">新增</button>
+            </div>
+        }
+    </div>
+</div>
+
+

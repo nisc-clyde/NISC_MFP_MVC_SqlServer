@@ -13,13 +13,23 @@ function SearchDepartmentDataTableInitial() {
             { data: "dept_month_sum", name: "可用遞增餘額" },
             { data: "dept_usable", name: "狀態" },
             { data: "dept_email", name: "部門管理者Email" },
+            {
+                data: null,
+                className: "",
+                defaultContent: "<button type='button' class='btn btn-primary me-2'><i class='fa-solid fa-pen-to-square me-2'></i>修改</button>" +
+                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash'></i>刪除</button>",
+                orderable: false
+            }
+        ],
+        columnDefs: [
+            { "width": "200px", "targets": [6] }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
-            { extend: "excel", className: "btn btn-success buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-success buttons-csv buttons-html5" },
-            { extend: "print", className: "btn btn-success buttons-print buttons-html5" }
+            { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
+            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
@@ -76,7 +86,37 @@ function ColumnSearch() {
     });
 }
 
+function PopupForm() {
+    $("#btnAddDepartment").on("click", function () {
+        var url = $("#addDepartmentForm").data("url");
+        $.get(url, { formTitle: $(this).text() },
+            function (data) {
+                $("#addDepartmentForm").html(data);
+                $("#addDepartmentForm").modal("show");
+            })
+    });
+};
+
+function SubmitForm(form) {
+    $.validator.unobtrusive.parse(form);
+    if ($(form).valid()) {
+        $.ajax({
+            type: "POST",
+            url: form.action,
+            data: $(form).serialize(),
+            success: function (data) {
+                if (data.success) {
+                    $("#addDepartmentForm").modal("hide");
+                    datatable.ajax.reload();
+                }
+            }
+        });
+    }
+    return false;
+}
+
 $(function () {
     SearchDepartmentDataTableInitial();
     ColumnSearch();
+    PopupForm();
 });

@@ -1,0 +1,168 @@
+﻿@model NISC_MFP_MVC.Models.DTO.SearchUserDTO
+
+@{
+    Layout = null;
+}
+
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        @using (Html.BeginForm("AddUser", "User", FormMethod.Post, new { @class = "overflow-auto", onsubmit = "return SubmitForm(this)" }))
+        {
+
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.user_id, "帳號", new { @class = "form-label ps-0 fw-semibold me-2" })
+                        <div class="input-group-addon">
+                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.user_id, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.user_id, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.user_password, "密碼", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.user_password, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.work_id, "工號", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.work_id, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.user_name, "姓名", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.user_name, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_id, "部門代碼", new { @class = "form-label ps-0 fw-semibold me-3" })
+                        <div class="input-group-addon">
+                            <button id="btnAddUser_SearchDepartment" type="button" class="btn btn-secondary btn-sm">查詢</button>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.dept_id, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.dept_name, "部門名稱", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.dept_name, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.e_mail, "信箱", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.e_mail, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.color_enable_flag, "彩色使用權限", new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.color_enable_flag, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                無
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.color_enable_flag, "2", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                有
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.copy_enable_flag, "影印使用權限", new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.copy_enable_flag, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                無
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.copy_enable_flag, "2", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                有
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.print_enable_flag, "列印使用權限", new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.print_enable_flag, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                無
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.print_enable_flag, "2", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                有
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.scan_enable_flag, "掃描使用權限", new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.scan_enable_flag, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                無
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.scan_enable_flag, "2", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                有
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.fax_enable_flag, "傳真使用權限", new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.fax_enable_flag, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                無
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.fax_enable_flag, "2", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                有
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success">新增</button>
+            </div>
+        }
+    </div>
+</div>
+
+
