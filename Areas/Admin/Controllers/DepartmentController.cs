@@ -12,8 +12,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class DepartmentController : Controller
     {
-        private static readonly string DISABLE = "1";
-        private static readonly string ENABLE = "2";
+        private static readonly string DISABLE = "0";
+        private static readonly string ENABLE = "1";
         public ActionResult Department()
         {
             return View();

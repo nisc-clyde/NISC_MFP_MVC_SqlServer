@@ -6,13 +6,17 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
+using System.Data.Entity.Validation;
+using NISC_MFP_MVC.Models.DTO_Initial;
+using System.Diagnostics;
+using static Mysqlx.Expect.Open.Types.Condition.Types;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class UserController : Controller
     {
-        private static readonly string DISABLE = "1";
-        private static readonly string ENABLE = "2";
+        private static readonly string DISABLE = "0";
+        private static readonly string ENABLE = "1";
 
         public ActionResult User()
         {
@@ -59,7 +63,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public List<SearchUserDTO> InitialData(MFP_DBEntities db)
         {
             List<SearchUserDTO> SearchUserResult = (from u in db.tb_user
-                                                    join d in db.tb_department on u.dept_id equals d.dept_id
+                                                    join d in db.tb_department on u.dept_id equals d.dept_id into gj
+                                                    from subd in gj.DefaultIfEmpty()
                                                     select new SearchUserDTO
                                                     {
                                                         user_id = u.user_id,
@@ -67,8 +72,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                                                         work_id = u.work_id,
                                                         user_name = u.user_name,
                                                         dept_id = u.dept_id,
-                                                        dept_name = d.dept_name,
-                                                        depositor = u.depositor,
+                                                        dept_name = subd.dept_name,
                                                         color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
                                                         copy_enable_flag = u.copy_enable_flag,
                                                         print_enable_flag = u.print_enable_flag,
@@ -158,31 +162,52 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult AddUser(SearchUserDTO user)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    tb_user result = new tb_user();
-            //    result.user_id = string.IsNullOrEmpty(department.dept_id) ? "" : department.dept_id;
-            //    result.user_password = string.IsNullOrEmpty(department.dept_name) ? "" : department.dept_name;
-            //    result.work_id = department.dept_value == null ? 0 : department.dept_value;
-            //    result.user_name = department.dept_month_sum == null ? 0 : department.dept_month_sum;
-            //    result.dept_id = string.IsNullOrEmpty(department.dept_usable) ? "" : department.dept_usable;
-            //    result.dept = string.IsNullOrEmpty(department.dept_email) ? "" : department.dept_email;
+            if (ModelState.IsValid)
+            {
+                tb_user_dto result = new tb_user_dto();
+                result.user_id = user.user_id;
+                result.user_password = user.user_password;
+                result.work_id = user.work_id;
+                result.user_name = user.user_name;
+                result.dept_id = user.dept_id;
+                result.e_mail = user.e_mail;
+                result.color_enable_flag = user.color_enable_flag;
+                result.copy_enable_flag = user.copy_enable_flag;
+                result.print_enable_flag = user.print_enable_flag;
+                result.scan_enable_flag = user.scan_enable_flag;
+                result.fax_enable_flag = user.fax_enable_flag;
 
-            //    using (MFP_DBEntities db = new MFP_DBEntities())
-            //    {
-            //        db.tb_department.Add(result);
-            //        db.SaveChanges();
-            //        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-            //    }
-            //}
-            return RedirectToAction("Department");
+                using (MFP_DBEntities db = new MFP_DBEntities())
+                {
+                    db.tb_user.Add(result.Convert2DatabaseModel());
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return RedirectToAction("User");
         }
 
-        [HttpGet]
-        public ActionResult SearchDepartment()
+        [HttpPost]
+        public ActionResult SearchDepartment(string prefix)
         {
-            return PartialView();
-        }
 
+            using (MFP_DBEntities db = new MFP_DBEntities())
+            {
+                //var departmentSearchResult = (from d in db.tb_department
+                //                              where d.dept_id.ToUpper().Contains(prefix.ToUpper()) ||
+                //                                    d.dept_name.ToUpper().Contains(prefix.ToUpper())
+                //                              select new
+                //                              {
+                //                                  dept_id = d.dept_id,
+                //                                  dept_name = d.dept_name
+                //                              }).ToList();
+                var departmentSearchResult = (from d in db.tb_department
+                                              where d.dept_id.ToUpper().Contains(prefix.ToUpper())
+                                              select d).ToList();
+                Debug.WriteLine("Call Success");
+                return Json(departmentSearchResult, JsonRequestBehavior.AllowGet);
+            }
+
+        }
     }
 }

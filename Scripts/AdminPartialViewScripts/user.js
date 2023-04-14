@@ -15,7 +15,14 @@ function SearchUserDataTableInitial() {
             { data: "dept_id", name: "部門代碼" },
             { data: "dept_name", name: "部門名稱" },
             { data: "color_enable_flag", name: "彩色使用權限" },
-            { data: "e_mail", name: "信箱" }
+            { data: "e_mail", name: "信箱" },
+            {
+                data: null,
+                className: "",
+                defaultContent: "<button type='button' class='btn btn-primary me-2'><i class='fa-solid fa-pen-to-square me-2'></i>修改</button>" +
+                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash'></i>刪除</button>",
+                orderable: false
+            }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
@@ -97,7 +104,7 @@ function PopupForm() {
                 $("#addUserForm").html(data);
                 $("#addUserForm").modal("show");
             }
-        )
+        );
     });
 }
 
@@ -119,15 +126,12 @@ function SubmitForm(form) {
     return false;
 }
 
-function SearchDepartment() {
-    $("#btnAddUser_SearchDepartment").on("click", function () {
-        
-    });
+function typeageadintial() {
+
 }
 
 $(function () {
     SearchUserDataTableInitial();
     ColumnSearch();
     PopupForm();
-    SearchDepartment();
 });

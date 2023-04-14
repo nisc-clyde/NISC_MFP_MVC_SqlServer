@@ -1,9 +1,14 @@
 ﻿@model NISC_MFP_MVC.Models.DTO.SearchUserDTO
-
 @{
     Layout = null;
 }
 
+<style>
+
+    .ui-autocomplete {
+        z-index: 215000000 !important;
+    }
+</style>
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
@@ -17,11 +22,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body ui-front">
 
                 <div class="row mx-3 mb-3">
                     <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.user_id, "帳號", new { @class = "form-label ps-0 fw-semibold me-2" })
+                        @Html.LabelFor(d => d.user_id, new { @class = "form-label ps-0 fw-semibold me-2" })
                         <div class="input-group-addon">
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
@@ -31,51 +36,52 @@
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.user_password, "密碼", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.user_password, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.user_password, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.work_id, "工號", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.work_id, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.work_id, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.user_name, "姓名", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.user_name, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.user_name, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.dept_id, "部門代碼", new { @class = "form-label ps-0 fw-semibold me-3" })
-                        <div class="input-group-addon">
-                            <button id="btnAddUser_SearchDepartment" type="button" class="btn btn-secondary btn-sm">查詢</button>
+                    <div class="col p-0">
+                        @Html.LabelFor(d => d.dept_id, new { @class = "form-label ps-0 fw-semibold me-3" })
+                        <div class="input-group" id="the-basics">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            @Html.TextBoxFor(d => d.dept_id, new { @class = "form-control mw-100"})
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.dept_id, new { @class = "form-control" })
                 </div>
 
+
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_name, "部門名稱", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.dept_name, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.dept_name, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.e_mail, "信箱", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.e_mail, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.e_mail, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.color_enable_flag, "彩色使用權限", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.color_enable_flag, new { @class = "form-label ps-0 fw-semibold" })
                     <div class="col px-0">
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.color_enable_flag, "1", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.color_enable_flag, "0", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 無
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.color_enable_flag, "2", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.color_enable_flag, "1", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 有
                             </label>
@@ -87,13 +93,13 @@
                     @Html.LabelFor(d => d.copy_enable_flag, "影印使用權限", new { @class = "form-label ps-0 fw-semibold" })
                     <div class="col px-0">
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.copy_enable_flag, "1", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.copy_enable_flag, "0", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 無
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.copy_enable_flag, "2", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.copy_enable_flag, "1", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 有
                             </label>
@@ -105,13 +111,13 @@
                     @Html.LabelFor(d => d.print_enable_flag, "列印使用權限", new { @class = "form-label ps-0 fw-semibold" })
                     <div class="col px-0">
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.print_enable_flag, "1", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.print_enable_flag, "0", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 無
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.print_enable_flag, "2", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.print_enable_flag, "1", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 有
                             </label>
@@ -123,13 +129,13 @@
                     @Html.LabelFor(d => d.scan_enable_flag, "掃描使用權限", new { @class = "form-label ps-0 fw-semibold" })
                     <div class="col px-0">
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.scan_enable_flag, "1", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.scan_enable_flag, "0", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 無
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.scan_enable_flag, "2", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.scan_enable_flag, "1", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 有
                             </label>
@@ -141,13 +147,13 @@
                     @Html.LabelFor(d => d.fax_enable_flag, "傳真使用權限", new { @class = "form-label ps-0 fw-semibold" })
                     <div class="col px-0">
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.fax_enable_flag, "1", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.fax_enable_flag, "0", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 無
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            @Html.RadioButtonFor(d => d.fax_enable_flag, "2", new { @class = "form-check-input" })
+                            @Html.RadioButtonFor(d => d.fax_enable_flag, "1", new { @class = "form-check-input" })
                             <label class="form-check-label fs-6" for="flexRadioDefault1">
                                 有
                             </label>
@@ -159,10 +165,38 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-success">新增</button>
+                <button type="submit" class="btn btn-success">新增</button>
             </div>
         }
     </div>
 </div>
 
+<script>
+    //$("#dept_id").keyup(function () {
+    //    alert("asdasd");
+    //});
 
+
+    //$('.advancedAutoComplete').autoComplete('show',{
+    //    resolver: 'custom',
+    //    events: {
+    //        search: function (qry, callback) {
+    //            // let's do a custom ajax call
+    //            $.ajax({
+    //                url: "/Admin/SearchDepartment",
+    //                type:"POST",
+    //                data: { 'qry': qry }
+    //            }).done(function (res) {
+    //                callback(res.result)
+    //            });
+    //        }
+    //    }
+    //});
+
+    $('#dept_id').autoComplete({
+        source:@Url.Action("SearchDepartment","User"),
+        minLength: 1,
+        delay:100
+    });
+
+</script>

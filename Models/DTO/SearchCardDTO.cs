@@ -30,10 +30,10 @@ namespace NISC_MFP_MVC.Models.DTO
 
         public string user_id
         {
-            get
-            { return string.IsNullOrEmpty(_user_id) ? "" : _user_id; }
-            set
-            { _user_id = value; }
+
+            get { return string.IsNullOrEmpty(_user_id) ? "" : _user_id; }
+
+            set { _user_id = value; }
         }
 
         public string user_name

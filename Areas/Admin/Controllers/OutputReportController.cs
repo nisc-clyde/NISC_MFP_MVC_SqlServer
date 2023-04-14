@@ -39,7 +39,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                                                     user_name = u.user_name,
                                                     dept_id = u.dept_id,
                                                     dept_name = d.dept_name,
-                                                    depositor = u.depositor,
                                                     color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
                                                     copy_enable_flag = u.copy_enable_flag,
                                                     print_enable_flag = u.print_enable_flag,

@@ -14,8 +14,9 @@
             @using (Html.BeginForm("ResetCardPoint", "Card", FormMethod.Post))
             {
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.freevalue, "關鍵字查詢", new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.freevalue, new { @class = "form-control" })
+                    @*@Html.LabelFor(d => d.freevalue, "關鍵字查詢", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.freevalue, new { @class = "form-control" })*@
+                    <button class="btn btn-success">Test</button>
                 </div>
             }
         </div>

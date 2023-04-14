@@ -19,8 +19,8 @@ namespace NISC_MFP_MVC.Models
         public string dept_name { get; set; }
         public Nullable<int> dept_value { get; set; }
         public Nullable<int> dept_month_sum { get; set; } 
-        public string dept_usable { get; set; } = "1";
-        public string dept_email { get; set; } = null;
-        public string if_deleted { get; set; } = "0";
+        public string dept_usable { get; set; } 
+        public string dept_email { get; set; } 
+        public string if_deleted { get; set; } 
     }
 }

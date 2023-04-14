@@ -6,7 +6,10 @@
 }
 
 @section UserJS{
+    @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/jqueryui")
     <script src="@Url.Content("~/Scripts/AdminPartialViewScripts/user.js")"></script>
+    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
 }
 
 <div class="d-grid gap-4">
@@ -109,8 +112,9 @@
                 使用者列表&nbsp;<i class="fa-solid fa-list"></i>
                 <button id="btnAddUser" type="button" class="ms-3 btn btn-success mb-1">新增使用者</button>
                 <div class="modal fade" id="addUserForm" role="dialog" data-url='@Url.Action("AddUser","User")'></div>
+                <div class="modal fade" id="searchDepratmentForm" role="dialog" data-url='@Url.Action("SearchDepartment","User")'></div>
             </div>
-            
+
         </div>
 
         <div class="row p-2">
@@ -125,7 +129,7 @@
                         <th>部門名稱</th>
                         <th>彩色使用權限</th>
                         <th>信箱</th>
-                        @*<th>新增使用者</th>*@
+                        <th>操作</th>
                     </tr>
                 </thead>
             </table>

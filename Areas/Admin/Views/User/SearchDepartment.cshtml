@@ -1,5 +1,5 @@
 ﻿@model NISC_MFP_MVC.Models.DTO.SearchDepartmentDTO
-
+@using NISC_MFP_MVC.Models
 @{
     Layout = null;
 }
@@ -11,38 +11,72 @@
         {
 
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(d => d.dept_id)
 
             <div class="modal-header">
-                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">查詢部門編號及名稱</h1>
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-
-                @*<div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.user_id, "帳號", new { @class = "form-label ps-0 fw-semibold me-2" })
-                        <div class="input-group-addon">
-                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
-                        </div>
-                    </div>
-                    @Html.TextBoxFor(d => d.user_id, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.user_id, "", new { @class = "text-danger ps-0 fs-6" })
+                <div class="row mx-3 mb-3" id="test">
+                    @Html.LabelFor(d => d.dept_name, "查詢", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.dept_name, new { @class = "typeahead form-control", id = "departmentSearchBox", })
                 </div>
-
-                <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.user_password, "密碼", new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.user_password, new { @class = "form-control" })
-                </div>*@
-
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-success">新增</button>
+                <button type="submit" class="btn btn-success">確定</button>
             </div>
         }
     </div>
 </div>
+
+<script>
+    var substringMatcher = function (strs) {
+        return function findMatches(q, cb) {
+            var matches, substringRegex;
+
+            // an array that will be populated with substring matches
+            matches = [];
+
+            // regex used to determine if a string contains the substring `q`
+            substrRegex = new RegExp(q, 'i');
+
+            // iterate through the pool of strings and for any string that
+            // contains the substring `q`, add it to the `matches` array
+            $.each(strs, function (i, str) {
+                if (substrRegex.test(str)) {
+                    matches.push(str);
+                }
+            });
+
+            cb(matches);
+        };
+    };
+
+    var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+        'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+        'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+        'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+        'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+        'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+        'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+        'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+        'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+    ];
+
+    $('#test .typeahead').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 1
+    },
+        {
+            name: 'states',
+            source: substringMatcher(states)
+        });
+
+</script>>
 
 

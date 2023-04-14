@@ -1,7 +1,7 @@
 ﻿@model NISC_MFP_MVC.Models.DTO.SearchDepartmentDTO
 
 @{
-    
+
 }
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -20,7 +20,7 @@
             <div class="modal-body">
                 <div class="row mx-3 mb-3">
                     <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.dept_id, "部門編號", new { @class = "form-label fw-semibold me-2" })
+                        @Html.LabelFor(d => d.dept_id, new { @class = "form-label fw-semibold me-2" })
                         <div class="input-group-addon">
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
@@ -30,22 +30,22 @@
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_name, "部門名稱", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.dept_name, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.dept_name, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_value, "可用點數上限", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.dept_value, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.dept_value, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_month_sum, "可用遞增餘額", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.dept_month_sum, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.dept_month_sum, new { @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_usable, "狀態", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.dept_usable, new { @class = "form-label ps-0 fw-semibold" })
                     <div class="col px-0">
                         <div class="form-check form-check-inline">
                             @Html.RadioButtonFor(d => d.dept_usable, "0", new { @class = "form-check-input" })
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_email, "部門管理者Email", new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.LabelFor(d => d.dept_email, new { @class = "form-label ps-0 fw-semibold" })
                     @Html.TextBoxFor(d => d.dept_email, new { @class = "form-control" })
                 </div>
 

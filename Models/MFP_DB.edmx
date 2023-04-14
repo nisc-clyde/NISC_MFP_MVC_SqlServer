@@ -306,7 +306,7 @@
           <Property Name="authority" Type="text" />
           <Property Name="depositor" Type="varchar" MaxLength="1" />
           <Property Name="dept_id" Type="varchar" MaxLength="50" />
-          <Property Name="import_flag" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="import_flag" Type="varchar" MaxLength="1" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="color_enable_flag" Type="varchar" MaxLength="1" />
           <Property Name="reserve_flag" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="scan_reserve_flag" Type="varchar" MaxLength="1" Nullable="false" />
@@ -728,7 +728,7 @@
           <Property Name="authority" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
           <Property Name="depositor" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="dept_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="import_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="import_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="color_enable_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="reserve_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="scan_reserve_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
