@@ -2,7 +2,7 @@
 function SearchWatermarkDataTableInitial() {
     datatable = $("#searchWatermarkDataTable").DataTable({
         ajax: {
-            url: "/Admin/Watermark",
+            url: "/Admin/Watermark/InitialDataTable",
             type: "POST",
             datatype: "json",
             data: { page: "watermark" }

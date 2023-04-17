@@ -214,6 +214,7 @@
     <Compile Include="Models\AbstractSearchDTO.cs" />
     <Compile Include="Models\DTO\SearchUserDTO.cs" />
     <Compile Include="Models\DTO\SearchWatermarkDTO.cs" />
+    <Compile Include="Models\DTO_Initial\tb_department_dto.cs" />
     <Compile Include="Models\DTO_Initial\tb_user_dto.cs" />
     <Compile Include="Models\LoginTO.cs" />
     <Compile Include="Models\MFP_DB.Context.cs">
@@ -1040,7 +1041,8 @@
     <Content Include="Areas\Admin\Views\Card\AddCard.cshtml" />
     <Content Include="Areas\Admin\Views\Card\ResetCardFreePoint.cshtml" />
     <Content Include="Areas\Admin\Views\Watermark\AddWatermark.cshtml" />
-    <Content Include="Areas\Admin\Views\User\SearchDepartment.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\UpdateDepartment.cshtml" />
+    <Content Include="Areas\Admin\Views\User\UpdateUser.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -1076,18 +1078,18 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Login\User.cshtml" />
     <Content Include="Views\Login\Admin.cshtml" />
-    <Content Include="Areas\Admin\Views\Print\Print.cshtml" />
+    <Content Include="Areas\Admin\Views\Print\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
-    <Content Include="Areas\Admin\Views\Deposite\Deposite.cshtml" />
-    <Content Include="Areas\Admin\Views\Department\Department.cshtml" />
-    <Content Include="Areas\Admin\Views\User\User.cshtml" />
-    <Content Include="Areas\Admin\Views\CardReader\CardReader.cshtml" />
-    <Content Include="Areas\Admin\Views\Card\Card.cshtml" />
-    <Content Include="Areas\Admin\Views\Watermark\Watermark.cshtml" />
-    <Content Include="Areas\Admin\Views\History\History.cshtml" />
-    <Content Include="Areas\Admin\Views\System\System.cshtml" />
-    <Content Include="Areas\Admin\Views\OutputReport\OutputReport.cshtml" />
-    <Content Include="Areas\Admin\Views\LogOut\LogOut.cshtml" />
+    <Content Include="Areas\Admin\Views\Deposite\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Card\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Watermark\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\History\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\System\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\OutputReport\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\LogOut\Index.cshtml" />
     <Content Include="Areas\User\Views\Shared\_UserLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>

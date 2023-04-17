@@ -2,7 +2,7 @@
 function SearchUserDataTableInitial() {
     datatable = $("#searchUserDataTable").DataTable({
         ajax: {
-            url: "/Admin/User",
+            url: "/Admin/User/InitialDataTable",
             type: "POST",
             datatype: "json",
             data: { page: "user" }
@@ -18,11 +18,16 @@ function SearchUserDataTableInitial() {
             { data: "e_mail", name: "信箱" },
             {
                 data: null,
-                className: "",
-                defaultContent: "<button type='button' class='btn btn-primary me-2'><i class='fa-solid fa-pen-to-square me-2'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash'></i>刪除</button>",
+                className: "editor-edit",
+                defaultContent: "<button type='button' class='btn btn-primary me-1'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
+                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
                 orderable: false
-            }
+            },
+            { data: "serial", name: "serial" }
+        ],
+        columnDefs: [
+            
+            { visible: false, target: 9 }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
@@ -94,21 +99,21 @@ function ColumnSearch() {
     });
 }
 
-function PopupForm() {
+function PopupFormForAdd() {
     $("#btnAddUser").on("click", function () {
-        var url = $("#addUserForm").data("url");
+        var url = $("#userForm").data("url");
         $.get(
             url,
             { formTitle: $(this).text() },
             function (data) {
-                $("#addUserForm").html(data);
-                $("#addUserForm").modal("show");
+                $("#userForm").html(data);
+                $("#userForm").modal("show");
             }
         );
     });
 }
 
-function SubmitForm(form) {
+function SubmitFormForAdd(form) {
     $.validator.unobtrusive.parse(form);
     if ($(form).valid()) {
         $.ajax({
@@ -117,7 +122,7 @@ function SubmitForm(form) {
             data: $(form).serialize(),
             success: function (data) {
                 if (data.success) {
-                    $("#addUserForm").modal("hide");
+                    $("#userForm").modal("hide");
                     datatable.ajax.reload();
                 }
             }
@@ -126,12 +131,43 @@ function SubmitForm(form) {
     return false;
 }
 
-function typeageadintial() {
+function PopupFormForUpdate() {
+    $("#searchUserDataTable").on("click", "td.editor-edit", function (e) {
+        e.preventDefault();
 
+        var currentRow = $(this).closest("tr");
+        var rowData = $('#searchUserDataTable').DataTable().row(currentRow).data();
+
+        $.get("/Admin/User/UpdateUser", { formTitle: "修改使用者", serial: rowData["serial"] },
+            function (data) {
+                $("#userForm").html(data);
+                $("#userForm").modal("show");
+            })
+    });
 }
+
+function SubmitFormForUpdate(form) {
+    $.validator.unobtrusive.parse(form);
+    if ($(form).valid()) {
+        $.ajax({
+            type: "POST",
+            url: "/Admin/User/UpdateUser",
+            data: $(form).serialize(),
+            success: function (data) {
+                if (data.success) {
+                    $("#userForm").modal("hide");
+                    datatable.ajax.reload();
+                }
+            }
+        });
+    }
+    return false;
+}
+
 
 $(function () {
     SearchUserDataTableInitial();
     ColumnSearch();
-    PopupForm();
+    PopupFormForAdd();
+    PopupFormForUpdate();
 });

@@ -8,7 +8,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class SystemController : Controller
     {
-        public ActionResult System()
+        public ActionResult Index()
         {
             return View();
         }

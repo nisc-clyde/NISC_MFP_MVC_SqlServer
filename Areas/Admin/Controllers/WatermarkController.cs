@@ -13,13 +13,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class WatermarkController : Controller
     {
-        public ActionResult Watermark()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [ActionName("watermark")]
+        [ActionName("InitialDataTable")]
         public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);

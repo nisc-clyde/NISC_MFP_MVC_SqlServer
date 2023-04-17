@@ -2,7 +2,7 @@
 function SearchDepositeDataTableInitial() {
     datatable=$("#searchDepositeDataTable").DataTable({
         ajax: {
-            url: "/Admin/Deposite",
+            url: "/Admin/Deposite/InitialDataTable",
             type: "POST",
             datatype: "json",
             data: { page: "deposite" }

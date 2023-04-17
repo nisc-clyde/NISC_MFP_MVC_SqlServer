@@ -20,11 +20,11 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("AddUser", "User", FormMethod.Post, new { @class = "overflow-auto", onsubmit = "return SubmitFormForAdd(this)" }))
+        @using (Html.BeginForm("UpdateUser", "User", FormMethod.Post, new { @class = "overflow-auto", onsubmit = "return SubmitFormForUpdate(this)" }))
         {
 
             @Html.AntiForgeryToken()
-
+            @Html.HiddenFor(d => d.serial)
             <div class="modal-header">
                 <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

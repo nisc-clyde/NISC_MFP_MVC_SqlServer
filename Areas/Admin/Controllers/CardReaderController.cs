@@ -14,13 +14,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         private static readonly string DISABLE = "1";
         private static readonly string ENABLE = "1";
 
-        public ActionResult CardReader()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [ActionName("cardreader")]
+        [ActionName("InitialDataTable")]
         public ActionResult SearchCardReaderDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);

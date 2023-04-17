@@ -3,7 +3,7 @@
     //$date_time, $login_user_id, $login_user_name, $operation, $affected_data
     $("#searchHistoryDataTable").DataTable({
         ajax: {
-            url: "/Admin/History",
+            url: "/Admin/History/InitialDataTable",
             type: "POST",
             datatype: "json",
             data: {page:"history"}

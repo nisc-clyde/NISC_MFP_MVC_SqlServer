@@ -2,7 +2,7 @@
 function SearchDepartmentDataTableInitial() {
     datatable = $("#searchDepartmentDataTable").DataTable({
         ajax: {
-            url: "/Admin/Department",
+            url: "/Admin/Department/InitialDataTable",
             type: "POST",
             datatype: "json",
             data: { page: "department" }
@@ -15,14 +15,16 @@ function SearchDepartmentDataTableInitial() {
             { data: "dept_email", name: "部門管理者Email" },
             {
                 data: null,
-                className: "",
-                defaultContent: "<button type='button' class='btn btn-primary me-2'><i class='fa-solid fa-pen-to-square me-2'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash'></i>刪除</button>",
+                className: "editor-edit",
+                defaultContent: "<button type='button' class='btn btn-primary me-1'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
+                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
                 orderable: false
-            }
+            },
+            { data: "serial", name: "序列號" }
         ],
         columnDefs: [
-            { "width": "200px", "targets": [6] }
+            { "width": "200px", "targets": [6] },
+            { visible: false, target: 7 }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
@@ -86,18 +88,17 @@ function ColumnSearch() {
     });
 }
 
-function PopupForm() {
+function PopupFormForAdd() {
     $("#btnAddDepartment").on("click", function () {
-        var url = $("#addDepartmentForm").data("url");
-        $.get(url, { formTitle: $(this).text() },
+        $.get("/Admin/Department/AddDepartment", { formTitle: $(this).text() },
             function (data) {
-                $("#addDepartmentForm").html(data);
-                $("#addDepartmentForm").modal("show");
+                $("#departmentForm").html(data);
+                $("#departmentForm").modal("show");
             })
     });
-};
+}
 
-function SubmitForm(form) {
+function SubmitFormForAdd(form) {
     $.validator.unobtrusive.parse(form);
     if ($(form).valid()) {
         $.ajax({
@@ -106,7 +107,40 @@ function SubmitForm(form) {
             data: $(form).serialize(),
             success: function (data) {
                 if (data.success) {
-                    $("#addDepartmentForm").modal("hide");
+                    $("#departmentForm").modal("hide");
+                    datatable.ajax.reload();
+                }
+            }
+        });
+    }
+    return false;
+}
+
+function PopupFormForUpdate() {
+    $("#searchDepartmentDataTable").on("click", "td.editor-edit", function (e) {
+        e.preventDefault();
+
+        var currentRow = $(this).closest("tr");
+        var rowData = $('#searchDepartmentDataTable').DataTable().row(currentRow).data();
+
+        $.get("/Admin/Department/UpdateDepartment", { formTitle: "修改部門", serial: rowData["serial"] },
+            function (data) {
+                $("#departmentForm").html(data);
+                $("#departmentForm").modal("show");
+            })
+    });
+}
+
+function SubmitFormForUpdate(form) {
+    $.validator.unobtrusive.parse(form);
+    if ($(form).valid()) {
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Department/UpdateDepartment",
+            data: $(form).serialize(),
+            success: function (data) {
+                if (data.success) {
+                    $("#departmentForm").modal("hide");
                     datatable.ajax.reload();
                 }
             }
@@ -118,5 +152,6 @@ function SubmitForm(form) {
 $(function () {
     SearchDepartmentDataTableInitial();
     ColumnSearch();
-    PopupForm();
+    PopupFormForAdd();
+    PopupFormForUpdate();
 });

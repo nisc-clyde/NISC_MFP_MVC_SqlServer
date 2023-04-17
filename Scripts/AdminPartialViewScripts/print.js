@@ -167,7 +167,7 @@ function FormSelect_Select() {
 function SearchPrintDataTableInitial() {
     datatable = $("#searchPrintDataTable").DataTable({
         ajax: {
-            url: "/Admin/Print",
+            url: "/Admin/Print/InitialDataTable",
             type: "POST",
             dataType: "json",
             data: { page: "print" }

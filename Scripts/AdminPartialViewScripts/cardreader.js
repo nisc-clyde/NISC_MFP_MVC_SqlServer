@@ -2,7 +2,7 @@
 function SearchCardReaderDataTableInitial() {
     datatable = $("#searchCardReaderDataTable").DataTable({
         ajax: {
-            url: "/Admin/CardReader",
+            url: "/Admin/CardReader/InitialDataTable",
             type: "POST",
             datatype: "json",
             data: { page: "cardreader" }

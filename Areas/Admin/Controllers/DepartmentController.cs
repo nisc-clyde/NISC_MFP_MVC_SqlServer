@@ -1,12 +1,12 @@
 ﻿using NISC_MFP_MVC.Models.DTO;
 using NISC_MFP_MVC.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
-using System.Diagnostics;
+using NISC_MFP_MVC.Models.DTO_Initial;
+using Microsoft.Ajax.Utilities;
+using System.Data.Entity;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -14,35 +14,37 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
-        public ActionResult Department()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [ActionName("department")]
+        [ActionName("InitialDataTable")]
         public ActionResult SearchDepartmentDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
+
             using (MFP_DBEntities db = new MFP_DBEntities())
             {
-                List<SearchDepartmentDTO> searchDepartmentResult = InitialData(db);
+                List<tb_department_dto> searchDepartmentResultDetail = InitialData(db);
 
-                dataTableRequest.RecordsTotalGet = searchDepartmentResult.Count;
+                dataTableRequest.RecordsTotalGet = searchDepartmentResultDetail.Count;
 
-                searchDepartmentResult = GlobalSearch(searchDepartmentResult, dataTableRequest.GlobalSearchValue);
+                searchDepartmentResultDetail = GlobalSearch(searchDepartmentResultDetail, dataTableRequest.GlobalSearchValue);
 
-                searchDepartmentResult = ColumnSearch(searchDepartmentResult, dataTableRequest);
+                searchDepartmentResultDetail = ColumnSearch(searchDepartmentResultDetail, dataTableRequest);
 
-                searchDepartmentResult = searchDepartmentResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
+                searchDepartmentResultDetail = searchDepartmentResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
 
-                dataTableRequest.RecordsFilteredGet = searchDepartmentResult.Count;
 
-                searchDepartmentResult = searchDepartmentResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+                dataTableRequest.RecordsFilteredGet = searchDepartmentResultDetail.Count;
 
-                foreach (SearchDepartmentDTO dto in searchDepartmentResult)
+                searchDepartmentResultDetail = searchDepartmentResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+
+                foreach (tb_department_dto dto in searchDepartmentResultDetail)
                 {
-                    dataTableRequest.SearchDTO.Add(dto);
+                    dataTableRequest.SearchDTO.Add(dto.Convert2PresentationModel());
                 }
 
                 return Json(new
@@ -56,29 +58,30 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [NonAction]
-        public List<SearchDepartmentDTO> InitialData(MFP_DBEntities db)
+        public List<tb_department_dto> InitialData(MFP_DBEntities db)
         {
-            List<SearchDepartmentDTO> searchDepartmentResult = db.tb_department
-                .Select(department => new SearchDepartmentDTO
+            List<tb_department_dto> searchDepartmentResult = db.tb_department
+                .Select(department => new tb_department_dto
                 {
-                    serial=department.serial,
+                    serial = department.serial,
                     dept_id = department.dept_id,
-                    dept_name = department.dept_name,
+                    dept_name = string.IsNullOrEmpty(department.dept_name) ? "" : department.dept_name,
                     dept_value = department.dept_value,
                     dept_month_sum = department.dept_month_sum,
                     dept_usable = department.dept_usable == "0" ? "停用" : "啟用",
-                    dept_email = department.dept_email,
+                    dept_email = string.IsNullOrEmpty(department.dept_email) ? "" : department.dept_email,
                 }).ToList();
             return searchDepartmentResult;
         }
 
         [NonAction]
-        public List<SearchDepartmentDTO> GlobalSearch(List<SearchDepartmentDTO> searchData, string searchValue)
+        public List<tb_department_dto> GlobalSearch(List<tb_department_dto> searchData, string searchValue)
         {
+
             if (!string.IsNullOrEmpty(searchValue))
             {
-                searchData = searchData.Where(
-                    p => p.dept_id.ToUpper().Contains(searchValue.ToUpper()) ||
+                searchData = searchData
+                    .Where(p => p.dept_id.ToUpper().Contains(searchValue.ToUpper()) ||
                     p.dept_name.ToUpper().Contains(searchValue.ToUpper()) ||
                     p.dept_value.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
                     p.dept_month_sum.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
@@ -86,12 +89,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     p.dept_email.ToUpper().Contains(searchValue.ToUpper()) ||
                     p.serial.ToString().ToUpper().Contains(searchValue.ToUpper())
                     ).ToList();
+
             }
+
             return searchData;
         }
 
         [NonAction]
-        public List<SearchDepartmentDTO> ColumnSearch(List<SearchDepartmentDTO> searchData, DataTableRequest searchReauest)
+        public List<tb_department_dto> ColumnSearch(List<tb_department_dto> searchData, DataTableRequest searchReauest)
         {
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
             {
@@ -126,11 +131,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddDepartment()
+        public ActionResult AddDepartment(string formTitle)
         {
             SearchDepartmentDTO initialDepartmentDTO = new SearchDepartmentDTO();
             initialDepartmentDTO.dept_usable = DISABLE;
-            ViewBag.formTitle = Request["formTitle"];
+            ViewBag.formTitle = formTitle;
             return PartialView(initialDepartmentDTO);
         }
 
@@ -139,22 +144,80 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                tb_department result = new tb_department();
-                result.dept_id = string.IsNullOrEmpty(department.dept_id) ? "" : department.dept_id;
-                result.dept_name = string.IsNullOrEmpty(department.dept_name) ? "" : department.dept_name;
+                tb_department_dto result = new tb_department_dto();
+                result.dept_id = department.dept_id;
+                result.dept_name = department.dept_name;
                 result.dept_value = department.dept_value == null ? 0 : department.dept_value;
                 result.dept_month_sum = department.dept_month_sum == null ? 0 : department.dept_month_sum;
-                result.dept_usable = string.IsNullOrEmpty(department.dept_usable) ? "" : department.dept_usable;
-                result.dept_email = string.IsNullOrEmpty(department.dept_email) ? "" : department.dept_email;
+                result.dept_usable = department.dept_usable;
+                result.dept_email = department.dept_email;
 
                 using (MFP_DBEntities db = new MFP_DBEntities())
                 {
-                    db.tb_department.Add(result);
+                    db.tb_department.Add(result.Convert2DatabaseModel());
                     db.SaveChanges();
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
             return RedirectToAction("Department");
+        }
+
+        [HttpGet]
+        public ActionResult UpdateDepartment(string formTitle, int serial)
+        {
+            using (MFP_DBEntities db = new MFP_DBEntities())
+            {
+                SearchDepartmentDTO searchDepartmentDTO = db.tb_department
+                    .Where(d => d.serial.Equals(serial))
+                    .Select(d => new SearchDepartmentDTO
+                    {
+                        dept_id = d.dept_id,
+                        dept_name = d.dept_name,
+                        dept_value = d.dept_value,
+                        dept_month_sum = d.dept_month_sum,
+                        dept_usable = d.dept_usable,
+                        dept_email = d.dept_email
+                    }).FirstOrDefault();
+                ViewBag.formTitle = formTitle;
+                return PartialView(searchDepartmentDTO);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UpdateDepartment(SearchDepartmentDTO department)
+        {
+            if (ModelState.IsValid)
+            {
+                tb_department result = new tb_department();
+
+                tb_department_dto departmentDetail = new tb_department_dto();
+                departmentDetail.dept_id = department.dept_id;
+                departmentDetail.dept_name = department.dept_name;
+                departmentDetail.dept_value = department.dept_value;
+                departmentDetail.dept_month_sum = department.dept_month_sum;
+                departmentDetail.dept_usable = department.dept_usable;
+                departmentDetail.dept_email = department.dept_email;
+                departmentDetail.serial = department.serial;
+
+                result = departmentDetail.Convert2DatabaseModel();
+
+                using (MFP_DBEntities db = new MFP_DBEntities())
+                {
+                    IQueryable<tb_department> targetDepartment = db.tb_department.Where(d => d.serial.Equals(result.serial));
+
+                    targetDepartment.ForEach(d =>
+                    {
+                        d.dept_id = result.dept_id;
+                        d.dept_name = result.dept_name;
+                        d.dept_value = result.dept_value;
+                        d.dept_month_sum = result.dept_month_sum;
+                        d.dept_usable = result.dept_usable;
+                        d.dept_email = result.dept_email;
+                    });
+                    db.SaveChanges();
+                }
+            }
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
     }

@@ -15,13 +15,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class PrintController : Controller
     {
-        public ActionResult Print()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [ActionName("print")]
+        [ActionName("InitialDataTable")]
         public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);

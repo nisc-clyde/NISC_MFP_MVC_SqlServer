@@ -11,13 +11,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class HistoryController : Controller
     {
-        public ActionResult History()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [ActionName("history")]
+        [ActionName("InitialDataTable")]
         public ActionResult SearchHistoryDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);

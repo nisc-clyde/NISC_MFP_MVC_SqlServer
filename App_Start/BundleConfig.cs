@@ -46,11 +46,8 @@ namespace NISC_MFP_MVC
             bundles.Add(new StyleBundle("~/lib/datatable-css").Include("~/lib/datatables/datatables.min.css"));
             bundles.Add(new Bundle("~/lib/datatable-js").Include("~/lib/datatables/datatables.min.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-            "~/Scripts/jquery-ui-{version}.js"));
-            bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
-              "~/Content/themes/base/all.css"));
-
+            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include("~/Scripts/jquery-ui-{version}.js"));
+            bundles.Add(new StyleBundle("~/Content/themes/base/css").Include("~/Content/themes/base/all.css"));
         }
     }
 }

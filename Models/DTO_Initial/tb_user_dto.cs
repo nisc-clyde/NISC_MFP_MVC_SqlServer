@@ -1,12 +1,15 @@
-﻿using System;
+﻿using NISC_MFP_MVC.Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
 
 namespace NISC_MFP_MVC.Models.DTO_Initial
 {
     public class tb_user_dto
     {
+        public int serial { get; set; }
         public string user_id { get; set; }
         public string user_password { get; set; } = null;
         public string work_id { get; set; } = null;
@@ -32,6 +35,7 @@ namespace NISC_MFP_MVC.Models.DTO_Initial
         {
             tb_user user = new tb_user();
 
+            user.serial = serial;
             user.user_id = user_id;
             user.user_password = user_password;
             user.work_id = work_id;
@@ -48,6 +52,26 @@ namespace NISC_MFP_MVC.Models.DTO_Initial
             user.e_mail = e_mail;
             user.if_deleted = if_deleted;
             user.group_id = group_id;
+            user.copy_enable_flag = copy_enable_flag;
+            user.print_enable_flag = print_enable_flag;
+            user.scan_enable_flag = scan_enable_flag;
+            user.fax_enable_flag = fax_enable_flag;
+
+            return user;
+        }
+
+        public SearchUserDTO Convert2PrensentationModel()
+        {
+            SearchUserDTO user = new SearchUserDTO();
+
+            user.serial= serial;
+            user.user_id = user_id;
+            user.user_password = user_password;
+            user.work_id = work_id;
+            user.user_name = user_name;
+            user.dept_id = dept_id;
+            user.color_enable_flag = color_enable_flag;
+            user.e_mail = e_mail;
             user.copy_enable_flag = copy_enable_flag;
             user.print_enable_flag = print_enable_flag;
             user.scan_enable_flag = scan_enable_flag;

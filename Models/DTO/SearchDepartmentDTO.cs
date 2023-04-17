@@ -18,7 +18,6 @@ namespace NISC_MFP_MVC.Models.DTO
             dept_month_sum = 0;
             dept_usable = "";
             dept_email = "";
-            serial = 0;
         }
 
         [Required(ErrorMessage = "此欄位為必填資料")]

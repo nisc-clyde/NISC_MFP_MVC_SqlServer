@@ -17,7 +17,7 @@ namespace NISC_MFP_MVC
             routes.MapRoute(
                 name: "AdminRename",
                 url: "Admin/{controller}/{action}/{id}",
-                defaults: new { controller = "Print", action = "Print", id = UrlParameter.Optional },
+                defaults: new { controller = "Print", action = "Index", id = UrlParameter.Optional },
                 namespaces: new string[] { "NISC_MFP_MVC.Areas.Admin.Controllers" }
                 );
 

@@ -1,15 +1,11 @@
 ﻿using NISC_MFP_MVC.Models.DTO;
 using NISC_MFP_MVC.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
-using System.Data.Entity.Validation;
 using NISC_MFP_MVC.Models.DTO_Initial;
-using System.Diagnostics;
-using static Mysqlx.Expect.Open.Types.Condition.Types;
+using Microsoft.Ajax.Utilities;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -18,13 +14,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
 
-        public ActionResult User()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [ActionName("user")]
+        [ActionName("InitialDataTable")]
         public ActionResult SearchUserDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
@@ -67,6 +63,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                                                     from subd in gj.DefaultIfEmpty()
                                                     select new SearchUserDTO
                                                     {
+                                                        serial = u.serial,
                                                         user_id = u.user_id,
                                                         user_password = u.user_password,
                                                         work_id = u.work_id,
@@ -190,24 +187,95 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult SearchDepartment(string prefix)
         {
-
             using (MFP_DBEntities db = new MFP_DBEntities())
             {
-                //var departmentSearchResult = (from d in db.tb_department
-                //                              where d.dept_id.ToUpper().Contains(prefix.ToUpper()) ||
-                //                                    d.dept_name.ToUpper().Contains(prefix.ToUpper())
-                //                              select new
-                //                              {
-                //                                  dept_id = d.dept_id,
-                //                                  dept_name = d.dept_name
-                //                              }).ToList();
-                var departmentSearchResult = (from d in db.tb_department
-                                              where d.dept_id.ToUpper().Contains(prefix.ToUpper())
-                                              select d).ToList();
-                Debug.WriteLine("Call Success");
-                return Json(departmentSearchResult, JsonRequestBehavior.AllowGet);
+                List<SearchDepartmentDTO> result = db.tb_department
+                    .Where(d => d.dept_id.ToUpper().Contains(prefix.ToUpper()) || d.dept_name.ToUpper().Contains(prefix.ToUpper()))
+                    .Select(d => new SearchDepartmentDTO
+                    {
+                        dept_id = d.dept_id,
+                        dept_name = d.dept_name
+                    }).ToList();
+
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        [HttpGet]
+        public ActionResult UpdateUser(string formTitle, int serial)
+        {
+            using (MFP_DBEntities db = new MFP_DBEntities())
+            {
+                SearchUserDTO searchUserDTO = (from u in db.tb_user
+                                               join d in db.tb_department on u.dept_id equals d.dept_id into gj
+                                               from subd in gj.DefaultIfEmpty()
+                                               where u.serial == serial
+                                               select new SearchUserDTO
+                                               {
+                                                   user_id = u.user_id,
+                                                   user_password = u.user_password,
+                                                   work_id = u.work_id,
+                                                   user_name = u.user_name,
+                                                   dept_id = u.dept_id,
+                                                   dept_name = subd.dept_name,
+                                                   color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
+                                                   copy_enable_flag = u.copy_enable_flag,
+                                                   print_enable_flag = u.print_enable_flag,
+                                                   scan_enable_flag = u.scan_enable_flag,
+                                                   fax_enable_flag = u.fax_enable_flag,
+                                                   e_mail = u.e_mail,
+                                               }).FirstOrDefault();
+
+                ViewBag.formTitle = formTitle;
+                return PartialView(searchUserDTO);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UpdateUser(SearchUserDTO user)
+        {
+            if (ModelState.IsValid)
+            {
+                tb_user result = new tb_user();
+
+                tb_user_dto userDetail = new tb_user_dto();
+                userDetail.user_id = user.dept_id;
+                userDetail.user_password = user.user_password;
+                userDetail.work_id = user.work_id;
+                userDetail.user_name = user.user_name;
+                userDetail.dept_id = user.dept_id;
+                userDetail.color_enable_flag = user.color_enable_flag;
+                userDetail.copy_enable_flag = user.copy_enable_flag;
+                userDetail.print_enable_flag = user.print_enable_flag;
+                userDetail.scan_enable_flag = user.scan_enable_flag;
+                userDetail.fax_enable_flag = user.fax_enable_flag;
+                userDetail.e_mail = user.e_mail;
+                userDetail.serial = user.serial;
+
+                result = userDetail.Convert2DatabaseModel();
+
+                using (MFP_DBEntities db = new MFP_DBEntities())
+                {
+                    IQueryable<tb_user> targetUser = db.tb_user.Where(d => d.serial.Equals(result.serial));
+
+                    targetUser.ForEach(d =>
+                    {
+                        d.user_password = result.user_password;
+                        d.work_id = result.work_id;
+                        d.user_name = result.user_name;
+                        d.dept_id = result.dept_id;
+                        d.color_enable_flag = result.color_enable_flag;
+                        d.copy_enable_flag = result.copy_enable_flag;
+                        d.print_enable_flag = result.print_enable_flag;
+                        d.scan_enable_flag = result.scan_enable_flag;
+                        d.fax_enable_flag = result.fax_enable_flag;
+                        d.e_mail = result.e_mail;
+                    });
+                    db.SaveChanges();
+                }
+            }
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

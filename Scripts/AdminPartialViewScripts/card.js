@@ -2,7 +2,7 @@
 function SearchCardDataTableInitial() {
     datatable = $("#searchCardDataTable").DataTable({
         ajax: {
-            url: "/Admin/Card",
+            url: "/Admin/Card/InitialDataTable",
             type: "POST",
             datatype: "json",
             data: { page: "card" }
@@ -89,7 +89,7 @@ function ColumnSearch() {
 
 function PopupForm() {
     $("#btnAddCard").on("click", function () {
-        var url = "/Admin/AddCard"
+        var url = "/Admin/Card/AddCard"
         $.get(
             url,
             { formTitle: $(this).text() },
@@ -101,7 +101,7 @@ function PopupForm() {
     });
 
     $("#btnResetCardFreePoint").on("click", function () {
-        var url = "/Admin/ResetCardFreePoint"
+        var url = "/Admin/Card/ResetCardFreePoint"
         $.get(
             url,
             { formTitle: $(this).text() },

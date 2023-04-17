@@ -11,13 +11,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class DepositeController : Controller
     {
-        public ActionResult Deposite()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [ActionName("deposite")]
+        [ActionName("InitialDataTable")]
         public ActionResult SearchDepositeDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);

@@ -1,5 +1,6 @@
 ﻿using NISC_MFP_MVC.Models;
 using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC.Models.DTO_Initial;
 using NISC_MFP_MVC.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class OutputReportController : Controller
     {
-        public ActionResult OutputReport()
+        public ActionResult Index()
         {
             SearchOutputReportDTO outputReportResult = new SearchOutputReportDTO();
             OutputReportViewModel outputReportViewModel = new OutputReportViewModel();
@@ -24,28 +25,35 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [NonAction]
+        [ActionName("InitialDataTable")]
         public SearchOutputReportDTO InitialData(MFP_DBEntities db)
         {
             SearchOutputReportDTO outputReportResult = new SearchOutputReportDTO();
-            outputReportResult.searchDepartmentDTOs = new DepartmentController().InitialData(db);
-            
-            outputReportResult.searchUserDTOs= (from u in db.tb_user
-                                                join d in db.tb_department on u.dept_id equals d.dept_id
-                                                select new SearchUserDTO
-                                                {
-                                                    user_id = u.user_id,
-                                                    user_password = u.user_password,
-                                                    work_id = u.work_id,
-                                                    user_name = u.user_name,
-                                                    dept_id = u.dept_id,
-                                                    dept_name = d.dept_name,
-                                                    color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
-                                                    copy_enable_flag = u.copy_enable_flag,
-                                                    print_enable_flag = u.print_enable_flag,
-                                                    scan_enable_flag = u.scan_enable_flag,
-                                                    fax_enable_flag = u.fax_enable_flag,
-                                                    e_mail = u.e_mail,
-                                                }).ToList();
+
+            List<tb_department_dto> departmentDTO = new List<tb_department_dto>();
+
+            foreach (tb_department_dto d in departmentDTO)
+            {
+                outputReportResult.searchDepartmentDTOs.Add(d.Convert2PresentationModel());
+            }
+
+            outputReportResult.searchUserDTOs = (from u in db.tb_user
+                                                 join d in db.tb_department on u.dept_id equals d.dept_id
+                                                 select new SearchUserDTO
+                                                 {
+                                                     user_id = u.user_id,
+                                                     user_password = u.user_password,
+                                                     work_id = u.work_id,
+                                                     user_name = u.user_name,
+                                                     dept_id = u.dept_id,
+                                                     dept_name = d.dept_name,
+                                                     color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
+                                                     copy_enable_flag = u.copy_enable_flag,
+                                                     print_enable_flag = u.print_enable_flag,
+                                                     scan_enable_flag = u.scan_enable_flag,
+                                                     fax_enable_flag = u.fax_enable_flag,
+                                                     e_mail = u.e_mail,
+                                                 }).ToList();
 
             outputReportResult.searchUserDTOs = new UserController().InitialData(db);
             outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData(db);

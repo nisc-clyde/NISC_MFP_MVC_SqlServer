@@ -7,11 +7,11 @@
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 
     <div class="modal-content">
-        @using (Html.BeginForm("AddDepartment", "Department", FormMethod.Post, new { onsubmit = "return SubmitFormForAdd(this)" }))
+        @using (Html.BeginForm("UpdateDepartment", "Department", FormMethod.Post, new { onsubmit = "return SubmitFormForUpdate(this)" }))
         {
 
             @Html.AntiForgeryToken()
-
+            @Html.HiddenFor(d => d.serial);
             <div class="modal-header">
                 <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
