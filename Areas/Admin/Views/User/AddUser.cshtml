@@ -1,6 +1,6 @@
 ﻿@model NISC_MFP_MVC.Models.DTO.SearchUserDTO
 @{
-    Layout = null;
+    
 }
 
 <style>
@@ -22,7 +22,6 @@
     <div class="modal-content">
         @using (Html.BeginForm("AddUser", "User", FormMethod.Post, new { @class = "overflow-auto", onsubmit = "return SubmitFormForAdd(this)" }))
         {
-
             @Html.AntiForgeryToken()
 
             <div class="modal-header">
@@ -76,7 +75,7 @@
 
                 <div class="row mx-3 mb-3">
                     @Html.LabelFor(d => d.e_mail, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.e_mail, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.e_mail, new { @class = "form-control", @type = "email" })
                 </div>
 
                 <div class="row mx-3 mb-3">

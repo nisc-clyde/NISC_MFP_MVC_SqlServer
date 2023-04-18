@@ -35,13 +35,19 @@
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_value, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_value, new { @class = "form-label fw-semibold me-2" })
+                    </div>
                     @Html.TextBoxFor(d => d.dept_value, new { @class = "form-control", @type = "number" })
+                    @Html.ValidationMessageFor(d => d.dept_value, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_month_sum, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_month_sum, new { @class = "form-label fw-semibold me-2" })
+                    </div>
                     @Html.TextBoxFor(d => d.dept_month_sum, new { @class = "form-control", @type = "number" })
+                    @Html.ValidationMessageFor(d => d.dept_month_sum, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
                 <div class="row mx-3 mb-3">
@@ -63,8 +69,11 @@
                 </div>
 
                 <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.dept_email, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.dept_email, new { @class = "form-control" })
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_email, new { @class = "form-label fw-semibold me-2" })
+                    </div>
+                    @Html.TextBoxFor(d => d.dept_email, new { @class = "form-control", @type = "email" })
+                    @Html.ValidationMessageFor(d => d.dept_email, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
             </div>

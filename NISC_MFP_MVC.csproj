@@ -46,6 +46,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Extensions.Microsoft.DependencyInjection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=e767ac9c89543656, processorArchitecture=MSIL">
+      <HintPath>packages\AutoMapper.Extensions.Microsoft.DependencyInjection.8.1.1\lib\netstandard2.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -71,6 +77,15 @@
       <HintPath>packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Options.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Primitives.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=8.0.32.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>packages\MySql.Data.8.0.32.1\lib\net452\MySql.Data.dll</HintPath>
     </Reference>
@@ -83,6 +98,9 @@
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.ComponentModel.Annotations.4.6.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
@@ -214,8 +232,10 @@
     <Compile Include="Models\AbstractSearchDTO.cs" />
     <Compile Include="Models\DTO\SearchUserDTO.cs" />
     <Compile Include="Models\DTO\SearchWatermarkDTO.cs" />
-    <Compile Include="Models\DTO_Initial\tb_department_dto.cs" />
-    <Compile Include="Models\DTO_Initial\tb_user_dto.cs" />
+    <Compile Include="Models\DTO_Initial\CardReaderRepoDTO.cs" />
+    <Compile Include="Models\DTO_Initial\CardRepoDTO.cs" />
+    <Compile Include="Models\DTO_Initial\DepartmentRepoDTO.cs" />
+    <Compile Include="Models\DTO_Initial\UserRepoDTO.cs" />
     <Compile Include="Models\LoginTO.cs" />
     <Compile Include="Models\MFP_DB.Context.cs">
       <AutoGen>True</AutoGen>
@@ -1043,6 +1063,7 @@
     <Content Include="Areas\Admin\Views\Watermark\AddWatermark.cshtml" />
     <Content Include="Areas\Admin\Views\Department\UpdateDepartment.cshtml" />
     <Content Include="Areas\Admin\Views\User\UpdateUser.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\UpdateCardReader.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

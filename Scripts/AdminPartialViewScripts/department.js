@@ -15,15 +15,14 @@ function SearchDepartmentDataTableInitial() {
             { data: "dept_email", name: "部門管理者Email" },
             {
                 data: null,
-                className: "editor-edit",
-                defaultContent: "<button type='button' class='btn btn-primary me-1'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
+                defaultContent: "<button type='button' class='btn btn-info btn-sm me-1 btn-edit'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
+                    "<button type='button' class='btn btn-danger btn-sm btn-delete'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
                 orderable: false
             },
             { data: "serial", name: "序列號" }
         ],
         columnDefs: [
-            { "width": "200px", "targets": [6] },
+            { "width": "150px", target: 6 },
             { visible: false, target: 7 }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
@@ -39,6 +38,7 @@ function SearchDepartmentDataTableInitial() {
         serverSide: true,
         processing: true,
         pagingType: 'full_numbers',
+        responsive: true,
         language: {
             processing: "資料載入中...請稍後",
             paginate: {
@@ -117,11 +117,11 @@ function SubmitFormForAdd(form) {
 }
 
 function PopupFormForUpdate() {
-    $("#searchDepartmentDataTable").on("click", "td.editor-edit", function (e) {
+    datatable.on("click", ".btn-edit", function (e) {
         e.preventDefault();
 
         var currentRow = $(this).closest("tr");
-        var rowData = $('#searchDepartmentDataTable').DataTable().row(currentRow).data();
+        var rowData = datatable.row(currentRow).data();
 
         $.get("/Admin/Department/UpdateDepartment", { formTitle: "修改部門", serial: rowData["serial"] },
             function (data) {

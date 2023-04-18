@@ -21,16 +21,18 @@ namespace NISC_MFP_MVC.Models.DTO
         }
 
         [Required(ErrorMessage = "此欄位為必填資料")]
-        [Display(Name = "部門編號")]        
+        [Display(Name = "部門編號")]
         public string dept_id { get; set; }
 
         [Display(Name = "部門名稱")]
         public string dept_name { get; set; }
 
         [Display(Name = "可用點數上限")]
+        [Range(0, Double.MaxValue, ErrorMessage = "{0}不得小於0")]
         public int? dept_value { get; set; }
 
         [Display(Name = "可用遞增餘額")]
+        [Range(0, Double.MaxValue, ErrorMessage = "{0}不得小於0")]
         public int? dept_month_sum { get; set; }
 
         [Display(Name = "狀態")]

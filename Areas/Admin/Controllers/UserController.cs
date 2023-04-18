@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
 using NISC_MFP_MVC.Models.DTO_Initial;
 using Microsoft.Ajax.Utilities;
+using AutoMapper;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -58,27 +59,32 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public List<SearchUserDTO> InitialData(MFP_DBEntities db)
         {
-            List<SearchUserDTO> SearchUserResult = (from u in db.tb_user
-                                                    join d in db.tb_department on u.dept_id equals d.dept_id into gj
-                                                    from subd in gj.DefaultIfEmpty()
-                                                    select new SearchUserDTO
-                                                    {
-                                                        serial = u.serial,
-                                                        user_id = u.user_id,
-                                                        user_password = u.user_password,
-                                                        work_id = u.work_id,
-                                                        user_name = u.user_name,
-                                                        dept_id = u.dept_id,
-                                                        dept_name = subd.dept_name,
-                                                        color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
-                                                        copy_enable_flag = u.copy_enable_flag,
-                                                        print_enable_flag = u.print_enable_flag,
-                                                        scan_enable_flag = u.scan_enable_flag,
-                                                        fax_enable_flag = u.fax_enable_flag,
-                                                        e_mail = u.e_mail,
-                                                    }).ToList();
+            List<UserRepoDTO> searchUserResult = (from u in db.tb_user
+                                                  join d in db.tb_department on u.dept_id equals d.dept_id into gj
+                                                  from subd in gj.DefaultIfEmpty()
+                                                  select new UserRepoDTO
+                                                  {
+                                                      serial = u.serial,
+                                                      user_id = u.user_id,
+                                                      user_password = u.user_password,
+                                                      work_id = u.work_id,
+                                                      user_name = u.user_name,
+                                                      dept_id = u.dept_id,
+                                                      dept_name = subd.dept_name,
+                                                      color_enable_flag = u.color_enable_flag,
+                                                      copy_enable_flag = u.copy_enable_flag,
+                                                      print_enable_flag = u.print_enable_flag,
+                                                      scan_enable_flag = u.scan_enable_flag,
+                                                      fax_enable_flag = u.fax_enable_flag,
+                                                      e_mail = u.e_mail,
+                                                  }).ToList();
+            List<SearchUserDTO> result = new List<SearchUserDTO>();
+            foreach(UserRepoDTO u in searchUserResult)
+            {
+                result.Add(u.Convert2PrensentationModel());
+            }
 
-            return SearchUserResult;
+            return result;
         }
         [NonAction]
         public List<SearchUserDTO> GlobalSearch(List<SearchUserDTO> searchData, string searchValue)
@@ -144,7 +150,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddUser()
+        public ActionResult AddUser(string formTitle)
         {
             SearchUserDTO initialUserDTO = new SearchUserDTO();
             initialUserDTO.color_enable_flag = DISABLE;
@@ -152,7 +158,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             initialUserDTO.print_enable_flag = DISABLE;
             initialUserDTO.scan_enable_flag = DISABLE;
             initialUserDTO.fax_enable_flag = DISABLE;
-            ViewBag.formTitle = Request["formTitle"];
+            ViewBag.formTitle = formTitle;
             return PartialView(initialUserDTO);
         }
 
@@ -161,7 +167,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                tb_user_dto result = new tb_user_dto();
+                UserRepoDTO result = new UserRepoDTO();
                 result.user_id = user.user_id;
                 result.user_password = user.user_password;
                 result.work_id = user.work_id;
@@ -181,7 +187,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return RedirectToAction("User");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -219,7 +225,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                                                    user_name = u.user_name,
                                                    dept_id = u.dept_id,
                                                    dept_name = subd.dept_name,
-                                                   color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
+                                                   color_enable_flag = u.color_enable_flag,
                                                    copy_enable_flag = u.copy_enable_flag,
                                                    print_enable_flag = u.print_enable_flag,
                                                    scan_enable_flag = u.scan_enable_flag,
@@ -239,7 +245,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 tb_user result = new tb_user();
 
-                tb_user_dto userDetail = new tb_user_dto();
+                UserRepoDTO userDetail = new UserRepoDTO();
                 userDetail.user_id = user.dept_id;
                 userDetail.user_password = user.user_password;
                 userDetail.work_id = user.work_id;

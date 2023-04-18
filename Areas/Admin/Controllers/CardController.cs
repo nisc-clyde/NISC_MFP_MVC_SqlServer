@@ -15,6 +15,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "1";
         private static readonly string ENABLE = "1";
+        private MFP_DBEntities db = new MFP_DBEntities();
+
         public ActionResult Index()
         {
             return View();
@@ -25,39 +27,38 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchCardDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            using (MFP_DBEntities db = new MFP_DBEntities())
+
+            List<SearchCardDTO> searchCardResult = InitialData();
+
+            dataTableRequest.RecordsTotalGet = searchCardResult.Count;
+
+            searchCardResult = GlobalSearch(searchCardResult, dataTableRequest.GlobalSearchValue);
+
+            searchCardResult = ColumnSearch(searchCardResult, dataTableRequest);
+
+            searchCardResult = searchCardResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
+
+            dataTableRequest.RecordsFilteredGet = searchCardResult.Count;
+
+            searchCardResult = searchCardResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+
+            foreach (SearchCardDTO dto in searchCardResult)
             {
-                List<SearchCardDTO> searchCardResult = InitialData(db);
-
-                dataTableRequest.RecordsTotalGet = searchCardResult.Count;
-
-                searchCardResult = GlobalSearch(searchCardResult, dataTableRequest.GlobalSearchValue);
-
-                searchCardResult = ColumnSearch(searchCardResult, dataTableRequest);
-
-                searchCardResult = searchCardResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
-
-                dataTableRequest.RecordsFilteredGet = searchCardResult.Count;
-
-                searchCardResult = searchCardResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
-
-                foreach (SearchCardDTO dto in searchCardResult)
-                {
-                    dataTableRequest.SearchDTO.Add(dto);
-                }
-
-                return Json(new
-                {
-                    data = dataTableRequest.SearchDTO,
-                    draw = dataTableRequest.Draw,
-                    recordsTotal = dataTableRequest.RecordsTotalGet,
-                    recordsFiltered = dataTableRequest.RecordsFilteredGet
-                }, JsonRequestBehavior.AllowGet);
+                dataTableRequest.SearchDTO.Add(dto);
             }
+
+            return Json(new
+            {
+                data = dataTableRequest.SearchDTO,
+                draw = dataTableRequest.Draw,
+                recordsTotal = dataTableRequest.RecordsTotalGet,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
+
         }
 
         [NonAction]
-        public List<SearchCardDTO> InitialData(MFP_DBEntities db)
+        public List<SearchCardDTO> InitialData()
         {
             List<SearchCardDTO> searchCardResult = (from c in db.tb_card
                                                     join u in db.tb_user on c.user_id equals u.user_id
@@ -133,12 +134,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddCard()
+        public ActionResult AddCard(string formTitle)
         {
             SearchCardDTO initialCardDTO = new SearchCardDTO();
             initialCardDTO.card_type = DISABLE;
             initialCardDTO.enable = DISABLE;
-            ViewBag.formTitle = Request["formTitle"];
+            ViewBag.formTitle = formTitle;
             return PartialView(initialCardDTO);
         }
 
@@ -148,5 +149,32 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             ViewBag.formTitle = Request["formTitle"];
             return PartialView();
         }
+
+        [HttpPost]
+        public ActionResult AddCard(SearchCardDTO card)
+        {
+            
+            return PartialView();
+        }
+
+
+        [HttpPost]
+        public ActionResult SearchUser(string prefix)
+        {
+            List<SearchUserDTO> result = new UserController().InitialData(db)
+                .Where(u => u.user_id != null && u.user_id.ToUpper().Contains(prefix.ToUpper()) || u.user_name != null && u.user_name.ToUpper().Contains(prefix.ToUpper()))
+                .Select(u => new SearchUserDTO { user_id = u.user_id ?? "", user_name = u.user_name ?? "" })
+                .ToList();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
+        }
+
     }
+
 }

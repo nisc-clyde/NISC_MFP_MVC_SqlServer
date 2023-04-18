@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
@@ -8,59 +9,27 @@ namespace NISC_MFP_MVC.Models.DTO
     //$card_id, $value, $freevalue, $user_id, $user_name, $card_type, $enable, $serial
     public class SearchCardDTO : AbstractSearchDTO
     {
-        private string _card_id;
-        //private int? _value;
-        //private int _freevalue;
-        private string _user_id;
-        private string _user_name;
-        private string _card_type;
-        private string _enable;
+        [DisplayName("卡片編號")]
+        public string card_id { get; set; }
+        [DisplayName("點數")]
+        public int? value { get; set; }
 
-        public string card_id
-        {
-            get
-            { return string.IsNullOrEmpty(_card_id) ? "" : _card_id; }
-            set
-            { _card_id = value; }
-        }
+        [DisplayName("免費點數")]
+        public int freevalue { get; set; }
 
-        public int? value { get; set; } = 0;
+        [DisplayName("使用者帳號")]
+        public string user_id { get; set; }
 
-        public int freevalue { get; set; } = 0;
+        [DisplayName("使用者姓名")]
+        public string user_name { get; set; }
 
-        public string user_id
-        {
+        [DisplayName("屬性")]
+        public string card_type { get; set; }
 
-            get { return string.IsNullOrEmpty(_user_id) ? "" : _user_id; }
+        [DisplayName("使用狀態")]
+        public string enable { get; set; }
 
-            set { _user_id = value; }
-        }
-
-        public string user_name
-        {
-            get
-            { return string.IsNullOrEmpty(_user_name) ? "" : _user_name; }
-            set
-            { _user_name = value; }
-        }
-
-        public string card_type
-        {
-            get
-            { return string.IsNullOrEmpty(_card_type) ? "" : _card_type; }
-            set
-            { _card_type = value; }
-        }
-
-        public string enable
-        {
-            get
-            { return string.IsNullOrEmpty(_enable) ? "" : _enable; }
-            set
-            { _enable = value; }
-        }
-
-        public int serial { get; set; } = 0;
+        public int serial { get; set; }
 
         public static string ColumnName2Property(string index)
         {

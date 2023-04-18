@@ -7,7 +7,7 @@ using System.Web;
 
 namespace NISC_MFP_MVC.Models.DTO_Initial
 {
-    public class tb_department_dto
+    public class DepartmentRepoDTO
     {
         private int? _dept_value = 0;
         private int? _dept_month_sum = 0;

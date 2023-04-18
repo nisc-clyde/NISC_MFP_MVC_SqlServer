@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -8,54 +10,34 @@ namespace NISC_MFP_MVC.Models.DTO
     //$cr_id, $cr_ip, $cr_port, $cr_type, $cr_mode, $cr_card_switch, $cr_status, $serial
     public class SearchCardReaderDTO : AbstractSearchDTO
     {
-        private string _cr_id;
-        private string _cr_ip;
-        private string _cr_port;
-        private string _cr_type;
-        private string _cr_mode;
-        private string _cr_card_switch;
-        private string _cr_status;
-        //private int _serial;
+        [Required(ErrorMessage = "此欄位為必填資料")]
+        [DisplayName("卡機編號")]
+        public string cr_id { get; set; }
 
-        public string cr_id
-        {
-            get { return string.IsNullOrEmpty(_cr_id) ? "" : _cr_id; }
-            set { _cr_id = value; }
-        }
+        [DisplayName("IP位置")]
+        [RegularExpression(@"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", ErrorMessage = "欄位內容格式錯誤")]
+        [MaxLength(15, ErrorMessage = "欄位內容不符合規定長度")]
+        public string cr_ip { get; set; }
 
-        public string cr_ip
-        {
-            get { return string.IsNullOrEmpty(_cr_ip) ? "" : _cr_ip; }
-            set { _cr_ip = value; }
-        }
+        [DisplayName("PORT")]
+        [Required(ErrorMessage = "此欄位為必填資料")]
+        [RegularExpression(@"^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$", ErrorMessage = "欄位內容格式錯誤")]
+        [MaxLength(5, ErrorMessage = "欄位內容不符合規定長度")]
+        public string cr_port { get; set; }
 
-        public string cr_port
-        {
-            get { return string.IsNullOrEmpty(_cr_port) ? "" : _cr_port; }
-            set { _cr_port = value; }
-        }
+        [Required(ErrorMessage = "此欄位為必填資料")]
+        [DisplayName("卡機種類")]
+        public string cr_type { get; set; }
 
-        public string cr_type
-        {
-            get { return string.IsNullOrEmpty(_cr_type) ? "" : _cr_type; }
-            set { _cr_type = value; }
-        }
+        [Required(ErrorMessage = "此欄位為必填資料")]
+        [DisplayName("運作模式")]
+        public string cr_mode { get; set; }
 
-        public string cr_mode
-        {
-            get { return string.IsNullOrEmpty(_cr_mode) ? "" : _cr_mode; }
-            set { _cr_mode = value; }
-        }
-        public string cr_card_switch
-        {
-            get { return string.IsNullOrEmpty(_cr_card_switch) ? "" : _cr_card_switch; }
-            set { _cr_card_switch = value; }
-        }
-        public string cr_status
-        {
-            get { return string.IsNullOrEmpty(_cr_status) ? "" : _cr_status; }
-            set { _cr_status = value; }
-        }
+        [DisplayName("卡號判斷開關")]
+        public string cr_card_switch { get; set; }
+
+        [DisplayName("狀態")]
+        public string cr_status { get; set; }
 
         public int serial { get; set; } = 0;
 

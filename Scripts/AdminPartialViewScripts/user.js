@@ -18,15 +18,15 @@ function SearchUserDataTableInitial() {
             { data: "e_mail", name: "信箱" },
             {
                 data: null,
-                className: "editor-edit",
-                defaultContent: "<button type='button' class='btn btn-primary me-1'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
+                defaultContent: "<button type='button' class='btn btn-primary btn-sm me-1 btn-permission'><i class='fa-solid fa-circle-info me-1'></i>權限</button>" +
+                    "<button type='button' class='btn btn-info btn-sm me-1 btn-edit'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
+                    "<button type='button' class='btn btn-danger btn-sm btn-delete'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
                 orderable: false
             },
             { data: "serial", name: "serial" }
         ],
         columnDefs: [
-            
+            { width: "220px", targets: 8 },
             { visible: false, target: 9 }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
@@ -42,6 +42,7 @@ function SearchUserDataTableInitial() {
         serverSide: true,
         processing: true,
         pagingType: 'full_numbers',
+        responsive: true,
         language: {
             processing: "資料載入中...請稍後",
             paginate: {
@@ -53,6 +54,14 @@ function SearchUserDataTableInitial() {
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
             zeroRecords: "找不到相符資料",
             search: "全部欄位搜尋："
+        },
+        rowCallback: function (row, data) {
+            if (data.color_enable_flag == "1") {
+                $('td:eq(6)', row).html("<b class='text-success'>有</b>");
+            } else {
+                $('td:eq(6)', row).html("<b class='text-danger'>無</b>");
+            }
+
         }
     });
 }
@@ -87,7 +96,7 @@ function ColumnSearch() {
     });
 
     $("#searchUser_ColorPermissionSelect").change(function () {
-        if ($("#searchUser_ColorPermissionSelect").val() != "0") {
+        if ($("#searchUser_ColorPermissionSelect").val() != "") {
             datatable.columns(6).search($("#searchUser_ColorPermissionSelect :selected").text()).draw();
         } else {
             datatable.columns(6).search("").draw();
@@ -132,11 +141,11 @@ function SubmitFormForAdd(form) {
 }
 
 function PopupFormForUpdate() {
-    $("#searchUserDataTable").on("click", "td.editor-edit", function (e) {
+    datatable.on("click", ".btn-edit", function (e) {
         e.preventDefault();
 
         var currentRow = $(this).closest("tr");
-        var rowData = $('#searchUserDataTable').DataTable().row(currentRow).data();
+        var rowData = datatable.row(currentRow).data();
 
         $.get("/Admin/User/UpdateUser", { formTitle: "修改使用者", serial: rowData["serial"] },
             function (data) {

@@ -1,9 +1,11 @@
-﻿using NISC_MFP_MVC.Models;
+﻿using AutoMapper;
+using NISC_MFP_MVC.Models;
 using NISC_MFP_MVC.Models.DTO;
 using NISC_MFP_MVC.Models.DTO_Initial;
 using NISC_MFP_MVC.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -30,12 +32,17 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             SearchOutputReportDTO outputReportResult = new SearchOutputReportDTO();
 
-            List<tb_department_dto> departmentDTO = new List<tb_department_dto>();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<DepartmentRepoDTO, SearchDepartmentDTO>());
 
-            foreach (tb_department_dto d in departmentDTO)
+            var mapper = new Mapper(config);
+
+            List<DepartmentRepoDTO> departmerntsDetail = new DepartmentController().InitialData(db);
+            List<SearchDepartmentDTO> departmernts = new List<SearchDepartmentDTO>();
+            foreach (DepartmentRepoDTO d in departmerntsDetail)
             {
-                outputReportResult.searchDepartmentDTOs.Add(d.Convert2PresentationModel());
+                departmernts.Add(d.Convert2PresentationModel());
             }
+            outputReportResult.searchDepartmentDTOs= departmernts;
 
             outputReportResult.searchUserDTOs = (from u in db.tb_user
                                                  join d in db.tb_department on u.dept_id equals d.dept_id
@@ -47,7 +54,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                                                      user_name = u.user_name,
                                                      dept_id = u.dept_id,
                                                      dept_name = d.dept_name,
-                                                     color_enable_flag = u.color_enable_flag == "0" ? "無" : "有",
+                                                     color_enable_flag = u.color_enable_flag,
                                                      copy_enable_flag = u.copy_enable_flag,
                                                      print_enable_flag = u.print_enable_flag,
                                                      scan_enable_flag = u.scan_enable_flag,

@@ -7,16 +7,21 @@ using System.Web.UI.WebControls;
 
 namespace NISC_MFP_MVC.Models.DTO_Initial
 {
-    public class tb_user_dto
+    public class UserRepoDTO
     {
+        //private string _user_name;
+
         public int serial { get; set; }
         public string user_id { get; set; }
         public string user_password { get; set; } = null;
         public string work_id { get; set; } = null;
+        //public string user_name { get { return _user_name; } set { _user_name = value ?? ""; } }
         public string user_name { get; set; } = null;
+
         public string authority { get; set; } = null;
         public string depositor { get; set; } = "0";
         public string dept_id { get; set; } = null;
+        public string dept_name { get; set; } = "";
         public string import_flag { get; set; } = "0";
         public string color_enable_flag { get; set; } = "0";
         public string reserve_flag { get; set; } = "0";
@@ -64,12 +69,13 @@ namespace NISC_MFP_MVC.Models.DTO_Initial
         {
             SearchUserDTO user = new SearchUserDTO();
 
-            user.serial= serial;
+            user.serial = serial;
             user.user_id = user_id;
             user.user_password = user_password;
             user.work_id = work_id;
             user.user_name = user_name;
             user.dept_id = dept_id;
+            user.dept_name = dept_name;
             user.color_enable_flag = color_enable_flag;
             user.e_mail = e_mail;
             user.copy_enable_flag = copy_enable_flag;

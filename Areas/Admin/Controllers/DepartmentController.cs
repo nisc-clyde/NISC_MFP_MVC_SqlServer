@@ -27,7 +27,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             using (MFP_DBEntities db = new MFP_DBEntities())
             {
-                List<tb_department_dto> searchDepartmentResultDetail = InitialData(db);
+                List<DepartmentRepoDTO> searchDepartmentResultDetail = InitialData(db);
 
                 dataTableRequest.RecordsTotalGet = searchDepartmentResultDetail.Count;
 
@@ -42,7 +42,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
                 searchDepartmentResultDetail = searchDepartmentResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
 
-                foreach (tb_department_dto dto in searchDepartmentResultDetail)
+                foreach (DepartmentRepoDTO dto in searchDepartmentResultDetail)
                 {
                     dataTableRequest.SearchDTO.Add(dto.Convert2PresentationModel());
                 }
@@ -58,10 +58,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [NonAction]
-        public List<tb_department_dto> InitialData(MFP_DBEntities db)
+        public List<DepartmentRepoDTO> InitialData(MFP_DBEntities db)
         {
-            List<tb_department_dto> searchDepartmentResult = db.tb_department
-                .Select(department => new tb_department_dto
+            List<DepartmentRepoDTO> searchDepartmentResult = db.tb_department
+                .Select(department => new DepartmentRepoDTO
                 {
                     serial = department.serial,
                     dept_id = department.dept_id,
@@ -75,7 +75,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [NonAction]
-        public List<tb_department_dto> GlobalSearch(List<tb_department_dto> searchData, string searchValue)
+        public List<DepartmentRepoDTO> GlobalSearch(List<DepartmentRepoDTO> searchData, string searchValue)
         {
 
             if (!string.IsNullOrEmpty(searchValue))
@@ -96,7 +96,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [NonAction]
-        public List<tb_department_dto> ColumnSearch(List<tb_department_dto> searchData, DataTableRequest searchReauest)
+        public List<DepartmentRepoDTO> ColumnSearch(List<DepartmentRepoDTO> searchData, DataTableRequest searchReauest)
         {
             if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
             {
@@ -144,7 +144,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                tb_department_dto result = new tb_department_dto();
+                DepartmentRepoDTO result = new DepartmentRepoDTO();
                 result.dept_id = department.dept_id;
                 result.dept_name = department.dept_name;
                 result.dept_value = department.dept_value == null ? 0 : department.dept_value;
@@ -159,7 +159,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return RedirectToAction("Department");
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -190,7 +190,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 tb_department result = new tb_department();
 
-                tb_department_dto departmentDetail = new tb_department_dto();
+                DepartmentRepoDTO departmentDetail = new DepartmentRepoDTO();
                 departmentDetail.dept_id = department.dept_id;
                 departmentDetail.dept_name = department.dept_name;
                 departmentDetail.dept_value = department.dept_value;

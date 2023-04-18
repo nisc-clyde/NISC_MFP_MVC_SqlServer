@@ -6,13 +6,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
+using NISC_MFP_MVC.Models.DTO_Initial;
+using AutoMapper;
+using Microsoft.Ajax.Utilities;
+using MySqlX.XDevAPI.Common;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class CardReaderController : Controller
     {
-        private static readonly string DISABLE = "1";
+        private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
+        private MFP_DBEntities db = new MFP_DBEntities();
 
         public ActionResult Index()
         {
@@ -24,35 +29,33 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchCardReaderDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            using (MFP_DBEntities db = new MFP_DBEntities())
+
+            List<SearchCardReaderDTO> searchCardReaderResult = InitialData(db);
+
+            dataTableRequest.RecordsTotalGet = searchCardReaderResult.Count;
+
+            searchCardReaderResult = GlobalSearch(searchCardReaderResult, dataTableRequest.GlobalSearchValue);
+
+            searchCardReaderResult = ColumnSearch(searchCardReaderResult, dataTableRequest);
+
+            searchCardReaderResult = searchCardReaderResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
+
+            dataTableRequest.RecordsFilteredGet = searchCardReaderResult.Count;
+
+            searchCardReaderResult = searchCardReaderResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+
+            foreach (SearchCardReaderDTO dto in searchCardReaderResult)
             {
-                List<SearchCardReaderDTO> searchCardReaderResult = InitialData(db);
-
-                dataTableRequest.RecordsTotalGet = searchCardReaderResult.Count;
-
-                searchCardReaderResult = GlobalSearch(searchCardReaderResult, dataTableRequest.GlobalSearchValue);
-
-                searchCardReaderResult = ColumnSearch(searchCardReaderResult, dataTableRequest);
-
-                searchCardReaderResult = searchCardReaderResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
-
-                dataTableRequest.RecordsFilteredGet = searchCardReaderResult.Count;
-
-                searchCardReaderResult = searchCardReaderResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
-
-                foreach (SearchCardReaderDTO dto in searchCardReaderResult)
-                {
-                    dataTableRequest.SearchDTO.Add(dto);
-                }
-
-                return Json(new
-                {
-                    data = dataTableRequest.SearchDTO,
-                    draw = dataTableRequest.Draw,
-                    recordsTotal = dataTableRequest.RecordsTotalGet,
-                    recordsFiltered = dataTableRequest.RecordsFilteredGet
-                }, JsonRequestBehavior.AllowGet);
+                dataTableRequest.SearchDTO.Add(dto);
             }
+
+            return Json(new
+            {
+                data = dataTableRequest.SearchDTO,
+                draw = dataTableRequest.Draw,
+                recordsTotal = dataTableRequest.RecordsTotalGet,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [NonAction]
@@ -61,6 +64,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             List<SearchCardReaderDTO> searchCardReaderResult = db.tb_cardreader
                     .Select(cardreader => new SearchCardReaderDTO
                     {
+                        serial = cardreader.serial,
                         cr_id = cardreader.cr_id,
                         cr_ip = cardreader.cr_ip,
                         cr_port = cardreader.cr_port,
@@ -131,13 +135,102 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddCardReader()
+        public ActionResult AddCardReader(string formTitle)
         {
             SearchCardReaderDTO initialCardReaderDTO = new SearchCardReaderDTO();
-            initialCardReaderDTO.cr_mode = DISABLE;
-            initialCardReaderDTO.cr_card_switch = DISABLE;
-            initialCardReaderDTO.cr_status = DISABLE;
+            initialCardReaderDTO.cr_mode = "F";
+            initialCardReaderDTO.cr_card_switch = "F";
+            initialCardReaderDTO.cr_status = "Online";
+            ViewBag.formTitle = formTitle;
             return PartialView(initialCardReaderDTO);
+        }
+
+        [HttpPost]
+        public ActionResult AddCardReader(SearchCardReaderDTO cardreader)
+        {
+            if (ModelState.IsValid)
+            {
+                CardReaderRepoDTO result = new CardReaderRepoDTO();
+                result.cr_id = cardreader.cr_id;
+                result.cr_ip = cardreader.cr_ip;
+                result.cr_port = cardreader.cr_port;
+                result.cr_type = cardreader.cr_type;
+                result.cr_mode = cardreader.cr_mode;
+                result.cr_card_switch = cardreader.cr_card_switch;
+                result.cr_status = cardreader.cr_status;
+
+                db.tb_cardreader.Add(result.Convert2DatabaseModel());
+                db.SaveChanges();
+            }
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult UpdateCardReader(string formTitle, int serial)
+        {
+            SearchCardReaderDTO initialCardReaderDTO = new SearchCardReaderDTO();
+
+            initialCardReaderDTO = db.tb_cardreader
+               .Where(d => d.serial.Equals(serial))
+               .Select(d => new SearchCardReaderDTO
+               {
+                   serial = d.serial,
+                   cr_id = d.cr_id,
+                   cr_ip = d.cr_ip,
+                   cr_port = d.cr_port,
+                   cr_type = d.cr_type,
+                   cr_mode = d.cr_mode,
+                   cr_card_switch = d.cr_card_switch,
+                   cr_status = d.cr_status
+               })
+               .FirstOrDefault();
+
+            ViewBag.formTitle = formTitle;
+            return PartialView(initialCardReaderDTO);
+        }
+
+
+        [HttpPost]
+        public ActionResult UpdateCardReader(SearchCardReaderDTO cardreader)
+        {
+            if (ModelState.IsValid)
+            {
+                tb_cardreader result = new tb_cardreader();
+
+                var config = new MapperConfiguration(cfg => { cfg.CreateMap<SearchCardReaderDTO, CardReaderRepoDTO>(); });
+
+                var mapper = new Mapper(config);
+
+                CardReaderRepoDTO cardReaderDetail = mapper.Map<CardReaderRepoDTO>(cardreader);
+
+                result = cardReaderDetail.Convert2DatabaseModel();
+
+                IQueryable<tb_cardreader> targetCardReader = db.tb_cardreader.Where(d => d.serial.Equals(result.serial));
+
+                targetCardReader.ForEach(d =>
+                {
+                    d.cr_id = result.cr_id;
+                    d.cr_ip = result.cr_ip;
+                    d.cr_port = result.cr_port;
+                    d.cr_type = result.cr_type;
+                    d.cr_mode = result.cr_mode;
+                    d.cr_card_switch = result.cr_card_switch;
+                    d.history_date = result.history_date;
+                    d.card_update_date = result.card_update_date;
+                    d.cr_status = result.cr_status;
+                    d.cr_version = result.cr_version;
+                    d.cr_relay_status = result.cr_relay_status;
+                });
+                db.SaveChanges();
+
+            }
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -9,23 +9,6 @@ namespace NISC_MFP_MVC.Models.DTO
     //$user_id, $user_password, $work_id, $user_name, $dept_id, $dept_name, $depositor, $color_enable_flag, $copy_enable_flag, $print_enable_flag, $scan_enable_flag, $fax_enable_flag, $e_mail, $serial
     public class SearchUserDTO : AbstractSearchDTO
     {
-        public SearchUserDTO()
-        {
-            user_id = "";
-            user_password = "";
-            work_id = "";
-            user_name = "";
-            dept_id = "";
-            dept_name = "";
-            color_enable_flag = "";
-            copy_enable_flag = "";
-            print_enable_flag = "";
-            scan_enable_flag = "";
-            fax_enable_flag = "";
-            e_mail = "";
-            serial = 0;
-        }
-
         [Required(ErrorMessage = "此欄位為必填資料")]
         [Display(Name = "帳號")]
         public string user_id { get; set; }

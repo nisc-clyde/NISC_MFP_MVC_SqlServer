@@ -10,230 +10,232 @@
     <script src="@Url.Content("~/Scripts/AdminPartialViewScripts/print.js")"></script>
 }
 
-<div class="d-grid gap-3">
-    @*進階搜尋選項 - First Container - Start*@
-    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
-        <div class="row border-bottom border-2 ">
-            <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
-                進階搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass-plus"></i>
-            </div>
+@*進階搜尋選項 - First Container - Start*@
+<div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
+    <div class="row border-bottom border-2 ">
+        <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+            進階搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass-plus"></i>
         </div>
 
-        <div class="row border-bottom border-2 bg-secondary bg-opacity-10">
+    </div>
 
-            <div class="col-4 border-start border-end border-2">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">日期區間</div>
-                <div class="row align-items-center h-75">
+    <div class="row border-bottom border-2 bg-secondary bg-opacity-10">
 
-                    <div class="col">
-                        <div class="input-group justify-content-center">
-                            <span class="input-group-text" id="basic-addon1">起</span>
-                            <input id="dateRangePicker" type="text" class="form-control text-center">
-                            <span class="input-group-text" id="basic-addon1">始</span>
-                        </div>
+        <div class="col-4 border-start border-end border-2">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">日期區間</div>
+            <div class="row align-items-center h-75">
+
+                <div class="col">
+                    <div class="input-group justify-content-center">
+                        <span class="input-group-text" id="basic-addon1">起</span>
+                        <input id="dateRangePicker" type="text" class="form-control text-center">
+                        <span class="input-group-text" id="basic-addon1">始</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-4 border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">
-                    動作選擇
+        <div class="col-4 border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                動作選擇
+            </div>
+            <div class="row pt-2 pb-2">
+                <div class="col">
+                    <select id="searchPrint_OperationUnSelect" class="form-select" multiple size="6">
+                        <option disabled class="bg-light">未選擇動作</option>
+                    </select>
                 </div>
-                <div class="row pt-2 pb-2">
-                    <div class="col">
-                        <select id="searchPrint_OperationUnSelect" class="form-select" multiple size="6">
-                            <option disabled class="bg-light">未選擇動作</option>
-                        </select>
-                    </div>
-                    <div class="col align-self-center">
-                        <i class="fa-solid fa-repeat"></i>
-                    </div>
-                    <div class="col">
-                        <select id="searchPrint_OperationSelect" class="form-select" multiple size="6">
-                            <option disabled class="bg-light">已選擇動作</option>
-                            <option id="searchPrint_OperationCopy" value="0">影印</option>
-                            <option id="searchPrint_OperationPrint" value="1">列印</option>
-                            <option id="searchPrint_OperationScan" value="2">掃描</option>
-                            <option id="searchPrint_OperationFax" value="3">傳真</option>
-                            @*<option id="searchPrint_OperationUnKnown" value="4">未知</option>*@
-                        </select>
-                    </div>
+                <div class="col align-self-center">
+                    <i class="fa-solid fa-repeat"></i>
+                </div>
+                <div class="col">
+                    <select id="searchPrint_OperationSelect" class="form-select" multiple size="6">
+                        <option disabled class="bg-light">已選擇動作</option>
+                        <option id="searchPrint_OperationCopy" value="0">影印</option>
+                        <option id="searchPrint_OperationPrint" value="1">列印</option>
+                        <option id="searchPrint_OperationScan" value="2">掃描</option>
+                        <option id="searchPrint_OperationFax" value="3">傳真</option>
+                        @*<option id="searchPrint_OperationUnKnown" value="4">未知</option>*@
+                    </select>
                 </div>
             </div>
+        </div>
 
-            <div class="col-4 border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">
-                    部門選擇
+        <div class="col-4 border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                部門選擇
+            </div>
+            <div class="row pt-2 pb-2">
+                <div class="col">
+                    <select id="searchPrint_DepartmentUnSelect" class="form-select" multiple size="6">
+                        <option disabled class="bg-light">未選擇部門</option>
+                    </select>
                 </div>
-                <div class="row pt-2 pb-2">
-                    <div class="col">
-                        <select id="searchPrint_DepartmentUnSelect" class="form-select" multiple size="6">
-                            <option disabled class="bg-light">未選擇部門</option>
-                        </select>
-                    </div>
 
-                    <div class="col align-self-center">
-                        <i class="fa-solid fa-repeat"></i>
-                    </div>
-                    <div class="col">
-                        <select id="searchPrint_DepartmentSelect" class="form-select" multiple size="6">
-                            <option disabled class="bg-light">已選擇部門</option>
-                            <option id="searchPrint_DepartmentSelectAdmin" value="0">Admin</option>
-                            <option id="searchPrint_DepartmentSelectPPE" value="1">B15封裝製程工程部</option>
-                            <option id="searchPrint_DepartmentSelectTE" value="2">測試工程研發部</option>
-                            <option id="searchPrint_DepartmentSelectAccount" value="3">倉管／會計</option>
-                            <option id="searchPrint_DepartmentSelectRD" value="4">研發部</option>
-                            <option id="searchPrint_DepartmentSelectPRD" value="5">封裝研發部</option>
-                        </select>
-                    </div>
+                <div class="col align-self-center">
+                    <i class="fa-solid fa-repeat"></i>
+                </div>
+                <div class="col">
+                    <select id="searchPrint_DepartmentSelect" class="form-select" multiple size="6">
+                        <option disabled class="bg-light">已選擇部門</option>
+                        <option id="searchPrint_DepartmentSelectAdmin" value="0">Admin</option>
+                        <option id="searchPrint_DepartmentSelectPPE" value="1">B15封裝製程工程部</option>
+                        <option id="searchPrint_DepartmentSelectTE" value="2">測試工程研發部</option>
+                        <option id="searchPrint_DepartmentSelectAccount" value="3">倉管／會計</option>
+                        <option id="searchPrint_DepartmentSelectRD" value="4">研發部</option>
+                        <option id="searchPrint_DepartmentSelectPRD" value="5">封裝研發部</option>
+                    </select>
                 </div>
             </div>
+        </div>
 
+    </div>
+</div>
+@*進階搜尋選項 - First Container - End*@
+
+
+@*欄位搜尋選項 - Second Container - Start*@
+<div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+
+    <div class="row border-bottom border-2 ">
+        <div class="col-6 text-start fs-5 fw-bold " style="color: #1565C0">
+            欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
         </div>
     </div>
-    @*進階搜尋選項 - First Container - End*@
 
+    <div id="searchPrintRow" class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
 
-    @*欄位搜尋選項 - Second Container - Start*@
-    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
-
-        <div class="row border-bottom border-2 ">
-            <div class="col-6 text-start fs-5 fw-bold " style="color: #1565C0">
-                欄位搜尋選項&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
+        <div class="col border-start border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">事務機</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_Printer" type="text" class="form-control">
+                </div>
             </div>
         </div>
 
-        <div id="searchPrintRow" class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
-
-            <div class="col border-start border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">事務機</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_Printer" type="text" class="form-control">
-                    </div>
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">使用人員</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_User" type="text" class="form-control">
                 </div>
             </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">使用人員</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_User" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">部門</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_Department" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">卡號</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_Card" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">屬性</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <select id="searchPrint_AttributeSelect" class="form-select">
-                            <option id="searchPrint_AttributeAll" selected value="0">全部</option>
-                            <option id="searchPrint_AttributeDesc" value="1">遞減</option>
-                            <option id="searchPrint_AttributeAsc" value="2">遞增</option>
-
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">動作</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <select id="searchPrint_ActionSelect" class="form-select">
-                            <option id="searchPrint_ActionAll" selected value="0">全部</option>
-                            <option id="searchPrint_ActionCopy" value="C">影印</option>
-                            <option id="searchPrint_ActionPrint" value="P">列印</option>
-                            <option id="searchPrint_ActionScan" value="S">掃描</option>
-                            <option id="searchPrint_ActionFox" value="F">傳真</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">顏色</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <select id="searchPrint_ColorSelect" class="form-select">
-                            <option id="searchPrint_ColorAll" selected value="0">全部</option>
-                            <option id="searchPrint_ColorRGB" value="C">C(彩色)</option>
-                            <option id="searchPrint_ColorWB" value="M">M(單色)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">張數</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_Count" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">使用點數</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_Point" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">列印時間</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_PrintTime" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col border-end border-2 ">
-                <div class="row justify-content-center border-bottom border-2 fw-semibold">文件名稱</div>
-                <div class="row">
-                    <div class="col align-self-center pt-2 pb-2">
-                        <input id="searchPrint_DocumentName" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">部門</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_Department" type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">卡號</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_Card" type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">屬性</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <select id="searchPrint_AttributeSelect" class="form-select">
+                        <option id="searchPrint_AttributeAll" selected value="0">全部</option>
+                        <option id="searchPrint_AttributeDesc" value="1">遞減</option>
+                        <option id="searchPrint_AttributeAsc" value="2">遞增</option>
+
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">動作</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <select id="searchPrint_ActionSelect" class="form-select">
+                        <option id="searchPrint_ActionAll" selected value="0">全部</option>
+                        <option id="searchPrint_ActionCopy" value="C">影印</option>
+                        <option id="searchPrint_ActionPrint" value="P">列印</option>
+                        <option id="searchPrint_ActionScan" value="S">掃描</option>
+                        <option id="searchPrint_ActionFox" value="F">傳真</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">顏色</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <select id="searchPrint_ColorSelect" class="form-select">
+                        <option id="searchPrint_ColorAll" selected value="0">全部</option>
+                        <option id="searchPrint_ColorRGB" value="C">C(彩色)</option>
+                        <option id="searchPrint_ColorWB" value="M">M(單色)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">張數</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_Count" type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">使用點數</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_Point" type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">列印時間</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_PrintTime" type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col border-end border-2 ">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">文件名稱</div>
+            <div class="row">
+                <div class="col align-self-center pt-2 pb-2">
+                    <input id="searchPrint_DocumentName" type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
     </div>
-    @*欄位搜尋選項 - Second Container - End*@
+</div>
+@*欄位搜尋選項 - Second Container - End*@
 
-    @*使用紀錄 - Third Cotainer - Start*@
-    <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+@*使用紀錄 - Third Cotainer - Start*@
+<div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
-        <div class="row border-bottom border-2 ">
-            <div class="col text-start fs-5 fw-bold" style="color: #1565C0">使用紀錄&nbsp;<i class="fa-solid fa-clock-rotate-left"></i></div>
-        </div>
+    <div class="row border-bottom border-2 ">
+        <div class="col text-start fs-5 fw-bold" style="color: #1565C0">使用紀錄&nbsp;<i class="fa-solid fa-clock-rotate-left"></i></div>
+    </div>
 
-        <div class="row p-2">
-            <table id="searchPrintDataTable" class="table table-striped table-bordered">
+    <div class="row p-2">
+        <div class="table-responsive">
+
+            <table id="searchPrintDataTable" class="table table-striped table-bordered w-100">
                 <thead>
                     <tr>
                         <th>事務機</th>
@@ -252,6 +254,5 @@
             </table>
         </div>
     </div>
-    @*使用紀錄 - Third Cotainer - End*@
-
 </div>
+@*使用紀錄 - Third Cotainer - End*@

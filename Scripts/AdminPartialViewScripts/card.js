@@ -15,6 +15,18 @@ function SearchCardDataTableInitial() {
             { data: "user_name", name: "使用者姓名" },
             { data: "card_type", name: "屬性" },
             { data: "enable", name: "使用狀態" },
+            {
+                data: null,
+                defaultContent: "<button type='button' class='btn btn-primary btn-sm me-1 btn-manager'><i class='fa-solid fa-circle-info me-1'></i>儲值</button>" +
+                    "<button type='button' class='btn btn-info btn-sm me-1 btn-edit'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
+                    "<button type='button' class='btn btn-danger btn-sm btn-delete'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
+                orderable: false
+            },
+            { data: "serial", name: "serial" }
+        ],
+        columnDefs: [
+            { width: "220px", targets: 7 },
+            { visible: false, target: 8 }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
@@ -71,7 +83,7 @@ function ColumnSearch() {
     });
 
     $("#searchCard_AttributeSelect").change(function () {
-        if ($("#searchCard_AttributeSelect").val() != "0") {
+        if ($("#searchCard_AttributeSelect").val() != "") {
             datatable.columns(5).search($("#searchCard_AttributeSelect :selected").text()).draw();
         } else {
             datatable.columns(5).search("").draw();
@@ -79,7 +91,7 @@ function ColumnSearch() {
     });
 
     $("#searchCard_StatusSelect").change(function () {
-        if ($("#searchCard_StatusSelect").val() != "0") {
+        if ($("#searchCard_StatusSelect").val() != "") {
             datatable.columns(6).search($("#searchCard_StatusSelect :selected").text()).draw();
         } else {
             datatable.columns(6).search("").draw();
@@ -87,36 +99,54 @@ function ColumnSearch() {
     });
 }
 
-function PopupForm() {
+function PopupFormForAdd() {
     $("#btnAddCard").on("click", function () {
         var url = "/Admin/Card/AddCard"
         $.get(
             url,
             { formTitle: $(this).text() },
             function (data) {
-                $("#CardPopupForm").html(data);
-                $("#CardPopupForm").modal("show");
+                $("#cardForm").html(data);
+                $("#cardForm").modal("show");
             }
         )
     });
 
-    $("#btnResetCardFreePoint").on("click", function () {
-        var url = "/Admin/Card/ResetCardFreePoint"
-        $.get(
-            url,
-            { formTitle: $(this).text() },
-            function (data) {
+    //$("#btnResetCardFreePoint").on("click", function () {
+    //    var url = "/Admin/Card/ResetCardFreePoint"
+    //    $.get(
+    //        url,
+    //        { formTitle: $(this).text() },
+    //        function (data) {
 
-                $("#CardPopupForm").html(data);
-                $("#CardPopupForm").modal("show");
-            })
-    });
+    //            $("#cardForm").html(data);
+    //            $("#cardForm").modal("show");
+    //        })
+    //});
 
 };
+
+function SubmitFormForAdd(form) {
+    $.validator.unobtrusive.parse(form);
+    if ($(form).valid()) {
+        $.ajax({
+            type: "POST",
+            url: form.action,
+            data: $(form).serialize(),
+            success: function (data) {
+                if (data.success) {
+                    $("#cardForm").modal("hide");
+                    datatable.ajax.reload();
+                }
+            }
+        });
+    }
+    return false;
+}
 
 
 $(function () {
     SearchCardDataTableInitial();
     ColumnSearch();
-    PopupForm();
+    PopupFormForAdd();
 });

@@ -22,9 +22,9 @@
     <div class="modal-content">
         @using (Html.BeginForm("UpdateUser", "User", FormMethod.Post, new { @class = "overflow-auto", onsubmit = "return SubmitFormForUpdate(this)" }))
         {
-
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
+
             <div class="modal-header">
                 <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -76,7 +76,7 @@
 
                 <div class="row mx-3 mb-3">
                     @Html.LabelFor(d => d.e_mail, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.e_mail, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.e_mail, new { @class = "form-control", @type = "email" })
                 </div>
 
                 <div class="row mx-3 mb-3">
@@ -173,7 +173,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="submit" class="btn btn-success">新增</button>
+                <button type="submit" class="btn btn-success">修改</button>
             </div>
         }
     </div>
