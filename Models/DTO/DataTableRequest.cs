@@ -1,8 +1,7 @@
-﻿using System;
+﻿using NISC_MFP_MVC.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Web;
 
 namespace NISC_MFP_MVC.Models.DTO
 {
@@ -57,14 +56,14 @@ namespace NISC_MFP_MVC.Models.DTO
                 switch (PostPageFrom)
                 {
 
-                    case "print": return SearchPrintDTO.ColumnName2Property(SortColumnIndex);
-                    case "deposite": return SearchDepositeDTO.ColumnName2Property(SortColumnIndex);
-                    case "department": return SearchDepartmentDTO.ColumnName2Property(SortColumnIndex);
-                    case "user": return SearchUserDTO.ColumnName2Property(SortColumnIndex);
-                    case "cardreader": return SearchCardReaderDTO.ColumnName2Property(SortColumnIndex);
-                    case "card": return SearchCardDTO.ColumnName2Property(SortColumnIndex);
-                    case "watermark": return SearchWatermarkDTO.ColumnName2Property(SortColumnIndex);
-                    case "history": return SearchHistoryDTO.ColumnName2Property(SortColumnIndex);
+                    case "print": return PrintViewModel.ColumnName2Property(SortColumnIndex);
+                    case "deposite": return DepositViewModel.ColumnName2Property(SortColumnIndex);
+                    case "department": return DepartmentViewModel.ColumnName2Property(SortColumnIndex);
+                    case "user": return UserViewModel.ColumnName2Property(SortColumnIndex);
+                    case "cardreader": return CardReaderViewModel.ColumnName2Property(SortColumnIndex);
+                    case "card": return CardViewModel.ColumnName2Property(SortColumnIndex);
+                    case "watermark": return WatermarkViewModel.ColumnName2Property(SortColumnIndex);
+                    case "history": return HistoryViewModel.ColumnName2Property(SortColumnIndex);
                     default: return "";
                 }
             }

@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Optimization;
 
 namespace NISC_MFP_MVC
@@ -41,10 +41,17 @@ namespace NISC_MFP_MVC
             bundles.Add(new StyleBundle("~/lib/daterangepicker-css").Include("~/lib/daterangepicker/daterangepicker.css"));
             bundles.Add(new ScriptBundle("~/lib/daterangepicker-js").Include(
                 "~/lib/daterangepicker/moment.min.js",
-                "~/lib/daterangepicker/daterangepicker.js"));
+                "~/lib/daterangepicker/daterangepicker.js"
+                ));
 
-            bundles.Add(new StyleBundle("~/lib/datatable-css").Include("~/lib/datatables/datatables.min.css"));
-            bundles.Add(new Bundle("~/lib/datatable-js").Include("~/lib/datatables/datatables.min.js"));
+            bundles.Add(new StyleBundle("~/lib/datatable-css").Include(
+                "~/lib/datatables/datatables.min.css",
+                "~/lib/sweetalert2/dist/sweetalert2.min.css"
+                ));
+            bundles.Add(new Bundle("~/lib/datatable-js").Include(
+                "~/lib/datatables/datatables.min.js",
+                "~/lib/sweetalert2/dist/sweetalert2.all.min.js"
+                ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include("~/Scripts/jquery-ui-{version}.js"));
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include("~/Content/themes/base/all.css"));

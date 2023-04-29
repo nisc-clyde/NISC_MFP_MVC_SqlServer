@@ -9,6 +9,11 @@
     {
       "library": "bootstrap-daterangepicker@3.0.5",
       "destination": "lib/bootstrap-daterangepicker/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "sweetalert2@11.7.3",
+      "destination": "lib/sweetalert2/"
     }
   ]
 }

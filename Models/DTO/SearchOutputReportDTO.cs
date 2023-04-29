@@ -1,7 +1,5 @@
-﻿using System;
+﻿using NISC_MFP_MVC.ViewModels;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace NISC_MFP_MVC.Models.DTO
 {
@@ -11,11 +9,11 @@ namespace NISC_MFP_MVC.Models.DTO
 
         public int colorType { get; set; }
 
-        public List<SearchDepartmentDTO> searchDepartmentDTOs { get; set; }
+        public List<DepartmentViewModel> searchDepartmentDTOs { get; set; }
 
-        public List<SearchUserDTO> searchUserDTOs { get; set; }
+        public List<UserViewModel> searchUserDTOs { get; set; }
 
-        public List<SearchCardReaderDTO> searchCardReaderDTOs { get; set; }
+        public List<CardReaderViewModel> searchCardReaderDTOs { get; set; }
 
         public int duration { get; set; }
     }

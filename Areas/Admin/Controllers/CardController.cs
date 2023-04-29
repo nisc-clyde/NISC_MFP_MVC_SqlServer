@@ -1,13 +1,19 @@
-﻿using NISC_MFP_MVC.Models.DTO;
-using NISC_MFP_MVC.Models;
-using System;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC_Service.DTOs.Info.Card;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
+using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
+using NISC_MFP_MVC_Service.Implement;
+using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Web;
 using System.Web.Mvc;
-using System.Linq.Dynamic.Core;
-using Google.Protobuf.WellKnownTypes;
-using System.Diagnostics;
+using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -15,7 +21,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "1";
         private static readonly string ENABLE = "1";
-        private MFP_DBEntities db = new MFP_DBEntities();
+        private ICardService _CardService;
+        private Mapper mapper;
+
+        public CardController()
+        {
+            _CardService = new CardService();
+            mapper = InitializeAutomapper();
+        }
 
         public ActionResult Index()
         {
@@ -27,120 +40,127 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchCardDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-
-            List<SearchCardDTO> searchCardResult = InitialData();
-
-            dataTableRequest.RecordsTotalGet = searchCardResult.Count;
-
-            searchCardResult = GlobalSearch(searchCardResult, dataTableRequest.GlobalSearchValue);
-
-            searchCardResult = ColumnSearch(searchCardResult, dataTableRequest);
-
-            searchCardResult = searchCardResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
-
-            dataTableRequest.RecordsFilteredGet = searchCardResult.Count;
-
-            searchCardResult = searchCardResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
-
-            foreach (SearchCardDTO dto in searchCardResult)
-            {
-                dataTableRequest.SearchDTO.Add(dto);
-            }
+            IQueryable<CardViewModel> searchCardResultDetail = InitialData();
+            dataTableRequest.RecordsTotalGet = searchCardResultDetail.AsQueryable().Count();
+            searchCardResultDetail = GlobalSearch(searchCardResultDetail, dataTableRequest.GlobalSearchValue);
+            searchCardResultDetail = ColumnSearch(searchCardResultDetail, dataTableRequest);
+            searchCardResultDetail = searchCardResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            dataTableRequest.RecordsFilteredGet = searchCardResultDetail.AsQueryable().Count();
+            searchCardResultDetail = searchCardResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
             return Json(new
             {
-                data = dataTableRequest.SearchDTO,
+                data = searchCardResultDetail,
                 draw = dataTableRequest.Draw,
                 recordsTotal = dataTableRequest.RecordsTotalGet,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
             }, JsonRequestBehavior.AllowGet);
-
         }
 
         [NonAction]
-        public List<SearchCardDTO> InitialData()
+        public IQueryable<CardViewModel> InitialData()
         {
-            List<SearchCardDTO> searchCardResult = (from c in db.tb_card
-                                                    join u in db.tb_user on c.user_id equals u.user_id
-                                                    select new SearchCardDTO
-                                                    {
-                                                        card_id = c.card_id,
-                                                        value = c.value,
-                                                        freevalue = c.freevalue,
-                                                        user_id = u.user_id,
-                                                        user_name = u.user_name,
-                                                        card_type = c.card_type == "0" ? "遞減" : "遞增",
-                                                        enable = c.enable == "0" ? "停用" : "可用",
-                                                    }).ToList();
-            return searchCardResult;
+            IQueryable<AbstractCardInfo> resultModel = _CardService.GetAll();
+            IQueryable<CardViewModel> viewmodel = resultModel.ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodel;
         }
 
         [NonAction]
-        public List<SearchCardDTO> GlobalSearch(List<SearchCardDTO> searchData, string searchValue)
+        public IQueryable<CardViewModel> GlobalSearch(IQueryable<CardViewModel> searchData, string searchValue)
         {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(
-                    p => p.card_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.value.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.freevalue.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.user_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.user_name.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.card_type.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.enable.ToUpper().Contains(searchValue.ToUpper())
-                    ).ToList();
-            }
-            return searchData;
+            IQueryable<CardInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            List<CardInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
+            IQueryable<CardViewModel> viewmodelAfter = _CardService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodelAfter;
         }
 
         [NonAction]
-        public List<SearchCardDTO> ColumnSearch(List<SearchCardDTO> searchData, DataTableRequest searchReauest)
+        public IQueryable<CardViewModel> ColumnSearch(IQueryable<CardViewModel> searchData, DataTableRequest searchRequest)
         {
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
-            {
-                searchData = searchData.Where(card => card.card_id.ToUpper().Contains(searchReauest.ColumnSearch_0.ToUpper())).ToList();
-            }
+            IQueryable<CardInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "card_id", searchRequest.ColumnSearch_0).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "value", searchRequest.ColumnSearch_1).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "freevalue", searchRequest.ColumnSearch_2).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "user_id", searchRequest.ColumnSearch_3).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "user_name", searchRequest.ColumnSearch_4).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "card_type", searchRequest.ColumnSearch_5).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "enable", searchRequest.ColumnSearch_6).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
+            IQueryable<CardViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_1))
-            {
-                searchData = searchData.Where(card => card.value.ToString().ToUpper().Contains(searchReauest.ColumnSearch_1.ToUpper())).ToList();
-            }
+            return viewmodelAfter;
+        }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
-            {
-                searchData = searchData.Where(card => card.freevalue.ToString().ToUpper().Contains(searchReauest.ColumnSearch_2.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
-            {
-                searchData = searchData.Where(card => card.user_id.ToUpper().Contains(searchReauest.ColumnSearch_3.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_4))
-            {
-                searchData = searchData.Where(card => card.user_name.ToUpper().Contains(searchReauest.ColumnSearch_4.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
-            {
-                searchData = searchData.Where(card => card.card_type.ToUpper().Contains(searchReauest.ColumnSearch_5.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_6))
-            {
-                searchData = searchData.Where(card => card.enable.ToUpper().Contains(searchReauest.ColumnSearch_6.ToUpper())).ToList();
-            }
-            return searchData;
+        private Mapper InitializeAutomapper()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
+            return mapper;
         }
 
         [HttpGet]
-        public ActionResult AddCard(string formTitle)
+        public ActionResult AddOrEditCard(string formTitle, int serial)
         {
-            SearchCardDTO initialCardDTO = new SearchCardDTO();
-            initialCardDTO.card_type = DISABLE;
-            initialCardDTO.enable = DISABLE;
+            CardViewModel initialCardDTO = new CardViewModel();
+            try
+            {
+                if (serial < 0)
+                {
+                    initialCardDTO.card_type = DISABLE;
+                    initialCardDTO.enable = DISABLE;
+                }
+                else if (serial >= 0)
+                {
+                    AbstractCardInfo instance = _CardService.Get(serial);
+                    initialCardDTO = mapper.Map<CardViewModel>(instance);
+                }
+            }
+            catch (HttpException he)
+            {
+                Debug.WriteLine(he.Message);
+                //throw he;
+            }
+
             ViewBag.formTitle = formTitle;
             return PartialView(initialCardDTO);
+        }
+
+        [HttpPost]
+        public ActionResult AddOrEditCard(CardViewModel card, string currentOperation)
+        {
+            if (currentOperation == "Add")
+            {
+                if (ModelState.IsValid)
+                {
+                    _CardService.Insert(mapper.Map<CardViewModel, CardInfoConvert2Code>(card));
+                    _CardService.SaveChanges();
+
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (currentOperation == "Edit")
+            {
+                if (ModelState.IsValid)
+                {
+                    _CardService.Update(mapper.Map<CardViewModel, CardInfoConvert2Code>(card));
+                    _CardService.SaveChanges();
+
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult SearchUSer(string prefix)
+        {
+            UserService _UserService = new UserService();
+            IEnumerable<AbstractUserInfo> searchResult = _UserService.SearchByIdAndName(prefix);
+            List<UserViewModel> resultViewModel = mapper.Map<IEnumerable<AbstractUserInfo>, IEnumerable<UserViewModel>>(searchResult).ToList();
+
+            return Json(resultViewModel, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -150,31 +170,24 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView();
         }
 
+        [HttpGet]
+        public ActionResult DeleteCard(int serial)
+        {
+            CardViewModel CardViewModel = new CardViewModel();
+            AbstractCardInfo instance = _CardService.Get(serial);
+            CardViewModel = mapper.Map<CardViewModel>(instance);
+
+            return PartialView(CardViewModel);
+        }
+
         [HttpPost]
-        public ActionResult AddCard(SearchCardDTO card)
+        public ActionResult ReadyDeleteCard(CardViewModel Card)
         {
-            
-            return PartialView();
+            _CardService.Delete(mapper.Map<CardViewModel, CardInfoConvert2Code>(Card));
+            _CardService.SaveChanges();
+
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
-
-
-        [HttpPost]
-        public ActionResult SearchUser(string prefix)
-        {
-            List<SearchUserDTO> result = new UserController().InitialData(db)
-                .Where(u => u.user_id != null && u.user_id.ToUpper().Contains(prefix.ToUpper()) || u.user_name != null && u.user_name.ToUpper().Contains(prefix.ToUpper()))
-                .Select(u => new SearchUserDTO { user_id = u.user_id ?? "", user_name = u.user_name ?? "" })
-                .ToList();
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            db.Dispose();
-            base.Dispose(disposing);
-        }
-
     }
 
 }

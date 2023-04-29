@@ -1,6 +1,8 @@
-﻿var datatable;
+﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete } from "./Shared.js"
+
+var dataTable;
 function SearchUserDataTableInitial() {
-    datatable = $("#searchUserDataTable").DataTable({
+    dataTable = $("#searchUserDataTable").DataTable({
         ajax: {
             url: "/Admin/User/InitialDataTable",
             type: "POST",
@@ -33,15 +35,15 @@ function SearchUserDataTableInitial() {
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
             { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
             { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
+        pagingType: 'full_numbers',
         deferRender: true,
         serverSide: true,
         processing: true,
-        pagingType: 'full_numbers',
         responsive: true,
         language: {
             processing: "資料載入中...請稍後",
@@ -56,7 +58,7 @@ function SearchUserDataTableInitial() {
             search: "全部欄位搜尋："
         },
         rowCallback: function (row, data) {
-            if (data.color_enable_flag == "1") {
+            if (data.color_enable_flag == "有") {
                 $('td:eq(6)', row).html("<b class='text-success'>有</b>");
             } else {
                 $('td:eq(6)', row).html("<b class='text-danger'>無</b>");
@@ -68,115 +70,106 @@ function SearchUserDataTableInitial() {
 
 function ColumnSearch() {
     $("#searchUser_Account").keyup(function () {
-        datatable.columns(0).search($("#searchUser_Account").val()).draw();
+        dataTable.columns(0).search($("#searchUser_Account").val()).draw();
 
     });
 
     $("#searchUser_Password").keyup(function () {
-        datatable.columns(1).search($("#searchUser_Password").val()).draw();
+        dataTable.columns(1).search($("#searchUser_Password").val()).draw();
 
     });
 
     $("#searchUser_WorkNumber").keyup(function () {
-        datatable.columns(2).search($("#searchUser_WorkNumber").val()).draw();
+        dataTable.columns(2).search($("#searchUser_WorkNumber").val()).draw();
 
     });
 
     $("#searchUser_Name").keyup(function () {
-        datatable.columns(3).search($("#searchUser_Name").val()).draw();
+        dataTable.columns(3).search($("#searchUser_Name").val()).draw();
 
     });
 
     $("#searchUser_DepartmentID").keyup(function () {
-        datatable.columns(4).search($("#searchUser_DepartmentID").val()).draw();
+        dataTable.columns(4).search($("#searchUser_DepartmentID").val()).draw();
     });
 
     $("#searchUser_DepartmentName").keyup(function () {
-        datatable.columns(5).search($("#searchUser_DepartmentName").val()).draw();
+        dataTable.columns(5).search($("#searchUser_DepartmentName").val()).draw();
     });
 
     $("#searchUser_ColorPermissionSelect").change(function () {
         if ($("#searchUser_ColorPermissionSelect").val() != "") {
-            datatable.columns(6).search($("#searchUser_ColorPermissionSelect :selected").text()).draw();
+            dataTable.columns(6).search($("#searchUser_ColorPermissionSelect :selected").text()).draw();
         } else {
-            datatable.columns(6).search("").draw();
+            dataTable.columns(6).search("").draw();
         }
     });
 
     $("#searchUser_Mail").keyup(function () {
-        datatable.columns(7).search($("#searchUser_Mail").val()).draw();
+        dataTable.columns(7).search($("#searchUser_Mail").val()).draw();
     });
 }
 
-function PopupFormForAdd() {
-    $("#btnAddUser").on("click", function () {
-        var url = $("#userForm").data("url");
+
+/**
+ * Popup the modal from bootstrap library for adding or updating the data
+ * @param {string} btnAdd - click which button topopup modal for adding.
+ * @param {string} modalForm - modal's id.
+ * @param {jQuery DataTable} dataTable - the data of container.
+ * @param {string} uniqueIdProperty - identification each row data of property.
+ */
+function PopupFormForAddOrEdit() {
+    const btnAdd = "btnAddUser";
+    const modalForm = "userForm";
+    const uniqueIdProperty = "serial";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
+}
+
+/**
+ * Popup the modal from bootstrap library for deleting the data
+ * @param {jQuery DataTable} dataTable - The data of container.
+ * @param {string} uniqueIdProperty - Identification each row data of property.
+ * @param {string} getURL - Send request of get destination
+ * @param {string} postURL - Send request of post destination
+ */
+function DeleteAlertPopUp() {
+    const uniqueIdProperty = "serial";
+    const getURL = "/Admin/User/DeleteUser";
+    const postURL = "/Admin/User/ReadyDeleteUser"
+    RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL);
+}
+
+function EditUserPermissionConfig() {
+    const url = "/Admin/User/UserPermissionConfig";
+    const uniqueIdProperty = "serial";
+    const modalForm = "userForm";
+
+
+    dataTable.on("click", ".btn-permission", function (e) {
+        e.preventDefault();
+        const currentRow = $(this).closest("tr");
+        const rowData = dataTable.row(currentRow).data();
+
         $.get(
             url,
-            { formTitle: $(this).text() },
+            { formTitle: "使用者權限設定", serial: rowData[uniqueIdProperty] },
             function (data) {
-                $("#userForm").html(data);
-                $("#userForm").modal("show");
+                $("#" + modalForm).html(data);
+                $("#" + modalForm).modal("show");
+
+                //$("#addOrEditForm").on("submit", function () {
+                //    PostAddOrEditTemplate(this, modalForm, dataTable);
+                //    return false;
+                //})
             }
-        );
+        )
     });
 }
-
-function SubmitFormForAdd(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
-        $.ajax({
-            type: "POST",
-            url: form.action,
-            data: $(form).serialize(),
-            success: function (data) {
-                if (data.success) {
-                    $("#userForm").modal("hide");
-                    datatable.ajax.reload();
-                }
-            }
-        });
-    }
-    return false;
-}
-
-function PopupFormForUpdate() {
-    datatable.on("click", ".btn-edit", function (e) {
-        e.preventDefault();
-
-        var currentRow = $(this).closest("tr");
-        var rowData = datatable.row(currentRow).data();
-
-        $.get("/Admin/User/UpdateUser", { formTitle: "修改使用者", serial: rowData["serial"] },
-            function (data) {
-                $("#userForm").html(data);
-                $("#userForm").modal("show");
-            })
-    });
-}
-
-function SubmitFormForUpdate(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
-        $.ajax({
-            type: "POST",
-            url: "/Admin/User/UpdateUser",
-            data: $(form).serialize(),
-            success: function (data) {
-                if (data.success) {
-                    $("#userForm").modal("hide");
-                    datatable.ajax.reload();
-                }
-            }
-        });
-    }
-    return false;
-}
-
 
 $(function () {
     SearchUserDataTableInitial();
     ColumnSearch();
-    PopupFormForAdd();
-    PopupFormForUpdate();
+    PopupFormForAddOrEdit();
+    DeleteAlertPopUp();
+    EditUserPermissionConfig();
 });

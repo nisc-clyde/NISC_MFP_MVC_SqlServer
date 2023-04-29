@@ -6,7 +6,7 @@
 }
 
 @section WatermarkJS{
-    <script src="~/Scripts/AdminPartialViewScripts/watermark.js"></script>
+    <script type="module" src="~/Scripts/AdminPartialViewScripts/watermark.js"></script>
 }
 
 
@@ -24,9 +24,9 @@
             <div class="row h-75 align-items-center">
                 <div class="col align-self-center pt-2 pb-2">
                     <select id="searchWatermark_TypeSelect" class="form-select">
-                        <option id="searchWatermark_TypeAll" selected value="0">全部</option>
-                        <option id="searchWatermark_TypeImage" value="1">圖片</option>
-                        <option id="searchWatermark_TypeText" value="2">文字</option>
+                        <option id="searchWatermark_TypeAll" selected value>全部</option>
+                        <option id="searchWatermark_TypeImage" value="0">圖片</option>
+                        <option id="searchWatermark_TypeText" value="1">文字</option>
                     </select>
                 </div>
             </div>
@@ -73,12 +73,12 @@
             <div class="row h-75 align-items-center">
                 <div class="col align-self-center pt-2 pb-2">
                     <select id="searchWatermark_PositionSelect" class="form-select">
-                        <option id="searchWatermark_PositionAll" selected value="0">全部</option>
-                        <option id="searchWatermark_PositionLeftUp" value="1">左上</option>
-                        <option id="searchWatermark_PositionLeftDown" value="2">左下</option>
-                        <option id="searchWatermark_PositionRightUp" value="3">右上</option>
-                        <option id="searchWatermark_PositionRightDown" value="4">右下</option>
-                        <option id="searchWatermark_PositionCenter" value="5">中間</option>
+                        <option id="searchWatermark_PositionAll" selected value>全部</option>
+                        <option id="searchWatermark_PositionLeftUp" value="0">左上</option>
+                        <option id="searchWatermark_PositionLeftDown" value="1">左下</option>
+                        <option id="searchWatermark_PositionRightUp" value="2">右上</option>
+                        <option id="searchWatermark_PositionRightDown" value="3">右下</option>
+                        <option id="searchWatermark_PositionCenter" value="4">中間</option>
                     </select>
                 </div>
             </div>
@@ -89,13 +89,13 @@
             <div class="row h-75 align-items-center">
                 <div class="col align-self-center pt-2 pb-2">
                     <select id="searchWatermark_FillTypeSelect" class="form-select">
-                        <option id="searchWatermark_FillTypeAll" selected value="0">全部</option>
-                        <option id="searchWatermark_FillType1" value="1">無</option>
-                        <option id="searchWatermark_FillType2" value="2">依原圖比例多餘裁切</option>
-                        <option id="searchWatermark_FillType3" value="3">依原圖比例不裁切</option>
-                        <option id="searchWatermark_FillType4" value="4">依紙張比例</option>
-                        <option id="searchWatermark_FillType5" value="5">重覆填滿</option>
-                        <option id="searchWatermark_FillType6" value="6">置中，並依原圖比例多餘裁切</option>
+                        <option id="searchWatermark_FillTypeAll" selected value>全部</option>
+                        <option id="searchWatermark_FillType1" value="0">無</option>
+                        <option id="searchWatermark_FillType2" value="1">依原圖比例多餘裁切</option>
+                        <option id="searchWatermark_FillType3" value="2">依原圖比例不裁切</option>
+                        <option id="searchWatermark_FillType4" value="3">依紙張比例</option>
+                        <option id="searchWatermark_FillType5" value="4">重覆填滿</option>
+                        <option id="searchWatermark_FillType6" value="5">置中，並依原圖比例多餘裁切</option>
                     </select>
                 </div>
             </div>
@@ -148,7 +148,7 @@
         <div class="col text-start fs-5 fw-bold" style="color: #1565C0">
             浮水印列表&nbsp;<i class="fa-solid fa-list"></i>
             <button id="btnAddWatermark" type="button" class="ms-3 btn btn-success mb-1">新增浮水印</button>
-            <div class="modal fade" id="addWatermarkForm" role="dialog" data-url='@Url.Action("AddWatermark","Watermark")'></div>
+            <div class="modal fade" id="watermarkForm" role="dialog" data-url='@Url.Action("AddOrEditWatermark","Watermark")'></div>
         </div>
     </div>
 
@@ -167,6 +167,8 @@
                     <th>圖片位置</th>
                     <th>旋轉角度</th>
                     <th>顏色</th>
+                    <th>操作</th>
+                    <th>id</th>
                 </tr>
             </thead>
         </table>

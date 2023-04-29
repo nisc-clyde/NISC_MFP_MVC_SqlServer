@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using NISC_MFP_MVC.Models;
 using NISC_MFP_MVC.Models.DTO;
-using NISC_MFP_MVC.Models.DTO_Initial;
 using NISC_MFP_MVC.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
@@ -32,21 +28,21 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             SearchOutputReportDTO outputReportResult = new SearchOutputReportDTO();
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<DepartmentRepoDTO, SearchDepartmentDTO>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<DepartmentViewModel, DepartmentViewModel>());
 
             var mapper = new Mapper(config);
 
-            List<DepartmentRepoDTO> departmerntsDetail = new DepartmentController().InitialData(db);
-            List<SearchDepartmentDTO> departmernts = new List<SearchDepartmentDTO>();
-            foreach (DepartmentRepoDTO d in departmerntsDetail)
-            {
-                departmernts.Add(d.Convert2PresentationModel());
-            }
-            outputReportResult.searchDepartmentDTOs= departmernts;
+            //List<DepartmentRepoDTO> departmerntsDetail = new DepartmentController().InitialData(db);
+            List<DepartmentViewModel> departmernts = new List<DepartmentViewModel>();
+            //foreach (DepartmentRepoDTO d in departmerntsDetail)
+            //{
+            //    departmernts.Add(d.Convert2PresentationModel());
+            //}
+            outputReportResult.searchDepartmentDTOs = departmernts;
 
             outputReportResult.searchUserDTOs = (from u in db.tb_user
                                                  join d in db.tb_department on u.dept_id equals d.dept_id
-                                                 select new SearchUserDTO
+                                                 select new UserViewModel
                                                  {
                                                      user_id = u.user_id,
                                                      user_password = u.user_password,
@@ -62,8 +58,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                                                      e_mail = u.e_mail,
                                                  }).ToList();
 
-            outputReportResult.searchUserDTOs = new UserController().InitialData(db);
-            outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData(db);
+            outputReportResult.searchUserDTOs = new UserController().InitialData().ToList();
+            outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData().ToList();
             return outputReportResult;
         }
 
@@ -90,7 +86,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
 
         //[NonAction]
-        //public List<SearchDepartmentDTO> GlobalSearch(List<SearchDepartmentDTO> searchData, string searchValue)
+        //public List<DepartmentViewModel> GlobalSearch(List<DepartmentViewModel> searchData, string searchValue)
         //{
         //    if (!string.IsNullOrEmpty(searchValue))
         //    {
@@ -108,36 +104,37 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         //}
 
         //[NonAction]
-        //public List<SearchDepartmentDTO> ColumnSearch(List<SearchDepartmentDTO> searchData, DataTableRequest searchReauest)
+        //public List<DepartmentViewModel> ColumnSearch(List<DepartmentViewModel> searchData, DataTableRequest
+        //)
         //{
-        //    if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
+        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_0))
         //    {
-        //        searchData = searchData.Where(department => department.dept_id.ToUpper().Contains(searchReauest.ColumnSearch_0.ToUpper())).ToList();
+        //        searchData = searchData.Where(department => department.dept_id.ToUpper().Contains(searchRequest.ColumnSearch_0.ToUpper())).ToList();
         //    }
 
-        //    if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_1))
+        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_1))
         //    {
-        //        searchData = searchData.Where(department => department.dept_name.ToUpper().Contains(searchReauest.ColumnSearch_1.ToUpper())).ToList();
+        //        searchData = searchData.Where(department => department.dept_name.ToUpper().Contains(searchRequest.ColumnSearch_1.ToUpper())).ToList();
         //    }
 
-        //    if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
+        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_2))
         //    {
-        //        searchData = searchData.Where(department => department.dept_value.ToString().ToUpper().Contains(searchReauest.ColumnSearch_2.ToUpper())).ToList();
+        //        searchData = searchData.Where(department => department.dept_value.ToString().ToUpper().Contains(searchRequest.ColumnSearch_2.ToUpper())).ToList();
         //    }
 
-        //    if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
+        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_3))
         //    {
-        //        searchData = searchData.Where(department => department.dept_month_sum.ToString().ToUpper().Contains(searchReauest.ColumnSearch_3.ToUpper())).ToList();
+        //        searchData = searchData.Where(department => department.dept_month_sum.ToString().ToUpper().Contains(searchRequest.ColumnSearch_3.ToUpper())).ToList();
         //    }
 
-        //    if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_4))
+        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_4))
         //    {
-        //        searchData = searchData.Where(department => department.dept_usable.ToUpper().Contains(searchReauest.ColumnSearch_4.ToUpper())).ToList();
+        //        searchData = searchData.Where(department => department.dept_usable.ToUpper().Contains(searchRequest.ColumnSearch_4.ToUpper())).ToList();
         //    }
 
-        //    if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
+        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_5))
         //    {
-        //        searchData = searchData.Where(department => department.dept_email.ToUpper().Contains(searchReauest.ColumnSearch_5.ToUpper())).ToList();
+        //        searchData = searchData.Where(department => department.dept_email.ToUpper().Contains(searchRequest.ColumnSearch_5.ToUpper())).ToList();
         //    }
         //    return searchData;
         //}

@@ -1,15 +1,19 @@
-﻿using NISC_MFP_MVC.Models.DTO;
-using NISC_MFP_MVC.Models;
-using System;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
+using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
+using NISC_MFP_MVC_Service.Implement;
+using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Web;
 using System.Web.Mvc;
-using System.Linq.Dynamic.Core;
-using NISC_MFP_MVC.Models.DTO_Initial;
-using AutoMapper;
-using Microsoft.Ajax.Utilities;
-using MySqlX.XDevAPI.Common;
+using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -17,7 +21,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
-        private MFP_DBEntities db = new MFP_DBEntities();
+        private ICardReaderService _cardReaderService;
+        private Mapper mapper;
+
+        public CardReaderController()
+        {
+            _cardReaderService = new CardReaderService();
+            mapper = InitializeAutomapper();
+        }
 
         public ActionResult Index()
         {
@@ -29,29 +40,17 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchCardReaderDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-
-            List<SearchCardReaderDTO> searchCardReaderResult = InitialData(db);
-
-            dataTableRequest.RecordsTotalGet = searchCardReaderResult.Count;
-
-            searchCardReaderResult = GlobalSearch(searchCardReaderResult, dataTableRequest.GlobalSearchValue);
-
-            searchCardReaderResult = ColumnSearch(searchCardReaderResult, dataTableRequest);
-
-            searchCardReaderResult = searchCardReaderResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
-
-            dataTableRequest.RecordsFilteredGet = searchCardReaderResult.Count;
-
-            searchCardReaderResult = searchCardReaderResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
-
-            foreach (SearchCardReaderDTO dto in searchCardReaderResult)
-            {
-                dataTableRequest.SearchDTO.Add(dto);
-            }
+            IQueryable<CardReaderViewModel> searchUserResultDetail = InitialData();
+            dataTableRequest.RecordsTotalGet = searchUserResultDetail.AsQueryable().Count();
+            searchUserResultDetail = GlobalSearch(searchUserResultDetail, dataTableRequest.GlobalSearchValue);
+            searchUserResultDetail = ColumnSearch(searchUserResultDetail, dataTableRequest);
+            searchUserResultDetail = searchUserResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            dataTableRequest.RecordsFilteredGet = searchUserResultDetail.AsQueryable().Count();
+            searchUserResultDetail = searchUserResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
             return Json(new
             {
-                data = dataTableRequest.SearchDTO,
+                data = searchUserResultDetail,
                 draw = dataTableRequest.Draw,
                 recordsTotal = dataTableRequest.RecordsTotalGet,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
@@ -59,178 +58,120 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [NonAction]
-        public List<SearchCardReaderDTO> InitialData(MFP_DBEntities db)
+        public IQueryable<CardReaderViewModel> InitialData()
         {
-            List<SearchCardReaderDTO> searchCardReaderResult = db.tb_cardreader
-                    .Select(cardreader => new SearchCardReaderDTO
-                    {
-                        serial = cardreader.serial,
-                        cr_id = cardreader.cr_id,
-                        cr_ip = cardreader.cr_ip,
-                        cr_port = cardreader.cr_port,
-                        cr_type = cardreader.cr_type == "M" ? "事務機" : cardreader.cr_type == "F" ? "影印機" : "印表機",
-                        cr_mode = cardreader.cr_mode == "F" ? "離線" : "連線",
-                        cr_card_switch = cardreader.cr_card_switch == "F" ? "關閉" : "開啟",
-                        cr_status = cardreader.cr_status == "Online" ? "線上" : "離線",
-                    }).ToList();
-            return searchCardReaderResult;
+            IQueryable<AbstractCardReaderInfo> resultModel = _cardReaderService.GetAll();
+            IQueryable<CardReaderViewModel> viewmodel = resultModel.AsQueryable().ProjectTo<CardReaderViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodel;
         }
 
         [NonAction]
-        public List<SearchCardReaderDTO> GlobalSearch(List<SearchCardReaderDTO> searchData, string searchValue)
+        public IQueryable<CardReaderViewModel> GlobalSearch(IQueryable<CardReaderViewModel> searchData, string searchValue)
         {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(
-                    p => p.cr_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.cr_ip.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.cr_port.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.cr_type.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.cr_mode.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.cr_card_switch.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.cr_status.ToString().ToUpper().Contains(searchValue.ToUpper())
-                    ).ToList();
-            }
-            return searchData;
+            IQueryable<CardReaderInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            List<CardReaderInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
+            IQueryable<CardReaderViewModel> viewmodelAfter = _cardReaderService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<CardReaderViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodelAfter;
         }
 
         [NonAction]
-        public List<SearchCardReaderDTO> ColumnSearch(List<SearchCardReaderDTO> searchData, DataTableRequest searchReauest)
+        public IQueryable<CardReaderViewModel> ColumnSearch(IQueryable<CardReaderViewModel> searchData, DataTableRequest searchRequest)
         {
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
-            {
-                searchData = searchData.Where(cardreader => cardreader.cr_id.ToUpper().Contains(searchReauest.ColumnSearch_0.ToUpper())).ToList();
-            }
+            IQueryable<CardReaderInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _cardReaderService.GetWithColumnSearch(viewmodelBefore, "cr_id", searchRequest.ColumnSearch_0).ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _cardReaderService.GetWithColumnSearch(viewmodelBefore, "cr_ip", searchRequest.ColumnSearch_1).ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _cardReaderService.GetWithColumnSearch(viewmodelBefore, "cr_port", searchRequest.ColumnSearch_2).ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _cardReaderService.GetWithColumnSearch(viewmodelBefore, "cr_type", searchRequest.ColumnSearch_3).ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _cardReaderService.GetWithColumnSearch(viewmodelBefore, "cr_mode", searchRequest.ColumnSearch_4).ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _cardReaderService.GetWithColumnSearch(viewmodelBefore, "cr_card_switch", searchRequest.ColumnSearch_5).ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _cardReaderService.GetWithColumnSearch(viewmodelBefore, "cr_status", searchRequest.ColumnSearch_6).ProjectTo<CardReaderInfoConvert2Text>(mapper.ConfigurationProvider);
+            IQueryable<CardReaderViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<CardReaderViewModel>(mapper.ConfigurationProvider);
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_1))
-            {
-                searchData = searchData.Where(cardreader => cardreader.cr_ip.ToUpper().Contains(searchReauest.ColumnSearch_1.ToUpper())).ToList();
-            }
+            return viewmodelAfter;
+        }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
-            {
-                searchData = searchData.Where(cardreader => cardreader.cr_port.ToUpper().Contains(searchReauest.ColumnSearch_2.ToUpper())).ToList();
-            }
+        private Mapper InitializeAutomapper()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
-            {
-                searchData = searchData.Where(cardreader => cardreader.cr_type.ToUpper().Contains(searchReauest.ColumnSearch_3.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_4))
-            {
-                searchData = searchData.Where(cardreader => cardreader.cr_mode.ToUpper().Contains(searchReauest.ColumnSearch_4.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
-            {
-                searchData = searchData.Where(cardreader => cardreader.cr_card_switch.ToUpper().Contains(searchReauest.ColumnSearch_5.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_6))
-            {
-                searchData = searchData.Where(cardreader => cardreader.cr_status.ToUpper().Contains(searchReauest.ColumnSearch_6.ToUpper())).ToList();
-            }
-            return searchData;
+            return mapper;
         }
 
         [HttpGet]
-        public ActionResult AddCardReader(string formTitle)
+        public ActionResult AddOrEditCardReader(string formTitle, int serial)
         {
-            SearchCardReaderDTO initialCardReaderDTO = new SearchCardReaderDTO();
-            initialCardReaderDTO.cr_mode = "F";
-            initialCardReaderDTO.cr_card_switch = "F";
-            initialCardReaderDTO.cr_status = "Online";
-            ViewBag.formTitle = formTitle;
-            return PartialView(initialCardReaderDTO);
-        }
-
-        [HttpPost]
-        public ActionResult AddCardReader(SearchCardReaderDTO cardreader)
-        {
-            if (ModelState.IsValid)
+            CardReaderViewModel cardReaderViewModel = new CardReaderViewModel();
+            try
             {
-                CardReaderRepoDTO result = new CardReaderRepoDTO();
-                result.cr_id = cardreader.cr_id;
-                result.cr_ip = cardreader.cr_ip;
-                result.cr_port = cardreader.cr_port;
-                result.cr_type = cardreader.cr_type;
-                result.cr_mode = cardreader.cr_mode;
-                result.cr_card_switch = cardreader.cr_card_switch;
-                result.cr_status = cardreader.cr_status;
-
-                db.tb_cardreader.Add(result.Convert2DatabaseModel());
-                db.SaveChanges();
-            }
-            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public ActionResult UpdateCardReader(string formTitle, int serial)
-        {
-            SearchCardReaderDTO initialCardReaderDTO = new SearchCardReaderDTO();
-
-            initialCardReaderDTO = db.tb_cardreader
-               .Where(d => d.serial.Equals(serial))
-               .Select(d => new SearchCardReaderDTO
-               {
-                   serial = d.serial,
-                   cr_id = d.cr_id,
-                   cr_ip = d.cr_ip,
-                   cr_port = d.cr_port,
-                   cr_type = d.cr_type,
-                   cr_mode = d.cr_mode,
-                   cr_card_switch = d.cr_card_switch,
-                   cr_status = d.cr_status
-               })
-               .FirstOrDefault();
-
-            ViewBag.formTitle = formTitle;
-            return PartialView(initialCardReaderDTO);
-        }
-
-
-        [HttpPost]
-        public ActionResult UpdateCardReader(SearchCardReaderDTO cardreader)
-        {
-            if (ModelState.IsValid)
-            {
-                tb_cardreader result = new tb_cardreader();
-
-                var config = new MapperConfiguration(cfg => { cfg.CreateMap<SearchCardReaderDTO, CardReaderRepoDTO>(); });
-
-                var mapper = new Mapper(config);
-
-                CardReaderRepoDTO cardReaderDetail = mapper.Map<CardReaderRepoDTO>(cardreader);
-
-                result = cardReaderDetail.Convert2DatabaseModel();
-
-                IQueryable<tb_cardreader> targetCardReader = db.tb_cardreader.Where(d => d.serial.Equals(result.serial));
-
-                targetCardReader.ForEach(d =>
+                if (serial < 0)
                 {
-                    d.cr_id = result.cr_id;
-                    d.cr_ip = result.cr_ip;
-                    d.cr_port = result.cr_port;
-                    d.cr_type = result.cr_type;
-                    d.cr_mode = result.cr_mode;
-                    d.cr_card_switch = result.cr_card_switch;
-                    d.history_date = result.history_date;
-                    d.card_update_date = result.card_update_date;
-                    d.cr_status = result.cr_status;
-                    d.cr_version = result.cr_version;
-                    d.cr_relay_status = result.cr_relay_status;
-                });
-                db.SaveChanges();
-
+                    cardReaderViewModel.cr_mode = "F";
+                    cardReaderViewModel.cr_card_switch = "F";
+                    cardReaderViewModel.cr_status = "Online";
+                }
+                else if (serial >= 0)
+                {
+                    AbstractCardReaderInfo instance = _cardReaderService.Get(serial);
+                    cardReaderViewModel = mapper.Map<CardReaderViewModel>(instance);
+                }
             }
-            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+            catch (HttpException he)
+            {
+                Debug.WriteLine(he.Message);
+                //throw he;
+            }
+
+            ViewBag.formTitle = formTitle;
+            return PartialView(cardReaderViewModel);
         }
 
-        protected override void Dispose(bool disposing)
+        [HttpPost]
+        public ActionResult AddOrEditCardReader(CardReaderViewModel CardReader, string currentOperation)
         {
-            db.Dispose();
-            base.Dispose(disposing);
+            if (currentOperation == "Add")
+            {
+                if (ModelState.IsValid)
+                {
+                    _cardReaderService.Insert(mapper.Map<CardReaderViewModel, CardReaderInfoConvert2Code>(CardReader));
+                    _cardReaderService.SaveChanges();
+
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (currentOperation == "Edit")
+            {
+                if (ModelState.IsValid)
+                {
+                    _cardReaderService.Update(mapper.Map<CardReaderViewModel, CardReaderInfoConvert2Code>(CardReader));
+                    _cardReaderService.SaveChanges();
+
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult DeleteCardReader(int serial)
+        {
+            CardReaderViewModel CardReaderViewModel = new CardReaderViewModel();
+            AbstractCardReaderInfo instance = _cardReaderService.Get(serial);
+            CardReaderViewModel = mapper.Map<CardReaderViewModel>(instance);
+
+            return PartialView(CardReaderViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult ReadyDeleteCardReader(CardReaderViewModel CardReader)
+        {
+            _cardReaderService.Delete(mapper.Map<CardReaderViewModel, CardReaderInfoConvert2Code>(CardReader));
+            _cardReaderService.SaveChanges();
+
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1,0 +1,83 @@
+﻿@model NISC_MFP_MVC.ViewModels.DepartmentViewModel
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        @using (Html.BeginForm("AddOrEditDepartment", "Department", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(d => d.serial)
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_id, new { @class = "form-label fw-semibold me-2" })
+                        <div class="input-group-addon">
+                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.dept_id, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.dept_id, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.dept_name, new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.dept_name, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_value, new { @class = "form-label fw-semibold me-2" })
+                    </div>
+                    @Html.TextBoxFor(d => d.dept_value, new { @class = "form-control", @type = "number" })
+                    @Html.ValidationMessageFor(d => d.dept_value, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_month_sum, new { @class = "form-label fw-semibold me-2" })
+                    </div>
+                    @Html.TextBoxFor(d => d.dept_month_sum, new { @class = "form-control", @type = "number" })
+                    @Html.ValidationMessageFor(d => d.dept_month_sum, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.dept_usable, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.dept_usable, "0", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                停用
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.dept_usable, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                啟用
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.dept_email, new { @class = "form-label fw-semibold me-2" })
+                    </div>
+                    @Html.TextBoxFor(d => d.dept_email, new { @class = "form-control", @type = "email" })
+                    @Html.ValidationMessageFor(d => d.dept_email, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" id="btnSubmmit" value="Add" class="btn btn-success">確定</button>
+            </div>
+        }
+    </div>
+</div>

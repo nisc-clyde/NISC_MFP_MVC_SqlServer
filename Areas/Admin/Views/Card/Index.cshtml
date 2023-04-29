@@ -8,7 +8,7 @@
 @section CardJS{
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/jqueryui")
-    <script src="~/Scripts/AdminPartialViewScripts/card.js"></script>
+    <script type="module" src="@Url.Content("~/Scripts/AdminPartialViewScripts/card.js")"></script>
 }
 
 
@@ -16,10 +16,12 @@
 <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
     <div class="row border-bottom border-2 ">
-        <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">欄位搜尋選項(name=C總管全部管理者)&nbsp;<i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+            欄位搜尋選項(name=C總管全部管理者)&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
+        </div>
     </div>
 
-    <div class="row border-bottom border-2 bg-secondary bg-opacity-10">
+    <div class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
 
         <div class="col border-start border-end border-2 ">
             <div class="row justify-content-center border-bottom border-2 fw-semibold h-25 align-content-center">卡片編號</div>
@@ -106,7 +108,7 @@
             卡片列表&nbsp;<i class="fa-solid fa-list"></i>
             <button id="btnAddCard" type="button" class="ms-3 btn btn-success mb-1">新增卡片</button>
             <button id="btnResetCardFreePoint" type="button" class="ms-3 btn btn-warning mb-1">重設免費點數</button>
-            <div class="modal fade" id="cardForm" role="dialog" data-url='@Url.Action("AddCard","Card")'></div>
+            <div class="modal fade" id="cardForm" role="dialog" data-url='@Url.Action("AddOrEditCard","Card")'></div>
         </div>
     </div>
 

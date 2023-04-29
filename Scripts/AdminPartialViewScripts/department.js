@@ -1,6 +1,8 @@
-﻿var datatable;
+﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete } from "./Shared.js"
+
+var dataTable;
 function SearchDepartmentDataTableInitial() {
-    datatable = $("#searchDepartmentDataTable").DataTable({
+    dataTable = $("#searchDepartmentDataTable").DataTable({
         ajax: {
             url: "/Admin/Department/InitialDataTable",
             type: "POST",
@@ -29,15 +31,15 @@ function SearchDepartmentDataTableInitial() {
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
             { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
             { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
+        pagingType: 'full_numbers',
         deferRender: true,
         serverSide: true,
         processing: true,
-        pagingType: 'full_numbers',
         responsive: true,
         language: {
             processing: "資料載入中...請稍後",
@@ -50,108 +52,84 @@ function SearchDepartmentDataTableInitial() {
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
             zeroRecords: "找不到相符資料",
             search: "全部欄位搜尋："
+        },
+        rowCallback: function (row, data) {
+            if (data.dept_usable == "停用") {
+                $('td:eq(4)', row).html("<b class='text-danger'>停用</b>");
+            } else {
+                $('td:eq(4)', row).html("<b class='text-success'>啟用</b>");
+            }
+
         }
     });
 }
 
 function ColumnSearch() {
     $("#searchDepartment_DepartmentID").keyup(function () {
-        datatable.columns(0).search($("#searchDepartment_DepartmentID").val()).draw();
+        dataTable.columns(0).search($("#searchDepartment_DepartmentID").val()).draw();
 
     });
 
     $("#searchDepartment_DepartmentName").keyup(function () {
-        datatable.columns(1).search($("#searchDepartment_DepartmentName").val()).draw();
+        dataTable.columns(1).search($("#searchDepartment_DepartmentName").val()).draw();
 
     });
 
     $("#searchDepartment_AvailablePointLimit").keyup(function () {
-        datatable.columns(2).search($("#searchDepartment_AvailablePointLimit").val()).draw();
+        dataTable.columns(2).search($("#searchDepartment_AvailablePointLimit").val()).draw();
 
     });
 
     $("#searchDepartment_AvailableBalance").keyup(function () {
-        datatable.columns(3).search($("#searchDepartment_AvailableBalance").val()).draw();
+        dataTable.columns(3).search($("#searchDepartment_AvailableBalance").val()).draw();
 
     });
 
     $("#searchDepartment_StatueSelect").change(function () {
-        if ($("#searchDepartment_StatueSelect").val() != "0") {
-            datatable.columns(4).search($("#searchDepartment_StatueSelect :selected").text()).draw();
+        if ($("#searchDepartment_StatueSelect").val() != "") {
+            dataTable.columns(4).search($("#searchDepartment_StatueSelect :selected").text()).draw();
         } else {
-            datatable.columns(4).search("").draw();
+            dataTable.columns(4).search("").draw();
         }
     });
 
     $("#searchDepartment_Mail").keyup(function () {
-        datatable.columns(5).search($("#searchDepartment_Mail").val()).draw();
+        dataTable.columns(5).search($("#searchDepartment_Mail").val()).draw();
     });
 }
 
-function PopupFormForAdd() {
-    $("#btnAddDepartment").on("click", function () {
-        $.get("/Admin/Department/AddDepartment", { formTitle: $(this).text() },
-            function (data) {
-                $("#departmentForm").html(data);
-                $("#departmentForm").modal("show");
-            })
-    });
+
+/**
+ * Popup the modal from bootstrap library for adding or updating the data
+ * @param {string} btnAdd - click which button topopup modal for adding.
+ * @param {string} modalForm - modal's id.
+ * @param {jQuery DataTable} dataTable - the data of container.
+ * @param {string} uniqueIdProperty - identification each row data of property.
+ */
+function PopupFormForAddOrEdit() {
+    const btnAdd = "btnAddDepartment";
+    const modalForm = "departmentForm";
+    const uniqueIdProperty = "serial";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
 }
 
-function SubmitFormForAdd(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
-        $.ajax({
-            type: "POST",
-            url: form.action,
-            data: $(form).serialize(),
-            success: function (data) {
-                if (data.success) {
-                    $("#departmentForm").modal("hide");
-                    datatable.ajax.reload();
-                }
-            }
-        });
-    }
-    return false;
-}
-
-function PopupFormForUpdate() {
-    datatable.on("click", ".btn-edit", function (e) {
-        e.preventDefault();
-
-        var currentRow = $(this).closest("tr");
-        var rowData = datatable.row(currentRow).data();
-
-        $.get("/Admin/Department/UpdateDepartment", { formTitle: "修改部門", serial: rowData["serial"] },
-            function (data) {
-                $("#departmentForm").html(data);
-                $("#departmentForm").modal("show");
-            })
-    });
-}
-
-function SubmitFormForUpdate(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
-        $.ajax({
-            type: "POST",
-            url: "/Admin/Department/UpdateDepartment",
-            data: $(form).serialize(),
-            success: function (data) {
-                if (data.success) {
-                    $("#departmentForm").modal("hide");
-                    datatable.ajax.reload();
-                }
-            }
-        });
-    }
-    return false;
+/**
+ * Popup the modal from bootstrap library for deleting the data
+ * @param {jQuery DataTable} dataTable - The data of container.
+ * @param {string} uniqueIdProperty - Identification each row data of property.
+ * @param {string} getURL - Send request of get destination
+ * @param {string} postURL - Send request of post destination
+ */
+function DeleteAlertPopUp() {
+    const uniqueIdProperty = "serial";
+    const getURL = "/Admin/Department/DeleteDepartment";
+    const postURL = "/Admin/Department/ReadyDeleteDepartment"
+    RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL);
 }
 
 $(function () {
     SearchDepartmentDataTableInitial();
     ColumnSearch();
-    PopupFormForAdd();
-    PopupFormForUpdate();
+    PopupFormForAddOrEdit();
+    DeleteAlertPopUp();
 });

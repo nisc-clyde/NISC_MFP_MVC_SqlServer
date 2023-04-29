@@ -6,7 +6,7 @@
 }
 
 @section CardReaderJS{
-    <script src="~/Scripts/AdminPartialViewScripts/cardreader.js"></script>
+    <script type="module" src="~/Scripts/AdminPartialViewScripts/cardreader.js"></script>
 }
 
 
@@ -54,10 +54,10 @@
                 <div class="col align-self-center pt-2 pb-2">
                     <div class="dropdown">
                         <select id="searchCardReader_CardMachineTypeSelect" class="form-select">
-                            <option id="searchCardReader_CardMachineTypeAll" selected value="0">全部</option>
-                            <option id="searchCardReader_CardMachineTypeBusiness" value="1">事務機</option>
-                            <option id="searchCardReader_CardMachineTypeCopier" value="2">影印機</option>
-                            <option id="searchCardReader_CardMachineTypePrinter" value="3">印表機</option>
+                            <option id="searchCardReader_CardMachineTypeAll" selected value>全部</option>
+                            <option id="searchCardReader_CardMachineTypeBusiness" value="M">事務機</option>
+                            <option id="searchCardReader_CardMachineTypeCopier" value="F">影印機</option>
+                            <option id="searchCardReader_CardMachineTypePrinter" value="P">印表機</option>
                         </select>
                     </div>
                 </div>
@@ -69,9 +69,9 @@
             <div class="row">
                 <div class="col align-self-center pt-2 pb-2">
                     <select id="searchCardReader_WorkModeSelect" class="form-select">
-                        <option id="searchCardReader_WorkModeAll" selected value="0">全部</option>
-                        <option id="searchCardReader_WorkModeOnline" value="1">連線</option>
-                        <option id="searchCardReader_WorkModeOffline" value="2">離線</option>
+                        <option id="searchCardReader_WorkModeAll" selected value>全部</option>
+                        <option id="searchCardReader_WorkModeOnline" value="0">連線</option>
+                        <option id="searchCardReader_WorkModeOffline" value="1">離線</option>
                     </select>
                 </div>
             </div>
@@ -82,9 +82,9 @@
             <div class="row">
                 <div class="col align-self-center pt-2 pb-2">
                     <select id="searchCardReader_CardOnOffSelect" class="form-select">
-                        <option id="searchCardReader_CardOnOffAll" selected value="0">全部</option>
-                        <option id="searchCardReader_CardOnOffOn" value="1">開啟</option>
-                        <option id="searchCardReader_CardOnOffOff" value="2">關閉</option>
+                        <option id="searchCardReader_CardOnOffAll" selected value>全部</option>
+                        <option id="searchCardReader_CardOnOffOn" value="0">開啟</option>
+                        <option id="searchCardReader_CardOnOffOff" value="1">關閉</option>
                     </select>
                 </div>
             </div>
@@ -95,9 +95,9 @@
             <div class="row">
                 <div class="col align-self-center pt-2 pb-2">
                     <select id="searchCardReader_CardStatusSelect" class="form-select">
-                        <option id="searchCardReader_CardStatusAll" selected value="0">全部</option>
-                        <option id="searchCardReader_CardStatusOnline" value="1">線上</option>
-                        <option id="searchCardReader_CardStatusOffline" value="2">離線</option>
+                        <option id="searchCardReader_CardStatusAll" selected value>全部</option>
+                        <option id="searchCardReader_CardStatusOnline" value="0">線上</option>
+                        <option id="searchCardReader_CardStatusOffline" value="1">離線</option>
                     </select>
                 </div>
             </div>
@@ -114,7 +114,7 @@
         <div class="col text-start fs-5 fw-bold" style="color: #1565C0">
             事務機列表&nbsp;<i class="fa-solid fa-list"></i>
             <button id="btnAddCardReader" type="button" class="ms-3 btn btn-success mb-1">新增事務機</button>
-            <div class="modal fade" id="cardReaderForm" role="dialog" data-url='@Url.Action("AddCardReader","CardReader")'></div>
+            <div class="modal fade" id="cardReaderForm" role="dialog" data-url='@Url.Action("AddOrEditCardReader","CardReader")'></div>
         </div>
     </div>
 

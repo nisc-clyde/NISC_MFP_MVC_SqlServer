@@ -18,15 +18,16 @@
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
             { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
             { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
+        pagingType: 'full_numbers',
         deferRender: true,
         serverSide: true,
         processing: true,
-        pagingType: 'full_numbers',
+        responsive: true,
         language: {
             processing: "資料載入中...請稍後",
             paginate: {

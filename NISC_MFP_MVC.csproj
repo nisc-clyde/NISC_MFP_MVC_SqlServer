@@ -222,21 +222,16 @@
       <DependentUpon>MFP_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DTO\DataTableRequest.cs" />
-    <Compile Include="Models\DTO\SearchCardDTO.cs" />
-    <Compile Include="Models\DTO\SearchCardReaderDTO.cs" />
-    <Compile Include="Models\DTO\SearchDepartmentDTO.cs" />
-    <Compile Include="Models\DTO\SearchDepositeDTO.cs" />
-    <Compile Include="Models\DTO\SearchHistoryDTO.cs" />
+    <Compile Include="ViewModels\CardViewModel.cs" />
+    <Compile Include="ViewModels\CardReaderViewModel.cs" />
+    <Compile Include="ViewModels\DepositViewModel.cs" />
     <Compile Include="Models\DTO\SearchOutputReportDTO.cs" />
-    <Compile Include="Models\DTO\SearchPrintDTO.cs" />
     <Compile Include="Models\AbstractSearchDTO.cs" />
-    <Compile Include="Models\DTO\SearchUserDTO.cs" />
-    <Compile Include="Models\DTO\SearchWatermarkDTO.cs" />
-    <Compile Include="Models\DTO_Initial\CardReaderRepoDTO.cs" />
-    <Compile Include="Models\DTO_Initial\CardRepoDTO.cs" />
-    <Compile Include="Models\DTO_Initial\DepartmentRepoDTO.cs" />
-    <Compile Include="Models\DTO_Initial\UserRepoDTO.cs" />
+    <Compile Include="ViewModels\HistoryViewModel.cs" />
+    <Compile Include="ViewModels\Print\AdvancedPrintViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Models\LoginTO.cs" />
+    <Compile Include="Models\MappingProfile.cs" />
     <Compile Include="Models\MFP_DB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -316,7 +311,10 @@
       <DependentUpon>MFP_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\DepartmentViewModel.cs" />
     <Compile Include="ViewModels\OutputReportViewModel.cs" />
+    <Compile Include="ViewModels\Print\PrintViewModel.cs" />
+    <Compile Include="ViewModels\WatermarkViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -979,6 +977,130 @@
     <Content Include="lib\font-awesome\sprites\brands.svg" />
     <Content Include="lib\font-awesome\sprites\regular.svg" />
     <Content Include="lib\font-awesome\sprites\solid.svg" />
+    <Content Include="lib\sweetalert2\dist\sweetalert2.all.js" />
+    <Content Include="lib\sweetalert2\dist\sweetalert2.all.min.js" />
+    <Content Include="lib\sweetalert2\dist\sweetalert2.css" />
+    <Content Include="lib\sweetalert2\dist\sweetalert2.js" />
+    <Content Include="lib\sweetalert2\dist\sweetalert2.min.css" />
+    <Content Include="lib\sweetalert2\dist\sweetalert2.min.js" />
+    <Content Include="lib\sweetalert2\src\buttons-handlers.js" />
+    <Content Include="lib\sweetalert2\src\buttons-handlers.min.js" />
+    <Content Include="lib\sweetalert2\src\constants.js" />
+    <Content Include="lib\sweetalert2\src\constants.min.js" />
+    <Content Include="lib\sweetalert2\src\globalState.js" />
+    <Content Include="lib\sweetalert2\src\globalState.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\close.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\close.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\enable-disable-elements.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\enable-disable-elements.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\getInput.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\getInput.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\hideLoading.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\hideLoading.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\update.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\update.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\validation-message.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\validation-message.min.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\_destroy.js" />
+    <Content Include="lib\sweetalert2\src\instanceMethods\_destroy.min.js" />
+    <Content Include="lib\sweetalert2\src\keydown-handler.js" />
+    <Content Include="lib\sweetalert2\src\keydown-handler.min.js" />
+    <Content Include="lib\sweetalert2\src\popup-click-handler.js" />
+    <Content Include="lib\sweetalert2\src\popup-click-handler.min.js" />
+    <Content Include="lib\sweetalert2\src\privateMethods.js" />
+    <Content Include="lib\sweetalert2\src\privateMethods.min.js" />
+    <Content Include="lib\sweetalert2\src\privateProps.js" />
+    <Content Include="lib\sweetalert2\src\privateProps.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\argsToParams.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\argsToParams.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\bindClickHandler.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\bindClickHandler.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\dom.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\dom.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\fire.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\fire.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\mixin.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\mixin.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\showLoading.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\showLoading.min.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\timer.js" />
+    <Content Include="lib\sweetalert2\src\staticMethods\timer.min.js" />
+    <Content Include="lib\sweetalert2\src\SweetAlert.js" />
+    <Content Include="lib\sweetalert2\src\SweetAlert.min.js" />
+    <Content Include="lib\sweetalert2\src\sweetalert2.js" />
+    <Content Include="lib\sweetalert2\src\sweetalert2.min.js" />
+    <Content Include="lib\sweetalert2\src\types.js" />
+    <Content Include="lib\sweetalert2\src\types.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\aria.js" />
+    <Content Include="lib\sweetalert2\src\utils\aria.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\classes.js" />
+    <Content Include="lib\sweetalert2\src\utils\classes.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\defaultInputValidators.js" />
+    <Content Include="lib\sweetalert2\src\utils\defaultInputValidators.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\DismissReason.js" />
+    <Content Include="lib\sweetalert2\src\utils\DismissReason.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\animationEndEvent.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\animationEndEvent.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\domUtils.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\domUtils.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\getters.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\getters.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\index.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\index.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\init.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\init.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\inputUtils.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\inputUtils.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\measureScrollbar.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\measureScrollbar.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\parseHtmlToContainer.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\parseHtmlToContainer.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\render.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\render.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderActions.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderActions.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderCloseButton.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderCloseButton.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderContainer.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderContainer.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderContent.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderContent.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderFooter.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderFooter.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderIcon.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderIcon.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderImage.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderImage.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderInput.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderInput.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderPopup.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderPopup.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderProgressSteps.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderProgressSteps.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderTitle.js" />
+    <Content Include="lib\sweetalert2\src\utils\dom\renderers\renderTitle.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\getTemplateParams.js" />
+    <Content Include="lib\sweetalert2\src\utils\getTemplateParams.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\iosFix.js" />
+    <Content Include="lib\sweetalert2\src\utils\iosFix.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\isNodeEnv.js" />
+    <Content Include="lib\sweetalert2\src\utils\isNodeEnv.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\openPopup.js" />
+    <Content Include="lib\sweetalert2\src\utils\openPopup.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\params.js" />
+    <Content Include="lib\sweetalert2\src\utils\params.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\scrollbarFix.js" />
+    <Content Include="lib\sweetalert2\src\utils\scrollbarFix.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\setParameters.js" />
+    <Content Include="lib\sweetalert2\src\utils\setParameters.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\Timer.js" />
+    <Content Include="lib\sweetalert2\src\utils\Timer.min.js" />
+    <Content Include="lib\sweetalert2\src\utils\utils.js" />
+    <Content Include="lib\sweetalert2\src\utils\utils.min.js" />
     <Content Include="Models\MFP_DB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MFP_DB.Context.cs</LastGenOutput>
@@ -996,6 +1118,7 @@
     <Content Include="Scripts\AdminPartialViewScripts\history.js" />
     <Content Include="Scripts\AdminPartialViewScripts\outputreport.js" />
     <Content Include="Scripts\AdminPartialViewScripts\print.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\Shared.js" />
     <Content Include="Scripts\AdminPartialViewScripts\user.js" />
     <Content Include="Scripts\AdminPartialViewScripts\watermark.js" />
     <Content Include="Scripts\bloodhound.js" />
@@ -1055,15 +1178,31 @@
     <Content Include="Areas\User\Views\User\List.cshtml" />
     <Content Include="lib\bootstrap-daterangepicker\daterangepicker.min.css.map" />
     <Content Include="lib\bootstrap-daterangepicker\daterangepicker.min.js.map" />
-    <Content Include="Areas\Admin\Views\Department\AddDepartment.cshtml" />
-    <Content Include="Areas\Admin\Views\User\AddUser.cshtml" />
-    <Content Include="Areas\Admin\Views\CardReader\AddCardReader.cshtml" />
-    <Content Include="Areas\Admin\Views\Card\AddCard.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\AddOrEditDepartment.cshtml" />
+    <Content Include="Areas\Admin\Views\User\AddOrEditUser.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\AddOrEditCardReader.cshtml" />
+    <Content Include="Areas\Admin\Views\Card\AddOrEditCard.cshtml" />
     <Content Include="Areas\Admin\Views\Card\ResetCardFreePoint.cshtml" />
-    <Content Include="Areas\Admin\Views\Watermark\AddWatermark.cshtml" />
-    <Content Include="Areas\Admin\Views\Department\UpdateDepartment.cshtml" />
-    <Content Include="Areas\Admin\Views\User\UpdateUser.cshtml" />
-    <Content Include="Areas\Admin\Views\CardReader\UpdateCardReader.cshtml" />
+    <Content Include="Areas\Admin\Views\Watermark\AddOrEditWatermark.cshtml" />
+    <Content Include="lib\sweetalert2\LICENSE" />
+    <Content Include="lib\sweetalert2\package.json" />
+    <Content Include="lib\sweetalert2\README.md" />
+    <Content Include="lib\sweetalert2\src\scss\_animations.scss" />
+    <Content Include="lib\sweetalert2\src\scss\_body.scss" />
+    <Content Include="lib\sweetalert2\src\scss\_core.scss" />
+    <Content Include="lib\sweetalert2\src\scss\_mixins.scss" />
+    <Content Include="lib\sweetalert2\src\scss\_theming.scss" />
+    <Content Include="lib\sweetalert2\src\scss\_toasts-animations.scss" />
+    <Content Include="lib\sweetalert2\src\scss\_toasts-body.scss" />
+    <Content Include="lib\sweetalert2\src\scss\_toasts.scss" />
+    <Content Include="lib\sweetalert2\src\sweetalert2.scss" />
+    <Content Include="lib\sweetalert2\src\variables.scss" />
+    <Content Include="Areas\Admin\Views\Department\DeleteDepartment.cshtml" />
+    <Content Include="Areas\Admin\Views\User\DeleteUser.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\DeleteCardReader.cshtml" />
+    <Content Include="Areas\Admin\Views\Card\DeleteCard.cshtml" />
+    <Content Include="Areas\Admin\Views\Watermark\DeleteWatermark.cshtml" />
+    <Content Include="Areas\Admin\Views\User\UserPermissionConfig.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -1124,7 +1263,21 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NISC_MFP_MVC_Common\NISC_MFP_MVC_Common.csproj">
+      <Project>{060df26d-56e2-4242-bdca-a00772750564}</Project>
+      <Name>NISC_MFP_MVC_Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NISC_MFP_MVC_Service\NISC_MFP_MVC_Service.csproj">
+      <Project>{cb01bd0d-c597-43b2-883d-28b513954325}</Project>
+      <Name>NISC_MFP_MVC_Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="lib\sweetalert2\sweetalert2.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

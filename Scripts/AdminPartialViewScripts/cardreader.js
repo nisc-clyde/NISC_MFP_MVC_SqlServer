@@ -1,6 +1,8 @@
-﻿var datatable;
+﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete } from "./Shared.js"
+
+var dataTable;
 function SearchCardReaderDataTableInitial() {
-    datatable = $("#searchCardReaderDataTable").DataTable({
+    dataTable = $("#searchCardReaderDataTable").DataTable({
         ajax: {
             url: "/Admin/CardReader/InitialDataTable",
             type: "POST",
@@ -32,15 +34,16 @@ function SearchCardReaderDataTableInitial() {
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
             { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
             { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
+        pagingType: 'full_numbers',
         deferRender: true,
         serverSide: true,
         processing: true,
-        pagingType: 'full_numbers',
+        responsive: true,
         language: {
             processing: "資料載入中...請稍後",
             paginate: {
@@ -77,119 +80,84 @@ function SearchCardReaderDataTableInitial() {
 
 function ColumnSearch() {
     $("#searchCardReader_CardreaderID").keyup(function () {
-        datatable.columns(0).search($("#searchCardReader_CardreaderID").val()).draw();
+        dataTable.columns(0).search($("#searchCardReader_CardreaderID").val()).draw();
 
     });
 
     $("#searchCardReader_IPAddress").keyup(function () {
-        datatable.columns(1).search($("#searchCardReader_IPAddress").val()).draw();
+        dataTable.columns(1).search($("#searchCardReader_IPAddress").val()).draw();
 
     });
 
     $("#searchCardReader_Port").keyup(function () {
-        datatable.columns(2).search($("#searchCardReader_Port").val()).draw();
+        dataTable.columns(2).search($("#searchCardReader_Port").val()).draw();
 
     });
 
     $("#searchCardReader_CardMachineTypeSelect").change(function () {
-        if ($("#searchCardReader_CardMachineTypeSelect").val() != "0") {
-            datatable.columns(3).search($("#searchCardReader_CardMachineTypeSelect :selected").text()).draw();
+        if ($("#searchCardReader_CardMachineTypeSelect").val() != "") {
+            dataTable.columns(3).search($("#searchCardReader_CardMachineTypeSelect :selected").text()).draw();
         } else {
-            datatable.columns(3).search("").draw();
+            dataTable.columns(3).search("").draw();
         }
     });
 
     $("#searchCardReader_WorkModeSelect").change(function () {
-        if ($("#searchCardReader_WorkModeSelect").val() != "0") {
-            datatable.columns(4).search($("#searchCardReader_WorkModeSelect :selected").text()).draw();
+        if ($("#searchCardReader_WorkModeSelect").val() != "") {
+            dataTable.columns(4).search($("#searchCardReader_WorkModeSelect :selected").text()).draw();
         } else {
-            datatable.columns(4).search("").draw();
+            dataTable.columns(4).search("").draw();
         }
     });
 
     $("#searchCardReader_CardOnOffSelect").change(function () {
-        if ($("#searchCardReader_CardOnOffSelect").val() != "0") {
-            datatable.columns(5).search($("#searchCardReader_CardOnOffSelect :selected").text()).draw();
+        if ($("#searchCardReader_CardOnOffSelect").val() != "") {
+            dataTable.columns(5).search($("#searchCardReader_CardOnOffSelect :selected").text()).draw();
         } else {
-            datatable.columns(5).search("").draw();
+            dataTable.columns(5).search("").draw();
         }
     });
 
     $("#searchCardReader_CardStatusSelect").change(function () {
-        if ($("#searchCardReader_CardStatusSelect").val() != "0") {
-            datatable.columns(6).search($("#searchCardReader_CardStatusSelect :selected").text()).draw();
+        if ($("#searchCardReader_CardStatusSelect").val() != "") {
+            dataTable.columns(6).search($("#searchCardReader_CardStatusSelect :selected").text()).draw();
         } else {
-            datatable.columns(6).search("").draw();
+            dataTable.columns(6).search("").draw();
         }
     });
 }
 
-function PopupFormForAdd() {
-    $("#btnAddCardReader").on("click", function () {
-        var url = $("#cardReaderForm").data("url");
-        $.get(url,
-            { formTitle: $(this).text() },
-            function (data) {
-                $("#cardReaderForm").html(data);
-                $("#cardReaderForm").modal("show");
-            })
-    });
-};
-
-function SubmitFormForAdd(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
-        $.ajax({
-            type: "POST",
-            url: form.action,
-            data: $(form).serialize(),
-            success: function (data) {
-                if (data.success) {
-                    $("#cardReaderForm").modal("hide");
-                    datatable.ajax.reload();
-                }
-            }
-        });
-    }
-    return false;
-};
-
-function PopupFormForUpdate() {
-    datatable.on("click", ".btn-edit", function (e) {
-        e.preventDefault();
-
-        var currentRow = $(this).closest("tr");
-        var rowData = datatable.row(currentRow).data();
-
-        $.get("/Admin/CardReader/UpdateCardReader", { formTitle: "修改事務機", serial: rowData["serial"] },
-            function (data) {
-                $("#cardReaderForm").html(data);
-                $("#cardReaderForm").modal("show");
-            })
-    });
+/**
+ * Popup the modal from bootstrap library for adding or updating the data
+ * @param {string} btnAdd - click which button topopup modal for adding.
+ * @param {string} modalForm - modal's id.
+ * @param {jQuery DataTable} dataTable - the data of container.
+ * @param {string} uniqueIdProperty - identification each row data of property.
+ */
+function PopupFormForAddOrEdit() {
+    const btnAdd = "btnAddCardReader";
+    const modalForm = "cardReaderForm";
+    const uniqueIdProperty = "serial";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
 }
 
-function SubmitFormForUpdate(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
-        $.ajax({
-            type: "POST",
-            url: "/Admin/CardReader/UpdateCardReader",
-            data: $(form).serialize(),
-            success: function (data) {
-                if (data.success) {
-                    $("#cardReaderForm").modal("hide");
-                    datatable.ajax.reload();
-                }
-            }
-        });
-    }
-    return false;
+/**
+ * Popup the modal from bootstrap library for deleting the data
+ * @param {jQuery DataTable} dataTable - The data of container.
+ * @param {string} uniqueIdProperty - Identification each row data of property.
+ * @param {string} getURL - Send request of get destination
+ * @param {string} postURL - Send request of post destination
+ */
+function DeleteAlertPopUp() {
+    const uniqueIdProperty = "serial";
+    const getURL = "/Admin/CardReader/DeleteCardReader";
+    const postURL = "/Admin/CardReader/ReadyDeleteCardReader"
+    RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL);
 }
 
 $(function () {
     SearchCardReaderDataTableInitial();
     ColumnSearch();
-    PopupFormForAdd();
-    PopupFormForUpdate();
+    PopupFormForAddOrEdit();
+    DeleteAlertPopUp();
 });

@@ -1,0 +1,118 @@
+﻿@model NISC_MFP_MVC.ViewModels.CardReaderViewModel
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        @using (Html.BeginForm("AddOrEditCardReader", "CardReader", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(d => d.serial)
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.cr_id, new { @class = "form-label ps-0 fw-semibold me-2" })
+                        <div class="input-group-addon">
+                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.cr_id, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.cr_id, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.cr_ip, new { @class = "form-label ps-0 fw-semibold me-2" })
+                    </div>
+                    @Html.TextBoxFor(d => d.cr_ip, new { placeholder = "255.255.255.255", @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.cr_ip, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.cr_port, new { @class = "form-label ps-0 fw-semibold me-2" })
+                        <div class="input-group-addon">
+                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.cr_port, new { placeholder = "0~65535", @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.cr_port, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.cr_type, new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.DropDownList("cr_type", new List<SelectListItem> {
+                   new SelectListItem{ Text="事務機",Value="M"},
+                   new SelectListItem{ Text="影印機",Value="F"},
+                   new SelectListItem{ Text="印表機",Value="P"}
+               }, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.cr_mode, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.cr_mode, "O", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                連線
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.cr_mode, "F", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                離線
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.cr_card_switch, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.cr_card_switch, "O", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                開啟
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.cr_card_switch, "F", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                關閉
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.cr_status, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.cr_status, "Online", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                線上
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.cr_status, "Offline", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                離線
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" id="btnSubmmit" value="Add" class="btn btn-success">新增</button>
+            </div>
+        }
+    </div>
+</div>

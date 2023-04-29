@@ -1,0 +1,155 @@
+﻿@model NISC_MFP_MVC.ViewModels.CardViewModel
+
+@{
+
+}
+
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+    }
+
+    #cardForm ul li:not(:first-child) {
+        border-top: 1px #ccc solid;
+    }
+</style>
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        @using (Html.BeginForm("AddOrEditCard", "Card", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        {
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(d => d.serial)
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ui-front">
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.card_id, new { @class = "form-label fw-semibold me-2" })
+                        <div class="input-group-addon">
+                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.card_id, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.card_id, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    <div class="col p-0">
+                        <div class="input-group ps-0">
+                            @Html.LabelFor(d => d.user_id, new { @class = "form-label ps-0 fw-semibold me-2" })
+                            <div class="input-group-addon">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                        </div>
+                        @Html.TextBoxFor(d => d.user_id, new { @class = "form-control mw-100", data_url = Url.Action("SearchUser", "Card"), type = "search" })
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.user_name, new { @class = "form-label ps-0 fw-semibold" })
+                    @Html.TextBoxFor(d => d.user_name, new { @class = "form-control" })
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.card_type, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.card_type, "0", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                遞增
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.card_type, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                遞減
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mx-3 mb-3">
+                    @Html.LabelFor(d => d.enable, new { @class = "form-label ps-0 fw-semibold" })
+                    <div class="col px-0">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.enable, "1", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                可用
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(d => d.enable, "0", new { @class = "form-check-input" })
+                            <label class="form-check-label fs-6" for="flexRadioDefault1">
+                                停用
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" id="btnSubmmit" value="Add" class="btn btn-success">新增</button>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function DefalutUserAutocomplete() {
+        $("#user_id").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: $("#user_id").data("url"),
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.user_id, value: item.user_id, name: item.user_name
+                            };
+                        }));
+                    }
+                })
+            },
+            select: function (event, ui) {
+                $("#user_name").val(ui.item.name);
+            },
+            appendTo: "#cardForm",
+            minLength: 0
+        }).focus(function () {
+            $(this).autocomplete('search', $(this).val())
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li class='list-group-item'>")
+                .append("<div>使用者帳號：" + item.label + "</br>使用者名稱：" + item.name + "</div>")
+                .appendTo(ul);
+        };
+
+        //avoid dropdownlist unfix when modal scroll down
+        $("#user_id").autocomplete("option", "appendTo", ".eventInsForm");
+    }
+
+    function ClearButton() {
+        $("#user_id").on("search", function () {
+            $("#user_name").val('');
+        })
+    }
+
+    $(function () {
+        DefalutUserAutocomplete();
+        ClearButton();
+    })
+</script>

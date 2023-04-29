@@ -8,7 +8,7 @@
 @section UserJS{
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/jqueryui")
-    <script src="@Url.Content("~/Scripts/AdminPartialViewScripts/user.js")"></script>
+    <script type="module" src="@Url.Content("~/Scripts/AdminPartialViewScripts/user.js")"></script>
 }
 
 
@@ -60,7 +60,7 @@
         </div>
 
         <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold">部門編號</div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">部門代碼</div>
             <div class="row">
                 <div class="col align-self-center pt-2 pb-2">
                     <input id="searchUser_DepartmentID" type="text" class="form-control">
@@ -110,7 +110,7 @@
         <div class="col text-start fs-5 fw-bold mb-1">
             使用者列表&nbsp;<i class="fa-solid fa-list"></i>
             <button id="btnAddUser" type="button" class="ms-3 btn btn-success mb-1">新增使用者</button>
-            <div class="modal fade" id="userForm" role="dialog" data-url='@Url.Action("AddUser","User")'></div>
+            <div class="modal fade" id="userForm" role="dialog" data-url='@Url.Action("AddOrEditUser","User")'></div>
         </div>
 
     </div>

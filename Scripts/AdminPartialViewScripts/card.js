@@ -1,6 +1,8 @@
-﻿var datatable;
+﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete } from "./Shared.js"
+
+var dataTable;
 function SearchCardDataTableInitial() {
-    datatable = $("#searchCardDataTable").DataTable({
+    dataTable = $("#searchCardDataTable").DataTable({
         ajax: {
             url: "/Admin/Card/InitialDataTable",
             type: "POST",
@@ -32,15 +34,16 @@ function SearchCardDataTableInitial() {
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
             { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
             { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [0, "desc"],
         paging: true,
+        pagingType: 'full_numbers',
         deferRender: true,
         serverSide: true,
         processing: true,
-        pagingType: 'full_numbers',
+        responsive: true,
         language: {
             processing: "資料載入中...請稍後",
             paginate: {
@@ -53,100 +56,96 @@ function SearchCardDataTableInitial() {
             zeroRecords: "找不到相符資料",
             search: "全部欄位搜尋："
         },
+        rowCallback: function (row, data) {
+            if (data.card_type == "遞增") {
+                $('td:eq(5)', row).html("<b class='text-success'>遞增</b>");
+            } else {
+                $('td:eq(5)', row).html("<b class='text-danger'>遞減</b>");
+            }
+
+            if (data.enable == "可用") {
+                $('td:eq(6)', row).html("<b class='text-success'>可用</b>");
+            } else {
+                $('td:eq(6)', row).html("<b class='text-danger'>停用</b>");
+            }
+        }
     });
 }
 
 function ColumnSearch() {
     $("#searchCard_CardID").keyup(function () {
-        datatable.columns(0).search($("#searchCard_CardID").val()).draw();
+        dataTable.columns(0).search($("#searchCard_CardID").val()).draw();
 
     });
 
     $("#searchCard_Point").keyup(function () {
-        datatable.columns(1).search($("#searchCard_Point").val()).draw();
+        dataTable.columns(1).search($("#searchCard_Point").val()).draw();
 
     });
 
     $("#searchCard_FreePort").keyup(function () {
-        datatable.columns(2).search($("#searchCard_FreePort").val()).draw();
+        dataTable.columns(2).search($("#searchCard_FreePort").val()).draw();
 
     });
 
     $("#searchCard_Account").keyup(function () {
-        datatable.columns(3).search($("#searchCard_Account").val()).draw();
+        dataTable.columns(3).search($("#searchCard_Account").val()).draw();
 
     });
 
     $("#searchCard_Name").keyup(function () {
-        datatable.columns(4).search($("#searchCard_Name").val()).draw();
+        dataTable.columns(4).search($("#searchCard_Name").val()).draw();
 
     });
 
     $("#searchCard_AttributeSelect").change(function () {
         if ($("#searchCard_AttributeSelect").val() != "") {
-            datatable.columns(5).search($("#searchCard_AttributeSelect :selected").text()).draw();
+            dataTable.columns(5).search($("#searchCard_AttributeSelect :selected").text()).draw();
         } else {
-            datatable.columns(5).search("").draw();
+            dataTable.columns(5).search("").draw();
         }
     });
 
     $("#searchCard_StatusSelect").change(function () {
         if ($("#searchCard_StatusSelect").val() != "") {
-            datatable.columns(6).search($("#searchCard_StatusSelect :selected").text()).draw();
+            dataTable.columns(6).search($("#searchCard_StatusSelect :selected").text()).draw();
         } else {
-            datatable.columns(6).search("").draw();
+            dataTable.columns(6).search("").draw();
         }
     });
 }
 
-function PopupFormForAdd() {
-    $("#btnAddCard").on("click", function () {
-        var url = "/Admin/Card/AddCard"
-        $.get(
-            url,
-            { formTitle: $(this).text() },
-            function (data) {
-                $("#cardForm").html(data);
-                $("#cardForm").modal("show");
-            }
-        )
-    });
-
-    //$("#btnResetCardFreePoint").on("click", function () {
-    //    var url = "/Admin/Card/ResetCardFreePoint"
-    //    $.get(
-    //        url,
-    //        { formTitle: $(this).text() },
-    //        function (data) {
-
-    //            $("#cardForm").html(data);
-    //            $("#cardForm").modal("show");
-    //        })
-    //});
-
-};
-
-function SubmitFormForAdd(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
-        $.ajax({
-            type: "POST",
-            url: form.action,
-            data: $(form).serialize(),
-            success: function (data) {
-                if (data.success) {
-                    $("#cardForm").modal("hide");
-                    datatable.ajax.reload();
-                }
-            }
-        });
-    }
-    return false;
+/**
+ * Popup the modal from bootstrap library for adding or updating the data
+ * @param {string} btnAdd - click which button topopup modal for adding.
+ * @param {string} modalForm - modal's id.
+ * @param {jQuery DataTable} dataTable - the data of container.
+ * @param {string} uniqueIdProperty - identification each row data of property.
+ */
+function PopupFormForAddOrEdit() {
+    const btnAdd = "btnAddCard";
+    const modalForm = "cardForm";
+    const uniqueIdProperty = "serial";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
 }
 
+/**
+ * Popup the modal from bootstrap library for deleting the data
+ * @param {jQuery DataTable} dataTable - The data of container.
+ * @param {string} uniqueIdProperty - Identification each row data of property.
+ * @param {string} getURL - Send request of get destination
+ * @param {string} postURL - Send request of post destination
+ */
+function DeleteAlertPopUp() {
+    const uniqueIdProperty = "serial";
+    const getURL = "/Admin/Card/DeleteCard";
+    const postURL = "/Admin/Card/ReadyDeleteCard"
+    RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL);
+}
 
 $(function () {
     SearchCardDataTableInitial();
     ColumnSearch();
-    PopupFormForAdd();
+    PopupFormForAddOrEdit();
+    DeleteAlertPopUp();
 });

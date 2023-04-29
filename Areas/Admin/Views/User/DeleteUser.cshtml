@@ -1,0 +1,36 @@
+﻿@model NISC_MFP_MVC.ViewModels.UserViewModel
+
+@{
+    string color_enable_flag;
+
+    color_enable_flag = Model.color_enable_flag == "0" ? "無" :
+                    Model.color_enable_flag == "1" ? "有" :
+                    Model.color_enable_flag;
+}
+
+<table id="deleteDataTable" class="table table-striped table-bordered w-100 fs-6">
+    <thead>
+        <tr>
+            <th>帳號</th>
+            <th>密碼</th>
+            <th>工號</th>
+            <th>姓名</th>
+            <th>部門代碼</th>
+            <th>部門名稱</th>
+            <th>彩色使用權限</th>
+            <th>信箱</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="deleteRowData">
+            <th id="user_id">@Model.user_id</th>
+            <th id="user_password">@Model.user_password</th>
+            <th id="work_id">@Model.work_id</th>
+            <th id="user_name">@Model.user_name</th>
+            <th id="dept_id">@Model.dept_id</th>
+            <th id="dept_name">@Model.dept_name</th>
+            <th id="color_enable_flag" class="@(color_enable_flag=="有"?"fw-bold text-success":"fw-bold text-danger")">@color_enable_flag</th>
+            <th id="e_mail">@Model.e_mail</th>
+        </tr>
+    </tbody>
+</table>

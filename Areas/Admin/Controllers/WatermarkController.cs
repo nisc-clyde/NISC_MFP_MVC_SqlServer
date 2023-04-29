@@ -1,18 +1,33 @@
-﻿using NISC_MFP_MVC.Models.DTO;
-using NISC_MFP_MVC.Models;
-using System;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC_Service.DTOs.Info.Card;
+using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
+using NISC_MFP_MVC_Service.Implement;
+using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Web;
 using System.Web.Mvc;
-using System.Linq.Dynamic.Core;
-using static System.Net.Mime.MediaTypeNames;
-using System.Drawing;
+using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class WatermarkController : Controller
     {
+        private IWatermarkService _watermarkService;
+        private Mapper mapper;
+
+        public WatermarkController()
+        {
+            _watermarkService = new WatermarkService();
+            mapper = InitializeAutomapper();
+        }
+
+
         public ActionResult Index()
         {
             return View();
@@ -20,154 +35,153 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchPrintDataTable()
+        public ActionResult SearchWatermarkDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            using (MFP_DBEntities db = new MFP_DBEntities())
+            IQueryable<WatermarkViewModel> searchWatermarkResultDetail = InitialData();
+            dataTableRequest.RecordsTotalGet = searchWatermarkResultDetail.AsQueryable().Count();
+            searchWatermarkResultDetail = GlobalSearch(searchWatermarkResultDetail, dataTableRequest.GlobalSearchValue);
+            searchWatermarkResultDetail = ColumnSearch(searchWatermarkResultDetail, dataTableRequest);
+            searchWatermarkResultDetail = searchWatermarkResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            dataTableRequest.RecordsFilteredGet = searchWatermarkResultDetail.AsQueryable().Count();
+            searchWatermarkResultDetail = searchWatermarkResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+
+            return Json(new
             {
-                List<SearchWatermarkDTO> searchWatermarkResult = InitialData(db);
-
-                dataTableRequest.RecordsTotalGet = searchWatermarkResult.Count;
-
-                searchWatermarkResult = GlobalSearch(searchWatermarkResult, dataTableRequest.GlobalSearchValue);
-
-                searchWatermarkResult = ColumnSearch(searchWatermarkResult, dataTableRequest);
-
-                searchWatermarkResult = searchWatermarkResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
-
-                dataTableRequest.RecordsFilteredGet = searchWatermarkResult.Count;
-
-                searchWatermarkResult = searchWatermarkResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList<SearchWatermarkDTO>();
-
-                foreach (SearchWatermarkDTO dto in searchWatermarkResult)
-                {
-                    dataTableRequest.SearchDTO.Add(dto);
-                }
-
-                return Json(new
-                {
-                    data = dataTableRequest.SearchDTO,
-                    draw = dataTableRequest.Draw,
-                    recordsTotal = dataTableRequest.RecordsTotalGet,
-                    recordsFiltered = dataTableRequest.RecordsFilteredGet
-                }, JsonRequestBehavior.AllowGet);
-            }
+                data = searchWatermarkResultDetail,
+                draw = dataTableRequest.Draw,
+                recordsTotal = dataTableRequest.RecordsTotalGet,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [NonAction]
-        public List<SearchWatermarkDTO> InitialData(MFP_DBEntities db)
+        public IQueryable<WatermarkViewModel> InitialData()
         {
-            List<SearchWatermarkDTO> searchWatermarkResult = new List<SearchWatermarkDTO>();
-            searchWatermarkResult = db.tb_watermark
-               .Select(watermark => new SearchWatermarkDTO
-               {
-                   type = watermark.type.ToString() == "0" ? "圖片" : "文字",
-                   left_offset = watermark.left_offset,
-                   right_offset = watermark.right_offset,
-                   top_offset = watermark.top_offset,
-                   bottom_offset = watermark.bottom_offset,
-                   position_mode = watermark.position_mode.ToString() == "0" ? "左上" :
-                                   watermark.position_mode.ToString() == "1" ? "左下" :
-                                   watermark.position_mode.ToString() == "2" ? "右上" :
-                                   watermark.position_mode.ToString() == "3" ? "右下" : "正中間",
-                   fill_mode = watermark.fill_mode.ToString() == "0" ? "無" :
-                               watermark.fill_mode.ToString() == "1" ? "依原圖比例多餘裁切" :
-                               watermark.fill_mode.ToString() == "2" ? "依原圖比例不裁切" :
-                               watermark.fill_mode.ToString() == "3" ? "依紙張比例" :
-                               watermark.fill_mode.ToString() == "4" ? "重覆填滿" : "置中，並依原圖比例多餘裁切",
-                   text = watermark.text,
-                   image_path = watermark.image_path,
-                   rotation = watermark.rotation,
-                   color = watermark.color
-               }).ToList<SearchWatermarkDTO>();
-            return searchWatermarkResult;
+            IQueryable<AbstractWatermarkInfo> resultModel = _watermarkService.GetAll();
+            IQueryable<WatermarkViewModel> viewmodel = resultModel.ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodel;
         }
+
         [NonAction]
-        public List<SearchWatermarkDTO> GlobalSearch(List<SearchWatermarkDTO> searchData, string searchValue)
+        public IQueryable<WatermarkViewModel> GlobalSearch(IQueryable<WatermarkViewModel> searchData, string searchValue)
         {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(
-                    p => p.type.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.left_offset.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.right_offset.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.top_offset.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.bottom_offset.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.position_mode.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.fill_mode.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.text.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.image_path.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.rotation.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.color.ToUpper().Contains(searchValue.ToUpper())
-                    ).ToList();
-            }
-            return searchData;
+            IQueryable<WatermarkInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            List<WatermarkInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
+            IQueryable<WatermarkViewModel> viewmodelAfter = _watermarkService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodelAfter;
         }
+
         [NonAction]
-        public List<SearchWatermarkDTO> ColumnSearch(List<SearchWatermarkDTO> searchData, DataTableRequest searchReauest)
+        public IQueryable<WatermarkViewModel> ColumnSearch(IQueryable<WatermarkViewModel> searchData, DataTableRequest searchRequest)
         {
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
-            {
-                searchData = searchData.Where(watermark => watermark.type.Contains(searchReauest.ColumnSearch_0)).ToList();
-            }
+            IQueryable<WatermarkInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "type", searchRequest.ColumnSearch_0).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "left_offset", searchRequest.ColumnSearch_1).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "right_offset", searchRequest.ColumnSearch_2).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "top_offset", searchRequest.ColumnSearch_3).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "bottom_offset", searchRequest.ColumnSearch_4).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "position_mode", searchRequest.ColumnSearch_5).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "fill_mode", searchRequest.ColumnSearch_6).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "text", searchRequest.ColumnSearch_7).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "image_path", searchRequest.ColumnSearch_8).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "rotation", searchRequest.ColumnSearch_9).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "color", searchRequest.ColumnSearch_10).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
+            IQueryable<WatermarkViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_1))
-            {
-                searchData = searchData.Where(watermark => watermark.left_offset.ToString().Contains(searchReauest.ColumnSearch_1)).ToList();
-            }
+            return viewmodelAfter;
+        }
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
-            {
-                searchData = searchData.Where(watermark => watermark.right_offset.ToString().Contains(searchReauest.ColumnSearch_2)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
-            {
-                searchData = searchData.Where(watermark => watermark.top_offset.ToString().Contains(searchReauest.ColumnSearch_3)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_4))
-            {
-                searchData = searchData.Where(watermark => watermark.bottom_offset.ToString().Contains(searchReauest.ColumnSearch_4)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
-            {
-                searchData = searchData.Where(watermark => watermark.position_mode.Contains(searchReauest.ColumnSearch_5)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_6))
-            {
-                searchData = searchData.Where(watermark => watermark.fill_mode.Contains(searchReauest.ColumnSearch_6)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_7))
-            {
-                searchData = searchData.Where(watermark => watermark.text.ToUpper().Contains(searchReauest.ColumnSearch_7.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_8))
-            {
-                searchData = searchData.Where(watermark => watermark.image_path.Contains(searchReauest.ColumnSearch_8)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_9))
-            {
-                searchData = searchData.Where(watermark => watermark.rotation.ToString().Contains(searchReauest.ColumnSearch_9)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_10))
-            {
-                searchData = searchData.Where(watermark => watermark.color.Contains(searchReauest.ColumnSearch_10)).ToList();
-            }
-            return searchData;
+        private Mapper InitializeAutomapper()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
+            return mapper;
         }
 
         [HttpGet]
-        public ActionResult AddWatermark()
+        public ActionResult AddOrEditWatermark(string formTitle, int serial)
         {
-            ViewBag.formTitle = Request["formTitle"];
-            return View();
+            WatermarkViewModel initialWatermarkDTO = new WatermarkViewModel();
+            try
+            {
+                if (serial < 0)
+                {
+                    //Popup for Add
+                }
+                else if (serial >= 0)
+                {
+                    //Popup for Edit
+                    AbstractWatermarkInfo instance = _watermarkService.Get(serial);
+                    initialWatermarkDTO = mapper.Map<WatermarkViewModel>(instance);
+                }
+            }
+            catch (HttpException he)
+            {
+                Debug.WriteLine(he.Message);
+                //throw he;
+            }
+
+            ViewBag.formTitle = formTitle;
+            return PartialView(initialWatermarkDTO);
+        }
+
+        [HttpPost]
+        public ActionResult AddOrEditWatermark(WatermarkViewModel watermark, string currentOperation)
+        {
+            try
+            {
+                if (currentOperation == "Add")
+                {
+                    //Popup for Add
+                    if (ModelState.IsValid)
+                    {
+                        _watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfoConvert2Code>(watermark));
+                        _watermarkService.SaveChanges();
+
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else if (currentOperation == "Edit")
+                {
+                    //Popup for Edit
+                    if (ModelState.IsValid)
+                    {
+                        _watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfoConvert2Code>(watermark));
+                        _watermarkService.SaveChanges();
+
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            catch (HttpException he)
+            {
+                Debug.WriteLine(he.Message);
+                //throw he;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult DeleteWatermark(int serial)
+        {
+            WatermarkViewModel watermarkViewModel = new WatermarkViewModel();
+            AbstractWatermarkInfo instance = _watermarkService.Get(serial);
+            watermarkViewModel = mapper.Map<WatermarkViewModel>(instance);
+
+            return PartialView(watermarkViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult ReadyDeleteWatermark(WatermarkViewModel watermark)
+        {
+            _watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfoConvert2Code>(watermark));
+            _watermarkService.SaveChanges();
+
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

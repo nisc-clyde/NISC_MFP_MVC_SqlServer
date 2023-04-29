@@ -1,16 +1,28 @@
-﻿using NISC_MFP_MVC.Models.DTO;
-using NISC_MFP_MVC.Models;
-using System;
-using System.Collections.Generic;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
+using NISC_MFP_MVC_Service.Implement;
+using NISC_MFP_MVC_Service.Interface;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
+using System.Web.Mvc;
+using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class DepositeController : Controller
     {
+        private IDepositService _depositService;
+        private Mapper mapper;
+
+        public DepositeController()
+        {
+            _depositService = new DepositService();
+            mapper = InitializeAutomapper();
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -21,124 +33,65 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchDepositeDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            using (MFP_DBEntities db = new MFP_DBEntities())
+            IQueryable<DepositViewModel> searchDepositResultDetail = InitialData();
+            dataTableRequest.RecordsTotalGet = searchDepositResultDetail.AsQueryable().Count();
+            searchDepositResultDetail = GlobalSearch(searchDepositResultDetail, dataTableRequest.GlobalSearchValue);
+            searchDepositResultDetail = ColumnSearch(searchDepositResultDetail, dataTableRequest);
+            searchDepositResultDetail = searchDepositResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            dataTableRequest.RecordsFilteredGet = searchDepositResultDetail.AsQueryable().Count();
+            searchDepositResultDetail = searchDepositResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+
+            return Json(new
             {
-                List<SearchDepositeDTO> searchDepositeResult = InitialData(db);
+                data = searchDepositResultDetail,
+                draw = dataTableRequest.Draw,
+                recordsTotal = dataTableRequest.RecordsTotalGet,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
+        }
 
-                dataTableRequest.RecordsTotalGet = searchDepositeResult.Count;
 
-                searchDepositeResult = GlobalSearch(searchDepositeResult, dataTableRequest.GlobalSearchValue);
+        [NonAction]
+        public IQueryable<DepositViewModel> InitialData()
+        {
+            IQueryable<DepositInfo> resultModel = _depositService.GetAll();
+            IQueryable<DepositViewModel> viewmodel = resultModel.ProjectTo<DepositViewModel>(mapper.ConfigurationProvider);
 
-                searchDepositeResult = ColumnSearch(searchDepositeResult, dataTableRequest);
-
-                searchDepositeResult = searchDepositeResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
-
-                dataTableRequest.RecordsFilteredGet = searchDepositeResult.Count;
-
-                searchDepositeResult = searchDepositeResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
-
-                foreach (SearchDepositeDTO dto in searchDepositeResult)
-                {
-                    dataTableRequest.SearchDTO.Add(dto);
-                }
-
-                return Json(new
-                {
-                    data = dataTableRequest.SearchDTO,
-                    draw = dataTableRequest.Draw,
-                    recordsTotal = dataTableRequest.RecordsTotalGet,
-                    recordsFiltered = dataTableRequest.RecordsFilteredGet
-                }, JsonRequestBehavior.AllowGet);
-            }
+            return viewmodel;
         }
 
         [NonAction]
-        public List<SearchDepositeDTO> InitialData(MFP_DBEntities db)
+        public IQueryable<DepositViewModel> GlobalSearch(IQueryable<DepositViewModel> searchData, string searchValue)
         {
-            List<SearchDepositeDTO> searchDepositeResult = db.tb_logs_deposit
-                    .Select(deposite => new SearchDepositeDTO
-                    {
-                        user_name = deposite.user_name,
-                        user_id = deposite.user_id,
-                        card_id = deposite.card_id,
-                        card_user_id = deposite.card_user_id,
-                        card_user_name = deposite.card_user_name,
-                        pbalance = deposite.pbalance,
-                        deposit_value = deposite.deposit_value,
-                        final_value = deposite.final_value,
-                        deposit_date = deposite.deposit_date.ToString()
-                    }).ToList();
-            return searchDepositeResult;
+            IQueryable<DepositInfo> viewmodelBefore = searchData.ProjectTo<DepositInfo>(mapper.ConfigurationProvider);
+            IQueryable<DepositViewModel> viewmodelAfter = _depositService.GetWithGlobalSearch(viewmodelBefore, searchValue).ProjectTo<DepositViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodelAfter;
         }
 
         [NonAction]
-        public List<SearchDepositeDTO> GlobalSearch(List<SearchDepositeDTO> searchData, string searchValue)
+        public IQueryable<DepositViewModel> ColumnSearch(IQueryable<DepositViewModel> searchData, DataTableRequest searchRequest)
         {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(
-                    p => p.user_name.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.user_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.card_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.card_user_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.card_user_name.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.pbalance.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.deposit_value.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.final_value.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.deposit_date.ToUpper().Contains(searchValue.ToUpper())
-                    ).ToList();
-            }
-            return searchData;
+            IQueryable<DepositInfo> viewmodelBefore = searchData.ProjectTo<DepositInfo>(mapper.ConfigurationProvider);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "user_name", searchRequest.ColumnSearch_0);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "user_id", searchRequest.ColumnSearch_1);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "card_id", searchRequest.ColumnSearch_2);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "card_user_id", searchRequest.ColumnSearch_3);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "card_user_name", searchRequest.ColumnSearch_4);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "pbalance", searchRequest.ColumnSearch_5);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "deposit_value", searchRequest.ColumnSearch_6);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "final_value", searchRequest.ColumnSearch_7);
+            viewmodelBefore = _depositService.GetWithColumnSearch(viewmodelBefore, "deposit_date", searchRequest.ColumnSearch_8);
+            IQueryable<DepositViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<DepositViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodelAfter;
         }
 
-        [NonAction]
-        public List<SearchDepositeDTO> ColumnSearch(List<SearchDepositeDTO> searchData, DataTableRequest searchReauest)
+        private Mapper InitializeAutomapper()
         {
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
-            {
-                searchData = searchData.Where(deposite => deposite.user_name.ToUpper().Contains(searchReauest.ColumnSearch_0.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_1))
-            {
-                searchData = searchData.Where(deposite => deposite.user_id.ToUpper().Contains(searchReauest.ColumnSearch_1.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
-            {
-                searchData = searchData.Where(deposite => deposite.card_id.ToUpper().Contains(searchReauest.ColumnSearch_2.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
-            {
-                searchData = searchData.Where(deposite => deposite.card_user_id.ToUpper().Contains(searchReauest.ColumnSearch_3.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_4))
-            {
-                searchData = searchData.Where(deposite => deposite.card_user_name.ToUpper().Contains(searchReauest.ColumnSearch_4.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
-            {
-                searchData = searchData.Where(deposite => deposite.pbalance.ToString().ToUpper().Contains(searchReauest.ColumnSearch_5.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_6))
-            {
-                searchData = searchData.Where(deposite => deposite.deposit_value.ToString().ToUpper().Contains(searchReauest.ColumnSearch_6.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_7))
-            {
-                searchData = searchData.Where(deposite => deposite.final_value.ToString().ToUpper().Contains(searchReauest.ColumnSearch_7.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_8))
-            {
-                searchData = searchData.Where(deposite => deposite.deposit_date.ToUpper().Contains(searchReauest.ColumnSearch_8.ToUpper())).ToList();
-            }
-            return searchData;
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
+            return mapper;
         }
     }
 }

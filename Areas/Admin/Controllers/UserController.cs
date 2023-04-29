@@ -1,12 +1,18 @@
-﻿using NISC_MFP_MVC.Models.DTO;
-using NISC_MFP_MVC.Models;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
+using NISC_MFP_MVC_Service.Implement;
+using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
-using NISC_MFP_MVC.Models.DTO_Initial;
-using Microsoft.Ajax.Utilities;
-using AutoMapper;
+using System.Web;
+using System.Web.Mvc;
+using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -14,6 +20,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
+        private IUserService _userService;
+        private Mapper mapper;
+
+        public UserController()
+        {
+            _userService = new UserService();
+            mapper = InitializeAutomapper();
+        }
 
         public ActionResult Index()
         {
@@ -25,263 +39,162 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchUserDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            using (MFP_DBEntities db = new MFP_DBEntities())
+            IQueryable<UserViewModel> searchUserResultDetail = InitialData();
+            dataTableRequest.RecordsTotalGet = searchUserResultDetail.AsQueryable().Count();
+            searchUserResultDetail = GlobalSearch(searchUserResultDetail, dataTableRequest.GlobalSearchValue);
+            searchUserResultDetail = ColumnSearch(searchUserResultDetail, dataTableRequest);
+            searchUserResultDetail = searchUserResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            dataTableRequest.RecordsFilteredGet = searchUserResultDetail.AsQueryable().Count();
+            searchUserResultDetail = searchUserResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+
+            return Json(new
             {
-                List<SearchUserDTO> searchUserResult = InitialData(db);
+                data = searchUserResultDetail,
+                draw = dataTableRequest.Draw,
+                recordsTotal = dataTableRequest.RecordsTotalGet,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
 
-                dataTableRequest.RecordsTotalGet = searchUserResult.Count;
-
-                searchUserResult = GlobalSearch(searchUserResult, dataTableRequest.GlobalSearchValue);
-
-                searchUserResult = ColumnSearch(searchUserResult, dataTableRequest);
-
-                searchUserResult = searchUserResult.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection).ToList();
-
-                dataTableRequest.RecordsFilteredGet = searchUserResult.Count;
-
-                searchUserResult = searchUserResult.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
-
-                foreach (SearchUserDTO dto in searchUserResult)
-                {
-                    dataTableRequest.SearchDTO.Add(dto);
-                }
-
-                return Json(new
-                {
-                    data = dataTableRequest.SearchDTO,
-                    draw = dataTableRequest.Draw,
-                    recordsTotal = dataTableRequest.RecordsTotalGet,
-                    recordsFiltered = dataTableRequest.RecordsFilteredGet
-                }, JsonRequestBehavior.AllowGet);
-            }
         }
 
         [NonAction]
-        public List<SearchUserDTO> InitialData(MFP_DBEntities db)
+        public IQueryable<UserViewModel> InitialData()
         {
-            List<UserRepoDTO> searchUserResult = (from u in db.tb_user
-                                                  join d in db.tb_department on u.dept_id equals d.dept_id into gj
-                                                  from subd in gj.DefaultIfEmpty()
-                                                  select new UserRepoDTO
-                                                  {
-                                                      serial = u.serial,
-                                                      user_id = u.user_id,
-                                                      user_password = u.user_password,
-                                                      work_id = u.work_id,
-                                                      user_name = u.user_name,
-                                                      dept_id = u.dept_id,
-                                                      dept_name = subd.dept_name,
-                                                      color_enable_flag = u.color_enable_flag,
-                                                      copy_enable_flag = u.copy_enable_flag,
-                                                      print_enable_flag = u.print_enable_flag,
-                                                      scan_enable_flag = u.scan_enable_flag,
-                                                      fax_enable_flag = u.fax_enable_flag,
-                                                      e_mail = u.e_mail,
-                                                  }).ToList();
-            List<SearchUserDTO> result = new List<SearchUserDTO>();
-            foreach(UserRepoDTO u in searchUserResult)
-            {
-                result.Add(u.Convert2PrensentationModel());
-            }
+            IQueryable<AbstractUserInfo> resultModel = _userService.GetAll();
+            IQueryable<UserViewModel> viewmodel = resultModel.ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
 
-            return result;
+            return viewmodel;
         }
+
         [NonAction]
-        public List<SearchUserDTO> GlobalSearch(List<SearchUserDTO> searchData, string searchValue)
+        public IQueryable<UserViewModel> GlobalSearch(IQueryable<UserViewModel> searchData, string searchValue)
         {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(
-                    p => p.user_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.user_password.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.work_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.user_name.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.dept_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.dept_name.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.color_enable_flag.ToUpper().Contains(searchValue.ToUpper()) ||
-                    p.e_mail.ToUpper().Contains(searchValue.ToUpper())
-                    ).ToList();
-            }
-            return searchData;
+            IQueryable<UserInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            List<UserInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
+            IQueryable<UserViewModel> viewmodelAfter = _userService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
+
+            return viewmodelAfter;
         }
+
         [NonAction]
-        public List<SearchUserDTO> ColumnSearch(List<SearchUserDTO> searchData, DataTableRequest searchReauest)
+        public IQueryable<UserViewModel> ColumnSearch(IQueryable<UserViewModel> searchData, DataTableRequest searchRequest)
         {
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_0))
-            {
-                searchData = searchData.Where(user => user.user_id.ToUpper().Contains(searchReauest.ColumnSearch_0.ToUpper())).ToList();
-            }
+            IQueryable<UserInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "user_id", searchRequest.ColumnSearch_0).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "user_password", searchRequest.ColumnSearch_1).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "work_id", searchRequest.ColumnSearch_2).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "user_name", searchRequest.ColumnSearch_3).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "dept_id", searchRequest.ColumnSearch_4).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "dept_name", searchRequest.ColumnSearch_5).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "color_enable_flag", searchRequest.ColumnSearch_6).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "e_mail", searchRequest.ColumnSearch_7).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
+            IQueryable<UserViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
 
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_1))
-            {
-                searchData = searchData.Where(user => user.user_password.ToUpper().Contains(searchReauest.ColumnSearch_1.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_2))
-            {
-                searchData = searchData.Where(user => user.work_id.ToUpper().Contains(searchReauest.ColumnSearch_2.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_3))
-            {
-                searchData = searchData.Where(user => user.user_name.ToUpper().Contains(searchReauest.ColumnSearch_3.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_4))
-            {
-                searchData = searchData.Where(user => user.dept_id.ToUpper().Contains(searchReauest.ColumnSearch_4.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_5))
-            {
-                searchData = searchData.Where(user => user.dept_name.ToUpper().Contains(searchReauest.ColumnSearch_5.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_6))
-            {
-                searchData = searchData.Where(user => user.color_enable_flag.ToUpper().Contains(searchReauest.ColumnSearch_6.ToUpper())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchReauest.ColumnSearch_7))
-            {
-                searchData = searchData.Where(user => user.e_mail.ToString().ToUpper().Contains(searchReauest.ColumnSearch_7.ToUpper())).ToList();
-            }
-            return searchData;
+            return viewmodelAfter;
         }
 
-        [HttpGet]
-        public ActionResult AddUser(string formTitle)
+        private Mapper InitializeAutomapper()
         {
-            SearchUserDTO initialUserDTO = new SearchUserDTO();
-            initialUserDTO.color_enable_flag = DISABLE;
-            initialUserDTO.copy_enable_flag = DISABLE;
-            initialUserDTO.print_enable_flag = DISABLE;
-            initialUserDTO.scan_enable_flag = DISABLE;
-            initialUserDTO.fax_enable_flag = DISABLE;
-            ViewBag.formTitle = formTitle;
-            return PartialView(initialUserDTO);
-        }
-
-        [HttpPost]
-        public ActionResult AddUser(SearchUserDTO user)
-        {
-            if (ModelState.IsValid)
-            {
-                UserRepoDTO result = new UserRepoDTO();
-                result.user_id = user.user_id;
-                result.user_password = user.user_password;
-                result.work_id = user.work_id;
-                result.user_name = user.user_name;
-                result.dept_id = user.dept_id;
-                result.e_mail = user.e_mail;
-                result.color_enable_flag = user.color_enable_flag;
-                result.copy_enable_flag = user.copy_enable_flag;
-                result.print_enable_flag = user.print_enable_flag;
-                result.scan_enable_flag = user.scan_enable_flag;
-                result.fax_enable_flag = user.fax_enable_flag;
-
-                using (MFP_DBEntities db = new MFP_DBEntities())
-                {
-                    db.tb_user.Add(result.Convert2DatabaseModel());
-                    db.SaveChanges();
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            return RedirectToAction("Index");
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
+            return mapper;
         }
 
         [HttpPost]
         public ActionResult SearchDepartment(string prefix)
         {
-            using (MFP_DBEntities db = new MFP_DBEntities())
-            {
-                List<SearchDepartmentDTO> result = db.tb_department
-                    .Where(d => d.dept_id.ToUpper().Contains(prefix.ToUpper()) || d.dept_name.ToUpper().Contains(prefix.ToUpper()))
-                    .Select(d => new SearchDepartmentDTO
-                    {
-                        dept_id = d.dept_id,
-                        dept_name = d.dept_name
-                    }).ToList();
+            DepartmentService _DepartmentService = new DepartmentService();
+            IEnumerable<AbstractDepartmentInfo> searchResult = _DepartmentService.SearchByIdAndName(prefix);
+            List<DepartmentViewModel> resultViewModel = mapper.Map<IEnumerable<AbstractDepartmentInfo>, IEnumerable<DepartmentViewModel>>(searchResult).ToList();
 
-                return Json(result, JsonRequestBehavior.AllowGet);
-            }
-
+            return Json(resultViewModel, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
-        public ActionResult UpdateUser(string formTitle, int serial)
+        public ActionResult AddOrEditUser(string formTitle, int serial)
         {
-            using (MFP_DBEntities db = new MFP_DBEntities())
+            UserViewModel userViewModel = new UserViewModel();
+            try
             {
-                SearchUserDTO searchUserDTO = (from u in db.tb_user
-                                               join d in db.tb_department on u.dept_id equals d.dept_id into gj
-                                               from subd in gj.DefaultIfEmpty()
-                                               where u.serial == serial
-                                               select new SearchUserDTO
-                                               {
-                                                   user_id = u.user_id,
-                                                   user_password = u.user_password,
-                                                   work_id = u.work_id,
-                                                   user_name = u.user_name,
-                                                   dept_id = u.dept_id,
-                                                   dept_name = subd.dept_name,
-                                                   color_enable_flag = u.color_enable_flag,
-                                                   copy_enable_flag = u.copy_enable_flag,
-                                                   print_enable_flag = u.print_enable_flag,
-                                                   scan_enable_flag = u.scan_enable_flag,
-                                                   fax_enable_flag = u.fax_enable_flag,
-                                                   e_mail = u.e_mail,
-                                               }).FirstOrDefault();
-
-                ViewBag.formTitle = formTitle;
-                return PartialView(searchUserDTO);
+                if (serial < 0)
+                {
+                    userViewModel.color_enable_flag = DISABLE;
+                    userViewModel.copy_enable_flag = DISABLE;
+                    userViewModel.print_enable_flag = DISABLE;
+                    userViewModel.scan_enable_flag = DISABLE;
+                    userViewModel.fax_enable_flag = DISABLE;
+                }
+                else if (serial >= 0)
+                {
+                    AbstractUserInfo instance = _userService.Get(serial);
+                    userViewModel = mapper.Map<UserViewModel>(instance);
+                }
             }
+            catch (HttpException he)
+            {
+                Debug.WriteLine(he.Message);
+                //throw he;
+            }
+
+            ViewBag.formTitle = formTitle;
+            return PartialView(userViewModel);
         }
 
         [HttpPost]
-        public ActionResult UpdateUser(SearchUserDTO user)
+        public ActionResult AddOrEditUser(UserViewModel User, string currentOperation)
         {
-            if (ModelState.IsValid)
+            if (currentOperation == "Add")
             {
-                tb_user result = new tb_user();
-
-                UserRepoDTO userDetail = new UserRepoDTO();
-                userDetail.user_id = user.dept_id;
-                userDetail.user_password = user.user_password;
-                userDetail.work_id = user.work_id;
-                userDetail.user_name = user.user_name;
-                userDetail.dept_id = user.dept_id;
-                userDetail.color_enable_flag = user.color_enable_flag;
-                userDetail.copy_enable_flag = user.copy_enable_flag;
-                userDetail.print_enable_flag = user.print_enable_flag;
-                userDetail.scan_enable_flag = user.scan_enable_flag;
-                userDetail.fax_enable_flag = user.fax_enable_flag;
-                userDetail.e_mail = user.e_mail;
-                userDetail.serial = user.serial;
-
-                result = userDetail.Convert2DatabaseModel();
-
-                using (MFP_DBEntities db = new MFP_DBEntities())
+                if (ModelState.IsValid)
                 {
-                    IQueryable<tb_user> targetUser = db.tb_user.Where(d => d.serial.Equals(result.serial));
+                    _userService.Insert(mapper.Map<UserViewModel, UserInfoConvert2Code>(User));
+                    _userService.SaveChanges();
 
-                    targetUser.ForEach(d =>
-                    {
-                        d.user_password = result.user_password;
-                        d.work_id = result.work_id;
-                        d.user_name = result.user_name;
-                        d.dept_id = result.dept_id;
-                        d.color_enable_flag = result.color_enable_flag;
-                        d.copy_enable_flag = result.copy_enable_flag;
-                        d.print_enable_flag = result.print_enable_flag;
-                        d.scan_enable_flag = result.scan_enable_flag;
-                        d.fax_enable_flag = result.fax_enable_flag;
-                        d.e_mail = result.e_mail;
-                    });
-                    db.SaveChanges();
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
+            else if (currentOperation == "Edit")
+            {
+                if (ModelState.IsValid)
+                {
+                    _userService.Update(mapper.Map<UserViewModel, UserInfoConvert2Code>(User));
+                    _userService.SaveChanges();
+
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult DeleteUser(int serial)
+        {
+            UserViewModel UserViewModel = new UserViewModel();
+            AbstractUserInfo instance = _userService.Get(serial);
+            UserViewModel = mapper.Map<UserViewModel>(instance);
+
+            return PartialView(UserViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult ReadyDeleteUser(UserViewModel User)
+        {
+            _userService.Delete(mapper.Map<UserViewModel, UserInfoConvert2Code>(User));
+            _userService.SaveChanges();
+
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult UserPermissionConfig(string formTitle, int serial)
+        {
+            UserViewModel userViewModel = new UserViewModel();
+            AbstractUserInfo instance = _userService.Get(serial);
+            userViewModel = mapper.Map<UserViewModel>(instance);
+            ViewBag.formTitle = formTitle;
+            return PartialView(userViewModel);
+
         }
     }
 }

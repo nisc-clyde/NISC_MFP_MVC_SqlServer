@@ -86,11 +86,8 @@ function DateRangePicker_Initial() {
     dateRangePicker.on('cancel.daterangepicker', function (ev, picker) {
         dateRangePicker.data('daterangepicker').setStartDate('2005/01/01');
         dateRangePicker.data('daterangepicker').setEndDate(formatDate(new Date()));
-
-        //$('#daterange').data('daterangepicker').setStartDate('03/01/2014');
-        //$('#daterange').data('daterangepicker').setEndDate('03/31/2014');
-
-        datatable.columns(9).search("2005/01/01" + "~" + formatDate(new Date())).draw();
+        //datatable.columns(9).search("2005/01/01" + "~" + formatDate(new Date())).draw();
+        datatable.columns(9).search("").draw();
     });
 }
 
@@ -106,7 +103,7 @@ function FormSelect_UnSelect() {
 
         var operationString = [];
         $("#searchPrint_OperationSelect option:not(:first)").each(function () {
-            operationString.push($(this).text());
+            operationString.push($(this).val());
         })
 
         if (operationString.length == 0) {
@@ -138,7 +135,7 @@ function FormSelect_Select() {
 
         var operationString = [];
         $("#searchPrint_OperationSelect option:not(:first)").each(function () {
-            operationString.push($(this).text());
+            operationString.push($(this).val());
         })
 
         if (operationString.length == 0) {
@@ -182,22 +179,25 @@ function SearchPrintDataTableInitial() {
             { data: "page_color", name: "顏色" },
             { data: "page", name: "張數" },
             { data: "value", name: "使用點數" },
-            { data: "print_date", name: "列印時間" },
+            {
+                data: "print_date", name: "列印時間"
+            },
             { data: "document_name", name: "文件名稱" }
         ],
         dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
         buttons: [
             { text: "輸出：", className: 'btn btn-secondary disabled' },
             { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", className: "btn btn-warning buttons-csv buttons-html5" },
+            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
             { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
         ],
         order: [9, "desc"],
         paging: true,
+        pagingType: 'full_numbers',
         deferRender: true,
         serverSide: true,
         processing: true,
-        pagingType: 'full_numbers',
+        responsive: true,
         language: {
             processing: "資料載入中...請稍後",
             paginate: {
@@ -208,7 +208,17 @@ function SearchPrintDataTableInitial() {
             },
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
             zeroRecords: "找不到相符資料",
-            search:"全部欄位搜尋："
+            search: "全部欄位搜尋：",
+            infoFiltered: ""
+        },
+        rowCallback: function (row, data) {
+            data.card_type == "0" ? $('td:eq(4)', row).html("<b class='text-danger'>遞減</b>") : $('td:eq(4)', row).html("<b class='text-success'>遞增</b>");
+            data.usage_type == "C" ? $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(1).text()) :
+                data.usage_type == "P" ? $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(2).text()) :
+                    data.usage_type == "S" ? $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(3).text()) :
+                        $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(4).text());
+
+            data.page_color == "C" ? $('td:eq(6)', row).html($("#searchPrint_ColorSelect option").eq(1).text()) : $('td:eq(6)', row).html($("#searchPrint_ColorSelect option").eq(2).text());
         }
     });
 };
@@ -235,24 +245,24 @@ function ColumnSearch() {
     });
 
     $("#searchPrint_AttributeSelect").change(function () {
-        if ($("#searchPrint_AttributeSelect").val() != "0") {
-            datatable.columns(4).search($("#searchPrint_AttributeSelect :selected").text()).draw();
+        if ($("#searchPrint_AttributeSelect").val() != "") {
+            datatable.columns(4).search($("#searchPrint_AttributeSelect :selected").val()).draw();
         } else {
             datatable.columns(4).search("").draw();
         }
     });
 
     $("#searchPrint_ActionSelect").change(function () {
-        if ($("#searchPrint_ActionSelect").val() != "all") {
-            datatable.columns(5).search($("#searchPrint_ActionSelect :selected").text()).draw();
+        if ($("#searchPrint_ActionSelect").val() != "") {
+            datatable.columns(5).search($("#searchPrint_ActionSelect :selected").val()).draw();
         } else {
-            datatable.columns(5).search("all").draw();
+            datatable.columns(5).search("").draw();
         }
     });
 
     $("#searchPrint_ColorSelect").change(function () {
-        if ($("#searchPrint_ColorSelect").val() != "0") {
-            datatable.columns(6).search($("#searchPrint_ColorSelect :selected").text()).draw();
+        if ($("#searchPrint_ColorSelect").val() != "") {
+            datatable.columns(6).search($("#searchPrint_ColorSelect :selected").val()).draw();
         } else {
             datatable.columns(6).search("").draw();
         }
