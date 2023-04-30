@@ -9,6 +9,7 @@ using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -33,9 +34,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            
+
             AdvancedPrintViewModel advancedPrintViewModel = new AdvancedPrintViewModel();
-            
+
             List<DepartmentInfoConvert2Text> getAllDepartment = _departmentService.GetAll().ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider).ToList();
 
             foreach (var item in getAllDepartment)
@@ -60,7 +61,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             searchPrintResultDetail = GlobalSearch(searchPrintResultDetail, dataTableRequest.GlobalSearchValue);
             searchPrintResultDetail = ColumnSearch(searchPrintResultDetail, dataTableRequest);
             searchPrintResultDetail = searchPrintResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
-            dataTableRequest.RecordsFilteredGet = searchPrintResultDetail.AsQueryable().Count();
+            dataTableRequest.RecordsFilteredGet = searchPrintResultDetail.Count();
             searchPrintResultDetail = searchPrintResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
             return Json(new
@@ -77,8 +78,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             IQueryable<PrintInfo> resultModel = _printService.GetAll();
             IQueryable<PrintViewModel> viewmodel = resultModel.ProjectTo<PrintViewModel>(mapper.ConfigurationProvider);
-
-
 
             return viewmodel;
         }

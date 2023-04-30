@@ -41,8 +41,7 @@ namespace NISC_MFP_MVC_Service.Implement
         public IQueryable<PrintInfo> GetAll()
         {
             IQueryable<InitialPrintRepoDTO> datamodel = _repository.GetAll();
-            IEnumerable<InitialPrintRepoDTO> enumerableDataModel = datamodel.AsEnumerable();
-            IQueryable<PrintInfo> resultDataModel = mapper.Map<IEnumerable<InitialPrintRepoDTO>, IEnumerable<PrintInfo>>(enumerableDataModel).AsQueryable();
+            IQueryable<PrintInfo> resultDataModel = datamodel.ProjectTo<PrintInfo>(mapper.ConfigurationProvider);
 
             return resultDataModel;
         }

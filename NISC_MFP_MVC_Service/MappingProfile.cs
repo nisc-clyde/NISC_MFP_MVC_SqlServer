@@ -19,9 +19,23 @@ namespace NISC_MFP_MVC_Service.Implement
     {
         public MappingProfile()
         {
-            CreateMap<InitialPrintRepoDTO, PrintInfo>().ReverseMap();
+            CreateMap<InitialPrintRepoDTO, PrintInfo>()
+                .ForMember(dest=>dest.print_date,conf=>conf.MapFrom(src=>src.print_date !=null? src.print_date.Value.Year.ToString() + "-" +
+                    (src.print_date.Value.Month < 10 ? "0" + src.print_date.Value.Month.ToString() : src.print_date.Value.Month.ToString()) + "-" +
+                    (src.print_date.Value.Day < 10 ? "0" + src.print_date.Value.Day.ToString() : src.print_date.Value.Day.ToString()) + " " +
+                    (src.print_date.Value.Hour < 10 ? "0" + src.print_date.Value.Hour.ToString() : src.print_date.Value.Hour.ToString()) + ":" +
+                    (src.print_date.Value.Minute < 10 ? "0" + src.print_date.Value.Minute.ToString() : src.print_date.Value.Minute.ToString()) + ":" +
+                    (src.print_date.Value.Second < 10 ? "0" + src.print_date.Value.Second.ToString() : src.print_date.Value.Second.ToString()) : ""))
+                .ReverseMap();
 
-            CreateMap<InitialDepositRepoDTO, DepositInfo>().ReverseMap();
+            CreateMap<InitialDepositRepoDTO, DepositInfo>()
+                .ForMember(dest => dest.deposit_date, conf => conf.MapFrom(src => src.deposit_date != null ? src.deposit_date.Value.Year.ToString() + "-" +
+                    (src.deposit_date.Value.Month < 10 ? "0" + src.deposit_date.Value.Month.ToString() : src.deposit_date.Value.Month.ToString()) + "-" +
+                    (src.deposit_date.Value.Day < 10 ? "0" + src.deposit_date.Value.Day.ToString() : src.deposit_date.Value.Day.ToString()) + " " +
+                    (src.deposit_date.Value.Hour < 10 ? "0" + src.deposit_date.Value.Hour.ToString() : src.deposit_date.Value.Hour.ToString()) + ":" +
+                    (src.deposit_date.Value.Minute < 10 ? "0" + src.deposit_date.Value.Minute.ToString() : src.deposit_date.Value.Minute.ToString()) + ":" +
+                    (src.deposit_date.Value.Second < 10 ? "0" + src.deposit_date.Value.Second.ToString() : src.deposit_date.Value.Second.ToString()) : ""))
+                .ReverseMap();
 
             CreateMap<InitialDepartmentRepoDTO, AbstractDepartmentInfo>().ReverseMap();
             CreateMap<InitialDepartmentRepoDTO, DepartmentInfoConvert2Text>().ReverseMap();
@@ -66,27 +80,8 @@ namespace NISC_MFP_MVC_Service.Implement
                 .ForMember(dest => dest.position_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.position_mode)))
                 .ForMember(dest => dest.fill_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.fill_mode)));
 
-            CreateMap<DateTime?, string>().ConvertUsing(new DateTimeTypeConverter());
             CreateMap<InitialHistoryRepoDTO, HistoryInfo>().ReverseMap();
-            
-        }
 
-        public class DateTimeTypeConverter : ITypeConverter<DateTime?, string>
-        {
-            public string Convert(DateTime? source, string destination, ResolutionContext context)
-            {
-                if (source.HasValue)
-                {
-                    destination = source?.ToString("yyyy-MM-dd HH:mm:ss");
-                    return  destination;
-                }
-                else
-                {
-                    destination = "N/A";
-                    return destination;
-                }
-            }
         }
-
     }
 }

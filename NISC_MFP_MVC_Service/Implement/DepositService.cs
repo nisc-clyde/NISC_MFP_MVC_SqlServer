@@ -26,9 +26,8 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public IQueryable<DepositInfo> GetAll()
         {
-            IQueryable<InitialDepositRepoDTO> datamodel = _repository.GetAll();
-            IEnumerable<InitialDepositRepoDTO> enumerableDataModel = datamodel.AsEnumerable();
-            IQueryable<DepositInfo> resultDataModel = mapper.Map<IEnumerable<InitialDepositRepoDTO>, IEnumerable<DepositInfo>>(enumerableDataModel).AsQueryable();
+            IQueryable<InitialDepositRepoDTO> dateModel = _repository.GetAll();
+            IQueryable<DepositInfo> resultDataModel = dateModel.ProjectTo<DepositInfo>(mapper.ConfigurationProvider);
 
             return resultDataModel;
         }
