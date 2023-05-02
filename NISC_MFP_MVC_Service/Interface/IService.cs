@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using NISC_MFP_MVC_Common;
+using System.Linq;
 
 namespace NISC_MFP_MVC_Service.Interface
 {
@@ -9,11 +10,9 @@ namespace NISC_MFP_MVC_Service.Interface
 
         IQueryable<TEntity> GetAll();
 
+        IQueryable<TEntity> GetAll(DataTableRequest dataTableRequest);
+
         TEntity Get(int serial);
-
-        IQueryable<TEntity> GetWithGlobalSearch(IQueryable<TEntity> searchData, string searchValue);
-
-        IQueryable<TEntity> GetWithColumnSearch(IQueryable<TEntity> searchData, string column, string searchValue);
 
         void Update(TEntity instance);
 

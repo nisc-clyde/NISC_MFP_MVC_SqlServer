@@ -1,4 +1,4 @@
-﻿using NISC_MFP_MVC_Repository.DTOs.InitialValue;
+﻿using NISC_MFP_MVC_Repository.DTOs.User;
 
 namespace NISC_MFP_MVC_Repository.Interface
 {

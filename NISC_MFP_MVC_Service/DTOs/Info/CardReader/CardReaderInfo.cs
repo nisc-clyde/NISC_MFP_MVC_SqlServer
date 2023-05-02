@@ -1,6 +1,6 @@
 ﻿namespace NISC_MFP_MVC_Service.DTOsI.Info.CardReader
 {
-    public abstract class AbstractCardReaderInfo
+    public class CardReaderInfo
     {
         public virtual string cr_id { get; set; }
         public virtual string cr_ip { get; set; }

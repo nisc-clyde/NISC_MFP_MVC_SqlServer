@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.Models.DTO;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
@@ -13,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Web;
 using System.Web.Mvc;
+using NISC_MFP_MVC_Common;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
@@ -37,58 +37,24 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchDepartmentDataTable()
+        public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<DepartmentViewModel> searchDepartmentResultDetail = InitialData();
-            dataTableRequest.RecordsTotalGet = searchDepartmentResultDetail.AsQueryable().Count();
-            searchDepartmentResultDetail = GlobalSearch(searchDepartmentResultDetail, dataTableRequest.GlobalSearchValue);
-            searchDepartmentResultDetail = ColumnSearch(searchDepartmentResultDetail, dataTableRequest);
-            searchDepartmentResultDetail = searchDepartmentResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
-            dataTableRequest.RecordsFilteredGet = searchDepartmentResultDetail.AsQueryable().Count();
-            searchDepartmentResultDetail = searchDepartmentResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            IQueryable<DepartmentViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
 
             return Json(new
             {
-                data = searchDepartmentResultDetail,
+                data = searchPrintResultDetail,
                 draw = dataTableRequest.Draw,
-                recordsTotal = dataTableRequest.RecordsTotalGet,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
             }, JsonRequestBehavior.AllowGet);
         }
 
-        [NonAction]
-        public IQueryable<DepartmentViewModel> InitialData()
-        {
-            IQueryable<AbstractDepartmentInfo> resultModel = _departmentService.GetAll();
-            IQueryable<DepartmentViewModel> viewmodel = resultModel.ProjectTo<DepartmentViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodel;
-        }
 
         [NonAction]
-        public IQueryable<DepartmentViewModel> GlobalSearch(IQueryable<DepartmentViewModel> searchData, string searchValue)
+        public IQueryable<DepartmentViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            IQueryable<DepartmentInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            List<DepartmentInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
-            IQueryable<DepartmentViewModel> viewmodelAfter = _departmentService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<DepartmentViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
-        }
-
-        [NonAction]
-        public IQueryable<DepartmentViewModel> ColumnSearch(IQueryable<DepartmentViewModel> searchData, DataTableRequest searchRequest)
-        {
-            IQueryable<DepartmentInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _departmentService.GetWithColumnSearch(viewmodelBefore, "dept_id", searchRequest.ColumnSearch_0).ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _departmentService.GetWithColumnSearch(viewmodelBefore, "dept_name", searchRequest.ColumnSearch_1).ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _departmentService.GetWithColumnSearch(viewmodelBefore, "dept_value", searchRequest.ColumnSearch_2).ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _departmentService.GetWithColumnSearch(viewmodelBefore, "dept_month_sum", searchRequest.ColumnSearch_3).ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _departmentService.GetWithColumnSearch(viewmodelBefore, "dept_usable", searchRequest.ColumnSearch_4).ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _departmentService.GetWithColumnSearch(viewmodelBefore, "dept_email", searchRequest.ColumnSearch_5).ProjectTo<DepartmentInfoConvert2Text>(mapper.ConfigurationProvider);
-            IQueryable<DepartmentViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<DepartmentViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
+            return _departmentService.GetAll(dataTableRequest).ProjectTo<DepartmentViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()
@@ -110,7 +76,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    AbstractDepartmentInfo instance = _departmentService.Get(serial);
+                    DepartmentInfo instance = _departmentService.Get(serial);
                     departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
                 }
             }
@@ -131,7 +97,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfoConvert2Code>(department));
+                    _departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
                     _departmentService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -141,7 +107,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfoConvert2Code>(department));
+                    _departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
                     _departmentService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -155,7 +121,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteDepartment(int serial)
         {
             DepartmentViewModel departmentViewModel = new DepartmentViewModel();
-            AbstractDepartmentInfo instance = _departmentService.Get(serial);
+            DepartmentInfo instance = _departmentService.Get(serial);
             departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
 
             return PartialView(departmentViewModel);
@@ -164,7 +130,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult ReadyDeleteDepartment(DepartmentViewModel department)
         {
-            _departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfoConvert2Code>(department));
+            _departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
             _departmentService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);

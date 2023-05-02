@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NISC_MFP_MVC_Repository.DTOs.InitialValue
+namespace NISC_MFP_MVC_Repository.DTOs.InitialValue.Print
 {
     public class InitialPrintRepoDTO
     {
@@ -19,7 +19,7 @@ namespace NISC_MFP_MVC_Repository.DTOs.InitialValue
         public string user_name { get; set; } = null;
         public string work_id { get; set; } = null;
         public string card_id { get; set; } = null;
-        public string card_type { get; set; } = null;
+        public virtual string card_type { get; set; } = null;
         public string mfp_ip { get; set; } = null;
         public string mfp_name { get; set; } = null;
         public string computer { get; set; } = null;
@@ -28,10 +28,10 @@ namespace NISC_MFP_MVC_Repository.DTOs.InitialValue
         public int? value { get { return _value; } set { _value = value ?? 0; } }
         public int? page { get { return _page; } set { _page = value ?? 0; } }
         public int? copies { get { return _copies; } set { _copies = value ?? 0; } }
-        public string page_color { get; set; } = null;
+        public virtual string page_color { get; set; } = null;
         public string page_size { get; set; } = null;
         public string duplex { get; set; } = null;
-        public string usage_type { get; set; } = null;
+        public virtual string usage_type { get; set; } = null;
         public DateTime? print_date { get; set; }
         public string scan_destination { get; set; } = null;
         public string document_name { get; set; } = null;

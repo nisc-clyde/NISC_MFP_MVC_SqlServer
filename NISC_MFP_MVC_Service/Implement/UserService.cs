@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue;
+using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Department;
+using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Interface;
@@ -25,7 +29,7 @@ namespace NISC_MFP_MVC_Service.Implement
             mapper = InitializeAutomapper();
         }
 
-        public void Insert(AbstractUserInfo instance)
+        public void Insert(UserInfo instance)
         {
             if (instance == null)
             {
@@ -33,11 +37,11 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _userRepository.Insert(mapper.Map<AbstractUserInfo, InitialUserRepoDTO>(instance));
+                _userRepository.Insert(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
 
-        public IQueryable<AbstractUserInfo> GetAll()
+        public IQueryable<UserInfo> GetAll()
         {
             IQueryable<InitialUserRepoDTO> userDatamodel = _userRepository.GetAll();
             IQueryable<InitialDepartmentRepoDTO> departmentDatamodel = _departmentRepository.GetAll();
@@ -45,10 +49,10 @@ namespace NISC_MFP_MVC_Service.Implement
             List<InitialUserRepoDTO> userDatamodelList = userDatamodel.ToList();
             List<InitialDepartmentRepoDTO> departmentDatamodelList = departmentDatamodel.ToList();
 
-            IQueryable<AbstractUserInfo> datamodel = (from u in userDatamodelList
+            IQueryable<UserInfo> datamodel = (from u in userDatamodelList
                                                       join d in departmentDatamodelList on u.dept_id equals d.dept_id into gj
                                                       from subd in gj.DefaultIfEmpty(new InitialDepartmentRepoDTO())
-                                                      select new UserInfoConvert2Code
+                                                      select new UserInfo
                                                       {
                                                           serial = u.serial,
                                                           user_id = u.user_id,
@@ -68,7 +72,12 @@ namespace NISC_MFP_MVC_Service.Implement
             return datamodel;
         }
 
-        public AbstractUserInfo Get(int serial)
+        public IQueryable<UserInfo> GetAll(DataTableRequest dataTableRequest)
+        {
+            return _userRepository.GetAll(dataTableRequest).ProjectTo<UserInfo>(mapper.ConfigurationProvider);
+        }
+
+        public UserInfo Get(int serial)
         {
             if (serial < 0)
             {
@@ -82,20 +91,20 @@ namespace NISC_MFP_MVC_Service.Implement
                 {
                     departmentName = new DepartmentService().SearchByIdAndName(datamodel.dept_id).FirstOrDefault().dept_name;
                 }
-                UserInfoConvert2Code resultModel = mapper.Map<InitialUserRepoDTO, UserInfoConvert2Code>(datamodel);
+                UserInfo resultModel = mapper.Map<InitialUserRepoDTO, UserInfo>(datamodel);
                 resultModel.dept_name = departmentName;
 
                 return resultModel;
             }
         }
 
-        public IEnumerable<AbstractUserInfo> SearchByIdAndName(string prefix)
+        public IEnumerable<UserInfo> SearchByIdAndName(string prefix)
         {
-            IEnumerable<AbstractUserInfo> result = _userRepository.GetAll()
+            IEnumerable<UserInfo> result = _userRepository.GetAll()
                 .Where(d =>
                 ((!string.IsNullOrEmpty(d.user_id)) && d.user_id.ToUpper().Contains(prefix.ToUpper())) ||
                 ((!string.IsNullOrEmpty(d.user_name)) && d.user_name.ToUpper().Contains(prefix.ToUpper())))
-                .Select(d => new UserInfoConvert2Code
+                .Select(d => new UserInfo
                 {
                     user_id = d.user_id,
                     user_name = d.user_name ?? ""
@@ -104,38 +113,7 @@ namespace NISC_MFP_MVC_Service.Implement
             return result;
         }
 
-        public IQueryable<AbstractUserInfo> GetWithGlobalSearch(IQueryable<AbstractUserInfo> searchData, string searchValue)
-        {
-            if (searchValue == "")
-            {
-                return searchData;
-            }
-
-            IQueryable<AbstractUserInfo> resultModel = searchData
-                .Where(p =>
-                p.user_id.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                (p.user_password != null && p.user_password.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                (p.work_id != null && p.work_id.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                (p.user_name != null && p.user_name.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                (p.dept_id != null && p.dept_id.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                (p.dept_name != null && p.dept_name.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                (p.color_enable_flag != null && p.color_enable_flag.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                (p.e_mail != null && p.e_mail.ToString().ToUpper().Contains(searchValue.ToUpper())));
-
-            return resultModel;
-        }
-
-        public IQueryable<AbstractUserInfo> GetWithColumnSearch(IQueryable<AbstractUserInfo> searchData, string column, string searchValue)
-        {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(column + "!=null &&" + column + ".ToString().ToUpper().Contains" + "(\"" + searchValue.ToString().ToUpper() + "\")");
-            }
-
-            return searchData;
-        }
-
-        public void Delete(AbstractUserInfo instance)
+        public void Delete(UserInfo instance)
         {
             if (instance == null)
             {
@@ -143,12 +121,12 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _userRepository.Delete(mapper.Map<AbstractUserInfo, InitialUserRepoDTO>(instance));
+                _userRepository.Delete(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
 
 
-        public void Update(AbstractUserInfo instance)
+        public void Update(UserInfo instance)
         {
             if (instance == null)
             {
@@ -156,7 +134,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _userRepository.Update(mapper.Map<AbstractUserInfo, InitialUserRepoDTO>(instance));
+                _userRepository.Update(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
         public void SaveChanges()

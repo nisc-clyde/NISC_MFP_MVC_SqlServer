@@ -1,4 +1,4 @@
-﻿namespace NISC_MFP_MVC_Repository.DTOs.InitialValue
+﻿namespace NISC_MFP_MVC_Repository.DTOs.Card
 {
     public class InitialCardRepoDTO
     {
@@ -13,6 +13,7 @@
         public int freevalue { get; set; }
         public string enable { get; set; } = "1";
         public string user_id { get; set; } = null;
+        public string user_name { get; set; } = "";
         public string import_flag { get; set; } = "0";
         public string if_deleted { get; set; } = "0";
     }

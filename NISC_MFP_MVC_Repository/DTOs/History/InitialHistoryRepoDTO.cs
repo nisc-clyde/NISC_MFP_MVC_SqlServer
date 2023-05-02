@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NISC_MFP_MVC_Repository.DTOs.InitialValue
+namespace NISC_MFP_MVC_Repository.DTOs.History
 {
     public class InitialHistoryRepoDTO
     {

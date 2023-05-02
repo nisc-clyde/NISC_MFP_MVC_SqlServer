@@ -20,9 +20,11 @@ function SearchUserDataTableInitial() {
             { data: "e_mail", name: "信箱" },
             {
                 data: null,
-                defaultContent: "<button type='button' class='btn btn-primary btn-sm me-1 btn-permission'><i class='fa-solid fa-circle-info me-1'></i>權限</button>" +
-                    "<button type='button' class='btn btn-info btn-sm me-1 btn-edit'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger btn-sm btn-delete'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
+                render: function (data, type, row) {
+                    return "<div class='row gx-0'><div class='col-4 '><button type='button' class='btn btn-primary btn-sm btn-permission' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i>權限</button></div>" +
+                        "<div class='col-4'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
+                        "<div class='col-4'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                },
                 orderable: false
             },
             { data: "serial", name: "serial" }
@@ -55,7 +57,8 @@ function SearchUserDataTableInitial() {
             },
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
             zeroRecords: "找不到相符資料",
-            search: "全部欄位搜尋："
+            search: "全部欄位搜尋：",
+            infoFiltered: ""
         },
         rowCallback: function (row, data) {
             if (data.color_enable_flag == "有") {
@@ -121,8 +124,8 @@ function ColumnSearch() {
 function PopupFormForAddOrEdit() {
     const btnAdd = "btnAddUser";
     const modalForm = "userForm";
-    const uniqueIdProperty = "serial";
-    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
+    const title = "使用者";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, title);
 }
 
 /**
@@ -152,7 +155,7 @@ function EditUserPermissionConfig() {
 
         $.get(
             url,
-            { formTitle: "使用者權限設定", serial: rowData[uniqueIdProperty] },
+            { formTitle: "使用者權限設定", serial: $(this).data("id") },
             function (data) {
                 $("#" + modalForm).html(data);
                 $("#" + modalForm).modal("show");

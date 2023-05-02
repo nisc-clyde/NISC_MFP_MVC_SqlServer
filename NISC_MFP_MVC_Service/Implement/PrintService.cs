@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue;
+using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.Info;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.History;
+using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Interface;
 using System;
@@ -44,6 +45,11 @@ namespace NISC_MFP_MVC_Service.Implement
             IQueryable<PrintInfo> resultDataModel = datamodel.ProjectTo<PrintInfo>(mapper.ConfigurationProvider);
 
             return resultDataModel;
+        }
+
+        public IQueryable<PrintInfo> GetAll(DataTableRequest dataTableRequest)
+        {
+            return  _repository.GetAll(dataTableRequest).ProjectTo<PrintInfo>(mapper.ConfigurationProvider);
         }
 
         public PrintInfo Get(int serial)

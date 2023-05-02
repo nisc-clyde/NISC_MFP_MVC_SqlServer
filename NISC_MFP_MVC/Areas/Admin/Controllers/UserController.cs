@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
@@ -36,62 +36,26 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchUserDataTable()
+        public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<UserViewModel> searchUserResultDetail = InitialData();
-            dataTableRequest.RecordsTotalGet = searchUserResultDetail.AsQueryable().Count();
-            searchUserResultDetail = GlobalSearch(searchUserResultDetail, dataTableRequest.GlobalSearchValue);
-            searchUserResultDetail = ColumnSearch(searchUserResultDetail, dataTableRequest);
-            searchUserResultDetail = searchUserResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
-            dataTableRequest.RecordsFilteredGet = searchUserResultDetail.AsQueryable().Count();
-            searchUserResultDetail = searchUserResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            IQueryable<UserViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
 
             return Json(new
             {
-                data = searchUserResultDetail,
+                data = searchPrintResultDetail,
                 draw = dataTableRequest.Draw,
-                recordsTotal = dataTableRequest.RecordsTotalGet,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
             }, JsonRequestBehavior.AllowGet);
-
         }
+
 
         [NonAction]
-        public IQueryable<UserViewModel> InitialData()
+        public IQueryable<UserViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            IQueryable<AbstractUserInfo> resultModel = _userService.GetAll();
-            IQueryable<UserViewModel> viewmodel = resultModel.ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodel;
+            return _userService.GetAll(dataTableRequest).ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
         }
 
-        [NonAction]
-        public IQueryable<UserViewModel> GlobalSearch(IQueryable<UserViewModel> searchData, string searchValue)
-        {
-            IQueryable<UserInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            List<UserInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
-            IQueryable<UserViewModel> viewmodelAfter = _userService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
-        }
-
-        [NonAction]
-        public IQueryable<UserViewModel> ColumnSearch(IQueryable<UserViewModel> searchData, DataTableRequest searchRequest)
-        {
-            IQueryable<UserInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "user_id", searchRequest.ColumnSearch_0).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "user_password", searchRequest.ColumnSearch_1).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "work_id", searchRequest.ColumnSearch_2).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "user_name", searchRequest.ColumnSearch_3).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "dept_id", searchRequest.ColumnSearch_4).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "dept_name", searchRequest.ColumnSearch_5).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "color_enable_flag", searchRequest.ColumnSearch_6).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _userService.GetWithColumnSearch(viewmodelBefore, "e_mail", searchRequest.ColumnSearch_7).ProjectTo<UserInfoConvert2Text>(mapper.ConfigurationProvider);
-            IQueryable<UserViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
-        }
 
         private Mapper InitializeAutomapper()
         {
@@ -104,8 +68,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchDepartment(string prefix)
         {
             DepartmentService _DepartmentService = new DepartmentService();
-            IEnumerable<AbstractDepartmentInfo> searchResult = _DepartmentService.SearchByIdAndName(prefix);
-            List<DepartmentViewModel> resultViewModel = mapper.Map<IEnumerable<AbstractDepartmentInfo>, IEnumerable<DepartmentViewModel>>(searchResult).ToList();
+            IEnumerable<DepartmentInfo> searchResult = _DepartmentService.SearchByIdAndName(prefix);
+            List<DepartmentViewModel> resultViewModel = mapper.Map<IEnumerable<DepartmentInfo>, IEnumerable<DepartmentViewModel>>(searchResult).ToList();
 
             return Json(resultViewModel, JsonRequestBehavior.AllowGet);
         }
@@ -126,7 +90,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    AbstractUserInfo instance = _userService.Get(serial);
+                    UserInfo instance = _userService.Get(serial);
                     userViewModel = mapper.Map<UserViewModel>(instance);
                 }
             }
@@ -147,7 +111,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _userService.Insert(mapper.Map<UserViewModel, UserInfoConvert2Code>(User));
+                    _userService.Insert(mapper.Map<UserViewModel, UserInfo>(User));
                     _userService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -157,8 +121,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _userService.Update(mapper.Map<UserViewModel, UserInfoConvert2Code>(User));
-                    _userService.SaveChanges();
+                    _userService.Update(mapper.Map<UserViewModel, UserInfo>(User));
+                    //_userService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -171,7 +135,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteUser(int serial)
         {
             UserViewModel UserViewModel = new UserViewModel();
-            AbstractUserInfo instance = _userService.Get(serial);
+            UserInfo instance = _userService.Get(serial);
             UserViewModel = mapper.Map<UserViewModel>(instance);
 
             return PartialView(UserViewModel);
@@ -180,7 +144,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult ReadyDeleteUser(UserViewModel User)
         {
-            _userService.Delete(mapper.Map<UserViewModel, UserInfoConvert2Code>(User));
+            _userService.Delete(mapper.Map<UserViewModel, UserInfo>(User));
             _userService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -190,7 +154,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult UserPermissionConfig(string formTitle, int serial)
         {
             UserViewModel userViewModel = new UserViewModel();
-            AbstractUserInfo instance = _userService.Get(serial);
+            UserInfo instance = _userService.Get(serial);
             userViewModel = mapper.Map<UserViewModel>(instance);
             ViewBag.formTitle = formTitle;
             return PartialView(userViewModel);

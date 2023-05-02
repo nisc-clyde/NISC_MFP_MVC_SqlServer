@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue;
+using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info;
@@ -44,6 +45,12 @@ namespace NISC_MFP_MVC_Service.Implement
 
             return historyDataModel;
         }
+
+        public IQueryable<HistoryInfo> GetAll(DataTableRequest dataTableRequest)
+        {
+            return _repository.GetAll(dataTableRequest).ProjectTo<HistoryInfo>(mapper.ConfigurationProvider);
+        }
+
 
         public HistoryInfo Get(int serial)
         {

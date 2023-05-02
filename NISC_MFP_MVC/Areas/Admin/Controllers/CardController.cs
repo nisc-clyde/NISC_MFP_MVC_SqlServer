@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
@@ -21,12 +21,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "1";
         private static readonly string ENABLE = "1";
-        private ICardService _CardService;
+        private ICardService _cardService;
         private Mapper mapper;
 
         public CardController()
         {
-            _CardService = new CardService();
+            _cardService = new CardService();
             mapper = InitializeAutomapper();
         }
 
@@ -37,59 +37,24 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchCardDataTable()
+        public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<CardViewModel> searchCardResultDetail = InitialData();
-            dataTableRequest.RecordsTotalGet = searchCardResultDetail.AsQueryable().Count();
-            searchCardResultDetail = GlobalSearch(searchCardResultDetail, dataTableRequest.GlobalSearchValue);
-            searchCardResultDetail = ColumnSearch(searchCardResultDetail, dataTableRequest);
-            searchCardResultDetail = searchCardResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
-            dataTableRequest.RecordsFilteredGet = searchCardResultDetail.AsQueryable().Count();
-            searchCardResultDetail = searchCardResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            IQueryable<CardViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
 
             return Json(new
             {
-                data = searchCardResultDetail,
+                data = searchPrintResultDetail,
                 draw = dataTableRequest.Draw,
-                recordsTotal = dataTableRequest.RecordsTotalGet,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
             }, JsonRequestBehavior.AllowGet);
         }
 
-        [NonAction]
-        public IQueryable<CardViewModel> InitialData()
-        {
-            IQueryable<AbstractCardInfo> resultModel = _CardService.GetAll();
-            IQueryable<CardViewModel> viewmodel = resultModel.ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodel;
-        }
 
         [NonAction]
-        public IQueryable<CardViewModel> GlobalSearch(IQueryable<CardViewModel> searchData, string searchValue)
+        public IQueryable<CardViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            IQueryable<CardInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            List<CardInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
-            IQueryable<CardViewModel> viewmodelAfter = _CardService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
-        }
-
-        [NonAction]
-        public IQueryable<CardViewModel> ColumnSearch(IQueryable<CardViewModel> searchData, DataTableRequest searchRequest)
-        {
-            IQueryable<CardInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "card_id", searchRequest.ColumnSearch_0).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "value", searchRequest.ColumnSearch_1).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "freevalue", searchRequest.ColumnSearch_2).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "user_id", searchRequest.ColumnSearch_3).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "user_name", searchRequest.ColumnSearch_4).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "card_type", searchRequest.ColumnSearch_5).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _CardService.GetWithColumnSearch(viewmodelBefore, "enable", searchRequest.ColumnSearch_6).ProjectTo<CardInfoConvert2Text>(mapper.ConfigurationProvider);
-            IQueryable<CardViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
+            return _cardService.GetAll(dataTableRequest).ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()
@@ -112,7 +77,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    AbstractCardInfo instance = _CardService.Get(serial);
+                    CardInfo instance = _cardService.Get(serial);
                     initialCardDTO = mapper.Map<CardViewModel>(instance);
                 }
             }
@@ -133,8 +98,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _CardService.Insert(mapper.Map<CardViewModel, CardInfoConvert2Code>(card));
-                    _CardService.SaveChanges();
+                    _cardService.Insert(mapper.Map<CardViewModel, CardInfo>(card));
+                    _cardService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -143,8 +108,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _CardService.Update(mapper.Map<CardViewModel, CardInfoConvert2Code>(card));
-                    _CardService.SaveChanges();
+                    _cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
+                    _cardService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -154,11 +119,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SearchUSer(string prefix)
+        public ActionResult SearchUser(string prefix)
         {
             UserService _UserService = new UserService();
-            IEnumerable<AbstractUserInfo> searchResult = _UserService.SearchByIdAndName(prefix);
-            List<UserViewModel> resultViewModel = mapper.Map<IEnumerable<AbstractUserInfo>, IEnumerable<UserViewModel>>(searchResult).ToList();
+            IEnumerable<UserInfo> searchResult = _UserService.SearchByIdAndName(prefix);
+            List<UserViewModel> resultViewModel = mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserViewModel>>(searchResult).ToList();
 
             return Json(resultViewModel, JsonRequestBehavior.AllowGet);
         }
@@ -174,7 +139,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteCard(int serial)
         {
             CardViewModel CardViewModel = new CardViewModel();
-            AbstractCardInfo instance = _CardService.Get(serial);
+            CardInfo instance = _cardService.Get(serial);
             CardViewModel = mapper.Map<CardViewModel>(instance);
 
             return PartialView(CardViewModel);
@@ -183,11 +148,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult ReadyDeleteCard(CardViewModel Card)
         {
-            _CardService.Delete(mapper.Map<CardViewModel, CardInfoConvert2Code>(Card));
-            _CardService.SaveChanges();
+            _cardService.Delete(mapper.Map<CardViewModel, CardInfo>(Card));
+            _cardService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
     }
-
 }

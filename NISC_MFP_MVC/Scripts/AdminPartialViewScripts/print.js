@@ -103,7 +103,7 @@ function FormSelect_UnSelect() {
 
         var operationString = [];
         $("#searchPrint_OperationSelect option:not(:first)").each(function () {
-            operationString.push($(this).val());
+            operationString.push($(this).text());
         })
 
         if (operationString.length == 0) {
@@ -135,7 +135,7 @@ function FormSelect_Select() {
 
         var operationString = [];
         $("#searchPrint_OperationSelect option:not(:first)").each(function () {
-            operationString.push($(this).val());
+            operationString.push($(this).text());
         })
 
         if (operationString.length == 0) {
@@ -212,13 +212,17 @@ function SearchPrintDataTableInitial() {
             infoFiltered: ""
         },
         rowCallback: function (row, data) {
-            data.card_type == "0" ? $('td:eq(4)', row).html("<b class='text-danger'>遞減</b>") : $('td:eq(4)', row).html("<b class='text-success'>遞增</b>");
-            data.usage_type == "C" ? $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(1).text()) :
-                data.usage_type == "P" ? $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(2).text()) :
-                    data.usage_type == "S" ? $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(3).text()) :
-                        $('td:eq(5)', row).html($("#searchPrint_ActionSelect option").eq(4).text());
+            if (data.card_type == "遞增") {
+                $('td:eq(4)', row).html("<b class='text-success'>遞增</b>");
+            } else {
+                $('td:eq(4)', row).html("<b class='text-danger'>遞減</b>");
+            }
 
-            data.page_color == "C" ? $('td:eq(6)', row).html($("#searchPrint_ColorSelect option").eq(1).text()) : $('td:eq(6)', row).html($("#searchPrint_ColorSelect option").eq(2).text());
+            if (data.page_color == "C(彩色)") {
+                $('td:eq(6)', row).html("<b class='rainbow-text'>C(彩色)</b>");
+            } else {
+                $('td:eq(6)', row).html("<b>M(單色)</b>");
+            }
         }
     });
 };
@@ -246,7 +250,7 @@ function ColumnSearch() {
 
     $("#searchPrint_AttributeSelect").change(function () {
         if ($("#searchPrint_AttributeSelect").val() != "") {
-            datatable.columns(4).search($("#searchPrint_AttributeSelect :selected").val()).draw();
+            datatable.columns(4).search($("#searchPrint_AttributeSelect :selected").text()).draw();
         } else {
             datatable.columns(4).search("").draw();
         }
@@ -254,7 +258,7 @@ function ColumnSearch() {
 
     $("#searchPrint_ActionSelect").change(function () {
         if ($("#searchPrint_ActionSelect").val() != "") {
-            datatable.columns(5).search($("#searchPrint_ActionSelect :selected").val()).draw();
+            datatable.columns(5).search($("#searchPrint_ActionSelect :selected").text()).draw();
         } else {
             datatable.columns(5).search("").draw();
         }
@@ -262,7 +266,7 @@ function ColumnSearch() {
 
     $("#searchPrint_ColorSelect").change(function () {
         if ($("#searchPrint_ColorSelect").val() != "") {
-            datatable.columns(6).search($("#searchPrint_ColorSelect :selected").val()).draw();
+            datatable.columns(6).search($("#searchPrint_ColorSelect :selected").text()).draw();
         } else {
             datatable.columns(6).search("").draw();
         }

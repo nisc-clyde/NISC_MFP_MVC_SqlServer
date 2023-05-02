@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue;
+using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info;
@@ -32,6 +33,11 @@ namespace NISC_MFP_MVC_Service.Implement
             return resultDataModel;
         }
 
+        public IQueryable<DepositInfo> GetAll(DataTableRequest dataTableRequest)
+        {
+            return _repository.GetAll(dataTableRequest).ProjectTo<DepositInfo>(mapper.ConfigurationProvider);
+        }
+
         public DepositInfo Get(int serial)
         {
             if (serial <= 0)
@@ -46,37 +52,37 @@ namespace NISC_MFP_MVC_Service.Implement
             }
         }
 
-        public IQueryable<DepositInfo> GetWithGlobalSearch(IQueryable<DepositInfo> searchData, string searchValue)
-        {
-            if (searchValue == "")
-            {
-                return searchData;
-            }
+        //public IQueryable<DepositInfo> GetWithGlobalSearch(IQueryable<DepositInfo> searchData, string searchValue)
+        //{
+        //    if (searchValue == "")
+        //    {
+        //        return searchData;
+        //    }
 
-            IQueryable<DepositInfo> resultModel = searchData
-                .Where(p =>
-                ((!string.IsNullOrEmpty(p.user_name)) && p.user_name.ToUpper().Contains(searchValue.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.user_id)) && p.user_id.ToUpper().Contains(searchValue.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.card_id)) && p.card_id.ToUpper().Contains(searchValue.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.card_user_id)) && p.card_user_id.ToUpper().Contains(searchValue.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.card_user_name)) && p.card_user_name.ToUpper().Contains(searchValue.ToUpper())) ||
-                ((p.pbalance != null) && p.pbalance.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                ((p.deposit_value != null) && p.deposit_value.ToString().Contains(searchValue.ToUpper())) ||
-                ((p.final_value != null) && p.final_value.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.deposit_date)) && p.deposit_date.ToUpper().Contains(searchValue.ToUpper())));
+        //    IQueryable<DepositInfo> resultModel = searchData
+        //        .Where(p =>
+        //        ((!string.IsNullOrEmpty(p.user_name)) && p.user_name.ToUpper().Contains(searchValue.ToUpper())) ||
+        //        ((!string.IsNullOrEmpty(p.user_id)) && p.user_id.ToUpper().Contains(searchValue.ToUpper())) ||
+        //        ((!string.IsNullOrEmpty(p.card_id)) && p.card_id.ToUpper().Contains(searchValue.ToUpper())) ||
+        //        ((!string.IsNullOrEmpty(p.card_user_id)) && p.card_user_id.ToUpper().Contains(searchValue.ToUpper())) ||
+        //        ((!string.IsNullOrEmpty(p.card_user_name)) && p.card_user_name.ToUpper().Contains(searchValue.ToUpper())) ||
+        //        ((p.pbalance != null) && p.pbalance.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
+        //        ((p.deposit_value != null) && p.deposit_value.ToString().Contains(searchValue.ToUpper())) ||
+        //        ((p.final_value != null) && p.final_value.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
+        //        ((!string.IsNullOrEmpty(p.deposit_date)) && p.deposit_date.ToUpper().Contains(searchValue.ToUpper())));
 
-            return resultModel;
-        }
+        //    return resultModel;
+        //}
 
-        public IQueryable<DepositInfo> GetWithColumnSearch(IQueryable<DepositInfo> searchData, string column, string searchValue)
-        {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(column + ".ToString().ToUpper().Contains" + "(\"" + searchValue.ToString().ToUpper() + "\")");
-            }
+        //public IQueryable<DepositInfo> GetWithColumnSearch(IQueryable<DepositInfo> searchData, string column, string searchValue)
+        //{
+        //    if (!string.IsNullOrEmpty(searchValue))
+        //    {
+        //        searchData = searchData.Where(column + ".ToString().ToUpper().Contains" + "(\"" + searchValue.ToString().ToUpper() + "\")");
+        //    }
 
-            return searchData;
-        }
+        //    return searchData;
+        //}
 
         public void Insert(DepositInfo instance)
         {

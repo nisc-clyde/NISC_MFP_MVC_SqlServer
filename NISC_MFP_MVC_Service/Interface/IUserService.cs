@@ -2,7 +2,7 @@
 
 namespace NISC_MFP_MVC_Service.Interface
 {
-    public interface IUserService : IService<AbstractUserInfo>
+    public interface IUserService : IService<UserInfo>
     {
     }
 }

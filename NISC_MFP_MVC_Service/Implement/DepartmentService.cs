@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue;
+using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.Interface;
 using System;
@@ -22,13 +24,18 @@ namespace NISC_MFP_MVC_Service.Implement
             mapper = InitializeAutomapper();
         }
 
-        public IQueryable<AbstractDepartmentInfo> GetAll()
+        public IQueryable<DepartmentInfo> GetAll()
         {
             IQueryable<InitialDepartmentRepoDTO> datamodel = _repository.GetAll();
-            return datamodel.ProjectTo<AbstractDepartmentInfo>(mapper.ConfigurationProvider);
+            return datamodel.ProjectTo<DepartmentInfo>(mapper.ConfigurationProvider);
         }
 
-        public AbstractDepartmentInfo Get(int serial)
+        public IQueryable<DepartmentInfo> GetAll(DataTableRequest dataTableRequest)
+        {
+            return _repository.GetAll(dataTableRequest).ProjectTo<DepartmentInfo>(mapper.ConfigurationProvider);
+        }
+
+        public DepartmentInfo Get(int serial)
         {
             if (serial <= 0)
             {
@@ -37,18 +44,18 @@ namespace NISC_MFP_MVC_Service.Implement
             else
             {
                 InitialDepartmentRepoDTO dataModel = _repository.Get(serial);
-                AbstractDepartmentInfo resultModel = mapper.Map<InitialDepartmentRepoDTO, DepartmentInfoConvert2Code>(dataModel);
+                DepartmentInfo resultModel = mapper.Map<InitialDepartmentRepoDTO, DepartmentInfo>(dataModel);
                 return resultModel;
             }
         }
 
-        public IEnumerable<AbstractDepartmentInfo> SearchByIdAndName(string prefix)
+        public IEnumerable<DepartmentInfo> SearchByIdAndName(string prefix)
         {
-            IEnumerable<AbstractDepartmentInfo> result = _repository.GetAll()
+            IEnumerable<DepartmentInfo> result = _repository.GetAll()
                 .Where(d =>
                 ((d.dept_id != null) && d.dept_id.ToUpper().Contains(prefix.ToUpper())) ||
                 ((d.dept_name != null) && d.dept_name.ToUpper().Contains(prefix.ToUpper())))
-                .Select(d => new DepartmentInfoConvert2Code
+                .Select(d => new DepartmentInfo
                 {
                     dept_id = d.dept_id,
                     dept_name = d.dept_name ?? ""
@@ -57,36 +64,7 @@ namespace NISC_MFP_MVC_Service.Implement
             return result;
         }
 
-        public IQueryable<AbstractDepartmentInfo> GetWithGlobalSearch(IQueryable<AbstractDepartmentInfo> searchData, string searchValue)
-        {
-            if (searchValue == "")
-            {
-                return searchData;
-            }
-
-            IQueryable<AbstractDepartmentInfo> resultModel = searchData
-                .Where(p =>
-                (!string.IsNullOrEmpty(p.dept_id)) && p.dept_id.ToUpper().Contains(searchValue.ToUpper()) ||
-                (!string.IsNullOrEmpty(p.dept_name)) && p.dept_name.ToUpper().Contains(searchValue.ToUpper()) ||
-                (p.dept_value != null) && p.dept_value.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                (p.dept_month_sum != null) && p.dept_month_sum.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                (!string.IsNullOrEmpty(p.dept_usable)) && p.dept_usable.ToUpper().Contains(searchValue.ToUpper()) ||
-                (!string.IsNullOrEmpty(p.dept_email)) && p.dept_email.ToUpper().Contains(searchValue.ToUpper()));
-
-            return resultModel;
-        }
-
-        public IQueryable<AbstractDepartmentInfo> GetWithColumnSearch(IQueryable<AbstractDepartmentInfo> searchData, string column, string searchValue)
-        {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(column + "!=null &&" + column + ".ToString().ToUpper().Contains" + "(\"" + searchValue.ToString().ToUpper() + "\")");
-            }
-
-            return searchData;
-        }
-
-        public void Insert(AbstractDepartmentInfo instance)
+        public void Insert(DepartmentInfo instance)
         {
             if (instance == null)
             {
@@ -94,11 +72,11 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Insert(mapper.Map<AbstractDepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                _repository.Insert(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
             }
         }
 
-        public void Delete(AbstractDepartmentInfo instance)
+        public void Delete(DepartmentInfo instance)
         {
             if (instance == null)
             {
@@ -106,12 +84,12 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Delete(mapper.Map<AbstractDepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                _repository.Delete(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
             }
         }
 
 
-        public void Update(AbstractDepartmentInfo instance)
+        public void Update(DepartmentInfo instance)
         {
             if (instance == null)
             {
@@ -119,7 +97,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Update(mapper.Map<AbstractDepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                _repository.Update(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
             }
         }
         public void SaveChanges()

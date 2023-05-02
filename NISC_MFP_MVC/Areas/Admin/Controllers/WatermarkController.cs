@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
@@ -35,63 +35,23 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchWatermarkDataTable()
+        public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<WatermarkViewModel> searchWatermarkResultDetail = InitialData();
-            dataTableRequest.RecordsTotalGet = searchWatermarkResultDetail.AsQueryable().Count();
-            searchWatermarkResultDetail = GlobalSearch(searchWatermarkResultDetail, dataTableRequest.GlobalSearchValue);
-            searchWatermarkResultDetail = ColumnSearch(searchWatermarkResultDetail, dataTableRequest);
-            searchWatermarkResultDetail = searchWatermarkResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
-            dataTableRequest.RecordsFilteredGet = searchWatermarkResultDetail.AsQueryable().Count();
-            searchWatermarkResultDetail = searchWatermarkResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            IQueryable<WatermarkViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
 
             return Json(new
             {
-                data = searchWatermarkResultDetail,
+                data = searchPrintResultDetail,
                 draw = dataTableRequest.Draw,
-                recordsTotal = dataTableRequest.RecordsTotalGet,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
             }, JsonRequestBehavior.AllowGet);
         }
 
         [NonAction]
-        public IQueryable<WatermarkViewModel> InitialData()
+        public IQueryable<WatermarkViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            IQueryable<AbstractWatermarkInfo> resultModel = _watermarkService.GetAll();
-            IQueryable<WatermarkViewModel> viewmodel = resultModel.ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodel;
-        }
-
-        [NonAction]
-        public IQueryable<WatermarkViewModel> GlobalSearch(IQueryable<WatermarkViewModel> searchData, string searchValue)
-        {
-            IQueryable<WatermarkInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            List<WatermarkInfoConvert2Text> viewmodelBeforeWithValue = viewmodelBefore.ToList();
-            IQueryable<WatermarkViewModel> viewmodelAfter = _watermarkService.GetWithGlobalSearch(viewmodelBeforeWithValue.AsQueryable(), searchValue).ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
-        }
-
-        [NonAction]
-        public IQueryable<WatermarkViewModel> ColumnSearch(IQueryable<WatermarkViewModel> searchData, DataTableRequest searchRequest)
-        {
-            IQueryable<WatermarkInfoConvert2Text> viewmodelBefore = searchData.ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "type", searchRequest.ColumnSearch_0).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "left_offset", searchRequest.ColumnSearch_1).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "right_offset", searchRequest.ColumnSearch_2).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "top_offset", searchRequest.ColumnSearch_3).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "bottom_offset", searchRequest.ColumnSearch_4).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "position_mode", searchRequest.ColumnSearch_5).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "fill_mode", searchRequest.ColumnSearch_6).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "text", searchRequest.ColumnSearch_7).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "image_path", searchRequest.ColumnSearch_8).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "rotation", searchRequest.ColumnSearch_9).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            viewmodelBefore = _watermarkService.GetWithColumnSearch(viewmodelBefore, "color", searchRequest.ColumnSearch_10).ProjectTo<WatermarkInfoConvert2Text>(mapper.ConfigurationProvider);
-            IQueryable<WatermarkViewModel> viewmodelAfter = viewmodelBefore.ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodelAfter;
+            return _watermarkService.GetAll(dataTableRequest).ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()
@@ -114,7 +74,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 else if (serial >= 0)
                 {
                     //Popup for Edit
-                    AbstractWatermarkInfo instance = _watermarkService.Get(serial);
+                    WatermarkInfo instance = _watermarkService.Get(serial);
                     initialWatermarkDTO = mapper.Map<WatermarkViewModel>(instance);
                 }
             }
@@ -138,7 +98,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     //Popup for Add
                     if (ModelState.IsValid)
                     {
-                        _watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfoConvert2Code>(watermark));
+                        _watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
                         _watermarkService.SaveChanges();
 
                         return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -149,7 +109,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     //Popup for Edit
                     if (ModelState.IsValid)
                     {
-                        _watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfoConvert2Code>(watermark));
+                        _watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
                         _watermarkService.SaveChanges();
 
                         return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -169,7 +129,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteWatermark(int serial)
         {
             WatermarkViewModel watermarkViewModel = new WatermarkViewModel();
-            AbstractWatermarkInfo instance = _watermarkService.Get(serial);
+            WatermarkInfo instance = _watermarkService.Get(serial);
             watermarkViewModel = mapper.Map<WatermarkViewModel>(instance);
 
             return PartialView(watermarkViewModel);
@@ -178,7 +138,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult ReadyDeleteWatermark(WatermarkViewModel watermark)
         {
-            _watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfoConvert2Code>(watermark));
+            _watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
             _watermarkService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);

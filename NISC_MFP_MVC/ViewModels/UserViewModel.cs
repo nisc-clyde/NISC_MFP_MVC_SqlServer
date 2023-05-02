@@ -7,7 +7,7 @@ namespace NISC_MFP_MVC.ViewModels
     public class UserViewModel : AbstractSearchDTO
     {
         [Required(ErrorMessage = "此欄位為必填資料")]
-        [Display(Name = "帳號")]
+        [Display(Name = "帳號(請注意，帳號一旦新增即不可修改！)")]
         public string user_id { get; set; }
 
         [Display(Name = "密碼")]

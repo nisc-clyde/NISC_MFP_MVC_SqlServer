@@ -1,6 +1,6 @@
 ﻿namespace NISC_MFP_MVC_Service.DTOs.Info.Card
 {
-    public abstract class AbstractCardInfo
+    public class CardInfo
     {
         public virtual string card_id { get; set; }
         public virtual int? value { get; set; }

@@ -2,7 +2,7 @@
 
 namespace NISC_MFP_MVC_Service.Interface
 {
-    public interface ICardService : IService<AbstractCardInfo>
+    public interface ICardService : IService<CardInfo>
     {
     }
 }

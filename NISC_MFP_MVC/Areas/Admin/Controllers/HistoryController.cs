@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.Models;
-using NISC_MFP_MVC.Models.DTO;
+using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
 using NISC_MFP_MVC_Service.DTOs.Info.History;
@@ -22,8 +22,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         public HistoryController()
         {
-            _historyService=new HistoryService();
-            mapper=InitializeAutomapper();
+            _historyService = new HistoryService();
+            mapper = InitializeAutomapper();
         }
 
         public ActionResult Index()
@@ -33,43 +33,64 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchHistoryDataTable()
+        public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<HistoryViewModel> searchHistoryResultDetail = InitialData();
-            dataTableRequest.RecordsTotalGet = searchHistoryResultDetail.AsQueryable().Count();
-            searchHistoryResultDetail = GlobalSearch(searchHistoryResultDetail, dataTableRequest.GlobalSearchValue);
-            searchHistoryResultDetail = searchHistoryResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
-            dataTableRequest.RecordsFilteredGet = searchHistoryResultDetail.AsQueryable().Count();
-            searchHistoryResultDetail = searchHistoryResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            IQueryable<HistoryViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
 
             return Json(new
             {
-                data = searchHistoryResultDetail,
+                data = searchPrintResultDetail,
                 draw = dataTableRequest.Draw,
-                recordsTotal = dataTableRequest.RecordsTotalGet,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
             }, JsonRequestBehavior.AllowGet);
         }
 
-
         [NonAction]
-        public IQueryable<HistoryViewModel> InitialData()
+        public IQueryable<HistoryViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            IQueryable<HistoryInfo> resultModel = _historyService.GetAll();
-            IQueryable<HistoryViewModel> viewmodel = resultModel.ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
-
-            return viewmodel;
+            return _historyService.GetAll(dataTableRequest).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
         }
 
-        [NonAction]
-        public IQueryable<HistoryViewModel> GlobalSearch(IQueryable<HistoryViewModel> searchData, string searchValue)
-        {
-            IQueryable<HistoryInfo> viewmodelBefore = searchData.ProjectTo<HistoryInfo>(mapper.ConfigurationProvider);
-            IQueryable<HistoryViewModel> viewmodelAfter = _historyService.GetWithGlobalSearch(viewmodelBefore, searchValue).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
+        //[HttpPost]
+        //[ActionName("InitialDataTable")]
+        //public ActionResult SearchHistoryDataTable()
+        //{
+        //    DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
+        //    IQueryable<HistoryViewModel> searchHistoryResultDetail = InitialData();
+        //    dataTableRequest.RecordsTotalGet = searchHistoryResultDetail.AsQueryable().Count();
+        //    //searchHistoryResultDetail = GlobalSearch(searchHistoryResultDetail, dataTableRequest.GlobalSearchValue);
+        //    searchHistoryResultDetail = searchHistoryResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+        //    dataTableRequest.RecordsFilteredGet = searchHistoryResultDetail.AsQueryable().Count();
+        //    searchHistoryResultDetail = searchHistoryResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            return viewmodelAfter;
-        }
+        //    return Json(new
+        //    {
+        //        data = searchHistoryResultDetail,
+        //        draw = dataTableRequest.Draw,
+        //        recordsTotal = dataTableRequest.RecordsTotalGet,
+        //        recordsFiltered = dataTableRequest.RecordsFilteredGet
+        //    }, JsonRequestBehavior.AllowGet);
+        //}
+
+
+        //[NonAction]
+        //public IQueryable<HistoryViewModel> InitialData()
+        //{
+        //    IQueryable<HistoryInfo> resultModel = _historyService.GetAll();
+        //    IQueryable<HistoryViewModel> viewmodel = resultModel.ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
+
+        //    return viewmodel;
+        //}
+
+        //[NonAction]
+        //public IQueryable<HistoryViewModel> GlobalSearch(IQueryable<HistoryViewModel> searchData, string searchValue)
+        //{
+        //    IQueryable<HistoryInfo> viewmodelBefore = searchData.ProjectTo<HistoryInfo>(mapper.ConfigurationProvider);
+        //    IQueryable<HistoryViewModel> viewmodelAfter = _historyService.GetWithGlobalSearch(viewmodelBefore, searchValue).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
+
+        //    return viewmodelAfter;
+        //}
 
         //[NonAction]
         //public List<SearchHistoryDTO> GlobalSearch(List<SearchHistoryDTO> searchData, string searchValue)

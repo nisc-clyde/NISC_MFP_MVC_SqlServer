@@ -19,9 +19,11 @@ function SearchCardReaderDataTableInitial() {
             { data: "cr_status", name: "狀態" },
             {
                 data: null,
-                defaultContent: "<button type='button' class='btn btn-primary btn-sm me-1 btn-manager'><i class='fa-solid fa-circle-info me-1'></i>管理</button>" +
-                    "<button type='button' class='btn btn-info btn-sm me-1 btn-edit'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger btn-sm btn-delete'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
+                render: function (data, type, row) {
+                    return "<div class='row gx-0'><div class='col-4 '><button type='button' class='btn btn-primary btn-sm btn-management' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i>管理</button></div>" +
+                        "<div class='col-4'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
+                        "<div class='col-4'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                },
                 orderable: false
             },
             { data: "serial", name: "serial" }
@@ -54,7 +56,8 @@ function SearchCardReaderDataTableInitial() {
             },
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
             zeroRecords: "找不到相符資料",
-            search: "全部欄位搜尋："
+            search: "全部欄位搜尋：",
+            infoFiltered: ""
         },
         rowCallback: function (row, data) {
             if (data.cr_mode == "連線") {
@@ -137,8 +140,8 @@ function ColumnSearch() {
 function PopupFormForAddOrEdit() {
     const btnAdd = "btnAddCardReader";
     const modalForm = "cardReaderForm";
-    const uniqueIdProperty = "serial";
-    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
+    const title = "事務機";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, title);
 }
 
 /**

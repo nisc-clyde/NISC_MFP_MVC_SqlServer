@@ -1,10 +1,17 @@
 ﻿using AutoMapper;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue;
-using NISC_MFP_MVC_Service.DTOs.Info;
+using NISC_MFP_MVC_Repository.DTOs.Card;
+using NISC_MFP_MVC_Repository.DTOs.CardReader;
+using NISC_MFP_MVC_Repository.DTOs.Department;
+using NISC_MFP_MVC_Repository.DTOs.Deposit;
+using NISC_MFP_MVC_Repository.DTOs.History;
+using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
+using NISC_MFP_MVC_Repository.DTOs.User;
+using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
 using NISC_MFP_MVC_Service.DTOs.Info.History;
+using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
 using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
@@ -20,7 +27,7 @@ namespace NISC_MFP_MVC_Service.Implement
         public MappingProfile()
         {
             CreateMap<InitialPrintRepoDTO, PrintInfo>()
-                .ForMember(dest=>dest.print_date,conf=>conf.MapFrom(src=>src.print_date !=null? src.print_date.Value.Year.ToString() + "-" +
+                .ForMember(dest => dest.print_date, conf => conf.MapFrom(src => src.print_date != null ? src.print_date.Value.Year.ToString() + "-" +
                     (src.print_date.Value.Month < 10 ? "0" + src.print_date.Value.Month.ToString() : src.print_date.Value.Month.ToString()) + "-" +
                     (src.print_date.Value.Day < 10 ? "0" + src.print_date.Value.Day.ToString() : src.print_date.Value.Day.ToString()) + " " +
                     (src.print_date.Value.Hour < 10 ? "0" + src.print_date.Value.Hour.ToString() : src.print_date.Value.Hour.ToString()) + ":" +
@@ -37,50 +44,24 @@ namespace NISC_MFP_MVC_Service.Implement
                     (src.deposit_date.Value.Second < 10 ? "0" + src.deposit_date.Value.Second.ToString() : src.deposit_date.Value.Second.ToString()) : ""))
                 .ReverseMap();
 
-            CreateMap<InitialDepartmentRepoDTO, AbstractDepartmentInfo>().ReverseMap();
-            CreateMap<InitialDepartmentRepoDTO, DepartmentInfoConvert2Text>().ReverseMap();
-            CreateMap<InitialDepartmentRepoDTO, DepartmentInfoConvert2Code>().ReverseMap();
+            CreateMap<InitialDepartmentRepoDTO, DepartmentInfo>().ReverseMap();
 
-            CreateMap<InitialUserRepoDTO, AbstractUserInfo>().ReverseMap();
-            CreateMap<InitialUserRepoDTO, UserInfoConvert2Text>().ReverseMap();
-            CreateMap<InitialUserRepoDTO, UserInfoConvert2Code>().ReverseMap();
+            CreateMap<InitialUserRepoDTO, UserInfo>().ReverseMap();
 
-            CreateMap<InitialCardReaderRepoDTO, AbstractCardReaderInfo>().ReverseMap();
-            CreateMap<InitialCardReaderRepoDTO, CardReaderInfoConvert2Text>().ReverseMap();
-            CreateMap<InitialCardReaderRepoDTO, CardReaderInfoConvert2Code>().ReverseMap();
+            CreateMap<InitialCardReaderRepoDTO, CardReaderInfo>().ReverseMap();
 
-            CreateMap<InitialCardRepoDTO, AbstractCardInfo>().ReverseMap();
-            CreateMap<InitialCardRepoDTO, CardInfoConvert2Text>().ReverseMap();
-            CreateMap<InitialCardRepoDTO, CardInfoConvert2Code>().ReverseMap();
+            CreateMap<InitialCardRepoDTO, CardInfo>().ReverseMap();
 
-            CreateMap<InitialWatermarkRepoDTO, AbstractWatermarkInfo>()
-                .ForMember(dest => dest.type, conf => conf.MapFrom(src => src.type.ToString()))
-                .ForMember(dest => dest.position_mode, conf => conf.MapFrom(src => src.position_mode.ToString()))
-                .ForMember(dest => dest.fill_mode, conf => conf.MapFrom(src => src.fill_mode.ToString()))
-                .ReverseMap()
-                .ForMember(dest => dest.type, conf => conf.MapFrom(src => Convert.ToInt32(src.type)))
-                .ForMember(dest => dest.position_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.position_mode)))
-                .ForMember(dest => dest.fill_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.fill_mode)));
+            CreateMap<InitialWatermarkRepoDTO, WatermarkInfo>().ReverseMap();
 
-            CreateMap<InitialWatermarkRepoDTO, WatermarkInfoConvert2Text>()
-                .ForMember(dest => dest.type, conf => conf.MapFrom(src => src.type.ToString()))
-                .ForMember(dest => dest.position_mode, conf => conf.MapFrom(src => src.position_mode.ToString()))
-                .ForMember(dest => dest.fill_mode, conf => conf.MapFrom(src => src.fill_mode.ToString()))
-                .ReverseMap()
-                .ForMember(dest => dest.type, conf => conf.MapFrom(src => Convert.ToInt32(src.type)))
-                .ForMember(dest => dest.position_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.position_mode)))
-                .ForMember(dest => dest.fill_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.fill_mode)));
-
-            CreateMap<InitialWatermarkRepoDTO, WatermarkInfoConvert2Code>()
-                .ForMember(dest => dest.type, conf => conf.MapFrom(src => src.type.ToString()))
-                .ForMember(dest => dest.position_mode, conf => conf.MapFrom(src => src.position_mode.ToString()))
-                .ForMember(dest => dest.fill_mode, conf => conf.MapFrom(src => src.fill_mode.ToString()))
-                .ReverseMap()
-                .ForMember(dest => dest.type, conf => conf.MapFrom(src => Convert.ToInt32(src.type)))
-                .ForMember(dest => dest.position_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.position_mode)))
-                .ForMember(dest => dest.fill_mode, conf => conf.MapFrom(src => Convert.ToInt32(src.fill_mode)));
-
-            CreateMap<InitialHistoryRepoDTO, HistoryInfo>().ReverseMap();
+            CreateMap<InitialHistoryRepoDTO, HistoryInfo>()
+                .ForMember(dest => dest.date_time, conf => conf.MapFrom(src => src.date_time != null ? src.date_time.Value.Year.ToString() + "-" +
+                    (src.date_time.Value.Month < 10 ? "0" + src.date_time.Value.Month.ToString() : src.date_time.Value.Month.ToString()) + "-" +
+                    (src.date_time.Value.Day < 10 ? "0" + src.date_time.Value.Day.ToString() : src.date_time.Value.Day.ToString()) + " " +
+                    (src.date_time.Value.Hour < 10 ? "0" + src.date_time.Value.Hour.ToString() : src.date_time.Value.Hour.ToString()) + ":" +
+                    (src.date_time.Value.Minute < 10 ? "0" + src.date_time.Value.Minute.ToString() : src.date_time.Value.Minute.ToString()) + ":" +
+                    (src.date_time.Value.Second < 10 ? "0" + src.date_time.Value.Second.ToString() : src.date_time.Value.Second.ToString()) : ""))
+                .ReverseMap();
 
         }
     }

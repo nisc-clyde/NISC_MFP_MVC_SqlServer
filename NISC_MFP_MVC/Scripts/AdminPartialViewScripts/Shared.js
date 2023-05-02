@@ -43,7 +43,7 @@
 
 export const RequestAddOrEdit = (function () {
 
-    function GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty) {
+    function GetAddOrEditTemplate(btnAdd, modalForm, dataTable, title) {
         const url = $("#" + modalForm).data("url");
 
         //Add Department
@@ -67,10 +67,10 @@ export const RequestAddOrEdit = (function () {
             e.preventDefault();
             const currentRow = $(this).closest("tr");
             const rowData = dataTable.row(currentRow).data();
-
+            
             $.get(
                 url,
-                { formTitle: $(this).text() + "部門", serial: rowData[uniqueIdProperty] },
+                { formTitle: $(this).text() + title, serial: $(this).data("id") },
                 function (data) {
                     $("#" + modalForm).html(data);
                     $("#" + modalForm).modal("show");
@@ -124,10 +124,10 @@ export const RequestDelete = (function () {
 
             $.get(
                 getURL,
-                { serial: rowData[uniqueIdProperty] },
+                { serial: $(this).data("id") },
                 function (data) {
 
-                    var dataTableAsFormSerialize = uniqueIdProperty+"=" + rowData[uniqueIdProperty];
+                    var dataTableAsFormSerialize = uniqueIdProperty + "=" + $(this).data("id");
                     const sweetalertHtml = $.parseHTML(data);
                     const dataTableHtml = $("#deleteRowData", sweetalertHtml);
 

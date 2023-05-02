@@ -2,7 +2,7 @@
 
 namespace NISC_MFP_MVC_Service.DTOs.Info.Watermark
 {
-    public abstract class AbstractWatermarkInfo
+    public class WatermarkInfo
     {
         public virtual int id { get; set; }
         public virtual string type { get; set; }

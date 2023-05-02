@@ -23,8 +23,10 @@ function SearchWatermarkDataTableInitial() {
             { data: "color", name: "顏色" },
             {
                 data: null,
-                defaultContent: "<button type='button' class='btn btn-info btn-sm me-1 btn-edit'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger btn-sm btn-delete'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
+                render: function (data, type, row) {
+                    return "<div class='row gx-0'><div class='col-6'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.id + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
+                        "<div class='col-6'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.id + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                },
                 orderable: false
             },
             { data: "id", name: "id" }
@@ -57,7 +59,8 @@ function SearchWatermarkDataTableInitial() {
             },
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
             zeroRecords: "找不到相符資料",
-            search: "全部欄位搜尋："
+            search: "全部欄位搜尋：",
+            infoFiltered: ""
         },
     });
 }
@@ -141,8 +144,8 @@ function ColumnSearch() {
 function PopupFormForAddOrEdit() {
     const btnAdd = "btnAddWatermark";
     const modalForm = "watermarkForm";
-    const uniqueIdProperty = "id";
-    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
+    const title = "浮水印";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, title);
 }
 
 /**

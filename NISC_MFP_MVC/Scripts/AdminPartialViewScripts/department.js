@@ -17,8 +17,10 @@ function SearchDepartmentDataTableInitial() {
             { data: "dept_email", name: "部門管理者Email" },
             {
                 data: null,
-                defaultContent: "<button type='button' class='btn btn-info btn-sm me-1 btn-edit'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button>" +
-                    "<button type='button' class='btn btn-danger btn-sm btn-delete'><i class='fa-solid fa-trash me-1'></i>刪除</button>",
+                render: function (data, type, row) {
+                    return "<div class='row gx-0'><div class='col-6'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
+                        "<div class='col-6'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                },
                 orderable: false
             },
             { data: "serial", name: "序列號" }
@@ -51,7 +53,8 @@ function SearchDepartmentDataTableInitial() {
             },
             info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
             zeroRecords: "找不到相符資料",
-            search: "全部欄位搜尋："
+            search: "全部欄位搜尋：",
+            infoFiltered: ""
         },
         rowCallback: function (row, data) {
             if (data.dept_usable == "停用") {
@@ -109,8 +112,8 @@ function ColumnSearch() {
 function PopupFormForAddOrEdit() {
     const btnAdd = "btnAddDepartment";
     const modalForm = "departmentForm";
-    const uniqueIdProperty = "serial";
-    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, uniqueIdProperty);
+    const title = "部門";
+    RequestAddOrEdit.GetAddOrEditTemplate(btnAdd, modalForm, dataTable, title);
 }
 
 /**

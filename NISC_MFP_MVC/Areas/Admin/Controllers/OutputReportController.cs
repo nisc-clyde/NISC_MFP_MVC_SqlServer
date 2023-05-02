@@ -58,8 +58,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                                                      e_mail = u.e_mail,
                                                  }).ToList();
 
-            outputReportResult.searchUserDTOs = new UserController().InitialData().ToList();
-            outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData().ToList();
+            //outputReportResult.searchUserDTOs = new UserController().InitialData().ToList();
+            //outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData().ToList();
             return outputReportResult;
         }
 
