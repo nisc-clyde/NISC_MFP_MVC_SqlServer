@@ -2,13 +2,13 @@
 {
     public class CardInfo
     {
-        public virtual string card_id { get; set; }
-        public virtual int? value { get; set; }
-        public virtual int freevalue { get; set; }
-        public virtual string user_id { get; set; }
-        public virtual string user_name { get; set; }
-        public virtual string card_type { get; set; }
-        public virtual string enable { get; set; }
-        public virtual int serial { get; set; }
+        public string card_id { get; set; }
+        public int? value { get; set; }
+        public int freevalue { get; set; }
+        public string user_id { get; set; }
+        public string user_name { get; set; }
+        public string card_type { get; set; }
+        public string enable { get; set; }
+        public int serial { get; set; }
     }
 }

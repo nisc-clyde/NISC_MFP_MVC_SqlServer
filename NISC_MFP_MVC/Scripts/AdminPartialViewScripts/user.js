@@ -21,9 +21,9 @@ function SearchUserDataTableInitial() {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return "<div class='row gx-0'><div class='col-4 '><button type='button' class='btn btn-primary btn-sm btn-permission' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i>權限</button></div>" +
-                        "<div class='col-4'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
-                        "<div class='col-4'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                    return "<div class='row g-2'><div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-primary btn-sm btn-permission' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i><div style='display: inline-block; white-space: nowrap;'>權限</div></button></div>" +
+                        "<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
+                        "<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete' data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
                 },
                 orderable: false
             },
@@ -144,7 +144,6 @@ function DeleteAlertPopUp() {
 
 function EditUserPermissionConfig() {
     const url = "/Admin/User/UserPermissionConfig";
-    const uniqueIdProperty = "serial";
     const modalForm = "userForm";
 
 

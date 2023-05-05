@@ -37,11 +37,11 @@ function DateRangePicker_Initial() {
         "showCustomRangeLabel": true,
         "cancelClass": "btn-danger",
         "startDate": "2005/01/01",
-        "endDate": formatDate(new Date()),
-        "maxDate": formatDate(new Date()),
+        "endDate": moment(),
+        "maxDate": moment(),
         "alwaysShowCalendars": true,
         "locale": {
-            "format": "YYYY/MM/DD",
+            "format": "YYYY-MM-DD",
             "separator": " ~ ",
             "applyLabel": "確定",
             "cancelLabel": "清除",
@@ -71,8 +71,7 @@ function DateRangePicker_Initial() {
                 "十月",
                 "十一月",
                 "十二月"
-            ],
-            "firstDay": 1
+            ]
         }
     }, function (start, end, label) {
         dateStart = start.format('YYYY-MM-DD');
@@ -85,8 +84,7 @@ function DateRangePicker_Initial() {
 
     dateRangePicker.on('cancel.daterangepicker', function (ev, picker) {
         dateRangePicker.data('daterangepicker').setStartDate('2005/01/01');
-        dateRangePicker.data('daterangepicker').setEndDate(formatDate(new Date()));
-        //datatable.columns(9).search("2005/01/01" + "~" + formatDate(new Date())).draw();
+        dateRangePicker.data('daterangepicker').setEndDate(moment());
         datatable.columns(9).search("").draw();
     });
 }

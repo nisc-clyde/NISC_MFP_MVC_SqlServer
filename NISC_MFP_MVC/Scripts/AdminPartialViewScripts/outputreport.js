@@ -1,18 +1,35 @@
-﻿function DateRangePickerInitial_Start() {
-    $("#generateOutputReport_PeriodCustomStart").daterangepicker({
-        "singleDatePicker": true,
-        "minYear": 2015,
-        "maxYear": 2023,
+﻿
+var dateRangePicker;
+var dateStart = "2005-01-01";
+var dateEnd = moment().format("YYYY-MM-DD");
+function DateRangePickerInitial() {
+    dateRangePicker = $("#outputReportDateRangePickerCustom").daterangepicker({
         "showDropdowns": true,
+        ranges: {
+            '今天': [moment(), moment()],
+            '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '7天前': [moment().subtract(6, 'days'), moment()],
+            '30天前': [moment().subtract(29, 'days'), moment()],
+            '1年前': [moment().subtract(365, 'days'), moment()],
+            '當月': [moment().startOf('month'), moment().endOf('month')],
+            '上個月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        },
         "drops": "auto",
+        "showCustomRangeLabel": true,
+        "cancelClass": "btn-danger",
+        "startDate": "2005-01-01",
+        "endDate": moment(),
+        "minDate": "2005-01-01",
+        "maxDate": moment(),
+        "alwaysShowCalendars": true,
         "locale": {
-            "format": "YYYY/MM/DD",
-            "separator": " - ",
+            "format": "YYYY-MM-DD",
+            "separator": " ~ ",
             "applyLabel": "確定",
-            "cancelLabel": "取消",
+            "cancelLabel": "清除",
             "fromLabel": "自",
             "toLabel": "到",
-            "customRangeLabel": "Custom",
+            "customRangeLabel": "自定義",
             "weekLabel": "週",
             "daysOfWeek": [
                 "日",
@@ -36,62 +53,41 @@
                 "十月",
                 "十一月",
                 "十二月"
-            ],
-            "firstDay": 1
-        },
-        "showCustomRangeLabel": false,
-        "startDate": "2023/03/30"
+            ]
+        }
     }, function (start, end, label) {
-        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        dateStart = start.format('YYYY-MM-DD');
+        dateEnd = end.format('YYYY-MM-DD');
     });
 }
 
-function DateRangePickerInitial_End() {
-    $("#generateOutputReport_PeriodCustomEnd").daterangepicker({
-        "singleDatePicker": true,
-        "minYear": 2015,
-        "maxYear": 2023,
-        "showDropdowns": true,
-        "drops": "auto",
-        "locale": {
-            "format": "YYYY/MM/DD",
-            "separator": " - ",
-            "applyLabel": "確定",
-            "cancelLabel": "取消",
-            "fromLabel": "自",
-            "toLabel": "到",
-            "customRangeLabel": "Custom",
-            "weekLabel": "週",
-            "daysOfWeek": [
-                "日",
-                "一",
-                "二",
-                "三",
-                "四",
-                "五",
-                "六"
-            ],
-            "monthNames": [
-                "一月",
-                "二月",
-                "三月",
-                "四月",
-                "五月",
-                "六月",
-                "七月",
-                "八月",
-                "九月",
-                "十月",
-                "十一月",
-                "十二月"
-            ],
-            "firstDay": 1
-        },
-        "showCustomRangeLabel": false,
-        "startDate": "2023/03/31"
-    }, function (start, end, label) {
-        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-    });
+function CustomDateRangePicker() {
+    dateRangePicker.on("apply.daterangepicker", function (ev, picker) {
+        dateStart = picker.startDate.format('YYYY-MM-DD');
+        dateEnd = picker.endDate.format('YYYY-MM-DD');
+        $("#outputReportDateRangePickerStart").val(picker.startDate.format('YYYY-MM-DD'));
+        $("#outputReportDateRangePickerEnd").val(picker.endDate.format('YYYY-MM-DD'))
+    })
+
+    dateRangePicker.on("cancel.daterangepicker", function (ev, picker) {
+        dateStart = "2005-01-01";
+        dateEnd = moment().format("YYYY-MM-DD");
+        $("#outputReportDateRangePickerStart").val(dateStart);
+        $("#outputReportDateRangePickerEnd").val(dateEnd);
+    })
+
+    dateRangePicker.on("hide.daterangepicker", function (ev, picker) {
+        $("#outputReportDateRangePickerStart").val(dateStart);
+        $("#outputReportDateRangePickerEnd").val(dateEnd);
+    })
+
+    dateRangePicker.on("show.daterangepicker", function (ev, picker) {
+        $("#outputReportDateRangePickerStart").val(dateStart);
+        $("#outputReportDateRangePickerEnd").val(dateEnd)
+    })
+
+    $("#outputReportDateRangePickerStart").val("2005-01-01");
+    $("#outputReportDateRangePickerEnd").val(moment().format("YYYY-MM-DD"));
 }
 
 function FormSelect_Select() {
@@ -116,20 +112,19 @@ function FormSelect_Select() {
         console.log($(this).find("option:selected").val());
     })
 
-    $("#generateOutputReport_PeriodSelect").change(function () {
+    $("#outputReportPeriodSelect").change(function () {
         console.log($(this).find("option:selected").val());
         if ($(this).find("option:selected").val() == 4) {
-            $("#generateOutputReport_PeriodCustomBlock").css({ display: "block" });
+            $("#outputReportDateRangePickerCustom").css({ display: "block" });
         } else {
-            $("#generateOutputReport_PeriodCustomBlock").css({ display: "none" });
+            $("#outputReportDateRangePickerCustom").css({ display: "none" });
         }
     })
 }
 
 
 $(function () {
-    $(document).ready(DateRangePickerInitial_Start);
-    $(document).ready(DateRangePickerInitial_End);
-    $(document).ready(FormSelect_Select);
-
+    FormSelect_Select();
+    DateRangePickerInitial();
+    CustomDateRangePicker();
 });

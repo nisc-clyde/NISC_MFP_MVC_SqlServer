@@ -1,28 +1,34 @@
-﻿@model NISC_MFP_MVC.ViewModels.CardViewModel
-@{
-    Layout = null;
-}
+﻿@model      NISC_MFP_MVC.ViewModels.Card.ResetFreeValueViewModel
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            @using (Html.BeginForm("ResetCardPoint", "Card", FormMethod.Post))
-            {
-                <div class="row mx-3 mb-3">
-                    @*@Html.LabelFor(d => d.freevalue, "關鍵字查詢", new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.freevalue, new { @class = "form-control" })*@
-                    <button class="btn btn-success">Test</button>
-                </div>
-            }
-        </div>
+        @using (Html.BeginForm("ResetCardFreePoint", "Card", FormMethod.Post, new { @id = "resetFreeValueForm", @class = "overflow-auto" }))
+        {
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-success">新增</button>
-        </div>
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ui-front">
+
+                <div class="row mx-3 mb-3">
+                    <div class="input-group ps-0">
+                        @Html.LabelFor(d => d.freevalue, new { @class = "form-label fw-semibold me-2" })
+                        <div class="input-group-addon">
+                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(d => d.freevalue, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.freevalue, "", new { @class = "text-danger ps-0 fs-6" })
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" id="btnSubmmit" class="btn btn-success">確定</button>
+            </div>
+        }
     </div>
 </div>

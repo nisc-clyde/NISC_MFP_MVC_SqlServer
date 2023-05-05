@@ -57,6 +57,9 @@ namespace NISC_MFP_MVC
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include("~/Scripts/jquery-ui-{version}.js"));
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include("~/Content/themes/base/all.css"));
+
+            bundles.Add(new StyleBundle("~/lib/animate.css").Include("~/lib/animate.css/animate.min.css"));
+
         }
     }
 }

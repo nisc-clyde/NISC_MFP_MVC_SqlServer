@@ -1,14 +1,14 @@
-﻿using NISC_MFP_MVC.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace NISC_MFP_MVC.ViewModels
+namespace NISC_MFP_MVC.ViewModels.Card
 {
     //$card_id, $value, $freevalue, $user_id, $user_name, $card_type, $enable, $serial
-    public class CardViewModel : AbstractSearchDTO
+    public class CardViewModel : AbstractViewModel
     {
         [Required(ErrorMessage = "此欄位為必填資料")]
-        [MaxLength(10, ErrorMessage = "卡片編號長度不得超過10碼")]
+        [RegularExpression(@"^\d{1,10}$", ErrorMessage = "卡片編號長度不得超過10碼")]
+        [MaxLength(10)]
         [DisplayName("卡片編號")]
         public string card_id { get; set; }
 
@@ -31,21 +31,5 @@ namespace NISC_MFP_MVC.ViewModels
         public string enable { get; set; }
 
         public int serial { get; set; }
-
-        public static string ColumnName2Property(string index)
-        {
-            switch (index)
-            {
-                case "0": return "card_id";
-                case "1": return "value";
-                case "2": return "freevalue";
-                case "3": return "user_id";
-                case "4": return "user_name";
-                case "5": return "card_type";
-                case "6": return "enable";
-                default: return "";
-            }
-        }
-
     }
 }

@@ -2,10 +2,7 @@
 
 @{
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 }
-
-
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
@@ -38,84 +35,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-                @*<div class="container">
-                        <div class="row row-cols-4 gy-2 border-bottom border-1 fs-6">
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                                    <label class="form-check-label" for="inlineCheckbox1">列印紀錄</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                                    <label class="form-check-label" for="inlineCheckbox2">檔案檢視</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">部門管理</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">使用者管理</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">事務機管理</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">卡片管理</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">儲值紀錄</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">浮水印管理</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">操作紀錄查詢</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">系統管理</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                    <label class="form-check-label" for="inlineCheckbox3">報表選項</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col ">
-                                <button type="button" class="btn btn-danger btn-sm">清除</button>
-                                <button type="button" class="btn btn-info btn-sm">全選</button>
-                            </div>
-                        </div>
-
-                    </div>*@
 
                 <div class="container">
                     <div class="row gy-2 fs-6">
@@ -188,8 +107,8 @@
                             </div>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-danger btn-sm">清除</button>
-                            <button type="button" class="btn btn-info btn-sm">全選</button>
+                            <button type="button" id="btnClearChekced" class="btn btn-danger btn-sm">清除</button>
+                            <button type="button" id="btnAllChekced" class="btn btn-info btn-sm">全選</button>
                         </div>
                     </div>
                 </div>
@@ -202,3 +121,14 @@
         }
     </div>
 </div>
+
+<script>
+
+    function PermissionClearOrAll() {
+
+    }
+
+    $(function () {
+        PermissionClearOrAll();
+    })
+</script>

@@ -143,6 +143,8 @@
     <Compile Include="DTOs\Department\InitialDepartmentRepoDTO.cs" />
     <Compile Include="DTOs\Deposit\InitialDepositRepoDTO.cs" />
     <Compile Include="DTOs\History\InitialHistoryRepoDTO.cs" />
+    <Compile Include="DTOs\MultiFunctionPrint\InitialMultiFunctionPrintRepoDTO.cs" />
+    <Compile Include="DTOs\MultiFunctionPrint\InitialMultiFunctionPrintRepoDTONeed.cs" />
     <Compile Include="DTOs\Print\InitialPrintRepoDTO.cs" />
     <Compile Include="DTOs\Print\InitialPrintRepoDTONeed.cs" />
     <Compile Include="DTOs\User\InitialUserRepoDTO.cs" />
@@ -153,10 +155,12 @@
     <Compile Include="Implement\CardRepository.cs" />
     <Compile Include="Implement\DepositRepository.cs" />
     <Compile Include="Implement\HistoryRepository.cs" />
+    <Compile Include="Implement\MultiFunctionPrintRepository.cs" />
     <Compile Include="Implement\WatermarkRepository.cs" />
     <Compile Include="Interface\ICardReaderRepository.cs" />
     <Compile Include="Interface\ICardRepository.cs" />
     <Compile Include="Interface\IHistoryRepository.cs" />
+    <Compile Include="Interface\IMultiFunctionPrintRepository.cs" />
     <Compile Include="Interface\IWatermarkRepository.cs" />
     <Compile Include="MappingProfile.cs" />
     <Compile Include="Implement\DepartmentRepository.cs" />

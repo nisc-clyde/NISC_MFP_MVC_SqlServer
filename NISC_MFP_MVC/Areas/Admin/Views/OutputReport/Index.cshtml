@@ -8,7 +8,9 @@
 }
 
 @section OutputReportJS{
-    <script src="~/Scripts/AdminPartialViewScripts/outputreport.js"></script>
+    @Styles.Render("~/lib/daterangepicker-css")
+    @Scripts.Render("~/lib/daterangepicker-js")
+    <script src="@Url.Content("~/Scripts/AdminPartialViewScripts/outputreport.js")"></script>
 }
 
 
@@ -16,49 +18,50 @@
 <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
     <div class="row border-bottom border-2 ">
-        <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">報表選項&nbsp;<i class="fa-solid fa-bars-staggered"></i></div>
+        <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
+            報表選項&nbsp;<i class="fa-solid fa-bars-staggered"></i>
+        </div>
     </div>
 
-    @*@using (Html.BeginForm(""))*@
-    <div class="row border-x border-bottom border-2  bg-secondary bg-opacity-10">
+    <div class="row justify-content-center border-bottom border-2 bg-secondary bg-opacity-10">
 
         <div class="col border-start border-end border-2">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">報表種類</div>
-            <div class="row align-items-center">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">報表種類</div></div>
+            <div class="row">
                 <div class="col pt-2 pb-2">
                     <select id="generateOutputReport_ReportTypeSeelct" class="form-select">
-                        <option id="generateOutputReport_ReportType1" selected value="0">部門總使用量報表</option>
-                        <option id="generateOutputReport_ReportType2" value="1">部門影印使用量報表</option>
-                        <option id="generateOutputReport_ReportType3" value="2">部門列印使用量報表</option>
-                        <option id="generateOutputReport_ReportType4" value="3">部門影列印使用量報表</option>
-                        <option id="generateOutputReport_ReportType5" value="4">部門掃描使用量報表</option>
-                        <option id="generateOutputReport_ReportType6" value="5">部門傳真使用量報表</option>
-                        <option id="generateOutputReport_ReportType7" value="6">使用者總使用量報表</option>
-                        <option id="generateOutputReport_ReportType8" value="7">使用者影印使用量報表</option>
-                        <option id="generateOutputReport_ReportType9" value="8">使用者列印使用量報表</option>
-                        <option id="generateOutputReport_ReportType10" value="9">使用者掃描使用量報表</option>
-                        <option id="generateOutputReport_ReportType11" value="10">使用者傳真使用量報表</option>
+                        <option id="generateOutputReport_ReportType1" selected value>部門總使用量報表</option>
+                        <option id="generateOutputReport_ReportType2" value="0">部門影印使用量報表</option>
+                        <option id="generateOutputReport_ReportType3" value="1">部門列印使用量報表</option>
+                        <option id="generateOutputReport_ReportType4" value="2">部門影列印使用量報表</option>
+                        <option id="generateOutputReport_ReportType5" value="3">部門掃描使用量報表</option>
+                        <option id="generateOutputReport_ReportType6" value="4">部門傳真使用量報表</option>
+                        <option id="generateOutputReport_ReportType7" value="5">使用者總使用量報表</option>
+                        <option id="generateOutputReport_ReportType8" value="6">使用者影印使用量報表</option>
+                        <option id="generateOutputReport_ReportType9" value="7">使用者列印使用量報表</option>
+                        <option id="generateOutputReport_ReportType10" value="8">使用者掃描使用量報表</option>
+                        <option id="generateOutputReport_ReportType11" value="9">使用者傳真使用量報表</option>
                     </select>
                 </div>
             </div>
         </div>
 
         <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">顏色</div>
-            <div class="row align-items-center">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">顏色</div></div>
+            <div class="row">
                 <div class="col pt-2 pb-2">
                     <select id="generateOutputReport_ColorSelect" class="form-select">
-                        <option id="generateOutputReport_ColorAll" selected value="0">全部</option>
-                        <option id="generateOutputReport_ColorRGB" value="1">彩色</option>
-                        <option id="generateOutputReport_ColorWB" value="2">黑白</option>
+                        <option id="generateOutputReport_ColorAll" selected value>全部</option>
+                        <option id="generateOutputReport_ColorRGB" value="0">彩色</option>
+                        <option id="generateOutputReport_ColorWB" value="1">黑白</option>
                     </select>
                 </div>
             </div>
         </div>
 
         <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">部門</div>
-            <div class="row align-items-center">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">部門</div></div>
+            <div class="row">
                 <div class="col pt-2 pb-2">
                     @Html.DropDownListFor(department => department.departmentNames, Model.departmentNames, "全部", new { @id = "generateOutputReport_DepartmentSelect", @class = "form-select" })
                 </div>
@@ -66,7 +69,7 @@
         </div>
 
         <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">使用者</div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">使用者</div></div>
             <div class="row align-items-center">
                 <div class="col pt-2 pb-2">
                     @Html.DropDownListFor(user => user.userNames, Model.userNames, "全部", new { @id = "generateOutputReport_User", @class = "form-select" })
@@ -75,7 +78,7 @@
         </div>
 
         <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">事務機IP</div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">事務機IP</div></div>
             <div class="row align-items-center">
                 <div class="col pt-2 pb-2">
                     @Html.DropDownListFor(cardreader => cardreader.cardReaders, Model.cardReaders, "全部", new { @id = "generateOutputReport_MachineIPSelect", @class = "form-select" })
@@ -84,49 +87,44 @@
         </div>
 
         <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">期間</div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">期間</div></div>
             <div class="row align-items-center">
                 <div class="col pt-2 pb-2">
-                    <select id="generateOutputReport_PeriodSelect" class="form-select">
-                        <option id="generateOutputReport_PeriodToday" selected value="0">今天</option>
-                        <option id="generateOutputReport_PeriodWeek" value="1">一週</option>
-                        <option id="generateOutputReport_PeriodMonth" value="2">一個月</option>
-                        <option id="generateOutputReport_PeriodAll" value="3">全部</option>
-                        <option id="generateOutputReport_PeriodCustom" value="4">自訂</option>
+                    <select id="outputReportPeriodSelect" class="form-select">
+                        <option id="outputReportToday" selected value="0">今天</option>
+                        <option id="outputReportWeek" value="1">一週</option>
+                        <option id="outputReportMonth" value="2">一個月</option>
+                        <option id="outputReportAll" value="3">全部</option>
+                        <option id="outputReportCustom" value="4">自訂</option>
                         @*Add the date range - start*@
                         @*Add the date range - end*@
                     </select>
 
-                    <div id="generateOutputReport_PeriodCustomBlock" class="mt-3" style="display:none">
+                    <div id="outputReportDateRangePickerCustom" class="mt-3" style="display:none">
                         <div class="input-group justify-content-center">
                             <span class="input-group-text" id="basic-addon1">自</span>
-                            <input id="generateOutputReport_PeriodCustomStart" type="text" class="form-control text-center">
+                            <input id="outputReportDateRangePickerStart" type="text" class="form-control text-center customDateRange">
                         </div>
-
                         <i class="fa-solid fa-arrow-down"></i>
-
                         <div class="input-group justify-content-center">
                             <span class="input-group-text" id="basic-addon1">到</span>
-                            <input id="generateOutputReport_PeriodCustomEnd" type="text" class="form-control text-center">
+                            <input id="outputReportDateRangePickerEnd" type="text" class="form-control text-center customDateRange">
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
 
         <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold  align-content-center">產生報表</div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">產生報表</div></div>
             <div class="row align-items-center">
                 <div class="col pt-2 pb-2">
-                    <div class="btn-group" role="group" aria-label="Vertical button group">
-                        <button type="button" class="btn btn-primary">用量報表</button>
-                        <button type="button" class="btn btn-warning">紀錄報表</button>
-                    </div>
+                    <button type="button" class="btn btn-primary">用量報表</button>
+                    <button type="button" class="btn btn-warning">紀錄報表</button>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 @*報表選項 - First Container - End*@

@@ -107,6 +107,7 @@
     <Compile Include="DTOs\Info\CardReader\CardReaderInfo.cs" />
     <Compile Include="DTOs\Info\Department\DepartmentInfo.cs" />
     <Compile Include="DTOs\Info\History\HistoryInfo.cs" />
+    <Compile Include="DTOs\Info\MultiFunctionPrint\MultiFunctionPrintInfo.cs" />
     <Compile Include="DTOs\Info\Print\PrintInfo.cs" />
     <Compile Include="DTOs\Info\User\UserInfo.cs" />
     <Compile Include="DTOs\Info\Watermark\WatermarkInfo.cs" />
@@ -115,10 +116,12 @@
     <Compile Include="Implement\DepartmentService.cs" />
     <Compile Include="Implement\DepositService.cs" />
     <Compile Include="Implement\HistoryService.cs" />
+    <Compile Include="Implement\MultiFunctionPrintService.cs" />
     <Compile Include="Implement\WatermarkService.cs" />
     <Compile Include="Interface\ICardReaderService.cs" />
     <Compile Include="Interface\ICardService.cs" />
     <Compile Include="Interface\IHistoryService.cs" />
+    <Compile Include="Interface\IMultiFunctionPrintService.cs" />
     <Compile Include="Interface\IWatermarkService.cs" />
     <Compile Include="MappingProfile.cs" />
     <Compile Include="Implement\PrintService.cs" />

@@ -232,12 +232,13 @@
     <Compile Include="Models\doc_mng.cs">
       <DependentUpon>MFP_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DTO\DataTableRequest.cs" />
-    <Compile Include="ViewModels\CardViewModel.cs" />
-    <Compile Include="ViewModels\CardReaderViewModel.cs" />
+    <Compile Include="ViewModels\CardReader\MultiFunctionPrintModel.cs" />
+    <Compile Include="ViewModels\CardReader\MultiFunctionPrintViewModel.cs" />
+    <Compile Include="ViewModels\Card\CardViewModel.cs" />
+    <Compile Include="ViewModels\CardReader\CardReaderModel.cs" />
+    <Compile Include="ViewModels\Card\ResetFreeValueViewModel.cs" />
     <Compile Include="ViewModels\DepositViewModel.cs" />
-    <Compile Include="Models\DTO\SearchOutputReportDTO.cs" />
-    <Compile Include="Models\AbstractSearchDTO.cs" />
+    <Compile Include="ViewModels\AbstractViewModel.cs" />
     <Compile Include="ViewModels\HistoryViewModel.cs" />
     <Compile Include="ViewModels\Print\AdvancedPrintViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
@@ -388,7 +389,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\site.css" />
     <Content Include="img\bw.jpg" />
     <Content Include="img\earth_01.png" />
     <Content Include="img\earth_02.png" />
@@ -396,6 +397,10 @@
     <Content Include="img\logo_b.png" />
     <Content Include="img\logo_w.png" />
     <Content Include="img\wb.jpg" />
+    <Content Include="lib\animate.css\animate.compat.css" />
+    <Content Include="lib\animate.css\animate.compat.min.css" />
+    <Content Include="lib\animate.css\animate.css" />
+    <Content Include="lib\animate.css\animate.min.css" />
     <Content Include="lib\bootstrap-daterangepicker\daterangepicker.css" />
     <Content Include="lib\bootstrap-daterangepicker\daterangepicker.js" />
     <Content Include="lib\bootstrap-daterangepicker\daterangepicker.min.css" />
@@ -1132,8 +1137,6 @@
     <Content Include="Scripts\AdminPartialViewScripts\Shared.js" />
     <Content Include="Scripts\AdminPartialViewScripts\user.js" />
     <Content Include="Scripts\AdminPartialViewScripts\watermark.js" />
-    <Content Include="Scripts\bloodhound.js" />
-    <Content Include="Scripts\bloodhound.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -1214,6 +1217,8 @@
     <Content Include="Areas\Admin\Views\Card\DeleteCard.cshtml" />
     <Content Include="Areas\Admin\Views\Watermark\DeleteWatermark.cshtml" />
     <Content Include="Areas\Admin\Views\User\UserPermissionConfig.cshtml" />
+    <Content Include="Areas\Admin\Views\Card\DepositCard.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\CardReaderManagement.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -1232,10 +1237,6 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\typeahead.bundle.js" />
-    <Content Include="Scripts\typeahead.bundle.min.js" />
-    <Content Include="Scripts\typeahead.jquery.js" />
-    <Content Include="Scripts\typeahead.jquery.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -5,12 +5,14 @@ using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
+using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
 using NISC_MFP_MVC_Service.DTOs.Info.History;
+using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
 using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
@@ -62,6 +64,8 @@ namespace NISC_MFP_MVC_Service.Implement
                     (src.date_time.Value.Minute < 10 ? "0" + src.date_time.Value.Minute.ToString() : src.date_time.Value.Minute.ToString()) + ":" +
                     (src.date_time.Value.Second < 10 ? "0" + src.date_time.Value.Second.ToString() : src.date_time.Value.Second.ToString()) : ""))
                 .ReverseMap();
+
+            CreateMap<InitialMultiFunctionPrintRepoDTO, MultiFunctionPrintInfo>().ReverseMap();
 
         }
     }

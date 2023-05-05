@@ -154,6 +154,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             {
                 var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
                 this.db.Entry(dataModel).State = EntityState.Modified;
+                this.db.Entry(dataModel).Property(p => p.user_id).IsModified = false;
                 db.SaveChanges();
             }
         }

@@ -1,7 +1,18 @@
 ﻿@model NISC_MFP_MVC.ViewModels.WatermarkViewModel
 
 @{
+    Model.type = Model.type == "圖片" ? "0" : "1";
 
+    Model.position_mode = Model.position_mode == "左上" ? "0" :
+                    Model.position_mode == "左下" ? "1" :
+                    Model.position_mode == "右上" ? "2" :
+                    Model.position_mode == "右下" ? "3" : "正中間";
+
+    Model.fill_mode = Model.fill_mode == "無" ? "0" :
+                Model.fill_mode == "依原圖比例多餘裁切" ? "1" :
+                Model.fill_mode == "依原圖比例不裁切" ? "2" :
+                Model.fill_mode == "依紙張比例" ? "3" :
+                Model.fill_mode == "重覆填滿" ? "4" : "置中，並依原圖比例多餘裁切";
 }
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -40,7 +51,7 @@
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.left_offset, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.left_offset, new { @class = "form-control", @type = "number" })
                     @Html.ValidationMessageFor(d => d.left_offset, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
@@ -51,7 +62,7 @@
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.right_offset, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.right_offset, new { @class = "form-control", @type = "number" })
                     @Html.ValidationMessageFor(d => d.right_offset, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
@@ -62,7 +73,7 @@
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.top_offset, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.top_offset, new { @class = "form-control", @type = "number" })
                     @Html.ValidationMessageFor(d => d.top_offset, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
@@ -73,7 +84,7 @@
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.bottom_offset, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.bottom_offset, new { @class = "form-control", @type = "number" })
                     @Html.ValidationMessageFor(d => d.bottom_offset, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 

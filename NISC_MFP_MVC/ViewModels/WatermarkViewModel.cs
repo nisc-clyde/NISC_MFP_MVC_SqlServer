@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace NISC_MFP_MVC.ViewModels
@@ -45,7 +46,8 @@ namespace NISC_MFP_MVC.ViewModels
         public string image_path { get; set; }
 
         [DisplayName("旋轉角度")]
-        [RegularExpression(@"(([0-9]{1,3})\.)(([0-9]{1,3}))", ErrorMessage = "請輸入三位數欲旋轉之角度，且最多至小數點後三位")]
+        //[RegularExpression(@"(([0-9]{1,3})\.)(([0-9]{1,3}))", ErrorMessage = "請輸入三位數欲旋轉之角度，且最多至小數點後三位")]
+        [Range(0.00, 360.00, ErrorMessage = "請輸入三位數欲旋轉之角度，且最多至小數點後三位")]
         public float? rotation { get; set; }
 
         [DisplayName("顏色")]
@@ -65,24 +67,5 @@ namespace NISC_MFP_MVC.ViewModels
         [DisplayName("文字高度")]
         [RegularExpression("([0-9]{1,5})", ErrorMessage = "請輸入數字，至多五位數")]
         public int? font_height { get; set; }
-
-        public static string ColumnName2Property(string index)
-        {
-            switch (index)
-            {
-                case "0": return "type";
-                case "1": return "left_offset";
-                case "2": return "right_offset";
-                case "3": return "top_offset";
-                case "4": return "bottom_offset";
-                case "5": return "position_mode";
-                case "6": return "fill_mode";
-                case "7": return "text";
-                case "8": return "image_path";
-                case "9": return "rotation";
-                case "10": return "color";
-                default: return "type";
-            }
-        }
     }
 }

@@ -18,12 +18,12 @@ function SearchDepartmentDataTableInitial() {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return "<div class='row gx-0'><div class='col-6'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
-                        "<div class='col-6'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                    return "<div class='row g-2'><div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6'><button type='button' class='btn btn-info btn-sm btn-edit' data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
+                        "<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete' data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
                 },
                 orderable: false
             },
-            { data: "serial", name: "序列號" }
+            { data: "serial", name: "serial" }
         ],
         columnDefs: [
             { "width": "150px", target: 6 },

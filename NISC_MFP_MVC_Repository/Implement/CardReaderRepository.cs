@@ -25,14 +25,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Insert(InitialCardReaderRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                this.db.tb_cardreader.Add(mapper.Map<tb_cardreader>(instance));
-            }
+            db.tb_cardreader.Add(mapper.Map<tb_cardreader>(instance));
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll()
@@ -121,48 +114,25 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialCardReaderRepoDTO Get(int serial)
         {
-            if (serial <= 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_cardreader result = db.tb_cardreader.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-                return mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
-            }
+            tb_cardreader result = db.tb_cardreader.Where(d => d.serial.Equals(serial)).FirstOrDefault();
+            return mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
         }
 
         public void Update(InitialCardReaderRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                db.SaveChanges();
-            }
+            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            db.Entry(dataModel).State = EntityState.Modified;
         }
 
         public void Delete(InitialCardReaderRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
-                this.db.Entry(dataModel).State = EntityState.Deleted;
-                this.db.SaveChanges();
-            }
+            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
         }
 
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            db.SaveChanges();
         }
         public void Dispose()
         {

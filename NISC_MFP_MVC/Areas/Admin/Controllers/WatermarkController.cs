@@ -69,6 +69,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (serial < 0)
                 {
+                    initialWatermarkDTO.type = "0";
+                    initialWatermarkDTO.position_mode = "0";
+                    initialWatermarkDTO.fill_mode = "0";
                     //Popup for Add
                 }
                 else if (serial >= 0)

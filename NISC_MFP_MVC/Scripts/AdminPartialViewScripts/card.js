@@ -20,9 +20,9 @@ function SearchCardDataTableInitial() {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return "<div class='row gx-0'><div class='col-4 '><button type='button' class='btn btn-primary btn-sm btn-deposit' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i>儲值</button></div>" +
-                        "<div class='col-4'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
-                        "<div class='col-4'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                    return "<div class='row g-2'><div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-primary btn-sm btn-deposit' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i><div style='display: inline-block; white-space: nowrap;'>儲值</div></button></div>" +
+                        "<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
+                        "<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-danger btn-sm btn-delete' data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
                 },
                 orderable: false
             },
@@ -146,9 +146,144 @@ function DeleteAlertPopUp() {
     RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL);
 }
 
+function ResetFreePoint() {
+    $("#btnResetCardFreePoint").on("click", function () {
+        const url = "/Admin/Card/ResetCardFreePoint";
+        const modalForm = "cardForm";
+        const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
+
+        $.get(
+            url,
+            { formTitle: $(this).text() },
+            function (data) {
+                $("#" + modalForm).html(data);
+                $("#" + modalForm).modal("show");
+                $("#resetFreeValueForm").on("submit", function () {
+                    $.validator.unobtrusive.parse(this);
+                    if ($(this).valid()) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $(this).serialize(),
+                            success: function (data) {
+                                if (data.success) {
+                                    $("#" + modalForm).modal("hide");
+                                    sweetAlertSuccess.fire({
+                                        text: "免費點數已重設"
+                                    })
+                                        .then((result) => {
+                                            if (result.isConfirmed || result.dismiss == Swal.DismissReason.timer) {
+                                                dataTable.ajax.reload();
+                                            }
+                                        })
+                                }
+                            }
+                        });
+                    }
+                    return false;
+                })
+            }
+        )
+    });
+}
+
+var addedValue = 0;
+var originalValue
+function DepositCardValue() {
+    const url = "/Admin/Card/DepositCard";
+    const modalForm = "cardForm";
+    const sweetAlertHome = CustomSweetAlert2.SweetAlertTemplateHome();
+    const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
+
+    dataTable.on("click", ".btn-deposit", function (e) {
+        e.preventDefault();
+        const currentRow = $(this).closest("tr");
+        const serial = $(this).data("id");
+
+        $.get(
+            url,
+            { formTitle: "卡片儲值", serial: serial },
+            function (data) {
+                $("#" + modalForm).html(data);
+                $("#" + modalForm).modal("show");
+                addedValue = 0;
+                CustomDeposit();
+
+                $("#depositcardForm").on("submit", function () {
+                    if (addedValue != 0) {
+                        sweetAlertHome.fire({
+                            title: "確定儲值" + addedValue + "點嗎？",
+                            text: ""
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Admin/Card/DepositCard",
+                                    data: { value: addedValue, serial: serial },
+                                    success: function (data) {
+                                        $("#" + modalForm).modal("hide");
+                                        if (data.success) {
+                                            sweetAlertSuccess.fire({
+                                                text: "儲值成功"
+                                            }).then((result) => {
+                                                dataTable.ajax.reload();
+                                                //if (result.isConfirmed || result.dismiss == Swal.DismissReason.timer) {
+                                                //    currentRow.addClass("animate__animated animate__flash animate__fast animate__repeat-2");
+                                                //    currentRow.on("animationend", function () {
+                                                //        currentRow.removeClass("animate__animated animate__flash animate__fast animate__repeat-2");
+                                                //    })
+                                                //}
+                                            })
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                    return false;
+                })
+            }
+        )
+    });
+}
+
+function CustomDeposit() {
+    originalValue = $("tr[id=depositCardRowData] th[id=value]").text();
+    $("#btnCustomDeposit").on("click", function () {
+        addedValue += parseInt($("#customDeposit").val());
+        if (addedValue > 0) {
+            $("tr[id=depositCardRowData] th[id=value]").html(originalValue + " <b class='text-success'>(+" + parseInt(addedValue) + ")</b>");
+        } else if (addedValue < 0) {
+            $("tr[id=depositCardRowData] th[id=value]").html(originalValue + " <b class='text-danger'>(" + parseInt(addedValue) + ")</b>");
+        } else {
+            $("tr[id=depositCardRowData] th[id=value]").text(originalValue);
+        }
+    })
+
+    $("#templateDepositParent .templateDeposit").each(function (index) {
+        $(this).on("click", function () {
+            if ($(this).text() == "儲值") {
+                addedValue = addedValue + parseInt($(this).prev().val());
+            } else if ($(this).text() == "扣款") {
+                addedValue = addedValue - parseInt($(this).next().val());
+            }
+            if (addedValue > 0) {
+                $("tr[id=depositCardRowData] th[id=value]").html(originalValue + " <b class='text-success'>(+" + parseInt(addedValue) + ")</b>");
+            } else if (addedValue < 0) {
+                $("tr[id=depositCardRowData] th[id=value]").html(originalValue + " <b class='text-danger'>(" + parseInt(addedValue) + ")</b>");
+            } else {
+                $("tr[id=depositCardRowData] th[id=value]").text(originalValue);
+            }
+        })
+    });
+}
+
+
 $(function () {
     SearchCardDataTableInitial();
     ColumnSearch();
     PopupFormForAddOrEdit();
     DeleteAlertPopUp();
+    ResetFreePoint();
+    DepositCardValue();
 });

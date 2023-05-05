@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
 using Google.Protobuf.WellKnownTypes;
+using Mysqlx.Crud;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.DTOs.CardReader;
@@ -27,16 +29,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Insert(InitialCardRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                this.db.tb_card.Add(mapper.Map<tb_card>(instance));
-            }
+            this.db.tb_card.Add(mapper.Map<tb_card>(instance));
         }
-
 
         public IQueryable<InitialCardRepoDTO> GetAll()
         {
@@ -128,48 +122,37 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialCardRepoDTO Get(int serial)
         {
-            if (serial < 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_card result = db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-                return mapper.Map<tb_card, InitialCardRepoDTO>(result);
-            }
+            tb_card result = db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
+            return mapper.Map<tb_card, InitialCardRepoDTO>(result);
+        }
+
+        public void UpdateResetFreeValue(int freevalue)
+        {
+            db.tb_card.ForAll(d => d.freevalue = freevalue);
+        }
+
+        public void UpdateDepositValue(int value, int serial)
+        {
+            tb_card dest = db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
+            dest.value += value;
+            db.Entry(dest).State = EntityState.Modified;
         }
 
         public void Update(InitialCardRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                db.SaveChanges();
-            }
+            var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
+            db.Entry(dataModel).State = EntityState.Modified;
         }
 
         public void Delete(InitialCardRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
-                this.db.Entry(dataModel).State = EntityState.Deleted;
-                this.db.SaveChanges();
-            }
+            var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
         }
 
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            db.SaveChanges();
         }
 
         public void Dispose()

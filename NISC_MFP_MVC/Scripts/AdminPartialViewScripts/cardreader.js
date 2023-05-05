@@ -20,9 +20,9 @@ function SearchCardReaderDataTableInitial() {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return "<div class='row gx-0'><div class='col-4 '><button type='button' class='btn btn-primary btn-sm btn-management' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i>管理</button></div>" +
-                        "<div class='col-4'><button type='button' class='btn btn-info btn-sm  btn-edit'data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i>修改</button></div>" +
-                        "<div class='col-4'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete'data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i>刪除</button></div></div>";
+                    return "<div class='row g-2'><div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-primary btn-sm btn-management' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i><div style='display: inline-block; white-space: nowrap;'>管理</div></button></div>" +
+                        "<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
+                        "<div class='col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4'><button type='button' class='btn btn-danger btn-sm btn-delete' data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
                 },
                 orderable: false
             },
@@ -158,9 +158,43 @@ function DeleteAlertPopUp() {
     RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL);
 }
 
+function CardReaderManagement() {
+    dataTable.on("click", ".btn-management", function (e) {
+        e.preventDefault();
+        const url = "/Admin/CardReader/CardReaderManagement";
+        const modalForm = "cardReaderForm";
+
+
+        let currentRow;
+        if ($(this).parents("tr").prev().hasClass("dt-hasChild")) {
+            //Is In Responsiveness
+            currentRow = $(this).parents("tr").prev();
+        } else {
+            //Not In Responsiveness
+            currentRow = $(this).closest("tr");
+        }
+        const rowData = dataTable.row(currentRow).data();
+
+        $.get(
+            url,
+            { formTitle: $(this).text() + "事務機", serial: $(this).data("id"), cr_id: rowData["cr_id"] },
+            function (data) {
+                $("#" + modalForm).html(data);
+                $("#" + modalForm).modal("show");
+
+                $("#cardreaderManagermentForm").on("submit", function () {
+
+                    return false;
+                })
+            }
+        )
+    });
+}
+
 $(function () {
     SearchCardReaderDataTableInitial();
     ColumnSearch();
     PopupFormForAddOrEdit();
     DeleteAlertPopUp();
+    CardReaderManagement();
 });

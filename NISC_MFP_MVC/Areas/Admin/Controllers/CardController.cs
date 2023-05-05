@@ -14,6 +14,7 @@ using System.Linq.Dynamic.Core;
 using System.Web;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
+using NISC_MFP_MVC.ViewModels.Card;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -63,6 +64,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             var mapper = new Mapper(config);
             return mapper;
         }
+
 
         [HttpGet]
         public ActionResult AddOrEditCard(string formTitle, int serial)
@@ -118,6 +120,25 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public ActionResult DeleteCard(int serial)
+        {
+            CardViewModel cardViewModel = new CardViewModel();
+            CardInfo instance = _cardService.Get(serial);
+            cardViewModel = mapper.Map<CardViewModel>(instance);
+
+            return PartialView(cardViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult ReadyDeleteCard(CardViewModel Card)
+        {
+            _cardService.Delete(mapper.Map<CardViewModel, CardInfo>(Card));
+            _cardService.SaveChanges();
+
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult SearchUser(string prefix)
         {
@@ -129,26 +150,35 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult ResetCardFreePoint()
+        public ActionResult ResetCardFreePoint(string formTitle)
         {
-            ViewBag.formTitle = Request["formTitle"];
+            ViewBag.formTitle = formTitle;
             return PartialView();
         }
 
-        [HttpGet]
-        public ActionResult DeleteCard(int serial)
+        [HttpPost]
+        public ActionResult ResetCardFreePoint(ResetFreeValueViewModel resetFreeValueViewModel)
         {
-            CardViewModel CardViewModel = new CardViewModel();
-            CardInfo instance = _cardService.Get(serial);
-            CardViewModel = mapper.Map<CardViewModel>(instance);
+            _cardService.UpdateResetFreeValue(resetFreeValueViewModel.freevalue);
+            _cardService.SaveChanges();
+            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+        }
 
-            return PartialView(CardViewModel);
+        [HttpGet]
+        public ActionResult DepositCard(string formTitle, int serial)
+        {
+            CardViewModel cardViewModel = new CardViewModel();
+            CardInfo instance = _cardService.Get(serial);
+            cardViewModel = mapper.Map<CardViewModel>(instance);
+            ViewBag.formTitle = formTitle;
+
+            return PartialView(cardViewModel);
         }
 
         [HttpPost]
-        public ActionResult ReadyDeleteCard(CardViewModel Card)
+        public ActionResult DepositCard(int value, int serial)
         {
-            _cardService.Delete(mapper.Map<CardViewModel, CardInfo>(Card));
+            _cardService.UpdateDepositValue(value, serial);
             _cardService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);

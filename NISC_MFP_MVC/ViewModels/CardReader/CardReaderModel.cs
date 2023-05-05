@@ -1,11 +1,10 @@
-﻿using NISC_MFP_MVC.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace NISC_MFP_MVC.ViewModels
+namespace NISC_MFP_MVC.ViewModels.CardReader
 {
     //$cr_id, $cr_ip, $cr_port, $cr_type, $cr_mode, $cr_card_switch, $cr_status, $serial
-    public class CardReaderViewModel : AbstractSearchDTO
+    public class CardReaderModel : AbstractViewModel
     {
         [Required(ErrorMessage = "此欄位為必填資料")]
         [DisplayName("卡機編號")]
@@ -37,20 +36,5 @@ namespace NISC_MFP_MVC.ViewModels
         public string cr_status { get; set; }
 
         public int serial { get; set; }
-
-        public static string ColumnName2Property(string index)
-        {
-            switch (index)
-            {
-                case "0": return "cr_id";
-                case "1": return "cr_ip";
-                case "2": return "cr_port";
-                case "3": return "cr_type";
-                case "4": return "cr_mode";
-                case "5": return "cr_card_switch";
-                case "6": return "cr_status";
-                default: return "";
-            }
-        }
     }
 }

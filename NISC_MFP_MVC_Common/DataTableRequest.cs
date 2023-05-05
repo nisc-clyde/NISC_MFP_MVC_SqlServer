@@ -69,9 +69,7 @@ namespace NISC_MFP_MVC_Common
                             case "9": return "print_date";
                             case "10": return "document_name";
                             default: return "print_date";
-
                         }
-                    //case "deposite": return DepositViewModel.ColumnName2Property(SortColumnIndex);
                     case "deposite":
                         switch (SortColumnIndex) {
                             case "0": return "user_name";
@@ -83,7 +81,7 @@ namespace NISC_MFP_MVC_Common
                             case "6": return "deposit_value";
                             case "7": return "final_value";
                             case "8": return "deposit_date";
-                            default: return "";
+                            default: return "deposit_date";
                         }
                     case "department":
                         switch (SortColumnIndex)
@@ -94,7 +92,7 @@ namespace NISC_MFP_MVC_Common
                             case "3": return "dept_month_sum";
                             case "4": return "dept_usable";
                             case "5": return "dept_email";
-                            default: return "";
+                            default: return "dept_id";
                         }
                     case "user":
                         switch (SortColumnIndex)
@@ -107,7 +105,7 @@ namespace NISC_MFP_MVC_Common
                             case "5": return "dept_name";
                             case "6": return "color_enable_flag";
                             case "7": return "e_mail";
-                            default: return "";
+                            default: return "user_id";
                         }
                     case "cardreader":
                         switch (SortColumnIndex)
@@ -119,7 +117,7 @@ namespace NISC_MFP_MVC_Common
                             case "4": return "cr_mode";
                             case "5": return "cr_card_switch";
                             case "6": return "cr_status";
-                            default: return "";
+                            default: return "cr_id";
                         }
                     case "card":
                         switch (SortColumnIndex)
@@ -131,7 +129,7 @@ namespace NISC_MFP_MVC_Common
                             case "4": return "user_name";
                             case "5": return "card_type";
                             case "6": return "enable";
-                            default: return "";
+                            default: return "card_id";
                         }
                     case "watermark":
                         switch (SortColumnIndex)

@@ -1,4 +1,4 @@
-﻿@model NISC_MFP_MVC.ViewModels.CardReaderViewModel
+﻿@model NISC_MFP_MVC.ViewModels.CardReader.CardReaderModel
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
@@ -20,7 +20,7 @@
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.cr_id, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.cr_id, new { @class = "form-control", @type = "number" })
                     @Html.ValidationMessageFor(d => d.cr_id, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
@@ -29,7 +29,7 @@
                     <div class="input-group ps-0">
                         @Html.LabelFor(d => d.cr_ip, new { @class = "form-label ps-0 fw-semibold me-2" })
                     </div>
-                    @Html.TextBoxFor(d => d.cr_ip, new { placeholder = "255.255.255.255", @class = "form-control" })
+                    @Html.TextBoxFor(d => d.cr_ip, new { placeholder = "255.255.255.255", @class = "form-control", @type = "number" })
                     @Html.ValidationMessageFor(d => d.cr_ip, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 
@@ -40,7 +40,7 @@
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.cr_port, new { placeholder = "0~65535", @class = "form-control" })
+                    @Html.TextBoxFor(d => d.cr_port, new { placeholder = "0~65535", @class = "form-control", @type = "number" })
                     @Html.ValidationMessageFor(d => d.cr_port, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 

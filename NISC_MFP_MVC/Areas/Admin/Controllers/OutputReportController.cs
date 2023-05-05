@@ -1,87 +1,103 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.Models;
-using NISC_MFP_MVC.Models.DTO;
 using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
+using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
+using NISC_MFP_MVC_Service.Implement;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class OutputReportController : Controller
     {
+        private Mapper mapper;
         public ActionResult Index()
         {
-            SearchOutputReportDTO outputReportResult = new SearchOutputReportDTO();
-            OutputReportViewModel outputReportViewModel = new OutputReportViewModel();
-            using (MFP_DBEntities db = new MFP_DBEntities())
-            {
-                outputReportResult = InitialData(db);
-                outputReportViewModel = InitialViewModel(outputReportResult);
-            }
-            return View(outputReportViewModel);
+            mapper = InitializeAutomapper();
+
+            return View(InitialViewModel());
         }
 
+        //[NonAction]
+        //[ActionName("InitialDataTable")]
+        //public OutputReportViewModel InitialData(MFP_DBEntities db)
+        //{
+        //OutputReportViewModel outputReportResult = new OutputReportViewModel();
+
+        //var config = new MapperConfiguration(cfg => cfg.CreateMap<DepartmentViewModel, DepartmentViewModel>());
+
+        //var mapper = new Mapper(config);
+
+        //List<DepartmentRepoDTO> departmerntsDetail = new DepartmentController().InitialData(db);
+        //List<DepartmentViewModel> departmernts = new List<DepartmentViewModel>();
+        //foreach (DepartmentRepoDTO d in departmerntsDetail)
+        //{
+        //    departmernts.Add(d.Convert2PresentationModel());
+        //}
+        //outputReportResult.departmentNames = departmernts;
+
+        //outputReportResult.searchUserDTOs = (from u in db.tb_user
+        //                                     join d in db.tb_department on u.dept_id equals d.dept_id
+        //                                     select new UserViewModel
+        //                                     {
+        //                                         user_id = u.user_id,
+        //                                         user_password = u.user_password,
+        //                                         work_id = u.work_id,
+        //                                         user_name = u.user_name,
+        //                                         dept_id = u.dept_id,
+        //                                         dept_name = d.dept_name,
+        //                                         color_enable_flag = u.color_enable_flag,
+        //                                         copy_enable_flag = u.copy_enable_flag,
+        //                                         print_enable_flag = u.print_enable_flag,
+        //                                         scan_enable_flag = u.scan_enable_flag,
+        //                                         fax_enable_flag = u.fax_enable_flag,
+        //                                         e_mail = u.e_mail,
+        //                                     }).ToList();
+
+        //outputReportResult.searchUserDTOs = new UserController().InitialData().ToList();
+        //outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData().ToList();
+        //    return PartialView();
+        //}
+
         [NonAction]
-        [ActionName("InitialDataTable")]
-        public SearchOutputReportDTO InitialData(MFP_DBEntities db)
-        {
-            SearchOutputReportDTO outputReportResult = new SearchOutputReportDTO();
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<DepartmentViewModel, DepartmentViewModel>());
-
-            var mapper = new Mapper(config);
-
-            //List<DepartmentRepoDTO> departmerntsDetail = new DepartmentController().InitialData(db);
-            List<DepartmentViewModel> departmernts = new List<DepartmentViewModel>();
-            //foreach (DepartmentRepoDTO d in departmerntsDetail)
-            //{
-            //    departmernts.Add(d.Convert2PresentationModel());
-            //}
-            outputReportResult.searchDepartmentDTOs = departmernts;
-
-            outputReportResult.searchUserDTOs = (from u in db.tb_user
-                                                 join d in db.tb_department on u.dept_id equals d.dept_id
-                                                 select new UserViewModel
-                                                 {
-                                                     user_id = u.user_id,
-                                                     user_password = u.user_password,
-                                                     work_id = u.work_id,
-                                                     user_name = u.user_name,
-                                                     dept_id = u.dept_id,
-                                                     dept_name = d.dept_name,
-                                                     color_enable_flag = u.color_enable_flag,
-                                                     copy_enable_flag = u.copy_enable_flag,
-                                                     print_enable_flag = u.print_enable_flag,
-                                                     scan_enable_flag = u.scan_enable_flag,
-                                                     fax_enable_flag = u.fax_enable_flag,
-                                                     e_mail = u.e_mail,
-                                                 }).ToList();
-
-            //outputReportResult.searchUserDTOs = new UserController().InitialData().ToList();
-            //outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData().ToList();
-            return outputReportResult;
-        }
-
-        [NonAction]
-        public OutputReportViewModel InitialViewModel(SearchOutputReportDTO outputReportResult)
+        public OutputReportViewModel InitialViewModel()
         {
             OutputReportViewModel outputReportViewModel = new OutputReportViewModel();
-            foreach (var item in outputReportResult.searchDepartmentDTOs)
+
+            List<DepartmentInfo> departmentInfo = new DepartmentService().GetAll().ToList();
+
+            List<UserInfo> userInfo = new UserService().GetAll().ToList();
+
+            List<CardReaderInfo> cardReaderInfo = new CardReaderService().GetAll().ToList();
+
+            foreach (var item in departmentInfo)
             {
                 outputReportViewModel.departmentNames.Add(new SelectListItem { Text = item.dept_name, Value = item.dept_id });
             }
 
-            foreach (var item in outputReportResult.searchUserDTOs)
+            foreach (var item in userInfo)
             {
                 outputReportViewModel.userNames.Add(new SelectListItem { Text = item.user_name, Value = item.user_id });
             }
 
-            foreach (var item in outputReportResult.searchCardReaderDTOs)
+            foreach (var item in cardReaderInfo)
             {
-                outputReportViewModel.cardReaders.Add(new SelectListItem { Text = item.cr_ip, Value = item.cr_ip });
+                outputReportViewModel.cardReaders.Add(new SelectListItem { Text = item.cr_ip, Value = item.cr_id });
             }
+
             return outputReportViewModel;
+        }
+
+        private Mapper InitializeAutomapper()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
+            return mapper;
         }
 
 

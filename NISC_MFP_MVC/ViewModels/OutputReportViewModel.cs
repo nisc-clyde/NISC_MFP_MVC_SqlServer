@@ -1,10 +1,9 @@
-﻿using NISC_MFP_MVC.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace NISC_MFP_MVC.ViewModels
 {
-    public class OutputReportViewModel : AbstractSearchDTO
+    public class OutputReportViewModel : AbstractViewModel
     {
 
         public OutputReportViewModel()
@@ -13,6 +12,9 @@ namespace NISC_MFP_MVC.ViewModels
             userNames = new List<SelectListItem>();
             cardReaders = new List<SelectListItem>();
         }
+        public int reportType { get; set; }
+
+        public int colorType { get; set; }
 
         public List<SelectListItem> departmentNames { get; set; }
 
@@ -20,5 +22,6 @@ namespace NISC_MFP_MVC.ViewModels
 
         public List<SelectListItem> cardReaders { get; set; }
 
+        public int duration { get; set; }
     }
 }

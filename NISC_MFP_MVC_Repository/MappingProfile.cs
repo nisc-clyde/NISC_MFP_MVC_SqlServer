@@ -5,6 +5,7 @@ using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
+using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
@@ -44,6 +45,10 @@ namespace NISC_MFP_MVC_Repository.Implement
             CreateMap<InitialWatermarkRepoDTONeed, InitialWatermarkRepoDTO>().ReverseMap();
 
             CreateMap<InitialHistoryRepoDTO, tb_logs_history>().ReverseMap();
+
+            CreateMap<InitialMultiFunctionPrintRepoDTO, tb_mfp>().ReverseMap();
+            CreateMap<InitialMultiFunctionPrintRepoDTONeed, InitialMultiFunctionPrintRepoDTO>().ReverseMap();
+
         }
     }
 }

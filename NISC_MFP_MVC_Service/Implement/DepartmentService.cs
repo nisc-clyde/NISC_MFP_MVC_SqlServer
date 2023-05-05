@@ -24,6 +24,18 @@ namespace NISC_MFP_MVC_Service.Implement
             mapper = InitializeAutomapper();
         }
 
+        public void Insert(DepartmentInfo instance)
+        {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("Reference to null instance.");
+            }
+            else
+            {
+                _repository.Insert(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
+            }
+        }
+
         public IQueryable<DepartmentInfo> GetAll()
         {
             IQueryable<InitialDepartmentRepoDTO> datamodel = _repository.GetAll();
@@ -64,7 +76,7 @@ namespace NISC_MFP_MVC_Service.Implement
             return result;
         }
 
-        public void Insert(DepartmentInfo instance)
+        public void Update(DepartmentInfo instance)
         {
             if (instance == null)
             {
@@ -72,7 +84,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Insert(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                _repository.Update(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
             }
         }
 
@@ -88,18 +100,6 @@ namespace NISC_MFP_MVC_Service.Implement
             }
         }
 
-
-        public void Update(DepartmentInfo instance)
-        {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _repository.Update(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
-            }
-        }
         public void SaveChanges()
         {
             _repository.SaveChanges();

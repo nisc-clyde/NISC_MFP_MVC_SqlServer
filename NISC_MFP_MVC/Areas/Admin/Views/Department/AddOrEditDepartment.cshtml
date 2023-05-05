@@ -68,7 +68,7 @@
                     <div class="input-group ps-0">
                         @Html.LabelFor(d => d.dept_email, new { @class = "form-label fw-semibold me-2" })
                     </div>
-                    @Html.TextBoxFor(d => d.dept_email, new { @class = "form-control", @type = "email" })
+                    @Html.TextBoxFor(d => d.dept_email, new { placeholder = "account@example.com", @class = "form-control" })
                     @Html.ValidationMessageFor(d => d.dept_email, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 

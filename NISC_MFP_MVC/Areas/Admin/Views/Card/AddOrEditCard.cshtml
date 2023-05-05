@@ -1,4 +1,4 @@
-﻿@model NISC_MFP_MVC.ViewModels.CardViewModel
+﻿@model  NISC_MFP_MVC.ViewModels.Card.CardViewModel
 
 @{
 
@@ -26,6 +26,8 @@
 
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
+            @Html.HiddenFor(d => d.value)
+            @Html.HiddenFor(d => d.freevalue)
 
             <div class="modal-header">
                 <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
@@ -40,7 +42,7 @@
                             <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                         </div>
                     </div>
-                    @Html.TextBoxFor(d => d.card_id, new { @class = "form-control" })
+                    @Html.TextBoxFor(d => d.card_id, new { placeholder = "0000000000 ~ 9999999999",@class = "form-control",  @type="number" })
                     @Html.ValidationMessageFor(d => d.card_id, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
 

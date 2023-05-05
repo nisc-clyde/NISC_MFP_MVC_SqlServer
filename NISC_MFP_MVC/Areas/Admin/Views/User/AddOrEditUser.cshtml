@@ -42,12 +42,12 @@
                     </div>
                     @if (@ViewBag.formTitle == "修改使用者")
                     {
-                        @Html.TextBoxFor(d => d.user_id, new { @class = "form-control", @readonly = "readonly"})
+                        @Html.TextBoxFor(d => d.user_id, new { @class = "form-control-plaintext", @readonly = "readonly" })
                         @Html.ValidationMessageFor(d => d.user_id, "", new { @class = "text-danger ps-0 fs-6" })
                     }
                     else
                     {
-                        @Html.TextBoxFor(d => d.user_id, new { @class = "form-control"})
+                        @Html.TextBoxFor(d => d.user_id, new { @class = "form-control" })
                         @Html.ValidationMessageFor(d => d.user_id, "", new { @class = "text-danger ps-0 fs-6" })
                     }
 
@@ -88,7 +88,7 @@
 
                 <div class="row mx-3 mb-3">
                     @Html.LabelFor(d => d.e_mail, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.e_mail, new { @class = "form-control", @type = "email" })
+                    @Html.TextBoxFor(d => d.e_mail, new { placeholder = "account@example.com", @class = "form-control" })
                 </div>
 
                 <div class="row mx-3 mb-3">

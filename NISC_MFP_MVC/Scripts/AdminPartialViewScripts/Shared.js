@@ -25,7 +25,7 @@
             },
             buttonsStyling: false,
             allowOutsideClick: false,
-            title: "成功?",
+            title: "成功",
             text: "此資料已刪除",
             icon: 'success',
             confirmButtonText: "確定",
@@ -65,9 +65,16 @@ export const RequestAddOrEdit = (function () {
         //Edit Department
         dataTable.on("click", ".btn-edit", function (e) {
             e.preventDefault();
-            const currentRow = $(this).closest("tr");
-            const rowData = dataTable.row(currentRow).data();
-            
+
+            let currentRow;
+            if ($(this).parents("tr").prev().hasClass("dt-hasChild")) {
+                //Is In Responsiveness
+                currentRow = $(this).parents("tr").prev();
+            } else {
+                //Not In Responsiveness
+                currentRow = $(this).closest("tr");
+            }
+
             $.get(
                 url,
                 { formTitle: $(this).text() + title, serial: $(this).data("id") },
@@ -78,7 +85,8 @@ export const RequestAddOrEdit = (function () {
                     $("#" + modalForm + " .modal-footer button:submit").val("Edit");
 
                     $("#addOrEditForm").on("submit", function () {
-                        PostAddOrEditTemplate(this, modalForm, dataTable);
+
+                        PostAddOrEditTemplate(this, modalForm, dataTable, currentRow);
                         return false;
                     })
                 }
@@ -86,7 +94,7 @@ export const RequestAddOrEdit = (function () {
         });
     }
 
-    function PostAddOrEditTemplate(form, modalForm, dataTable) {
+    function PostAddOrEditTemplate(form, modalForm, dataTable, currentRow) {
         $.validator.unobtrusive.parse(form);
         if ($(form).valid()) {
             $.ajax({
@@ -95,8 +103,17 @@ export const RequestAddOrEdit = (function () {
                 data: $(form).serialize() + "&currentOperation=" + $("#btnSubmmit").val(),
                 success: function (data) {
                     if (data.success) {
-                        $("#" + modalForm).modal("hide");
-                        dataTable.ajax.reload();
+                        if ($("#btnSubmmit").val() == "Add") {
+                            $("#" + modalForm).modal("hide");
+                            dataTable.ajax.reload();
+                        } else {
+                            $("#" + modalForm).modal("hide");
+                            currentRow.addClass("animate__animated animate__flash animate__faster animate__repeat-2");
+                            currentRow.on("animationend", function () {
+                                currentRow.removeClass("animate__animated animate__flash animate__faster animate__repeat-2");
+                                dataTable.row(currentRow).data(form).draw();
+                            })
+                        }
                     }
                 }
             });
@@ -112,22 +129,22 @@ export const RequestAddOrEdit = (function () {
 
 export const RequestDelete = (function () {
 
-    function GetAndPostDeleteTemplate(dataTable, uniqueIdProperty,getURL,postURL) {
-
+    function GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL) {
         dataTable.on("click", ".btn-delete", function (e) {
             e.preventDefault();
 
             const currentRow = $(this).closest("tr");
+            const uniqueId = $(this).data("id");
             const rowData = dataTable.row(currentRow).data();
             const sweetAlertHome = CustomSweetAlert2.SweetAlertTemplateHome();
             const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
 
             $.get(
                 getURL,
-                { serial: $(this).data("id") },
+                { serial: uniqueId },
                 function (data) {
 
-                    var dataTableAsFormSerialize = uniqueIdProperty + "=" + $(this).data("id");
+                    var dataTableAsFormSerialize = uniqueIdProperty + "=" + uniqueId;
                     const sweetalertHtml = $.parseHTML(data);
                     const dataTableHtml = $("#deleteRowData", sweetalertHtml);
 
@@ -144,16 +161,9 @@ export const RequestDelete = (function () {
                                 url: postURL,
                                 data: dataTableAsFormSerialize,
                                 success: function (data) {
+                                    dataTable.row(currentRow).remove().draw()
                                     if (data.success) {
-                                        sweetAlertSuccess.fire()
-                                            .then((result) => {
-                                                if (result.isConfirmed || result.dismiss == Swal.DismissReason.timer) {
-                                                    currentRow.fadeOut(600, function () {
-                                                        dataTable.row(currentRow).remove().draw()
-                                                    });
-                                                    //dataTable.ajax.reload();
-                                                }
-                                            })
+                                        sweetAlertSuccess.fire();
                                     }
                                 }
                             });
