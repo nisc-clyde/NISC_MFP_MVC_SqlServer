@@ -23,12 +23,16 @@
         </div>
     </div>
 
-    <div class="row justify-content-center border-bottom border-2 bg-secondary bg-opacity-10">
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 row-cols-xl-6 border-start border-2 bg-secondary bg-opacity-10">
 
-        <div class="col border-start border-end border-2">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">報表種類</div></div>
-            <div class="row">
-                <div class="col pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                <div class="col">
+                    報表種類
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col py-2">
                     <select id="generateOutputReport_ReportTypeSeelct" class="form-select">
                         <option id="generateOutputReport_ReportType1" selected value>部門總使用量報表</option>
                         <option id="generateOutputReport_ReportType2" value="0">部門影印使用量報表</option>
@@ -46,10 +50,10 @@
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
+        <div class="col col-xxl border-end border-2 ">
             <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">顏色</div></div>
-            <div class="row">
-                <div class="col pt-2 pb-2">
+            <div class="row border-bottom border-2">
+                <div class="col py-2">
                     <select id="generateOutputReport_ColorSelect" class="form-select">
                         <option id="generateOutputReport_ColorAll" selected value>全部</option>
                         <option id="generateOutputReport_ColorRGB" value="0">彩色</option>
@@ -59,37 +63,37 @@
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
+        <div class="col col-xxl border-end border-2 ">
             <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">部門</div></div>
-            <div class="row">
-                <div class="col pt-2 pb-2">
+            <div class="row border-bottom border-2">
+                <div class="col py-2">
                     @Html.DropDownListFor(department => department.departmentNames, Model.departmentNames, "全部", new { @id = "generateOutputReport_DepartmentSelect", @class = "form-select" })
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
+        <div class="col col-xxl border-end border-2 ">
             <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">使用者</div></div>
-            <div class="row align-items-center">
-                <div class="col pt-2 pb-2">
+            <div class="row border-bottom border-2">
+                <div class="col py-2">
                     @Html.DropDownListFor(user => user.userNames, Model.userNames, "全部", new { @id = "generateOutputReport_User", @class = "form-select" })
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
+        <div class="col col-xxl border-end border-2 ">
             <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">事務機IP</div></div>
-            <div class="row align-items-center">
-                <div class="col pt-2 pb-2">
+            <div class="row border-bottom border-2">
+                <div class="col py-2">
                     @Html.DropDownListFor(cardreader => cardreader.cardReaders, Model.cardReaders, "全部", new { @id = "generateOutputReport_MachineIPSelect", @class = "form-select" })
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
+        <div class="col col-xxl border-end border-2 ">
             <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">期間</div></div>
-            <div class="row align-items-center">
-                <div class="col pt-2 pb-2">
+            <div class="row border-bottom border-2">
+                <div class="col py-2">
                     <select id="outputReportPeriodSelect" class="form-select">
                         <option id="outputReportToday" selected value="0">今天</option>
                         <option id="outputReportWeek" value="1">一週</option>
@@ -115,12 +119,18 @@
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
+        <div class="col col-xxl border-end border-2 w-50">
             <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">產生報表</div></div>
-            <div class="row align-items-center">
-                <div class="col pt-2 pb-2">
-                    <button type="button" class="btn btn-primary">用量報表</button>
-                    <button type="button" class="btn btn-warning">紀錄報表</button>
+            <div class="row g-2 border-bottom border-2">
+                <div class="col py-2">
+                    <div style='display: inline-block; white-space: nowrap;'>
+                        <button type="button" class="btn btn-primary">用量報表</button>
+                    </div>
+                </div>
+                <div class="col py-2">
+                    <div style='display: inline-block; white-space: nowrap;'>
+                        <button type="button" class="btn btn-warning">紀錄報表</button>
+                    </div>
                 </div>
             </div>
         </div>

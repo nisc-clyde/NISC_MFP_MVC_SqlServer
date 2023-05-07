@@ -289,9 +289,17 @@ function ColumnSearch() {
     });
 }
 
+function DateRangePickerColumnHeight() {
+
+    $("#dateRangePickerRow").css("height", $("#operationRow").outerHeight());
+    console.log($("#operationRow").outerHeight())
+
+}
+
 $(function () {
     SearchPrintDataTableInitial();
     DateRangePicker_Initial();
+    DateRangePickerColumnHeight();
     FormSelect_Select();
     FormSelect_UnSelect();
     ColumnSearch();

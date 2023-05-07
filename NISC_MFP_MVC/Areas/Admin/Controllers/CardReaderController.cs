@@ -153,6 +153,5 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             ViewBag.formTitle = formTitle;
             return PartialView(multiFunctionPrintViewModel);
         }
-
     }
 }

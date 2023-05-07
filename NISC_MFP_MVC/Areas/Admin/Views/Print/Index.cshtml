@@ -20,7 +20,7 @@
 </style>
 
 @*進階搜尋選項 - First Container - Start*@
-<div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
+<div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light ">
 
     <div class="row border-bottom border-2 ">
         <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">
@@ -28,14 +28,17 @@
         </div>
     </div>
 
-    <div class="row border-bottom border-2 bg-secondary bg-opacity-10">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 border-start border-2 bg-secondary bg-opacity-10">
 
-        <div class="col-4 border-start border-end border-2">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold">日期區間</div>
-            <div class="row align-items-center h-75">
-
+        <div class="col col-xxl-3 border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
                 <div class="col">
-                    <div class="input-group justify-content-center">
+                    日期區間
+                </div>
+            </div>
+            <div class="row border-bottom border-2 align-items-center mx-auto" id="dateRangePickerRow">
+                <div class="col">
+                    <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">起</span>
                         <input id="dateRangePicker" type="text" class="form-control text-center">
                         <span class="input-group-text" id="basic-addon1">始</span>
@@ -44,17 +47,19 @@
             </div>
         </div>
 
-        <div class="col-4 border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold">
-                動作選擇
+        <div class="col col-xxl border-end border-2 ">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    動作選擇
+                </div>
             </div>
-            <div class="row pt-2 pb-2">
+            <div class="row py-2 border-bottom border-2" id="operationRow">
                 <div class="col">
                     <select id="searchPrint_OperationUnSelect" class="form-select" multiple size="6">
                         <option disabled class="bg-light">未選擇動作</option>
                     </select>
                 </div>
-                <div class="col align-self-center">
+                <div class="col-1 col-lg-1 align-self-center">
                     <i class="fa-solid fa-repeat"></i>
                 </div>
                 <div class="col">
@@ -63,18 +68,20 @@
             </div>
         </div>
 
-        <div class="col-4 border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold">
-                部門選擇
+        <div class="col col-xxl border-end border-2 ">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    部門選擇
+                </div>
             </div>
-            <div class="row pt-2 pb-2">
+            <div class="row py-2 border-bottom border-2" id="departmentRow">
                 <div class="col">
                     <select id="searchPrint_DepartmentUnSelect" class="form-select" multiple size="6">
                         <option disabled class="bg-light">未選擇部門</option>
                     </select>
                 </div>
 
-                <div class="col align-self-center">
+                <div class="col-1 align-self-center justify-content-center">
                     <i class="fa-solid fa-repeat"></i>
                 </div>
                 <div class="col">
@@ -97,48 +104,68 @@
         </div>
     </div>
 
-    <div id="searchPrintRow" class="row border-x border-bottom border-2 bg-secondary bg-opacity-10">
+    <div id="searchPrintRow" class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-6 border-start border-2 bg-secondary bg-opacity-10">
 
-        <div class="col border-start border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">事務機</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    事務機
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_Printer" type="text" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">使用人員</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    使用人員
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_User" type="text" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">部門</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    部門
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_Department" type="text" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">卡號</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    卡號
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_Card" type="text" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">屬性</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    屬性
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <select id="searchPrint_AttributeSelect" class="form-select">
                         <option id="searchPrint_AttributeAll" selected value>全部</option>
                         <option id="searchPrint_AttributeDesc" value="0">遞減</option>
@@ -149,10 +176,14 @@
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">動作</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    動作
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <select id="searchPrint_ActionSelect" class="form-select">
                         <option id="searchPrint_ActionAll" selected value>全部</option>
                         <option id="searchPrint_ActionCopy" value="C">影印</option>
@@ -164,10 +195,14 @@
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">顏色</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    顏色
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <select id="searchPrint_ColorSelect" class="form-select">
                         <option id="searchPrint_ColorAll" selected value>全部</option>
                         <option id="searchPrint_ColorRGB" value="C">C(彩色)</option>
@@ -177,37 +212,53 @@
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">張數</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    張數
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_Count" type="text" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">使用點數</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    使用點數
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_Point" type="text" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">列印時間</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    列印時間
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_PrintTime" type="text" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="col border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">文件名稱</div></div>
-            <div class="row">
-                <div class="col align-self-center pt-2 pb-2">
+        <div class="col col-xxl border-end border-2">
+            <div class="row border-bottom border-2 fw-semibold">
+                <div class="col">
+                    文件名稱
+                </div>
+            </div>
+            <div class="row border-bottom border-2">
+                <div class="col align-self-center py-2">
                     <input id="searchPrint_DocumentName" type="text" class="form-control">
                 </div>
             </div>
