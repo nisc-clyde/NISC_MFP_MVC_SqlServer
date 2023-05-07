@@ -96,7 +96,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             {
                 if (!string.IsNullOrEmpty(searches[i]))
                 {
-                    source = source.Where(columns[i] + "!=null &&" + columns[i] + ".ToString().ToUpper().Contains" + "(\"" + searches[i].ToString().ToUpper() + "\")");
+                    source = source.Where(columns[i] + "!=null &&" + columns[i] + ".ToString().ToUpper().Contains(@0)", searches[i].ToString().ToUpper());
                 }
             }
             return source;
