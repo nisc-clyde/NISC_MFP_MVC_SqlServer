@@ -6,7 +6,6 @@ using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
-using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;

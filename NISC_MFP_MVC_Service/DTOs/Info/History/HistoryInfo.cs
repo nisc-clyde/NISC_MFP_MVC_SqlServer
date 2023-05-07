@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NISC_MFP_MVC_Service.DTOs.Info.History
+﻿namespace NISC_MFP_MVC_Service.DTOs.Info.History
 {
     public class HistoryInfo
     {

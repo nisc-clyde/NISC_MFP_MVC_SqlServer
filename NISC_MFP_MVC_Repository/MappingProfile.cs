@@ -28,7 +28,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             CreateMap<InitialUserRepoDTO, tb_user>().ReverseMap();
             CreateMap<InitialUserRepoDTONeed, InitialUserRepoDTO>().ReverseMap();
 
-            CreateMap<InitialCardReaderRepoDTO,tb_cardreader>().ReverseMap();
+            CreateMap<InitialCardReaderRepoDTO, tb_cardreader>().ReverseMap();
             CreateMap<InitialCardReaderRepoDTONeed, InitialCardReaderRepoDTO>().ReverseMap();
 
             CreateMap<InitialCardRepoDTO, tb_card>().ReverseMap();

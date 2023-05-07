@@ -4,13 +4,10 @@ using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.Info;
 using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
 using NISC_MFP_MVC_Service.Interface;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 
 namespace NISC_MFP_MVC_Service.Implement
 {

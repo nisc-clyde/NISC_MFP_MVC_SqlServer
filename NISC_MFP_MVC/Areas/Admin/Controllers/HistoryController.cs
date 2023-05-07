@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.Models;
-using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC.ViewModels;
-using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
-using NISC_MFP_MVC_Service.DTOs.Info.History;
+using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 

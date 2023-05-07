@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Reflection;
 
 namespace NISC_MFP_MVC_Common
 {
@@ -71,7 +69,8 @@ namespace NISC_MFP_MVC_Common
                             default: return "print_date";
                         }
                     case "deposite":
-                        switch (SortColumnIndex) {
+                        switch (SortColumnIndex)
+                        {
                             case "0": return "user_name";
                             case "1": return "user_id";
                             case "2": return "card_id";

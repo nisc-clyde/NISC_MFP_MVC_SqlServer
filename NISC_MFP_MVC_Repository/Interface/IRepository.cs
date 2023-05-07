@@ -1,9 +1,6 @@
 ﻿using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 
 namespace NISC_MFP_MVC_Repository.Interface
 {

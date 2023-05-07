@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace NISC_MFP_MVC.ViewModels
+﻿namespace NISC_MFP_MVC.ViewModels
 {
     public class HistoryViewModel
     {

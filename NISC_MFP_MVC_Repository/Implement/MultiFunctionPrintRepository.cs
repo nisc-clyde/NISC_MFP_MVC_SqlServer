@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.CardReader;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
@@ -62,7 +57,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetMultiple(int cr_id)
         {
             IQueryable<InitialMultiFunctionPrintRepoDTO> result = db.tb_mfp
-                .Where(d => d.cr_id ==  cr_id.ToString())
+                .Where(d => d.cr_id == cr_id.ToString())
                 .Select(p => new InitialMultiFunctionPrintRepoDTONeed
                 {
                     serial = p.serial,

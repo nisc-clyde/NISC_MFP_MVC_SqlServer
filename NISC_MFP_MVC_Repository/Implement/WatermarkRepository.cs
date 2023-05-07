@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Google.Protobuf.WellKnownTypes;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Repository.Interface;
 using System;

@@ -20,7 +20,7 @@ namespace NISC_MFP_MVC.Models
         {
             CreateMap<PrintInfo, PrintViewModel>().ReverseMap();
 
-            CreateMap<DepartmentInfo, DepartmentViewModel>().ReverseMap();           
+            CreateMap<DepartmentInfo, DepartmentViewModel>().ReverseMap();
 
             CreateMap<DepositInfo, DepositViewModel>().ReverseMap();
 
@@ -29,9 +29,9 @@ namespace NISC_MFP_MVC.Models
             CreateMap<CardReaderInfo, CardReaderModel>().ReverseMap();
 
             CreateMap<CardInfo, CardViewModel>().ReverseMap();
-            
+
             CreateMap<WatermarkInfo, WatermarkViewModel>().ReverseMap();
-            
+
             CreateMap<HistoryInfo, HistoryViewModel>().ReverseMap();
 
             CreateMap<MultiFunctionPrintInfo, MultiFunctionPrintModel>().ReverseMap();

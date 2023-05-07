@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
-using Google.Protobuf.WellKnownTypes;
-using Mysqlx.Crud;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Card;
-using NISC_MFP_MVC_Repository.DTOs.CardReader;
-using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;

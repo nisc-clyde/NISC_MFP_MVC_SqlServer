@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NISC_MFP_MVC_Service.DTOs.Info.Deposit
+﻿namespace NISC_MFP_MVC_Service.DTOs.Info.Deposit
 {
     public class DepositInfo
     {

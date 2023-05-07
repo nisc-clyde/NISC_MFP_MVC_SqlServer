@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NISC_MFP_MVC_Service.DTOs.Info.Print
+﻿namespace NISC_MFP_MVC_Service.DTOs.Info.Print
 {
     public class PrintInfo
     {

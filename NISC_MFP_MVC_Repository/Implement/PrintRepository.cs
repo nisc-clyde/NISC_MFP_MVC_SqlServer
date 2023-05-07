@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Google.Protobuf.WellKnownTypes;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.Print;
@@ -10,8 +9,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {

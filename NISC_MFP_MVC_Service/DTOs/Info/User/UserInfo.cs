@@ -1,6 +1,6 @@
 ﻿namespace NISC_MFP_MVC_Service.DTOs.Info.User
 {
-    public  class UserInfo
+    public class UserInfo
     {
         public virtual string user_id { get; set; }
         public virtual string user_password { get; set; }

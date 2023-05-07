@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint
+﻿namespace NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint
 {
     public class InitialMultiFunctionPrintRepoDTONeed
     {

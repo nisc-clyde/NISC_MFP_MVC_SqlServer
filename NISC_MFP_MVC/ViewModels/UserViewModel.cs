@@ -41,7 +41,7 @@ namespace NISC_MFP_MVC.ViewModels
 
         [RegularExpression("^\\S+@\\S+\\.\\S+$", ErrorMessage = "此欄位格式不正確")]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "信箱")]  
+        [Display(Name = "信箱")]
         public string e_mail { get; set; }
 
         public int serial { get; set; } = 0;

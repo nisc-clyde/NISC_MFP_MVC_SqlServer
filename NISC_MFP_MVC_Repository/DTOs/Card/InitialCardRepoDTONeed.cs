@@ -1,12 +1,4 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NISC_MFP_MVC_Repository.DTOs.Card
+﻿namespace NISC_MFP_MVC_Repository.DTOs.Card
 {
     public class InitialCardRepoDTONeed
     {

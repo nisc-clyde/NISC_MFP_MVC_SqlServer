@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NISC_MFP_MVC.ViewModels
+﻿namespace NISC_MFP_MVC.ViewModels
 {
     public class PrintViewModel : AbstractViewModel
     {

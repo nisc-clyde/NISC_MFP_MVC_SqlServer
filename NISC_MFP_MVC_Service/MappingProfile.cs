@@ -17,10 +17,6 @@ using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
 using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
-using System;
-using System.ComponentModel;
-using System.Data.Entity.SqlServer;
-using System.Security.Cryptography.X509Certificates;
 
 namespace NISC_MFP_MVC_Service.Implement
 {

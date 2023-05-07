@@ -1,19 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.ViewModels.CardReader;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Service.DTOs.Info.Department;
-using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Web;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
-using NISC_MFP_MVC.ViewModels.CardReader;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
@@ -140,7 +136,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult CardReaderManagement(string formTitle,int serial, int cr_id)
+        public ActionResult CardReaderManagement(string formTitle, int serial, int cr_id)
         {
             MultiFunctionPrintViewModel multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
 

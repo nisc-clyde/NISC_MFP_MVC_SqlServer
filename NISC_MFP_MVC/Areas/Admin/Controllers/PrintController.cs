@@ -3,16 +3,11 @@ using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Print;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Service.DTOs.Info;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
@@ -57,7 +52,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             IQueryable<PrintViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
-            
+
             return Json(new
             {
                 data = searchPrintResultDetail,

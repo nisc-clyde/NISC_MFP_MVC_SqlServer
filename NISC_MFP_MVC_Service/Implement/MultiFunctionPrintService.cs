@@ -1,22 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.CardReader;
-using NISC_MFP_MVC_Repository.DTOs.Department;
-using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.Info.Department;
-using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
 using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
-using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -61,7 +53,7 @@ namespace NISC_MFP_MVC_Service.Implement
             {
                 IQueryable<InitialMultiFunctionPrintRepoDTO> dataModel = _repository.GetMultiple(cr_id);
                 IQueryable<MultiFunctionPrintInfo> resultModel = dataModel.ProjectTo<MultiFunctionPrintInfo>(mapper.ConfigurationProvider);
-                List< MultiFunctionPrintInfo > temp=resultModel.ToList();
+                List<MultiFunctionPrintInfo> temp = resultModel.ToList();
                 return resultModel;
             }
         }

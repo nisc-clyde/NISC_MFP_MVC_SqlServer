@@ -1,5 +1,4 @@
 ﻿using NISC_MFP_MVC_Service.DTOs.Info.Card;
-using System;
 
 namespace NISC_MFP_MVC_Service.Interface
 {
