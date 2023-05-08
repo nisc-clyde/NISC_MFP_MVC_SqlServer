@@ -9,7 +9,7 @@ MFP System used for management that includes print logger、deposit logger、dep
 
 ## Syllabus
 
-Basically, we developed by Visual Studio 2022, and choice Linq to Query for the CRUD MySQL database, it returns the type of interface IQueryable object, in progress, founded it's hard to debug、monitor, and checkout of the variable that is currently.
+Basically, we developed by Visual Studio 2022, and choice Linq to Entity for the CRUD MySQL database, it returns the type of interface IQueryable object, in progress, founded it's hard to debug、monitor, and checkout of the variable that is currently.
 
 After that, to get rid of this restriction, we found the OzCode for code analysis and more than additional functionals for code debugging, in the previous version, OzCode was free to use the functional part in Visual Studio 2019, but now in Visual Studio 2022, it joins the DataDog Company and no longer for free using, for that, we installed Visual Studio 2019 for this reason.
 
