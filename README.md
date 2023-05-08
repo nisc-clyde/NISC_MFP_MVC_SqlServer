@@ -56,6 +56,7 @@ In addition, there is another reason why needed to install Visual Studio 2019, i
   <summary>JavaScript</summary>
   
   - jQuery v3.4.1
+  - jQuery DataTables v1.13.4
   - jQuery DataRangePicker v3.0.5
   - SweetAlert2 v11.7.3
   - Font Awesome v6.4.0
