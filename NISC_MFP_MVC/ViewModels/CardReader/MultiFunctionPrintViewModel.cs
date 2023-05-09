@@ -13,5 +13,7 @@ namespace NISC_MFP_MVC.ViewModels.CardReader
         public CardReaderModel cardReaderModel { get; set; }
 
         public List<MultiFunctionPrintModel> multiFunctionPrintModels { get; set; }
+
+        public MultiFunctionPrintModel multiFunctionPrintModel { get; set; }
     }
 }

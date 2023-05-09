@@ -1,0 +1,70 @@
+﻿@model NISC_MFP_MVC.ViewModels.CardReader.MultiFunctionPrintViewModel
+
+@{
+
+}
+
+@using (Html.BeginForm("AddOrEditMFP", "CardReader", FormMethod.Post, new { @id = "cardreaderManagermentForm", @class = "overflow-auto" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered fs-6 w-100" id="cardreaderManagermentTable">
+
+            <thead>
+                <tr>
+                    <th style="width: 15%;">控制編號</th>
+                    <th style="width: 15%;">IP位置</th>
+                    <th style="width: 15%;">印表機名稱</th>
+                    <th style="width: 14%;">列印顏色</th>
+                    <th style="width: 14%;">驅動編號</th>
+                    <th style="width: 10%;">狀態</th>
+                    <th style="width: 17%;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @Html.HiddenFor(d => d.multiFunctionPrintModel.serial, new { id = "serial", name = "serial" })
+                    <td>@Html.TextBoxFor(d => d.multiFunctionPrintModel.printer_id, new { @class = "form-control form-control-sm", @style = "white-space: nowrap;", @type = "number", Id = "printer_id", Name = "printer_id" })</td>
+                    <td>@Html.TextBoxFor(d => d.multiFunctionPrintModel.mfp_ip, "mfp_ip", new { @class = "form-control form-control-sm", @style = "white-space: nowrap;", Id = "mfp_ip", Name = "mfp_ip" })</td>
+                    <td>@Html.TextBoxFor(d => d.multiFunctionPrintModel.mfp_name, "mfp_name", new { @class = "form-control form-control-sm", @style = "white-space: nowrap;", Id = "mfp_name", Name = "mfp_name" })</td>
+                    <td>
+                        @Html.DropDownList("mfp_color", new List<SelectListItem> {
+                           new SelectListItem{ Text="彩色",Value="C"},
+                           new SelectListItem{ Text="單色",Value="M"},
+                           new SelectListItem{ Text="未知",Value=""}
+                       }, new { @class = "form-control form-control-sm", @style = "white-space: nowrap;" })
+                    </td>
+                    <td>@Html.TextBoxFor(d => d.multiFunctionPrintModel.driver_number, "driver_number", new { @class = "form-control form-control-sm", @style = "white-space: nowrap;", @type = "number", Id = "driver_number", Name = "driver_number" })</td>
+                    <td>
+                        @Html.DropDownList("mfp_status", new List<SelectListItem> {
+                           new SelectListItem{ Text="線上",Value="Online"},
+                           new SelectListItem{ Text="離線",Value="Offline"}
+                       }, new { @class = "form-control form-control-sm", @style = "white-space: nowrap;" })
+                    </td>
+                    <td class="d-flex justify-content-around">
+                        <button type="submit" id="btnCardReaderManagementAdd" value="Add" class="btn btn-success btn-sm btnCardReaderManagement">新增</button>
+                        <button type="button" id="btnCardReaderManagementCancel" class="btn btn-info btn-sm" style="display:none">取消</button>
+                    </td>
+                </tr>
+
+                @foreach (NISC_MFP_MVC.ViewModels.CardReader.MultiFunctionPrintModel mfp in @Model.multiFunctionPrintModels)
+                {
+                    <tr>
+                        @Html.HiddenFor(d => @mfp.serial, new { id = "serial" })
+                        <td id="printer_id">@mfp.printer_id</td>
+                        <td id="mfp_ip">@mfp.mfp_ip</td>
+                        <td id="mfp_name">@mfp.mfp_name</td>
+                        <td id="mfp_color">@mfp.mfp_color</td>
+                        <td id="driver_number">@mfp.driver_number</td>
+                        <td id="mfp_status">@mfp.mfp_status</td>
+                        <td class="d-flex justify-content-around">
+                            <button type="button" id="btnCardReaderManagementRowEdit" class="btn btn-info btn-sm">修改</button>
+                            <button type="button" id="btnCardReaderManagementRowDelete" class="btn btn-danger btn-sm">刪除</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

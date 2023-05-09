@@ -25,8 +25,21 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(MultiFunctionPrintInfo instance)
         {
-            if (instance == null) throw new ArgumentNullException("Reference to null instance.");
-            else _repository.Insert(mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance));
+            //NOP
+        }
+
+        public void Insert(MultiFunctionPrintInfo instance, int cr_id)
+        {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("Reference to null instance.");
+            }
+            else
+            {
+                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
+                initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
+                _repository.Insert(initialMultiFunctionPrintRepoDTO);
+            }
         }
 
         public IQueryable<MultiFunctionPrintInfo> GetAll()
@@ -66,8 +79,21 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(MultiFunctionPrintInfo instance)
         {
-            if (instance == null) throw new ArgumentNullException("Reference to null instance.");
-            else _repository.Update(mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance));
+            //NOP
+        }
+
+        public void Update(MultiFunctionPrintInfo instance, int cr_id)
+        {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("Reference to null instance.");
+            }
+            else
+            {
+                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
+                initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
+                _repository.Update(initialMultiFunctionPrintRepoDTO);
+            }
         }
 
         public void Delete(MultiFunctionPrintInfo instance)
