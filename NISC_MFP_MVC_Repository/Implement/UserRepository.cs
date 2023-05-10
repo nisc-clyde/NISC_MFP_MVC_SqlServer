@@ -30,7 +30,14 @@ namespace NISC_MFP_MVC_Repository.Implement
             }
             else
             {
-                this.db.tb_user.Add(mapper.Map<tb_user>(instance));
+                if (db.tb_user.Where(d => d.user_id.Equals(instance.user_id)).FirstOrDefault() == null)
+                {
+                    db.tb_user.Add(mapper.Map<tb_user>(instance));
+                }
+                else
+                {
+                    throw new Exception("重複的使用者帳號");
+                }
             }
         }
 
@@ -153,7 +160,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             {
                 var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
                 this.db.Entry(dataModel).State = EntityState.Modified;
-                this.db.Entry(dataModel).Property(p => p.user_id).IsModified = false;
+                //this.db.Entry(dataModel).Property(p=>p.user_id).IsModified = false;
                 db.SaveChanges();
             }
         }

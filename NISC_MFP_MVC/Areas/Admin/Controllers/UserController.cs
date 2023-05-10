@@ -6,6 +6,7 @@ using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -106,28 +107,32 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult AddOrEditUser(UserViewModel User, string currentOperation)
         {
-            if (currentOperation == "Add")
-            {
-                if (ModelState.IsValid)
+            
+                if (currentOperation == "Add")
                 {
-                    _userService.Insert(mapper.Map<UserViewModel, UserInfo>(User));
-                    _userService.SaveChanges();
+                    if (ModelState.IsValid)
+                    {
+                        _userService.Insert(mapper.Map<UserViewModel, UserInfo>(User));
+                        _userService.SaveChanges();
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
                 }
-            }
-            else if (currentOperation == "Edit")
-            {
-                if (ModelState.IsValid)
+                else if (currentOperation == "Edit")
                 {
-                    _userService.Update(mapper.Map<UserViewModel, UserInfo>(User));
-                    //_userService.SaveChanges();
+                    if (ModelState.IsValid)
+                    {
+                        _userService.Update(mapper.Map<UserViewModel, UserInfo>(User));
+                        _userService.SaveChanges();
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
                 }
-            }
-
-            return RedirectToAction("Index");
+                return Json(new { success = false, message = "Unexpected operation" }, JsonRequestBehavior.AllowGet);
+            
+            
         }
 
         [HttpGet]
@@ -156,8 +161,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             UserInfo instance = _userService.Get(serial);
             userViewModel = mapper.Map<UserViewModel>(instance);
             ViewBag.formTitle = formTitle;
-            return PartialView(userViewModel);
 
+            return PartialView(userViewModel);
         }
     }
 }

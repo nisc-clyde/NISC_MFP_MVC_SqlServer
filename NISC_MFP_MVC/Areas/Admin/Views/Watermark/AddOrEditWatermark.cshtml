@@ -29,145 +29,177 @@
             </div>
 
             <div class="modal-body">
+                <div class="container">
+                    <div class="row row-cols-1">
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.type, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.DropDownList("type", new List<SelectListItem> {
+                               new SelectListItem{ Text="圖片",Value="0"},
+                               new SelectListItem{ Text="文字",Value="1"}
+                           }, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.type, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
 
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.type, new { @class = "form-label fw-semibold me-2" })
-                        <div class="input-group-addon">
-                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.left_offset, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(d => d.left_offset, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(d => d.left_offset, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.right_offset, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(d => d.right_offset, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(d => d.right_offset, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.top_offset, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(d => d.top_offset, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(d => d.top_offset, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.bottom_offset, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(d => d.bottom_offset, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(d => d.bottom_offset, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.position_mode, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.DropDownList("position_mode", new List<SelectListItem> {
+                               new SelectListItem{ Text="左上",Value="0"},
+                               new SelectListItem{ Text="左下",Value="1"},
+                               new SelectListItem{ Text="右上",Value="2"},
+                               new SelectListItem{ Text="右下",Value="3"}
+                           }, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.position_mode, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.fill_mode, new { @class = "form-label fw-semibold" })
+                                @Html.DropDownList("fill_mode", new List<SelectListItem> {
+                               new SelectListItem{ Text="無",Value="0"},
+                               new SelectListItem{ Text="依原圖比例多餘裁切",Value="1"},
+                               new SelectListItem{ Text="依原圖比例不裁切",Value="2"},
+                               new SelectListItem{ Text="依紙張比例",Value="3"},
+                               new SelectListItem{ Text="重覆填滿",Value="4"},
+                               new SelectListItem{ Text="置中，並依原圖比例多餘裁切",Value="5"}
+                           }, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.text, new { @class = "form-label fw-semibold" })
+                                @Html.TextBoxFor(d => d.text, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.image_path, new { @class = "form-label fw-semibold" })
+                                @Html.TextBoxFor(d => d.image_path, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.rotation, new { @class = "form-label fw-semibold me-2" })
+                                </div>
+                                @Html.TextBoxFor(d => d.rotation, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.rotation, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.color, new { @class = "form-label fw-semibold" })
+                                @Html.TextBoxFor(d => d.color, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.horizontal_alignment, new { @class = "form-label fw-semibold me-2" })
+                                </div>
+                                @Html.TextBoxFor(d => d.horizontal_alignment, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.horizontal_alignment, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.vertical_alignment, new { @class = "form-label fw-semibold me-2" })
+                                </div>
+                                @Html.TextBoxFor(d => d.vertical_alignment, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.vertical_alignment, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.font_name, new { @class = "form-label fw-semibold" })
+                                @Html.TextBoxFor(d => d.font_name, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(d => d.font_height, new { @class = "form-label fw-semibold me-2" })
+                                </div>
+                                @Html.TextBoxFor(d => d.font_height, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.font_height, "", new { @class = "text-danger fs-6" })
+                            </div>
                         </div>
                     </div>
-                    @Html.DropDownList("type", new List<SelectListItem> {
-                   new SelectListItem{ Text="圖片",Value="0"},
-                   new SelectListItem{ Text="文字",Value="1"}
-               }, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.type, "", new { @class = "text-danger ps-0 fs-6" })
                 </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.left_offset, new { @class = "form-label fw-semibold me-2" })
-                        <div class="input-group-addon">
-                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
-                        </div>
-                    </div>
-                    @Html.TextBoxFor(d => d.left_offset, new { @class = "form-control", @type = "number" })
-                    @Html.ValidationMessageFor(d => d.left_offset, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.right_offset, new { @class = "form-label fw-semibold me-2" })
-                        <div class="input-group-addon">
-                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
-                        </div>
-                    </div>
-                    @Html.TextBoxFor(d => d.right_offset, new { @class = "form-control", @type = "number" })
-                    @Html.ValidationMessageFor(d => d.right_offset, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.top_offset, new { @class = "form-label fw-semibold me-2" })
-                        <div class="input-group-addon">
-                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
-                        </div>
-                    </div>
-                    @Html.TextBoxFor(d => d.top_offset, new { @class = "form-control", @type = "number" })
-                    @Html.ValidationMessageFor(d => d.top_offset, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.bottom_offset, new { @class = "form-label fw-semibold me-2" })
-                        <div class="input-group-addon">
-                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
-                        </div>
-                    </div>
-                    @Html.TextBoxFor(d => d.bottom_offset, new { @class = "form-control", @type = "number" })
-                    @Html.ValidationMessageFor(d => d.bottom_offset, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.position_mode, new { @class = "form-label fw-semibold me-2" })
-                        <div class="input-group-addon">
-                            <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
-                        </div>
-                    </div>
-                    @Html.DropDownList("position_mode", new List<SelectListItem> {
-                   new SelectListItem{ Text="左上",Value="0"},
-                   new SelectListItem{ Text="左下",Value="1"},
-                   new SelectListItem{ Text="右上",Value="2"},
-                   new SelectListItem{ Text="右下",Value="3"}
-               }, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.position_mode, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.fill_mode, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.DropDownList("fill_mode", new List<SelectListItem> {
-                   new SelectListItem{ Text="無",Value="0"},
-                   new SelectListItem{ Text="依原圖比例多餘裁切",Value="1"},
-                   new SelectListItem{ Text="依原圖比例不裁切",Value="2"},
-                   new SelectListItem{ Text="依紙張比例",Value="3"},
-                   new SelectListItem{ Text="重覆填滿",Value="4"},
-                   new SelectListItem{ Text="置中，並依原圖比例多餘裁切",Value="5"}
-               }, new { @class = "form-control" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.text, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.text, new { @class = "form-control" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.image_path, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.image_path, new { @class = "form-control" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.rotation, new { @class = "form-label fw-semibold me-2" })
-                    </div>
-                    @Html.TextBoxFor(d => d.rotation, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.rotation, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.color, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.color, new { @class = "form-control" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.horizontal_alignment, new { @class = "form-label fw-semibold me-2" })
-                    </div>
-                    @Html.TextBoxFor(d => d.horizontal_alignment, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.horizontal_alignment, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.vertical_alignment, new { @class = "form-label fw-semibold me-2" })
-                    </div>
-                    @Html.TextBoxFor(d => d.vertical_alignment, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.vertical_alignment, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    @Html.LabelFor(d => d.font_name, new { @class = "form-label ps-0 fw-semibold" })
-                    @Html.TextBoxFor(d => d.font_name, new { @class = "form-control" })
-                </div>
-
-                <div class="row mx-3 mb-3">
-                    <div class="input-group ps-0">
-                        @Html.LabelFor(d => d.font_height, new { @class = "form-label fw-semibold me-2" })
-                    </div>
-                    @Html.TextBoxFor(d => d.font_height, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.font_height, "", new { @class = "text-danger ps-0 fs-6" })
-                </div>
-
             </div>
 
             <div class="modal-footer">
