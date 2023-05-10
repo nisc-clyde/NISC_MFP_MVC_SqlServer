@@ -34,8 +34,8 @@
             {
                 <div class="form-group">
                     <div id="login">
-                        @Html.TextBoxFor(a => a.account, new { placeholder = "管理者帳號", @class = "form-control mb-2 mr-sm-2" })
-                        @Html.TextBoxFor(p => p.password, new { placeholder = "Password", @class = "form-control mb-2 mr-sm-2" })
+                        @Html.TextBoxFor(a => a.account, new { placeholder = "管理者帳號", @class = "form-control mb-2 mr-sm-2",style= "max-width: 280px;" })
+                        @Html.TextBoxFor(p => p.password, new { placeholder = "Password", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;" })
                         <button type="button" class="btn btn-outline-secondary">Log In</button>
                     </div>
                 </div>
