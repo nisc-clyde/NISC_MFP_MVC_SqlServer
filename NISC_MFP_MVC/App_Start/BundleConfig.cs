@@ -57,6 +57,7 @@ namespace NISC_MFP_MVC
 
             bundles.Add(new StyleBundle("~/lib/animate.css").Include("~/lib/animate.css/animate.min.css"));
 
+            bundles.Add(new ScriptBundle("~/lib/popperjs").Include("~/lib/popperjs/core/lib/popper-lite.js"));
         }
     }
 }

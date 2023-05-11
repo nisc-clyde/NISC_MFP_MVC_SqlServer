@@ -1,73 +1,53 @@
-﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete } from "./Shared.js"
+﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete, DataTableTemplate } from "./Shared.js"
 
+/**
+ * Visualization the data from Database
+ * @param {Element} table - The table which you want populate.
+ * @param {string} url - The table resource request from.
+ * @param {string} page - Identify columns index when  request to controller.
+ * @param {string[]} columns - Declare all columns will exists.
+ * @param {string[]} columnDefs - Custom column definition your self.
+ * @param {string[]} order - Specify default orderable by column when data table already.
+ * @param {function} rowCallback - Do things between response from backend and render to element, 
+ */
 var dataTable;
 function SearchWatermarkDataTableInitial() {
-    dataTable = $("#searchWatermarkDataTable").DataTable({
-        ajax: {
-            url: "/Admin/Watermark/InitialDataTable",
-            type: "POST",
-            datatype: "json",
-            data: { page: "watermark" }
-        },
-        columns: [
-            { data: "type", name: "類別" },
-            { data: "left_offset", name: "左邊偏移" },
-            { data: "right_offset", name: "右邊偏移" },
-            { data: "top_offset", name: "上邊偏移" },
-            { data: "bottom_offset", name: "下邊偏移" },
-            { data: "position_mode", name: "浮水印位置" },
-            { data: "fill_mode", name: "填滿方式" },
-            { data: "text", name: "文字" },
-            { data: "image_path", name: "圖片位置" },
-            { data: "rotation", name: "旋轉角度" },
-            { data: "color", name: "顏色" },
-            {
-                data: null,
-                render: function (data, type, row) {
-                    return "<div class='row row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2 row-cols-xxl-2 g-2'><div class='col'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" + data.id + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
-                        "<div class='col'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete' data-id='" + data.id + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
-                },
-                orderable: false
+    const table = $("#searchWatermarkDataTable");
+    const url = "/Admin/Watermark/InitialDataTable";
+    const page = "watermark";
+    const columns = [
+        { data: "type", name: "類別" },
+        { data: "left_offset", name: "左邊偏移" },
+        { data: "right_offset", name: "右邊偏移" },
+        { data: "top_offset", name: "上邊偏移" },
+        { data: "bottom_offset", name: "下邊偏移" },
+        { data: "position_mode", name: "浮水印位置" },
+        { data: "fill_mode", name: "填滿方式" },
+        { data: "text", name: "文字" },
+        { data: "image_path", name: "圖片位置" },
+        { data: "rotation", name: "旋轉角度" },
+        { data: "color", name: "顏色" },
+        {
+            data: null,
+            render: function (data, type, row) {
+                return "<div class='row row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2 row-cols-xxl-2 g-2'><div class='col'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" + data.id + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
+                    "<div class='col'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete' data-id='" + data.id + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
             },
-            { data: "id", name: "id" }
-        ],
-        columnDefs: [
-            { width: "10%", targets: 11 },
-            { visible: false, target: 12 }
-        ],
-        dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
-        buttons: [
-            { text: "輸出：", className: 'btn btn-secondary disabled' },
-            { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
-            { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
-        ],
-        order: [0, "desc"],
-        paging: true,
-        pagingType: 'full_numbers',
-        deferRender: true,
-        serverSide: true,
-        processing: true,
-        responsive: true,
-        language: {
-            processing: "資料載入中...請稍後",
-            paginate: {
-                first: "首頁",
-                last: "尾頁",
-                previous: "上一頁",
-                next: "下一頁"
-            },
-            info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
-            zeroRecords: "找不到相符資料",
-            search: "全部欄位搜尋：",
-            infoFiltered: ""
+            orderable: false
         },
-        rowCallback: function (row, data) {
-            if (data.rotation != null) {
-                $('td:eq(9)', row).html(data.rotation + "°");
-            }
-        }
-    });
+        { data: "id", name: "id" }
+    ];
+    const columnDefs = [
+        { width: "10%", targets: 6 },
+        { width: "10%", targets: 11 },
+        { visible: false, target: 12 }
+    ];
+    const order = [0, "desc"];
+    const rowCallback = function (row, data) {
+        (data.rotation != null) ? $('td:eq(9)', row).html(data.rotation + "°") : $('td:eq(9)', row).html(data.rotation);
+    }
+
+    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
 }
 
 function ColumnSearch() {
@@ -137,8 +117,6 @@ function ColumnSearch() {
 
 }
 
-
-
 /**
  * Popup the modal from bootstrap library for adding or updating the data
  * @param {string} btnAdd - click which button topopup modal for adding.
@@ -166,7 +144,6 @@ function DeleteAlertPopUp() {
     const postURL = "/Admin/Watermark/ReadyDeleteWatermark"
     RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL);
 }
-
 
 $(function () {
     SearchWatermarkDataTableInitial();

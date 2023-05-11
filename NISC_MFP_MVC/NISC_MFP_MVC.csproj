@@ -83,6 +83,9 @@
     <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
       <HintPath>packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -123,8 +126,8 @@
       <HintPath>packages\System.Linq.Dynamic.Core.1.3.2\lib\net46\System.Linq.Dynamic.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -135,7 +138,16 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -990,6 +1002,144 @@
     <Content Include="lib\font-awesome\sprites\brands.svg" />
     <Content Include="lib\font-awesome\sprites\regular.svg" />
     <Content Include="lib\font-awesome\sprites\solid.svg" />
+    <Content Include="lib\popperjs\core\dist\cjs\enums.js" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper-base.js" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper-lite.js" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper.js" />
+    <Content Include="lib\popperjs\core\dist\esm\createPopper.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\contains.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getBoundingClientRect.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getClippingRect.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getCompositeRect.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getComputedStyle.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getDocumentElement.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getDocumentRect.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getHTMLElementScroll.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getLayoutRect.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getNodeName.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getNodeScroll.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getOffsetParent.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getParentNode.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getScrollParent.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getViewportRect.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getWindow.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getWindowScroll.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\getWindowScrollBarX.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\instanceOf.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\isLayoutViewport.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\isScrollParent.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\isTableElement.js" />
+    <Content Include="lib\popperjs\core\dist\esm\dom-utils\listScrollParents.js" />
+    <Content Include="lib\popperjs\core\dist\esm\enums.js" />
+    <Content Include="lib\popperjs\core\dist\esm\index.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\applyStyles.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\arrow.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\computeStyles.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\eventListeners.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\flip.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\hide.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\index.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\offset.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\popperOffsets.js" />
+    <Content Include="lib\popperjs\core\dist\esm\modifiers\preventOverflow.js" />
+    <Content Include="lib\popperjs\core\dist\esm\popper-base.js" />
+    <Content Include="lib\popperjs\core\dist\esm\popper-lite.js" />
+    <Content Include="lib\popperjs\core\dist\esm\popper.js" />
+    <Content Include="lib\popperjs\core\dist\esm\types.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\computeAutoPlacement.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\computeOffsets.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\debounce.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\detectOverflow.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\expandToHashMap.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\format.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getAltAxis.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getAltLen.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getBasePlacement.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getFreshSideObject.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getMainAxisFromPlacement.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getOppositePlacement.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getOppositeVariationPlacement.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\getVariation.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\math.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\mergeByName.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\mergePaddingObject.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\orderModifiers.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\rectToClientRect.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\uniqueBy.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\userAgent.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\validateModifiers.js" />
+    <Content Include="lib\popperjs\core\dist\esm\utils\within.js" />
+    <Content Include="lib\popperjs\core\dist\umd\enums.js" />
+    <Content Include="lib\popperjs\core\dist\umd\enums.min.js" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-base.js" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-base.min.js" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-lite.js" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-lite.min.js" />
+    <Content Include="lib\popperjs\core\dist\umd\popper.js" />
+    <Content Include="lib\popperjs\core\dist\umd\popper.min.js" />
+    <Content Include="lib\popperjs\core\lib\createPopper.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\contains.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getBoundingClientRect.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getClippingRect.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getCompositeRect.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getComputedStyle.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getDocumentElement.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getDocumentRect.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getHTMLElementScroll.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getLayoutRect.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getNodeName.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getNodeScroll.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getOffsetParent.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getParentNode.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getScrollParent.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getViewportRect.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getWindow.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getWindowScroll.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getWindowScrollBarX.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\instanceOf.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\isLayoutViewport.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\isScrollParent.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\isTableElement.js" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\listScrollParents.js" />
+    <Content Include="lib\popperjs\core\lib\enums.js" />
+    <Content Include="lib\popperjs\core\lib\index.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\applyStyles.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\arrow.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\computeStyles.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\eventListeners.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\flip.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\hide.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\index.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\offset.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\popperOffsets.js" />
+    <Content Include="lib\popperjs\core\lib\modifiers\preventOverflow.js" />
+    <Content Include="lib\popperjs\core\lib\popper-base.js" />
+    <Content Include="lib\popperjs\core\lib\popper-lite.js" />
+    <Content Include="lib\popperjs\core\lib\popper.js" />
+    <Content Include="lib\popperjs\core\lib\types.js" />
+    <Content Include="lib\popperjs\core\lib\utils\computeAutoPlacement.js" />
+    <Content Include="lib\popperjs\core\lib\utils\computeOffsets.js" />
+    <Content Include="lib\popperjs\core\lib\utils\debounce.js" />
+    <Content Include="lib\popperjs\core\lib\utils\detectOverflow.js" />
+    <Content Include="lib\popperjs\core\lib\utils\expandToHashMap.js" />
+    <Content Include="lib\popperjs\core\lib\utils\format.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getAltAxis.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getAltLen.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getBasePlacement.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getFreshSideObject.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getMainAxisFromPlacement.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getOppositePlacement.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getOppositeVariationPlacement.js" />
+    <Content Include="lib\popperjs\core\lib\utils\getVariation.js" />
+    <Content Include="lib\popperjs\core\lib\utils\math.js" />
+    <Content Include="lib\popperjs\core\lib\utils\mergeByName.js" />
+    <Content Include="lib\popperjs\core\lib\utils\mergePaddingObject.js" />
+    <Content Include="lib\popperjs\core\lib\utils\orderModifiers.js" />
+    <Content Include="lib\popperjs\core\lib\utils\rectToClientRect.js" />
+    <Content Include="lib\popperjs\core\lib\utils\uniqueBy.js" />
+    <Content Include="lib\popperjs\core\lib\utils\userAgent.js" />
+    <Content Include="lib\popperjs\core\lib\utils\validateModifiers.js" />
+    <Content Include="lib\popperjs\core\lib\utils\within.js" />
     <Content Include="lib\sweetalert2\dist\sweetalert2.all.js" />
     <Content Include="lib\sweetalert2\dist\sweetalert2.all.min.js" />
     <Content Include="lib\sweetalert2\dist\sweetalert2.css" />
@@ -1132,6 +1282,7 @@
     <Content Include="Scripts\AdminPartialViewScripts\outputreport.js" />
     <Content Include="Scripts\AdminPartialViewScripts\print.js" />
     <Content Include="Scripts\AdminPartialViewScripts\Shared.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\system.js" />
     <Content Include="Scripts\AdminPartialViewScripts\user.js" />
     <Content Include="Scripts\AdminPartialViewScripts\watermark.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -1219,6 +1370,94 @@
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\CardReader\CardReaderManager.cshtml" />
+    <Content Include="lib\popperjs\core\dist\cjs\enums.js.flow" />
+    <Content Include="lib\popperjs\core\dist\cjs\enums.js.map" />
+    <Content Include="lib\popperjs\core\LICENSE.md" />
+    <Content Include="lib\popperjs\core\package.json" />
+    <Content Include="lib\popperjs\core\README.md" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper-base.js.flow" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper-base.js.map" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper-lite.js.flow" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper-lite.js.map" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper.js.flow" />
+    <Content Include="lib\popperjs\core\dist\cjs\popper.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\enums.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\enums.min.js.flow" />
+    <Content Include="lib\popperjs\core\dist\umd\enums.min.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-base.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-base.min.js.flow" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-base.min.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-lite.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-lite.min.js.flow" />
+    <Content Include="lib\popperjs\core\dist\umd\popper-lite.min.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\popper.js.map" />
+    <Content Include="lib\popperjs\core\dist\umd\popper.min.js.flow" />
+    <Content Include="lib\popperjs\core\dist\umd\popper.min.js.map" />
+    <Content Include="lib\popperjs\core\lib\createPopper.js.flow" />
+    <Content Include="lib\popperjs\core\lib\enums.js.flow" />
+    <Content Include="lib\popperjs\core\lib\index.js.flow" />
+    <Content Include="lib\popperjs\core\lib\popper-base.js.flow" />
+    <Content Include="lib\popperjs\core\lib\popper-lite.js.flow" />
+    <Content Include="lib\popperjs\core\lib\popper.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\contains.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getBoundingClientRect.js.flow" />
+    <Content Include="lib\popperjs\core\lib\types.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getClippingRect.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getCompositeRect.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getComputedStyle.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getDocumentElement.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getDocumentRect.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getHTMLElementScroll.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getLayoutRect.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getNodeName.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getNodeScroll.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getOffsetParent.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getParentNode.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getScrollParent.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getViewportRect.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getWindow.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getWindowScroll.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\getWindowScrollBarX.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\instanceOf.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\isLayoutViewport.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\isScrollParent.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\isTableElement.js.flow" />
+    <Content Include="lib\popperjs\core\lib\dom-utils\listScrollParents.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\applyStyles.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\arrow.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\computeStyles.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\eventListeners.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\flip.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\hide.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\index.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\offset.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\popperOffsets.js.flow" />
+    <Content Include="lib\popperjs\core\lib\modifiers\preventOverflow.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\computeAutoPlacement.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\computeOffsets.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\debounce.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\detectOverflow.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\expandToHashMap.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\format.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getAltAxis.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getAltLen.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getBasePlacement.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getFreshSideObject.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getMainAxisFromPlacement.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getOppositePlacement.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getOppositeVariationPlacement.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\getVariation.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\math.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\mergeByName.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\mergePaddingObject.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\orderModifiers.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\rectToClientRect.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\uniqueBy.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\userAgent.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\validateModifiers.js.flow" />
+    <Content Include="lib\popperjs\core\lib\utils\within.js.flow" />
+    <Content Include="App_Data\Downloads\NISC_ImportEmployee.csv" />
+    <Content Include="Areas\Admin\Views\System\PreviewEmployee.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -1265,7 +1504,6 @@
     <Content Include="Areas\User\Views\Shared\_UserLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\User\Data\" />
   </ItemGroup>
@@ -1289,6 +1527,70 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="lib\popperjs\core\index.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\createPopper.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\contains.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getBoundingClientRect.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getClippingRect.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getCompositeRect.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getComputedStyle.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getDocumentElement.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getDocumentRect.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getHTMLElementScroll.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getLayoutRect.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getNodeName.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getNodeScroll.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getOffsetParent.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getParentNode.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getScrollParent.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getViewportRect.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getWindow.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getWindowScroll.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\getWindowScrollBarX.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\instanceOf.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\isLayoutViewport.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\isScrollParent.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\isTableElement.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\dom-utils\listScrollParents.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\enums.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\index.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\applyStyles.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\arrow.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\computeStyles.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\eventListeners.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\flip.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\hide.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\index.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\offset.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\popperOffsets.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\modifiers\preventOverflow.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\popper-base.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\popper-lite.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\popper.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\types.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\computeAutoPlacement.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\computeOffsets.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\debounce.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\detectOverflow.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\expandToHashMap.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\format.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getAltAxis.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getAltLen.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getBasePlacement.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getFreshSideObject.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getMainAxisFromPlacement.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getOppositePlacement.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getOppositeVariationPlacement.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\getVariation.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\math.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\mergeByName.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\mergePaddingObject.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\orderModifiers.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\rectToClientRect.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\uniqueBy.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\userAgent.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\validateModifiers.d.ts" />
+    <TypeScriptCompile Include="lib\popperjs\core\lib\utils\within.d.ts" />
     <TypeScriptCompile Include="lib\sweetalert2\sweetalert2.d.ts" />
   </ItemGroup>
   <PropertyGroup>

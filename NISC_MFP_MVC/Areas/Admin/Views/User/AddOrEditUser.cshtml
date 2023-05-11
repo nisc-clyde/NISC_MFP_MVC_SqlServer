@@ -45,7 +45,7 @@
                                 </div>
                                 @if (@ViewBag.formTitle == "修改使用者")
                                 {
-                                    @Html.TextBoxFor(d => d.user_id, new { @class = "form-control-plaintext" })
+                                    @Html.TextBoxFor(d => d.user_id, new { @class = "form-control bg-light text-dark", @readonly = "readonly" })
                                     @Html.ValidationMessageFor(d => d.user_id, "", new { @class = "text-danger fs-6" })
                                 }
                                 else
@@ -92,7 +92,7 @@
                         <div class="col">
                             <div class="form-group">
                                 @Html.LabelFor(d => d.dept_name, new { @class = "form-label fw-semibold" })
-                                @Html.TextBoxFor(d => d.dept_name, new { @class = "form-control" })
+                                @Html.TextBoxFor(d => d.dept_name, new { @class = "form-control bg-light text-dark", @readonly = "readonly" })
                             </div>
                         </div>
 

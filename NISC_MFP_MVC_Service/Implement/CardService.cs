@@ -35,6 +35,16 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
+                string card_id = "";
+                if (instance.card_id.Length != 10)
+                {
+                    for (int i = 0; i < 10 - instance.card_id.Length; i++)
+                    {
+                        card_id += "0";
+                    }
+                    card_id += instance.card_id;
+                }
+                instance.card_id = card_id;
                 _cardRepository.Insert(mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
             }
         }

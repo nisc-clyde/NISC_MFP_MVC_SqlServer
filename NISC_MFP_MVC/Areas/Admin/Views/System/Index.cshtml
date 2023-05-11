@@ -5,36 +5,86 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+@section SystemJS{
+    @Scripts.RenderFormat("<script type='module' src='{0}'></script>", "~/lib/popperjs")
+    <script type="module" src="@Url.Content("~/Scripts/AdminPartialViewScripts/system.js")"></script>
+}
+
+<style>
+    .custom-tooltip {
+        --bs-tooltip-bg: var(--bs-teal);
+    }
+</style>
 
 <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
     <div class="row border-bottom border-2 ">
-        <div class="col-6 text-start fs-5 fw-bold" style="color: #1565C0">人事資料匯入&nbsp;<i class="fa-solid fa-file-import"></i></div>
+        <div class="col text-start fs-5 fw-bold" style="color: #1565C0">人事資料匯入&nbsp;<i class="fa-solid fa-file-import"></i></div>
     </div>
 
     <div class="row border-start border-end border-bottom border-2 ">
-        <div class="col p-3 justify-content-center">
-
-            <div class="input-group mb-3 justify-content-center">
-                <input class="form-control" type="file" id="fileResource">
+        <div class="col p-4 justify-content-center">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3 justify-content-center">
+                        <input class="form-control" type="file" id="fileResource">
+                    </div>
+                </div>
             </div>
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <h2 class="text-center">輸入檔(文字檔)格式說明</h2>
+                    <div class="text-start">
+                        <p>
+                            檔案之格式要求為<b>CSV</b>，每行格式如下：<br />
+                            卡號(8-10碼),部門編號,部門名稱,姓名,帳號,功號,卡別(遞減=0，遞增=1),狀態(停用=0，啟用=1),Email<br />
+                            若該行已結束請按下Enter已表示換行，若欲使用範本進行編輯，請點擊旁邊圖示將會自動下載。
+                            <a href="@Url.Action("DownloadTemplate", "System", new { fileName = "NISC_ImportEmployee.csv" })"><i class="fa-solid fa-file-csv fa-3x" id="btnDownloadTemplate" style="color: #107c41;"></i></a>
 
-            @*<div class="form-group">*@
-            <p class="text-center">輸入檔(文字檔)格式說明</p>
-            <p class="text-center">每一行的格式如下：</p>
-            <p class="text-center">卡號(8-10碼)"部門編號"部門名稱"姓名"帳號"工號"0遞減卡or1遞增卡"0停用or1啟用"email</p>
-            <br />
-            <p class="text-center fw-bold">EX：</p>
-            <p class="text-center">00011111111"HE00000"人事部"王小明"aptg"R0001"0"1"test@nisc.com.tw</p>
-            <br />
-            <p class="text-center fw-bold">無工號EX：</p>
-            <p class="text-center">00011111111"HE00000"人事部"王小明"aptg"0"1"test@nisc.com.tw</p>
-            @*</div>*@
+                        </p>
+                    </div>
+                    <br />
+                    <div class="text-start">
+                        <p class="fw-bold">
+                            範例1(有工號)：<br />
+                            <div class="fs-5">
+                                &emsp;&emsp;00011111111,HE00000,人事部,王小明,aptg,R0001,0,1,test1@nisc.com.tw<br />
+                                &emsp;&emsp;00011111112,HE00000,人事部,王小華,apth,R0002,0,1,test2@nisc.com.tw
+                            </div>
+                        </p>
+                    </div>
+                    <div class="text-start">
+                        <p class="fw-bold">
+                            範例2(無工號)：<br />
+                            <div class="fs-5">
+                                &emsp;&emsp;00011111111,HE00000,人事部,王小明,aptg,{留空},0,1,test1@nisc.com.tw<br />
+                                &emsp;&emsp;00011111112,HE00000,人事部,王小華,apth,{留空},0,1,test2@nisc.com.tw
+                            </div>
+                        </p>
+                    </div>
 
-            <div class="col justify-content-end">
-                <button id="btnFileImport" type="button" class="btn btn-success btn-lg">匯入</button>
+                    <div class="col justify-content-end">
+                        <button id="btnAddFromFile" type="submit" value="Add" class="btn btn-success btn-lg"
+                                data-bs-toggle="tooltip" data-bs-placement="left"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-html="true"
+                                data-bs-title="<div class='row'><div class='col-1'><i class='fa-solid fa-lightbulb' style='color: #ffa200;'></i></div><div class='col text-start fs-6'>此操作將會<b class='text-danger'>額外加入人事資料</b>，若存在重複之帳號，則該行將略過新增，待可新增之資料完成後，再統一列出發生重複之帳號。</div></div>">
+                            新增
+                        </button>
+
+                        <button id="btnOverrideFromFile" type="submit" value="Override" class="btn btn-success btn-lg"
+                                data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-html="true"
+                                data-bs-title="<div class='row'><div class='col-1'><i class='fa-solid fa-lightbulb' style='color: #ffa200;'></i></div><div class='col text-start fs-6'>此操作將會<b class='text-danger'>覆蓋原人事資料</b>，若存在重複之帳號，則該行將略過新增，待可新增之資料完成後，再統一列出發生重複之帳號。</div></div>">
+                            匯入
+                        </button>
+                    </div>
+
+                    <div class="modal fade" id="employeePreviewModal" role="dialog" data-url='@Url.Action("PreviewEmployee","System")'></div>
+
+                </div>
             </div>
-
         </div>
     </div>
 

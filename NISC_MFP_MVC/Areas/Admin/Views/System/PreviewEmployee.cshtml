@@ -1,0 +1,42 @@
+﻿
+@{
+
+}
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        @using (Html.BeginForm("AddEmployeeFromFile", "System", FormMethod.Post, new { @id = "employeePreviewForm", @class = "overflow-auto" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="employeePreviewDataTable" class="table table-striped table-bordered w-100 fs-6 nowrap">
+                        <thead>
+                            <tr>
+                                <th>卡片編號</th>
+                                <th>部門編號</th>
+                                <th>部門名稱</th>
+                                <th>姓名</th>
+                                <th>帳號</th>
+                                <th>工號</th>
+                                <th>屬性</th>
+                                <th>使用狀態</th>
+                                <th>信箱</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" id="btnSubmmit" value="Add" class="btn btn-success">確定</button>
+            </div>
+        }
+    </div>
+</div>

@@ -10,23 +10,14 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/lib/datatable-css")
     @Styles.Render("~/lib/animate.css")
-    
+
 </head>
 
-<body class="bg-black bg-gradient pt-0 pb-0">
-    <header class=" header p-3 mb-2 bg-dark bg-gradient">
-
+<body class="bg-black bg-gradient">
+    <header class="header pt-4 ps-2  bg-dark bg-gradient">
         <a href="@Url.Action("Index", "Print", new { area="Admin"})" class="logo">
             <img src="~/img/logo.png" alt="Logo">
         </a>
-
-        <style>
-            /*.gridline {
-                outline: 3px solid #9E9E9E;
-                text-align: center;
-                margin: 1px;
-            }*/
-        </style>
     </header>
 
     <div class="container-fluid">
@@ -111,11 +102,13 @@
             </div>
         </div>
     </div>
-    
-    <footer class="footer bg-light text-lg-start">
-        <div class="text-left p-3" style="background-color: #3693cf; ">
-            © 2005 Copyright:
-            <a class="text-dark" href="https://www.nisc.com.tw/">新印科技股份有限公司</a>
+
+    <footer class="footer text-start" style="background-color: #3693cf;">
+        <div class="py-3 ps-4">
+            <p class="h6">
+                © 2005 Copyright:
+                <a class="text-dark" href="https://www.nisc.com.tw/">新印科技股份有限公司</a>
+            </p>
         </div>
     </footer>
 
@@ -135,6 +128,7 @@
     @RenderSection("WatermarkJS", required: false)
     @RenderSection("HistoryJS", required: false)
     @RenderSection("OutputReportJS", required: false)
+    @RenderSection("SystemJS", required: false)
 
 </body>
 </html>

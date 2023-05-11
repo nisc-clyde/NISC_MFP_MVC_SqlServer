@@ -1,7 +1,9 @@
-﻿/*body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}*/
+﻿body {
+    text-align: start;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+}
 
 /* Set padding to keep content from hitting the edges */
 /*.body-content {

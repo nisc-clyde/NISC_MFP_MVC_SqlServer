@@ -6,13 +6,14 @@
     Model.position_mode = Model.position_mode == "左上" ? "0" :
                     Model.position_mode == "左下" ? "1" :
                     Model.position_mode == "右上" ? "2" :
-                    Model.position_mode == "右下" ? "3" : "正中間";
+                    Model.position_mode == "右下" ? "3" : "";
 
     Model.fill_mode = Model.fill_mode == "無" ? "0" :
                 Model.fill_mode == "依原圖比例多餘裁切" ? "1" :
                 Model.fill_mode == "依原圖比例不裁切" ? "2" :
                 Model.fill_mode == "依紙張比例" ? "3" :
-                Model.fill_mode == "重覆填滿" ? "4" : "置中，並依原圖比例多餘裁切";
+                Model.fill_mode == "重覆填滿" ? "4" : 
+                Model.fill_mode == "置中，並依原圖比例多餘裁切" ? "5" : "";
 }
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">

@@ -23,7 +23,6 @@
     <div class="modal-content">
         @using (Html.BeginForm("AddOrEditCard", "Card", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
         {
-
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
             @Html.HiddenFor(d => d.value)

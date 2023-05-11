@@ -1,74 +1,50 @@
-﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete } from "./Shared.js"
+﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete, DataTableTemplate } from "./Shared.js"
 
+/**
+ * Visualization the data from Database
+ * @param {Element} table - The table which you want populate.
+ * @param {string} url - The table resource request from.
+ * @param {string} page - Identify columns index when  request to controller.
+ * @param {string[]} columns - Declare all columns will exists.
+ * @param {string[]} columnDefs - Custom column definition your self.
+ * @param {string[]} order - Specify default orderable by column when data table already.
+ * @param {function} rowCallback - Do things between response from backend and render to element, 
+ */
 var dataTable;
 function SearchUserDataTableInitial() {
-    dataTable = $("#searchUserDataTable").DataTable({
-        ajax: {
-            url: "/Admin/User/InitialDataTable",
-            type: "POST",
-            datatype: "json",
-            data: { page: "user" }
-        },
-        columns: [
-            { data: "user_id", name: "帳號" },
-            { data: "user_password", name: "密碼" },
-            { data: "work_id", name: "工號" },
-            { data: "user_name", name: "姓名" },
-            { data: "dept_id", name: "部門代碼" },
-            { data: "dept_name", name: "部門名稱" },
-            { data: "color_enable_flag", name: "彩色使用權限" },
-            { data: "e_mail", name: "信箱" },
-            {
-                data: null,
-                render: function (data, type, row) {
-                    return "<div class='row row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1 row-cols-xxl-3  g-2'><div class='col'><button type='button' class='btn btn-primary btn-sm btn-permission' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i><div style='display: inline-block; white-space: nowrap;'>權限</div></button></div>" +
-                        "<div class='col'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
-                        "<div class='col'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete' data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
-                },
-                orderable: false
+    const table = $("#searchUserDataTable");
+    const url = "/Admin/User/InitialDataTable";
+    const page = "user";
+    const columns = [
+        { data: "user_id", name: "帳號" },
+        { data: "user_password", name: "密碼" },
+        { data: "work_id", name: "工號" },
+        { data: "user_name", name: "姓名" },
+        { data: "dept_id", name: "部門代碼" },
+        { data: "dept_name", name: "部門名稱" },
+        { data: "color_enable_flag", name: "彩色使用權限" },
+        { data: "e_mail", name: "信箱" },
+        {
+            data: null,
+            render: function (data, type, row) {
+                return "<div class='row row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1 row-cols-xxl-3  g-2'><div class='col'><button type='button' class='btn btn-primary btn-sm btn-permission' data-id='" + data.serial + "'><i class='fa-solid fa-circle-info me-1'></i><div style='display: inline-block; white-space: nowrap;'>權限</div></button></div>" +
+                    "<div class='col'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" + data.serial + "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
+                    "<div class='col'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete' data-id='" + data.serial + "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>";
             },
-            { data: "serial", name: "serial" }
-        ],
-        columnDefs: [
-            { width: "15%", targets: 8 },
-            { visible: false, target: 9 }
-        ],
-        dom: "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
-        buttons: [
-            { text: "輸出：", className: 'btn btn-secondary disabled' },
-            { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
-            { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
-            { extend: "print", className: "btn btn-warning buttons-print buttons-html5" }
-        ],
-        order: [0, "desc"],
-        paging: true,
-        pagingType: 'full_numbers',
-        deferRender: true,
-        serverSide: true,
-        processing: true,
-        responsive: true,
-        language: {
-            processing: "資料載入中...請稍後",
-            paginate: {
-                first: "首頁",
-                last: "尾頁",
-                previous: "上一頁",
-                next: "下一頁"
-            },
-            info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
-            zeroRecords: "找不到相符資料",
-            search: "全部欄位搜尋：",
-            infoFiltered: ""
+            orderable: false
         },
-        rowCallback: function (row, data) {
-            if (data.color_enable_flag == "有") {
-                $('td:eq(6)', row).html("<b class='text-success'>有</b>");
-            } else {
-                $('td:eq(6)', row).html("<b class='text-danger'>無</b>");
-            }
+        { data: "serial", name: "serial" }
+    ];
+    const columnDefs = [
+        { width: "15%", targets: 8 },
+        { visible: false, target: 9 }
+    ];
+    const order = [0, "desc"];
+    const rowCallback = function (row, data) {
+        (data.color_enable_flag == "有") ? $('td:eq(6)', row).html("<b class='text-success'>有</b>") : $('td:eq(6)', row).html("<b class='text-danger'>無</b>");
+    }
 
-        }
-    });
+    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
 }
 
 function ColumnSearch() {

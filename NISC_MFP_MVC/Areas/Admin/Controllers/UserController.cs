@@ -107,32 +107,32 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult AddOrEditUser(UserViewModel User, string currentOperation)
         {
-            
-                if (currentOperation == "Add")
-                {
-                    if (ModelState.IsValid)
-                    {
-                        _userService.Insert(mapper.Map<UserViewModel, UserInfo>(User));
-                        _userService.SaveChanges();
 
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                    }
-                    return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
-                }
-                else if (currentOperation == "Edit")
+            if (currentOperation == "Add")
+            {
+                if (ModelState.IsValid)
                 {
-                    if (ModelState.IsValid)
-                    {
-                        _userService.Update(mapper.Map<UserViewModel, UserInfo>(User));
-                        _userService.SaveChanges();
+                    _userService.Insert(mapper.Map<UserViewModel, UserInfo>(User));
+                    _userService.SaveChanges();
 
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                    }
-                    return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
-                return Json(new { success = false, message = "Unexpected operation" }, JsonRequestBehavior.AllowGet);
-            
-            
+                return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+            else if (currentOperation == "Edit")
+            {
+                if (ModelState.IsValid)
+                {
+                    _userService.Update(mapper.Map<UserViewModel, UserInfo>(User));
+                    _userService.SaveChanges();
+
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false, message = "Unexpected operation" }, JsonRequestBehavior.AllowGet);
+
+
         }
 
         [HttpGet]
