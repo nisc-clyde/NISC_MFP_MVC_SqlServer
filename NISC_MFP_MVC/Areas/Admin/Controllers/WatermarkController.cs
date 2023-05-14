@@ -74,7 +74,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 else if (serial >= 0)
                 {
                     //Popup for Edit
-                    WatermarkInfo instance = watermarkService.Get(serial);
+                    WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
                     initialWatermarkDTO = mapper.Map<WatermarkViewModel>(instance);
                 }
             }
@@ -131,7 +131,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteWatermark(int serial)
         {
             WatermarkViewModel watermarkViewModel = new WatermarkViewModel();
-            WatermarkInfo instance = watermarkService.Get(serial);
+            WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
             watermarkViewModel = mapper.Map<WatermarkViewModel>(instance);
 
             return PartialView(watermarkViewModel);

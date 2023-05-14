@@ -77,7 +77,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    CardInfo instance = cardService.Get(serial);
+                    CardInfo instance = cardService.Get("serial",serial.ToString(),"Equals");
                     initialCardDTO = mapper.Map<CardViewModel>(instance);
                 }
             }
@@ -123,7 +123,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteCard(int serial)
         {
             CardViewModel cardViewModel = new CardViewModel();
-            CardInfo instance = cardService.Get(serial);
+            CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
             cardViewModel = mapper.Map<CardViewModel>(instance);
 
             return PartialView(cardViewModel);
@@ -168,7 +168,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DepositCard(string formTitle, int serial)
         {
             CardViewModel cardViewModel = new CardViewModel();
-            CardInfo instance = cardService.Get(serial);
+            CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
             cardViewModel = mapper.Map<CardViewModel>(instance);
             ViewBag.formTitle = formTitle;
 

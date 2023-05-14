@@ -1,26 +1,29 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info.History;
 using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
     public class MultiFunctionPrintService : IMultiFunctionPrintService
     {
-        private IMultiFunctionPrintRepository _repository;
-        private Mapper mapper;
+        private readonly IMultiFunctionPrintRepository _multiFunctionPrintRepository;
+        private Mapper _mapper;
 
         public MultiFunctionPrintService()
         {
-            _repository = new MultiFunctionPrintRepository();
-            mapper = InitializeAutomapper();
+            _multiFunctionPrintRepository = new MultiFunctionPrintRepository();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(MultiFunctionPrintInfo instance)
@@ -36,16 +39,16 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
+                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = _mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
                 initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
-                _repository.Insert(initialMultiFunctionPrintRepoDTO);
+                _multiFunctionPrintRepository.Insert(initialMultiFunctionPrintRepoDTO);
             }
         }
 
         public IQueryable<MultiFunctionPrintInfo> GetAll()
         {
-            IQueryable<InitialMultiFunctionPrintRepoDTO> dateModel = _repository.GetAll();
-            IQueryable<MultiFunctionPrintInfo> resultDataModel = dateModel.ProjectTo<MultiFunctionPrintInfo>(mapper.ConfigurationProvider);
+            IQueryable<InitialMultiFunctionPrintRepoDTO> dateModel = _multiFunctionPrintRepository.GetAll();
+            IQueryable<MultiFunctionPrintInfo> resultDataModel = dateModel.ProjectTo<MultiFunctionPrintInfo>(_mapper.ConfigurationProvider);
 
             return resultDataModel;
         }
@@ -64,14 +67,14 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                IQueryable<InitialMultiFunctionPrintRepoDTO> dataModel = _repository.GetMultiple(cr_id);
-                IQueryable<MultiFunctionPrintInfo> resultModel = dataModel.ProjectTo<MultiFunctionPrintInfo>(mapper.ConfigurationProvider);
+                IQueryable<InitialMultiFunctionPrintRepoDTO> dataModel = _multiFunctionPrintRepository.GetMultiple(cr_id);
+                IQueryable<MultiFunctionPrintInfo> resultModel = dataModel.ProjectTo<MultiFunctionPrintInfo>(_mapper.ConfigurationProvider);
                 List<MultiFunctionPrintInfo> temp = resultModel.ToList();
                 return resultModel;
             }
         }
 
-        public MultiFunctionPrintInfo Get(int serial)
+        public MultiFunctionPrintInfo Get(string column, string value, string operation)
         {
             //NOP
             return null;
@@ -90,21 +93,21 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
+                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = _mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
                 initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
-                _repository.Update(initialMultiFunctionPrintRepoDTO);
+                _multiFunctionPrintRepository.Update(initialMultiFunctionPrintRepoDTO);
             }
         }
 
         public void Delete(MultiFunctionPrintInfo instance)
         {
             if (instance == null) throw new ArgumentNullException("Reference to null instance.");
-            else _repository.Delete(mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance));
+            else _multiFunctionPrintRepository.Delete(_mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance));
         }
 
         public void SaveChanges()
         {
-            _repository.SaveChanges();
+            _multiFunctionPrintRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -116,7 +119,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _repository.Dispose();
+            _multiFunctionPrintRepository.Dispose();
         }
     }
 }

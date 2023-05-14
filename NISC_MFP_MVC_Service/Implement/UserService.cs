@@ -19,15 +19,15 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class UserService : IUserService
     {
-        private IUserRepository userRepository;
-        private IDepartmentRepository departmentRepository;
-        private Mapper mapper;
+        private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private Mapper _mapper;
 
         public UserService()
         {
-            userRepository = new UserRepository();
-            departmentRepository = new DepartmentRepository();
-            mapper = InitializeAutomapper();
+            _userRepository = new UserRepository();
+            _departmentRepository = new DepartmentRepository();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(UserInfo instance)
@@ -45,15 +45,15 @@ namespace NISC_MFP_MVC_Service.Implement
                 }
                 else
                 {
-                    userRepository.Insert(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+                    _userRepository.Insert(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
                 }
             }
         }
 
         public IQueryable<UserInfo> GetAll()
         {
-            IQueryable<InitialUserRepoDTO> userDatamodel = userRepository.GetAll();
-            IQueryable<InitialDepartmentRepoDTO> departmentDatamodel = departmentRepository.GetAll();
+            IQueryable<InitialUserRepoDTO> userDatamodel = _userRepository.GetAll();
+            IQueryable<InitialDepartmentRepoDTO> departmentDatamodel = _departmentRepository.GetAll();
 
             List<InitialUserRepoDTO> userDatamodelList = userDatamodel.ToList();
             List<InitialDepartmentRepoDTO> departmentDatamodelList = departmentDatamodel.ToList();
@@ -83,28 +83,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public IQueryable<UserInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return userRepository.GetAll(dataTableRequest).ProjectTo<UserInfo>(mapper.ConfigurationProvider);
-        }
-
-        public UserInfo Get(int serial)
-        {
-            if (serial < 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialUserRepoDTO datamodel = userRepository.Get(serial);
-                string departmentName = "";
-                if (!string.IsNullOrWhiteSpace(datamodel.dept_id))
-                {
-                    departmentName = new DepartmentService().SearchByIdAndName(datamodel.dept_id).FirstOrDefault().dept_name;
-                }
-                UserInfo resultModel = mapper.Map<InitialUserRepoDTO, UserInfo>(datamodel);
-                resultModel.dept_name = departmentName;
-
-                return resultModel;
-            }
+            return _userRepository.GetAll(dataTableRequest).ProjectTo<UserInfo>(_mapper.ConfigurationProvider);
         }
 
         public UserInfo Get(string column, string value, string operation)
@@ -119,24 +98,34 @@ namespace NISC_MFP_MVC_Service.Implement
                 InitialUserRepoDTO dataModel = null;
                 if (operation == "Equals")
                 {
-                    dataModel = userRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                    dataModel = _userRepository.Get(column, value, ".ToString().ToUpper() == @0");
                 }
                 else if (operation == "Contains")
                 {
-                    dataModel = userRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                    dataModel = _userRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
                 }
 
                 if (dataModel == null)
                 {
                     return null;
                 }
-                return mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
+                else
+                {
+                    string departmentName = "";
+                    if (!string.IsNullOrWhiteSpace(dataModel.dept_id))
+                    {
+                        departmentName = new DepartmentService().SearchByIdAndName(dataModel.dept_id).FirstOrDefault().dept_name;
+                    }
+                    UserInfo resultModel = _mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
+                    resultModel.dept_name = departmentName;
+                    return resultModel;
+                }
             }
         }
 
         public IEnumerable<UserInfo> SearchByIdAndName(string prefix)
         {
-            IEnumerable<UserInfo> result = userRepository.GetAll()
+            IEnumerable<UserInfo> result = _userRepository.GetAll()
                 .Where(d =>
                 ((!string.IsNullOrEmpty(d.user_id)) && d.user_id.ToUpper().Contains(prefix.ToUpper())) ||
                 ((!string.IsNullOrEmpty(d.user_name)) && d.user_name.ToUpper().Contains(prefix.ToUpper())))
@@ -157,14 +146,10 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                userRepository.Delete(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+                _userRepository.Delete(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
 
-        public void SoftDelete()
-        {
-            userRepository.SoftDelete();
-        }
 
         public void Update(UserInfo instance)
         {
@@ -174,12 +159,18 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                userRepository.Update(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+                _userRepository.Update(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
+
+        public void SoftDelete()
+        {
+            _userRepository.SoftDelete();
+        }
+
         public void SaveChanges()
         {
-            userRepository.SaveChanges();
+            _userRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -191,7 +182,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            userRepository.Dispose();
+            _userRepository.Dispose();
         }
     }
 }

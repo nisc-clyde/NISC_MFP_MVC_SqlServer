@@ -20,25 +20,25 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class UserRepository : IUserRepository
     {
-        protected MFP_DBEntities db { get; private set; }
-        private Mapper mapper;
+        protected MFP_DBEntities _db { get; private set; }
+        private Mapper _mapper;
 
         public UserRepository()
         {
-            db = new MFP_DBEntities();
-            mapper = InitializeAutomapper();
+            _db = new MFP_DBEntities();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialUserRepoDTO instance)
         {
-            db.tb_user.Add(mapper.Map<tb_user>(instance));
-            db.SaveChanges();
+            _db.tb_user.Add(_mapper.Map<tb_user>(instance));
+            _db.SaveChanges();
         }
 
         public IQueryable<InitialUserRepoDTO> GetAll()
         {
             //TODO
-            return db.tb_user.ProjectTo<InitialUserRepoDTO>(mapper.ConfigurationProvider);
+            return _db.tb_user.ProjectTo<InitialUserRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialUserRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -65,8 +65,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_7
             };
 
-            IQueryable<InitialUserRepoDTO> tb_Users = (from u in db.tb_user.ToList()
-                                                       join d in db.tb_department.ToList()
+            IQueryable<InitialUserRepoDTO> tb_Users = (from u in _db.tb_user.ToList()
+                                                       join d in _db.tb_department.ToList()
                                                        on u.dept_id equals d.dept_id into gj
                                                        from subd in gj.DefaultIfEmpty(new tb_department())
                                                        select new InitialUserRepoDTONeed
@@ -86,7 +86,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                            e_mail = u.e_mail
                                                        })
                                                        .AsQueryable()
-                                                       .ProjectTo<InitialUserRepoDTO>(mapper.ConfigurationProvider);
+                                                       .ProjectTo<InitialUserRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Users = GetWithGlobalSearch(tb_Users, dataTableRequest.GlobalSearchValue);
@@ -132,31 +132,25 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-        public InitialUserRepoDTO Get(int serial)
-        {
-            tb_user result = db.tb_user.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-            return mapper.Map<tb_user, InitialUserRepoDTO>(result);
-        }
-
         public InitialUserRepoDTO Get(string column, string value, string operation)
         {
-            tb_user result = db.tb_user.Where(column + operation, value).FirstOrDefault();
-            return mapper.Map<tb_user, InitialUserRepoDTO>(result);
+            tb_user result = _db.tb_user.Where(column + operation, value).FirstOrDefault();
+            return _mapper.Map<tb_user, InitialUserRepoDTO>(result);
         }
 
         public void Update(InitialUserRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
-            var existingEntity = db.tb_user.Find(dataModel.user_id);
-            db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
-            db.SaveChanges();
+            var dataModel = _mapper.Map<InitialUserRepoDTO, tb_user>(instance);
+            var existingEntity = _db.tb_user.Find(dataModel.user_id);
+            _db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
+            _db.SaveChanges();
         }
 
         public void Delete(InitialUserRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
-            db.Entry(dataModel).State = EntityState.Deleted;
-            db.SaveChanges();
+            var dataModel = _mapper.Map<InitialUserRepoDTO, tb_user>(instance);
+            _db.Entry(dataModel).State = EntityState.Deleted;
+            _db.SaveChanges();
         }
         public void SoftDelete()
         {
@@ -181,7 +175,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         }
         public void SaveChanges()
         {
-            db.SaveChanges();
+            _db.SaveChanges();
         }
 
         public void Dispose()
@@ -194,10 +188,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (db != null)
+                if (_db != null)
                 {
-                    db.Dispose();
-                    db = null;
+                    _db.Dispose();
+                    _db = null;
                 }
             }
         }

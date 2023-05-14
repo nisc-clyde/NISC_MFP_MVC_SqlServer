@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,31 +14,23 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class WatermarkRepository : IWatermarkRepository
     {
-        protected MFP_DBEntities db { get; private set; }
+        protected MFP_DBEntities _db { get; private set; }
         private Mapper mapper;
 
         public WatermarkRepository()
         {
-            db = new MFP_DBEntities();
+            _db = new MFP_DBEntities();
             mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialWatermarkRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                this.db.tb_watermark.Add(mapper.Map<tb_watermark>(instance));
-            }
+            this._db.tb_watermark.Add(mapper.Map<tb_watermark>(instance));
         }
-
 
         public IQueryable<InitialWatermarkRepoDTO> GetAll()
         {
-            return db.tb_watermark.ProjectTo<InitialWatermarkRepoDTO>(mapper.ConfigurationProvider);
+            return _db.tb_watermark.ProjectTo<InitialWatermarkRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialWatermarkRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -70,7 +63,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_10
             };
 
-            IQueryable<InitialWatermarkRepoDTO> tb_Watermarks = db.tb_watermark.AsNoTracking()
+            IQueryable<InitialWatermarkRepoDTO> tb_Watermarks = _db.tb_watermark.AsNoTracking()
                 .Select(p => new InitialWatermarkRepoDTO
                 {
                     id = p.id,
@@ -147,84 +140,46 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-        public InitialWatermarkRepoDTO Get(int id)
+        public InitialWatermarkRepoDTO Get(string column, string value, string operation)
         {
-            if (id < 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialWatermarkRepoDTO result = db.tb_watermark.AsNoTracking()
-                    .Where(p => p.id.Equals(id))
-                    .Select(p => new InitialWatermarkRepoDTO
-                    {
-                        id = p.id,
-                        type = p.type.ToString() == "0" ? "圖片" : "文字",
-                        left_offset = p.left_offset,
-                        right_offset = p.right_offset,
-                        top_offset = p.top_offset,
-                        bottom_offset = p.bottom_offset,
-                        position_mode = p.position_mode.ToString() == "0" ? "左上" :
-                                    p.position_mode.ToString() == "1" ? "左下" :
-                                    p.position_mode.ToString() == "2" ? "右上" :
-                                    p.position_mode.ToString() == "3" ? "右下" : "正中間",
-                        fill_mode = p.fill_mode.ToString() == "0" ? "無" :
-                                p.fill_mode.ToString() == "1" ? "依原圖比例多餘裁切" :
-                                p.fill_mode.ToString() == "2" ? "依原圖比例不裁切" :
-                                p.fill_mode.ToString() == "3" ? "依紙張比例" :
-                                p.fill_mode.ToString() == "4" ? "重覆填滿" : "置中，並依原圖比例多餘裁切",
-                        text = p.text,
-                        image_path = p.image_path,
-                        rotation = p.rotation,
-                        color = p.color,
-                        horizontal_alignment = p.horizontal_alignment,
-                        vertical_alignment = p.vertical_alignment,
-                        font_name = p.font_name,
-                        font_height = p.font_height,
-                    })
-                    .FirstOrDefault();
+            tb_watermark result = _db.tb_watermark.Where(column + operation, value).FirstOrDefault();
+            InitialWatermarkRepoDTO resultSubstitution = mapper.Map<tb_watermark, InitialWatermarkRepoDTO>(result);
+            resultSubstitution.type = resultSubstitution.type.ToString() == "0" ? "圖片" : "文字";
+            resultSubstitution.position_mode = resultSubstitution.position_mode.ToString() == "0" ? "左上" :
+                resultSubstitution.position_mode.ToString() == "1" ? "左下" :
+                resultSubstitution.position_mode.ToString() == "2" ? "右上" :
+                resultSubstitution.position_mode.ToString() == "3" ? "右下" : "正中間";
+            resultSubstitution.fill_mode = resultSubstitution.fill_mode.ToString() == "0" ? "無" :
+                resultSubstitution.fill_mode.ToString() == "1" ? "依原圖比例多餘裁切" :
+                resultSubstitution.fill_mode.ToString() == "2" ? "依原圖比例不裁切" :
+                resultSubstitution.fill_mode.ToString() == "3" ? "依紙張比例" :
+                resultSubstitution.fill_mode.ToString() == "4" ? "重覆填滿" : "置中，並依原圖比例多餘裁切";
 
-                return result;
-            }
+            return resultSubstitution;
         }
 
         public void Update(InitialWatermarkRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialWatermarkRepoDTO, tb_watermark>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                db.SaveChanges();
-            }
+            var dataModel = mapper.Map<InitialWatermarkRepoDTO, tb_watermark>(instance);
+            _db.Entry(dataModel).State = EntityState.Modified;
+            _db.SaveChanges();
         }
 
         public void Delete(InitialWatermarkRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_watermark dataModel = db.tb_watermark.Where(p => p.id.Equals(instance.id)).FirstOrDefault();
-                this.db.Entry(dataModel).State = EntityState.Deleted;
-                this.db.SaveChanges();
-            }
+            tb_watermark dataModel = _db.tb_watermark.Where(p => p.id.Equals(instance.id)).FirstOrDefault();
+            this._db.Entry(dataModel).State = EntityState.Deleted;
+            this._db.SaveChanges();
         }
 
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            _db.SaveChanges();
         }
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -232,10 +187,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (_db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    _db.Dispose();
+                    _db = null;
                 }
             }
         }

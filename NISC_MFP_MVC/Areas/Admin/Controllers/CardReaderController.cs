@@ -80,7 +80,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    CardReaderInfo instance = cardReaderService.Get(serial);
+                    CardReaderInfo instance = cardReaderService.Get("serial",serial.ToString(),"Equals");
                     cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
                 }
             }
@@ -127,7 +127,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteCardReader(int serial)
         {
             CardReaderModel cardReaderViewModel = new CardReaderModel();
-            CardReaderInfo instance = cardReaderService.Get(serial);
+            CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
             cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
 
             return PartialView(cardReaderViewModel);
@@ -147,7 +147,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             MultiFunctionPrintViewModel multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
 
-            CardReaderInfo instance = cardReaderService.Get(serial);
+            CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
             multiFunctionPrintViewModel.cardReaderModel = mapper.Map<CardReaderModel>(instance);
 
             IQueryable<MultiFunctionPrintModel> mfpResultModel = multiFunctionPrintService.GetMultiple(cardReaderId).ProjectTo<MultiFunctionPrintModel>(mapper.ConfigurationProvider);

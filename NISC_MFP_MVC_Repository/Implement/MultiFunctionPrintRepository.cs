@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using MySql.Data.MySqlClient;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -10,19 +11,20 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Security;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
     public class MultiFunctionPrintRepository : IMultiFunctionPrintRepository
     {
-        protected MFP_DBEntities db { get; private set; }
-        private Mapper mapper;
+        protected MFP_DBEntities _db { get; private set; }
+        private Mapper _mapper;
 
         public MultiFunctionPrintRepository()
         {
-            db = new MFP_DBEntities();
-            mapper = InitializeAutomapper();
+            _db = new MFP_DBEntities();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialMultiFunctionPrintRepoDTO instance)
@@ -35,13 +37,13 @@ namespace NISC_MFP_MVC_Repository.Implement
             //sqlCommand.ExecuteNonQuery();
             //conn.Close();
 
-            db.tb_mfp.Add(mapper.Map<tb_mfp>(instance));
+            _db.tb_mfp.Add(_mapper.Map<tb_mfp>(instance));
             this.SaveChanges();
         }
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetAll()
         {
-            return db.tb_mfp.ProjectTo<InitialMultiFunctionPrintRepoDTO>(mapper.ConfigurationProvider);
+            return _db.tb_mfp.ProjectTo<InitialMultiFunctionPrintRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -62,7 +64,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             return Enumerable.Empty<InitialMultiFunctionPrintRepoDTO>().AsQueryable();
         }
 
-        public InitialMultiFunctionPrintRepoDTO Get(int serial)
+        public InitialMultiFunctionPrintRepoDTO Get(string column, string value, string operation)
         {
             //NOP
             return null;
@@ -70,7 +72,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetMultiple(int cr_id)
         {
-            IQueryable<InitialMultiFunctionPrintRepoDTO> result = db.tb_mfp
+            IQueryable<InitialMultiFunctionPrintRepoDTO> result = _db.tb_mfp
                 .Where(d => d.cr_id == cr_id.ToString())
                 .Select(p => new InitialMultiFunctionPrintRepoDTONeed
                 {
@@ -83,30 +85,30 @@ namespace NISC_MFP_MVC_Repository.Implement
                     mfp_status = p.mfp_status == "Online" ? "線上" : "離線"
                 })
                 .AsQueryable()
-                .ProjectTo<InitialMultiFunctionPrintRepoDTO>(mapper.ConfigurationProvider);
+                .ProjectTo<InitialMultiFunctionPrintRepoDTO>(_mapper.ConfigurationProvider);
             return result;
         }
 
         public void Update(InitialMultiFunctionPrintRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
-            db.Entry(dataModel).State = EntityState.Modified;
+            var dataModel = _mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
+            _db.Entry(dataModel).State = EntityState.Modified;
         }
 
         public void Delete(InitialMultiFunctionPrintRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
-            db.Entry(dataModel).State = EntityState.Deleted;
+            var dataModel = _mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
+            _db.Entry(dataModel).State = EntityState.Deleted;
         }
 
         public void SaveChanges()
         {
-            db.SaveChanges();
+            _db.SaveChanges();
         }
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -114,10 +116,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (_db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    _db.Dispose();
+                    _db = null;
                 }
             }
         }

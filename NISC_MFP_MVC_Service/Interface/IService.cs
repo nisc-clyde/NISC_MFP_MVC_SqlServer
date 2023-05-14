@@ -12,7 +12,7 @@ namespace NISC_MFP_MVC_Service.Interface
 
         IQueryable<TEntity> GetAll(DataTableRequest dataTableRequest);
 
-        TEntity Get(int serial);
+        TEntity Get(string column, string value, string operation);
 
         void Update(TEntity instance);
 

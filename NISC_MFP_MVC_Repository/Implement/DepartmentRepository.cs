@@ -18,13 +18,13 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        protected MFP_DBEntities db { get; private set; }
-        private Mapper mapper;
+        protected MFP_DBEntities _db { get; private set; }
+        private Mapper _mapper;
 
         public DepartmentRepository()
         {
-            db = new MFP_DBEntities();
-            mapper = InitializeAutomapper();
+            _db = new MFP_DBEntities();
+            _mapper = InitializeAutomapper();
         }
 
         /// <summary>
@@ -34,13 +34,13 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// <exception cref="ArgumentNullException"></exception>
         public void Insert(InitialDepartmentRepoDTO instance)
         {
-            this.db.tb_department.Add(mapper.Map<tb_department>(instance));
+            this._db.tb_department.Add(_mapper.Map<tb_department>(instance));
             this.SaveChanges();
         }
 
         public IQueryable<InitialDepartmentRepoDTO> GetAll()
         {
-            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department.AsNoTracking()
+            IQueryable<InitialDepartmentRepoDTO> tb_Departments = _db.tb_department.AsNoTracking()
                 .Select(p => new InitialDepartmentRepoDTONeed
                 {
                     dept_id = p.dept_id,
@@ -51,7 +51,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_email = p.dept_email,
                     serial = p.serial
                 })
-                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider).AsQueryable();
+                .ProjectTo<InitialDepartmentRepoDTO>(_mapper.ConfigurationProvider).AsQueryable();
 
             return tb_Departments;
         }
@@ -76,7 +76,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_5
             };
 
-            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department.AsNoTracking()
+            IQueryable<InitialDepartmentRepoDTO> tb_Departments = _db.tb_department.AsNoTracking()
                 .Select(p => new InitialDepartmentRepoDTONeed
                 {
                     dept_id = p.dept_id,
@@ -87,7 +87,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_email = p.dept_email,
                     serial = p.serial
                 })
-                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider).AsQueryable();
+                .ProjectTo<InitialDepartmentRepoDTO>(_mapper.ConfigurationProvider).AsQueryable();
 
             //GlobalSearch
             tb_Departments = GetWithGlobalSearch(tb_Departments, dataTableRequest.GlobalSearchValue);
@@ -132,31 +132,25 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-        public InitialDepartmentRepoDTO Get(int serial)
-        {
-            tb_department result = db.tb_department.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-            return mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
-        }
-
         public InitialDepartmentRepoDTO Get(string column, string value, string operation)
         {
-            tb_department result = db.tb_department.Where(column + operation, value).FirstOrDefault();
-            return mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
+            tb_department result = _db.tb_department.Where(column + operation, value).FirstOrDefault();
+            return _mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
         }
 
         public void Update(InitialDepartmentRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
-            var existingEntity = db.tb_department.Find(dataModel.serial);
-            db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
-            db.SaveChanges();
+            var dataModel = _mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            var existingEntity = _db.tb_department.Find(dataModel.serial);
+            _db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
+            _db.SaveChanges();
         }
 
         public void Delete(InitialDepartmentRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
-            db.Entry(dataModel).State = EntityState.Deleted;
-            db.SaveChanges();
+            var dataModel = _mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            _db.Entry(dataModel).State = EntityState.Deleted;
+            _db.SaveChanges();
         }
 
         public void SoftDelete()
@@ -183,7 +177,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void SaveChanges()
         {
-            db.SaveChanges();
+            _db.SaveChanges();
         }
 
         public void Dispose()
@@ -196,10 +190,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (db != null)
+                if (_db != null)
                 {
-                    db.Dispose();
-                    db = null;
+                    _db.Dispose();
+                    _db = null;
                 }
             }
         }

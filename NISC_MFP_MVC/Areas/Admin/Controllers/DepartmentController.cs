@@ -74,7 +74,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    DepartmentInfo instance = departmentService.Get(serial);
+                    DepartmentInfo instance = departmentService.Get("serial", serial.ToString(), "Equals");
                     departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
                 }
             }
@@ -133,7 +133,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteDepartment(int serial)
         {
             DepartmentViewModel departmentViewModel = new DepartmentViewModel();
-            DepartmentInfo instance = departmentService.Get(serial);
+            DepartmentInfo instance = departmentService.Get("serial", serial.ToString(), "Equals");
             departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
 
             return PartialView(departmentViewModel);

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
 //using NISC_MFP_MVC_Service.DTOsI.Info.Watermark;
 using NISC_MFP_MVC_Service.Interface;
@@ -15,13 +17,13 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class WatermarkService : IWatermarkService
     {
-        private IWatermarkRepository _repository;
-        private Mapper mapper;
+        private readonly IWatermarkRepository _watermarkRepository;
+        private Mapper _mapper;
 
         public WatermarkService()
         {
-            _repository = new WatermarkRepository();
-            mapper = InitializeAutomapper();
+            _watermarkRepository = new WatermarkRepository();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(WatermarkInfo instance)
@@ -32,34 +34,45 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Insert(mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
+                _watermarkRepository.Insert(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
             }
         }
 
         public IQueryable<WatermarkInfo> GetAll()
         {
-            IQueryable<InitialWatermarkRepoDTO> dataModel = _repository.GetAll();
+            IQueryable<InitialWatermarkRepoDTO> dataModel = _watermarkRepository.GetAll();
 
-            return dataModel.ProjectTo<WatermarkInfo>(mapper.ConfigurationProvider);
+            return dataModel.ProjectTo<WatermarkInfo>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<WatermarkInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return _repository.GetAll(dataTableRequest).ProjectTo<WatermarkInfo>(mapper.ConfigurationProvider);
+            return _watermarkRepository.GetAll(dataTableRequest).ProjectTo<WatermarkInfo>(_mapper.ConfigurationProvider);
         }
 
-        public WatermarkInfo Get(int serial)
+        public WatermarkInfo Get(string column, string value, string operation)
         {
-            if (serial < 0)
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
             {
                 throw new ArgumentNullException("Reference to null instance.");
             }
             else
             {
-                InitialWatermarkRepoDTO datamodel = _repository.Get(serial);
-                WatermarkInfo resultmodel = mapper.Map<InitialWatermarkRepoDTO, WatermarkInfo>(datamodel);
+                InitialWatermarkRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = _watermarkRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = _watermarkRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
 
-                return resultmodel;
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<InitialWatermarkRepoDTO, WatermarkInfo>(dataModel);
             }
         }
 
@@ -106,7 +119,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Delete(mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
+                _watermarkRepository.Delete(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
             }
         }
 
@@ -118,13 +131,13 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Update(mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
+                _watermarkRepository.Update(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
             }
         }
 
         public void SaveChanges()
         {
-            _repository.SaveChanges();
+            _watermarkRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -136,7 +149,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _repository.Dispose();
+            _watermarkRepository.Dispose();
         }
     }
 }

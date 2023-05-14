@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.DTOs.CardReader;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Interface;
 using System;
@@ -14,13 +16,13 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class CardReaderService : ICardReaderService
     {
-        private ICardReaderRepository _repository;
-        private Mapper mapper;
+        private readonly ICardReaderRepository _cardRepository;
+        private Mapper _mapper;
 
         public CardReaderService()
         {
-            _repository = new CardReaderRepository();
-            mapper = InitializeAutomapper();
+            _cardRepository = new CardReaderRepository();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(CardReaderInfo instance)
@@ -31,32 +33,44 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Insert(mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
+                _cardRepository.Insert(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
             }
         }
 
         public IQueryable<CardReaderInfo> GetAll()
         {
-            IQueryable<InitialCardReaderRepoDTO> datamodel = _repository.GetAll();
-            return datamodel.ProjectTo<CardReaderInfo>(mapper.ConfigurationProvider);
+            IQueryable<InitialCardReaderRepoDTO> datamodel = _cardRepository.GetAll();
+            return datamodel.ProjectTo<CardReaderInfo>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<CardReaderInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return _repository.GetAll(dataTableRequest).ProjectTo<CardReaderInfo>(mapper.ConfigurationProvider);
+            return _cardRepository.GetAll(dataTableRequest).ProjectTo<CardReaderInfo>(_mapper.ConfigurationProvider);
         }
 
-        public CardReaderInfo Get(int serial)
+        public CardReaderInfo Get(string column, string value, string operation)
         {
-            if (serial < 0)
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
             {
                 throw new ArgumentNullException("Reference to null instance.");
             }
             else
             {
-                InitialCardReaderRepoDTO datamodel = _repository.Get(serial);
-                CardReaderInfo resultmodel = mapper.Map<InitialCardReaderRepoDTO, CardReaderInfo>(datamodel);
-                return resultmodel;
+                InitialCardReaderRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
+
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<InitialCardReaderRepoDTO, CardReaderInfo>(dataModel);
             }
         }
 
@@ -98,7 +112,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Update(mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
+                _cardRepository.Update(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
             }
         }
 
@@ -110,13 +124,13 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Delete(mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
+                _cardRepository.Delete(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
             }
         }
 
         public void SaveChanges()
         {
-            _repository.SaveChanges();
+            _cardRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -128,7 +142,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _repository.Dispose();
+            _cardRepository.Dispose();
         }
     }
 }

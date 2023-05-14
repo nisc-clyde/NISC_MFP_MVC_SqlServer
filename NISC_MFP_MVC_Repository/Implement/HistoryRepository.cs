@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,30 +14,23 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class HistoryRepository : IHistoryRepository
     {
-        protected MFP_DBEntities db { get; private set; }
-        private Mapper mapper;
+        protected MFP_DBEntities _db { get; private set; }
+        private Mapper _mapper;
 
         public HistoryRepository()
         {
-            db = new MFP_DBEntities();
-            mapper = InitializeAutomapper();
+            _db = new MFP_DBEntities();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialHistoryRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                this.db.tb_logs_history.Add(mapper.Map<tb_logs_history>(instance));
-            }
+            _db.tb_logs_history.Add(_mapper.Map<tb_logs_history>(instance));
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetAll()
         {
-            return db.tb_logs_history.ProjectTo<InitialHistoryRepoDTO>(mapper.ConfigurationProvider);
+            return _db.tb_logs_history.ProjectTo<InitialHistoryRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -57,7 +51,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_4,
             };
 
-            IQueryable<InitialHistoryRepoDTO> tb_Logs_History = db.tb_logs_history.AsNoTracking().ProjectTo<InitialHistoryRepoDTO>(mapper.ConfigurationProvider);
+            IQueryable<InitialHistoryRepoDTO> tb_Logs_History = _db.tb_logs_history.AsNoTracking().ProjectTo<InitialHistoryRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Logs_History = GetWithGlobalSearch(tb_Logs_History, dataTableRequest.GlobalSearchValue);
@@ -101,54 +95,33 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-        public InitialHistoryRepoDTO Get(int id)
+        public InitialHistoryRepoDTO Get(string column, string value, string operation)
         {
-            if (id < 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_logs_history result = db.tb_logs_history.Where(d => d.id.Equals(id)).FirstOrDefault();
-                return mapper.Map<tb_logs_history, InitialHistoryRepoDTO>(result);
-            }
+            tb_logs_history result = _db.tb_logs_history.Where(column + operation, value).FirstOrDefault();
+            return _mapper.Map<tb_logs_history, InitialHistoryRepoDTO>(result);
         }
 
         public void Update(InitialHistoryRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                db.SaveChanges();
-            }
+            var dataModel = _mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
+            _db.Entry(dataModel).State = EntityState.Modified;
+            _db.SaveChanges();
         }
 
         public void Delete(InitialHistoryRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
-                this.db.Entry(dataModel).State = EntityState.Deleted;
-                this.db.SaveChanges();
-            }
+            var dataModel = _mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
+            _db.Entry(dataModel).State = EntityState.Deleted;
+            _db.SaveChanges();
         }
 
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            _db.SaveChanges();
         }
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -156,10 +129,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (_db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    _db.Dispose();
+                    _db = null;
                 }
             }
         }

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
 using NISC_MFP_MVC_Service.DTOs.Info.History;
 using NISC_MFP_MVC_Service.Interface;
 using System;
@@ -15,13 +17,13 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class HistoryService : IHistoryService
     {
-        private IHistoryRepository _repository;
-        private Mapper mapper;
+        private readonly IHistoryRepository _historyRepository;
+        private Mapper _mapper;
 
         public HistoryService()
         {
-            _repository = new HistoryRepository();
-            mapper = InitializeAutomapper();
+            _historyRepository = new HistoryRepository();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(HistoryInfo instance)
@@ -32,36 +34,47 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Insert(mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
+                _historyRepository.Insert(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
             }
         }
 
         public IQueryable<HistoryInfo> GetAll()
         {
-            IQueryable<InitialHistoryRepoDTO> datamodel = _repository.GetAll();
+            IQueryable<InitialHistoryRepoDTO> datamodel = _historyRepository.GetAll();
             IEnumerable<InitialHistoryRepoDTO> enumerableDataModel = datamodel.AsEnumerable();
-            IQueryable<HistoryInfo> historyDataModel = mapper.Map<IEnumerable<InitialHistoryRepoDTO>, IEnumerable<HistoryInfo>>(enumerableDataModel).AsQueryable();
+            IQueryable<HistoryInfo> historyDataModel = _mapper.Map<IEnumerable<InitialHistoryRepoDTO>, IEnumerable<HistoryInfo>>(enumerableDataModel).AsQueryable();
 
             return historyDataModel;
         }
 
         public IQueryable<HistoryInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return _repository.GetAll(dataTableRequest).ProjectTo<HistoryInfo>(mapper.ConfigurationProvider);
+            return _historyRepository.GetAll(dataTableRequest).ProjectTo<HistoryInfo>(_mapper.ConfigurationProvider);
         }
 
-
-        public HistoryInfo Get(int serial)
+        public HistoryInfo Get(string column, string value, string operation)
         {
-            if (serial < 0)
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
             {
                 throw new ArgumentNullException("Reference to null instance.");
             }
             else
             {
-                InitialHistoryRepoDTO datamodel = _repository.Get(serial);
-                HistoryInfo resultmodel = mapper.Map<InitialHistoryRepoDTO, HistoryInfo>(datamodel);
-                return resultmodel;
+                InitialHistoryRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = _historyRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = _historyRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
+
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<InitialHistoryRepoDTO, HistoryInfo>(dataModel);
             }
         }
 
@@ -101,7 +114,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Update(mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
+                _historyRepository.Update(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
             }
         }
 
@@ -113,13 +126,13 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Delete(mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
+                _historyRepository.Delete(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
             }
         }
 
         public void SaveChanges()
         {
-            _repository.SaveChanges();
+            _historyRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -131,7 +144,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _repository.Dispose();
+            _historyRepository.Dispose();
         }
     }
 }

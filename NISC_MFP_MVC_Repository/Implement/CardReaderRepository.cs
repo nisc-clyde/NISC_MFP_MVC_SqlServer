@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.CardReader;
+using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -13,23 +14,23 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class CardReaderRepository : ICardReaderRepository
     {
-        protected MFP_DBEntities db { get; private set; }
-        private Mapper mapper;
+        protected MFP_DBEntities _db { get; private set; }
+        private Mapper _mapper;
 
         public CardReaderRepository()
         {
-            db = new MFP_DBEntities();
-            mapper = InitializeAutomapper();
+            _db = new MFP_DBEntities();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialCardReaderRepoDTO instance)
         {
-            db.tb_cardreader.Add(mapper.Map<tb_cardreader>(instance));
+            _db.tb_cardreader.Add(_mapper.Map<tb_cardreader>(instance));
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll()
         {
-            return db.tb_cardreader.ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+            return _db.tb_cardreader.ProjectTo<InitialCardReaderRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -54,7 +55,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_6
             };
 
-            IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
+            IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = _db.tb_cardreader
                 .Select(p => new InitialCardReaderRepoDTONeed
                 {
                     cr_id = p.cr_id,
@@ -66,7 +67,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     cr_status = p.cr_status == "Online" ? "線上" : "離線",
                     serial = p.serial
                 })
-                .AsNoTracking().ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+                .AsNoTracking().ProjectTo<InitialCardReaderRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_CardReaders = GetWithGlobalSearch(tb_CardReaders, dataTableRequest.GlobalSearchValue);
@@ -111,31 +112,31 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-        public InitialCardReaderRepoDTO Get(int serial)
+        public InitialCardReaderRepoDTO Get(string column, string value, string operation)
         {
-            tb_cardreader result = db.tb_cardreader.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-            return mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
+            tb_cardreader result = _db.tb_cardreader.Where(column + operation, value).FirstOrDefault();
+            return _mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
         }
 
         public void Update(InitialCardReaderRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
-            db.Entry(dataModel).State = EntityState.Modified;
+            var dataModel = _mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            _db.Entry(dataModel).State = EntityState.Modified;
         }
 
         public void Delete(InitialCardReaderRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
-            db.Entry(dataModel).State = EntityState.Deleted;
+            var dataModel = _mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            _db.Entry(dataModel).State = EntityState.Deleted;
         }
 
         public void SaveChanges()
         {
-            db.SaveChanges();
+            _db.SaveChanges();
         }
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -143,10 +144,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (_db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    _db.Dispose();
+                    _db = null;
                 }
             }
         }

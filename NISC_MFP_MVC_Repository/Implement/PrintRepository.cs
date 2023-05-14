@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
+using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -15,12 +16,12 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class PrintRepository : IPrintRepository
     {
         protected MFP_DBEntities db { get; private set; }
-        private Mapper mapper;
+        private Mapper _mapper;
 
         public PrintRepository()
         {
             db = new MFP_DBEntities();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialPrintRepoDTO instance)
@@ -30,7 +31,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialPrintRepoDTO> GetAll()
         {
-            return db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialPrintRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -78,7 +79,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     document_name = p.document_name,
                     serial = p.serial
                 })
-                .ProjectTo<InitialPrintRepoDTO>(mapper.ConfigurationProvider);
+                .ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Logs_Prints = GetWithGlobalSearch(tb_Logs_Prints, dataTableRequest.GlobalSearchValue);
@@ -172,31 +173,17 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-        public InitialPrintRepoDTO Get(int serial)
+        public InitialPrintRepoDTO Get(string column, string value, string operation)
         {
-            if (serial < 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_logs_print result = db.tb_logs_print.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-                return mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
-            }
+            tb_logs_print result = db.tb_logs_print.Where(column + operation, value).FirstOrDefault();
+            return _mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
         }
 
         public void Update(InitialPrintRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialPrintRepoDTO, tb_logs_print>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                db.SaveChanges();
-            }
+            var dataModel = _mapper.Map<InitialPrintRepoDTO, tb_logs_print>(instance);
+            this.db.Entry(dataModel).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(InitialPrintRepoDTO instance)

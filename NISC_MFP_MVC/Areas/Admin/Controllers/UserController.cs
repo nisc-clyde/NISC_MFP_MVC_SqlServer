@@ -90,7 +90,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    UserInfo instance = userService.Get(serial);
+                    UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
                     userViewModel = mapper.Map<UserViewModel>(instance);
                 }
             }
@@ -149,7 +149,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteUser(int serial)
         {
             UserViewModel UserViewModel = new UserViewModel();
-            UserInfo instance = userService.Get(serial);
+            UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
             UserViewModel = mapper.Map<UserViewModel>(instance);
 
             return PartialView(UserViewModel);
@@ -175,7 +175,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult UserPermissionConfig(string formTitle, int serial)
         {
             UserViewModel userViewModel = new UserViewModel();
-            UserInfo instance = userService.Get(serial);
+            UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
             userViewModel = mapper.Map<UserViewModel>(instance);
             ViewBag.formTitle = formTitle;
 

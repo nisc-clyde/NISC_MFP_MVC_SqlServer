@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.Implement;
+using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info.History;
 using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.Interface;
 using System;
@@ -14,13 +17,13 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class PrintService : IPrintService
     {
-        private PrintRepository _repository;
-        private Mapper mapper;
+        private PrintRepository _printRepository;
+        private Mapper _mapper;
 
         public PrintService()
         {
-            _repository = new PrintRepository();
-            mapper = InitializeAutomapper();
+            _printRepository = new PrintRepository();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(PrintInfo instance)
@@ -31,34 +34,46 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Insert(mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
+                _printRepository.Insert(_mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
             }
         }
 
         public IQueryable<PrintInfo> GetAll()
         {
-            IQueryable<InitialPrintRepoDTO> datamodel = _repository.GetAll();
-            IQueryable<PrintInfo> resultDataModel = datamodel.ProjectTo<PrintInfo>(mapper.ConfigurationProvider);
+            IQueryable<InitialPrintRepoDTO> datamodel = _printRepository.GetAll();
+            IQueryable<PrintInfo> resultDataModel = datamodel.ProjectTo<PrintInfo>(_mapper.ConfigurationProvider);
 
             return resultDataModel;
         }
 
         public IQueryable<PrintInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return _repository.GetAll(dataTableRequest).ProjectTo<PrintInfo>(mapper.ConfigurationProvider);
+            return _printRepository.GetAll(dataTableRequest).ProjectTo<PrintInfo>(_mapper.ConfigurationProvider);
         }
 
-        public PrintInfo Get(int serial)
+        public PrintInfo Get(string column, string value, string operation)
         {
-            if (serial < 0)
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
             {
                 throw new ArgumentNullException("Reference to null instance.");
             }
             else
             {
-                InitialPrintRepoDTO datamodel = _repository.Get(serial);
-                PrintInfo resultmodel = mapper.Map<InitialPrintRepoDTO, PrintInfo>(datamodel);
-                return resultmodel;
+                InitialPrintRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = _printRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = _printRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
+
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<InitialPrintRepoDTO, PrintInfo>(dataModel);
             }
         }
 
@@ -149,7 +164,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Update(mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
+                _printRepository.Update(_mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
             }
         }
 
@@ -161,13 +176,13 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Delete(mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
+                _printRepository.Delete(_mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
             }
         }
 
         public void SaveChanges()
         {
-            _repository.SaveChanges();
+            _printRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -179,7 +194,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _repository.Dispose();
+            _printRepository.Dispose();
         }
     }
 }

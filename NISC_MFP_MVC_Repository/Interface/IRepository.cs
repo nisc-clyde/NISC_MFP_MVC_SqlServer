@@ -17,7 +17,7 @@ namespace NISC_MFP_MVC_Repository.Interface
 
         IQueryable<TEntity> GetWithColumnSearch(IQueryable<TEntity> source, string[] columns, string[] searches);
 
-        TEntity Get(int serial);
+        TEntity Get(string column, string value, string operation);
 
         void Update(TEntity instance);
 

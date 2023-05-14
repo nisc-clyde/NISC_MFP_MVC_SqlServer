@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,13 +14,13 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class DepositRepository : IDepositRepository
     {
-        protected MFP_DBEntities db { get; private set; }
-        private Mapper mapper;
+        protected MFP_DBEntities _db { get; private set; }
+        private Mapper _mapper;
 
         public DepositRepository()
         {
-            db = new MFP_DBEntities();
-            mapper = InitializeAutomapper();
+            _db = new MFP_DBEntities();
+            _mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialDepositRepoDTO instance)
@@ -29,7 +30,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialDepositRepoDTO> GetAll()
         {
-            return db.tb_logs_deposit.ProjectTo<InitialDepositRepoDTO>(mapper.ConfigurationProvider);
+            return _db.tb_logs_deposit.ProjectTo<InitialDepositRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialDepositRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -58,7 +59,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_8,
             };
 
-            IQueryable<InitialDepositRepoDTO> tb_Logs_Deposit = db.tb_logs_deposit.AsNoTracking().ProjectTo<InitialDepositRepoDTO>(mapper.ConfigurationProvider);
+            IQueryable<InitialDepositRepoDTO> tb_Logs_Deposit = _db.tb_logs_deposit.AsNoTracking().ProjectTo<InitialDepositRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Logs_Deposit = GetWithGlobalSearch(tb_Logs_Deposit, dataTableRequest.GlobalSearchValue);
@@ -106,55 +107,34 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-        public InitialDepositRepoDTO Get(int serial)
+        public InitialDepositRepoDTO Get(string column, string value, string operation)
         {
-            if (serial < 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_logs_deposit result = db.tb_logs_deposit.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-                return mapper.Map<tb_logs_deposit, InitialDepositRepoDTO>(result);
-            }
+            tb_logs_deposit result = _db.tb_logs_deposit.Where(column + operation, value).FirstOrDefault();
+            return _mapper.Map<tb_logs_deposit, InitialDepositRepoDTO>(result);
         }
 
 
         public void Update(InitialDepositRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                db.SaveChanges();
-            }
+            var dataModel = _mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
+            _db.Entry(dataModel).State = EntityState.Modified;
+            _db.SaveChanges();
         }
 
         public void Delete(InitialDepositRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
-                this.db.Entry(dataModel).State = EntityState.Deleted;
-                this.db.SaveChanges();
-            }
+            var dataModel = _mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
+            _db.Entry(dataModel).State = EntityState.Deleted;
+            _db.SaveChanges();
         }
 
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            _db.SaveChanges();
         }
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -162,10 +142,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (_db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    _db.Dispose();
+                    _db = null;
                 }
             }
         }
