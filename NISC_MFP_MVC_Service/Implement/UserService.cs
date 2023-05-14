@@ -1,29 +1,32 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository;
 using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
     public class UserService : IUserService
     {
-        private IUserRepository _userRepository;
-        private IDepartmentRepository _departmentRepository;
+        private IUserRepository userRepository;
+        private IDepartmentRepository departmentRepository;
         private Mapper mapper;
 
         public UserService()
         {
-            _userRepository = new UserRepository();
-            _departmentRepository = new DepartmentRepository();
+            userRepository = new UserRepository();
+            departmentRepository = new DepartmentRepository();
             mapper = InitializeAutomapper();
         }
 
@@ -35,14 +38,22 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _userRepository.Insert(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+                UserInfo userViewModel = Get("user_id", instance.user_id, "Equals");
+                if (userViewModel != null)
+                {
+                    throw new Exception("此帳號已存在，請使用其他帳號");
+                }
+                else
+                {
+                    userRepository.Insert(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+                }
             }
         }
 
         public IQueryable<UserInfo> GetAll()
         {
-            IQueryable<InitialUserRepoDTO> userDatamodel = _userRepository.GetAll();
-            IQueryable<InitialDepartmentRepoDTO> departmentDatamodel = _departmentRepository.GetAll();
+            IQueryable<InitialUserRepoDTO> userDatamodel = userRepository.GetAll();
+            IQueryable<InitialDepartmentRepoDTO> departmentDatamodel = departmentRepository.GetAll();
 
             List<InitialUserRepoDTO> userDatamodelList = userDatamodel.ToList();
             List<InitialDepartmentRepoDTO> departmentDatamodelList = departmentDatamodel.ToList();
@@ -72,7 +83,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public IQueryable<UserInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return _userRepository.GetAll(dataTableRequest).ProjectTo<UserInfo>(mapper.ConfigurationProvider);
+            return userRepository.GetAll(dataTableRequest).ProjectTo<UserInfo>(mapper.ConfigurationProvider);
         }
 
         public UserInfo Get(int serial)
@@ -83,7 +94,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                InitialUserRepoDTO datamodel = _userRepository.Get(serial);
+                InitialUserRepoDTO datamodel = userRepository.Get(serial);
                 string departmentName = "";
                 if (!string.IsNullOrWhiteSpace(datamodel.dept_id))
                 {
@@ -96,9 +107,36 @@ namespace NISC_MFP_MVC_Service.Implement
             }
         }
 
+        public UserInfo Get(string column, string value, string operation)
+        {
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
+            {
+                throw new ArgumentNullException("Reference to null instance.");
+
+            }
+            else
+            {
+                InitialUserRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = userRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = userRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
+
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
+            }
+        }
+
         public IEnumerable<UserInfo> SearchByIdAndName(string prefix)
         {
-            IEnumerable<UserInfo> result = _userRepository.GetAll()
+            IEnumerable<UserInfo> result = userRepository.GetAll()
                 .Where(d =>
                 ((!string.IsNullOrEmpty(d.user_id)) && d.user_id.ToUpper().Contains(prefix.ToUpper())) ||
                 ((!string.IsNullOrEmpty(d.user_name)) && d.user_name.ToUpper().Contains(prefix.ToUpper())))
@@ -119,10 +157,14 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _userRepository.Delete(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+                userRepository.Delete(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
 
+        public void SoftDelete()
+        {
+            userRepository.SoftDelete();
+        }
 
         public void Update(UserInfo instance)
         {
@@ -132,12 +174,12 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _userRepository.Update(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+                userRepository.Update(mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
         public void SaveChanges()
         {
-            _userRepository.SaveChanges();
+            userRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -149,7 +191,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _userRepository.Dispose();
+            userRepository.Dispose();
         }
     }
 }

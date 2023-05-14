@@ -2,10 +2,13 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Card;
+using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
+using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -17,12 +20,12 @@ namespace NISC_MFP_MVC_Service.Implement
     public class CardService : ICardService
     {
         private IUserRepository _userRepository;
-        private ICardRepository _cardRepository;
+        private ICardRepository cardRepository;
         private Mapper mapper;
 
         public CardService()
         {
-            _cardRepository = new CardRepository();
+            cardRepository = new CardRepository();
             _userRepository = new UserRepository();
             mapper = InitializeAutomapper();
         }
@@ -43,41 +46,29 @@ namespace NISC_MFP_MVC_Service.Implement
                         card_id += "0";
                     }
                     card_id += instance.card_id;
+                    instance.card_id = card_id;
                 }
-                instance.card_id = card_id;
-                _cardRepository.Insert(mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
+
+                try
+                {
+                    cardRepository.Insert(mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
             }
         }
 
         public IQueryable<CardInfo> GetAll()
         {
-            IQueryable<InitialCardRepoDTO> cardDatamodel = _cardRepository.GetAll();
-            IQueryable<InitialUserRepoDTO> userDatamodel = _userRepository.GetAll();
-
-            List<InitialCardRepoDTO> cardDatamodelList = cardDatamodel.ToList();
-            List<InitialUserRepoDTO> userDatamodelList = userDatamodel.ToList();
-
-            IQueryable<CardInfo> datamodel = (from c in cardDatamodelList
-                                              join u in userDatamodelList on c.user_id equals u.user_id into gj
-                                              from subd in gj.DefaultIfEmpty(new InitialUserRepoDTO())
-                                              select new CardInfo
-                                              {
-                                                  card_id = c.card_id,
-                                                  value = c.value,
-                                                  freevalue = c.freevalue,
-                                                  user_id = subd.user_id,
-                                                  user_name = subd.user_name,
-                                                  card_type = c.card_type,
-                                                  enable = c.enable,
-                                                  serial = c.serial
-                                              }).AsQueryable();
-
-            return datamodel;
+            IQueryable<InitialCardRepoDTO> datamodel = cardRepository.GetAll();
+            return datamodel.ProjectTo<CardInfo>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<CardInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return _cardRepository.GetAll(dataTableRequest).ProjectTo<CardInfo>(mapper.ConfigurationProvider);
+            return cardRepository.GetAll(dataTableRequest).ProjectTo<CardInfo>(mapper.ConfigurationProvider);
         }
 
         public CardInfo Get(int serial)
@@ -88,7 +79,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                InitialCardRepoDTO datamodel = _cardRepository.Get(serial);
+                InitialCardRepoDTO datamodel = cardRepository.Get(serial);
                 CardInfo resultModel = new CardInfo();
 
                 string userName = "";
@@ -107,6 +98,33 @@ namespace NISC_MFP_MVC_Service.Implement
             }
         }
 
+        public CardInfo Get(string column, string value, string operation)
+        {
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
+            {
+                throw new ArgumentNullException("Reference to null instance.");
+            }
+            else
+            {
+                InitialCardRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = cardRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = cardRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
+
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return mapper.Map<InitialCardRepoDTO, CardInfo>(dataModel);
+            }
+        }
+
+
         public void UpdateResetFreeValue(int freevalue)
         {
             if (freevalue < 0)
@@ -115,7 +133,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _cardRepository.UpdateResetFreeValue(freevalue);
+                cardRepository.UpdateResetFreeValue(freevalue);
             }
         }
 
@@ -127,7 +145,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _cardRepository.UpdateDepositValue(value, serial);
+                cardRepository.UpdateDepositValue(value, serial);
             }
         }
 
@@ -139,7 +157,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _cardRepository.Update(mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
+                cardRepository.Update(mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
             }
         }
 
@@ -151,13 +169,18 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _cardRepository.Delete(mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
+                cardRepository.Delete(mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
             }
+        }
+
+        public void SoftDelete()
+        {
+            cardRepository.SoftDelete();
         }
 
         public void SaveChanges()
         {
-            _cardRepository.SaveChanges();
+            cardRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -169,7 +192,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _cardRepository.Dispose();
+            cardRepository.Dispose();
         }
     }
 }

@@ -3,8 +3,10 @@ using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -17,12 +19,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
-        private IDepartmentService _departmentService;
+        private IDepartmentService departmentService;
         private Mapper mapper;
 
         public DepartmentController()
         {
-            _departmentService = new DepartmentService();
+            departmentService = new DepartmentService();
             mapper = InitializeAutomapper();
         }
 
@@ -50,7 +52,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<DepartmentViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _departmentService.GetAll(dataTableRequest).ProjectTo<DepartmentViewModel>(mapper.ConfigurationProvider);
+            return departmentService.GetAll(dataTableRequest).ProjectTo<DepartmentViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()
@@ -72,7 +74,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    DepartmentInfo instance = _departmentService.Get(serial);
+                    DepartmentInfo instance = departmentService.Get(serial);
                     departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
                 }
             }
@@ -86,6 +88,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(departmentViewModel);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult AddOrEditDepartment(DepartmentViewModel department, string currentOperation)
         {
@@ -93,23 +96,36 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                    _departmentService.SaveChanges();
+                    try
+                    {
+                        departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
+                        departmentService.SaveChanges();
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception e)
+                    {
+                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
+                    }
                 }
             }
             else if (currentOperation == "Edit")
             {
                 if (ModelState.IsValid)
                 {
-                    _departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                    _departmentService.SaveChanges();
+                    try
+                    {
+                        departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
+                        departmentService.SaveChanges();
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception e)
+                    {
+                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
+                    }
                 }
             }
-
             return RedirectToAction("Index");
         }
 
@@ -117,19 +133,26 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteDepartment(int serial)
         {
             DepartmentViewModel departmentViewModel = new DepartmentViewModel();
-            DepartmentInfo instance = _departmentService.Get(serial);
+            DepartmentInfo instance = departmentService.Get(serial);
             departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
 
             return PartialView(departmentViewModel);
         }
 
         [HttpPost]
-        public ActionResult ReadyDeleteDepartment(DepartmentViewModel department)
+        public ActionResult DeleteDepartment(DepartmentViewModel department)
         {
-            _departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-            _departmentService.SaveChanges();
+            try
+            {
+                departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
+                departmentService.SaveChanges();
 
-            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

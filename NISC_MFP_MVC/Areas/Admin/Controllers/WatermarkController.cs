@@ -15,12 +15,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class WatermarkController : Controller
     {
-        private IWatermarkService _watermarkService;
+        private IWatermarkService watermarkService;
         private Mapper mapper;
 
         public WatermarkController()
         {
-            _watermarkService = new WatermarkService();
+            watermarkService = new WatermarkService();
             mapper = InitializeAutomapper();
         }
 
@@ -48,7 +48,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<WatermarkViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _watermarkService.GetAll(dataTableRequest).ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
+            return watermarkService.GetAll(dataTableRequest).ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()
@@ -74,7 +74,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 else if (serial >= 0)
                 {
                     //Popup for Edit
-                    WatermarkInfo instance = _watermarkService.Get(serial);
+                    WatermarkInfo instance = watermarkService.Get(serial);
                     initialWatermarkDTO = mapper.Map<WatermarkViewModel>(instance);
                 }
             }
@@ -88,6 +88,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(initialWatermarkDTO);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult AddOrEditWatermark(WatermarkViewModel watermark, string currentOperation)
         {
@@ -98,8 +99,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     //Popup for Add
                     if (ModelState.IsValid)
                     {
-                        _watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
-                        _watermarkService.SaveChanges();
+                        watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
+                        watermarkService.SaveChanges();
 
                         return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                     }
@@ -109,8 +110,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     //Popup for Edit
                     if (ModelState.IsValid)
                     {
-                        _watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
-                        _watermarkService.SaveChanges();
+                        watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
+                        watermarkService.SaveChanges();
 
                         return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                     }
@@ -125,23 +126,25 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        #region Request For DeleteWaterMark
         [HttpGet]
         public ActionResult DeleteWatermark(int serial)
         {
             WatermarkViewModel watermarkViewModel = new WatermarkViewModel();
-            WatermarkInfo instance = _watermarkService.Get(serial);
+            WatermarkInfo instance = watermarkService.Get(serial);
             watermarkViewModel = mapper.Map<WatermarkViewModel>(instance);
 
             return PartialView(watermarkViewModel);
         }
 
         [HttpPost]
-        public ActionResult ReadyDeleteWatermark(WatermarkViewModel watermark)
+        public ActionResult DeleteWatermark(WatermarkViewModel watermark)
         {
-            _watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
-            _watermarkService.SaveChanges();
+            watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
+            watermarkService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
+        #endregion
     }
 }

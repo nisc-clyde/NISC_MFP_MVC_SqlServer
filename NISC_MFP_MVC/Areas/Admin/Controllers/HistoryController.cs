@@ -12,12 +12,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class HistoryController : Controller
     {
-        private IHistoryService _historyService;
+        private IHistoryService historyService;
         private Mapper mapper;
 
         public HistoryController()
         {
-            _historyService = new HistoryService();
+            historyService = new HistoryService();
             mapper = InitializeAutomapper();
         }
 
@@ -44,7 +44,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<HistoryViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _historyService.GetAll(dataTableRequest).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
+            return historyService.GetAll(dataTableRequest).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
         }
 
         //[HttpPost]

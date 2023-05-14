@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository;
 using NISC_MFP_MVC_Repository.DTOs.Department;
+using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -15,11 +19,11 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class DepartmentService : IDepartmentService
     {
-        private IDepartmentRepository _repository;
+        private IDepartmentRepository departmentRepository;
         private Mapper mapper;
         public DepartmentService()
         {
-            _repository = new DepartmentRepository();
+            departmentRepository = new DepartmentRepository();
             mapper = InitializeAutomapper();
         }
 
@@ -31,19 +35,26 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Insert(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                try
+                {
+                    departmentRepository.Insert(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
             }
         }
 
         public IQueryable<DepartmentInfo> GetAll()
         {
-            IQueryable<InitialDepartmentRepoDTO> datamodel = _repository.GetAll();
+            IQueryable<InitialDepartmentRepoDTO> datamodel = departmentRepository.GetAll();
             return datamodel.ProjectTo<DepartmentInfo>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<DepartmentInfo> GetAll(DataTableRequest dataTableRequest)
         {
-            return _repository.GetAll(dataTableRequest).ProjectTo<DepartmentInfo>(mapper.ConfigurationProvider);
+            return departmentRepository.GetAll(dataTableRequest).ProjectTo<DepartmentInfo>(mapper.ConfigurationProvider);
         }
 
         public DepartmentInfo Get(int serial)
@@ -54,15 +65,42 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                InitialDepartmentRepoDTO dataModel = _repository.Get(serial);
+                InitialDepartmentRepoDTO dataModel = departmentRepository.Get(serial);
                 DepartmentInfo resultModel = mapper.Map<InitialDepartmentRepoDTO, DepartmentInfo>(dataModel);
                 return resultModel;
             }
         }
 
+        public DepartmentInfo Get(string column, string value, string operation)
+        {
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
+            {
+                throw new ArgumentNullException("Reference to null instance.");
+            }
+            else
+            {
+                InitialDepartmentRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = departmentRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = departmentRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
+
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return mapper.Map<InitialDepartmentRepoDTO, DepartmentInfo>(dataModel);
+            }
+        }
+
+
         public IEnumerable<DepartmentInfo> SearchByIdAndName(string prefix)
         {
-            IEnumerable<DepartmentInfo> result = _repository.GetAll()
+            IEnumerable<DepartmentInfo> result = departmentRepository.GetAll()
                 .Where(d =>
                 ((d.dept_id != null) && d.dept_id.ToUpper().Contains(prefix.ToUpper())) ||
                 ((d.dept_name != null) && d.dept_name.ToUpper().Contains(prefix.ToUpper())))
@@ -83,7 +121,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Update(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                departmentRepository.Update(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
             }
         }
 
@@ -95,13 +133,18 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _repository.Delete(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
+                departmentRepository.Delete(mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
             }
+        }
+
+        public void SoftDelete()
+        {
+            departmentRepository.SoftDelete();
         }
 
         public void SaveChanges()
         {
-            _repository.SaveChanges();
+            departmentRepository.SaveChanges();
         }
 
         private Mapper InitializeAutomapper()
@@ -113,7 +156,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Dispose()
         {
-            _repository.Dispose();
+            departmentRepository.Dispose();
         }
     }
 }

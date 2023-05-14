@@ -1,11 +1,8 @@
 ﻿
-@{
-
-}
-
-<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("AddEmployeeFromFile", "System", FormMethod.Post, new { @id = "employeePreviewForm", @class = "overflow-auto" }))
+
+        @using (Html.BeginForm("ImportEmployeeFromFile", "System", FormMethod.Post, new { @id = "employeePreviewForm", @class = "overflow-auto" }))
         {
             @Html.AntiForgeryToken()
 
@@ -16,7 +13,7 @@
 
             <div class="modal-body">
                 <div class="table-responsive">
-                    <table id="employeePreviewDataTable" class="table table-striped table-bordered w-100 fs-6 nowrap">
+                    <table id="employeePreviewDataTable" class="table table-striped table-bordered w-100 fs-6 nowrap table-hover">
                         <thead>
                             <tr>
                                 <th>卡片編號</th>
@@ -33,9 +30,13 @@
                     </table>
                 </div>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="submit" id="btnSubmmit" value="Add" class="btn btn-success">確定</button>
+                <button type="submit" id="btnSubmmit" class="btn btn-success">
+                    確定
+                    <span id="btnSubmmitSpinner" class="spinner-border spinner-border-sm" style="display:none" role="status"></span>
+                </button>
             </div>
         }
     </div>

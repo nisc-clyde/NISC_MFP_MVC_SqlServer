@@ -15,14 +15,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class PrintController : Controller
     {
-        private IPrintService _printService;
-        private IDepartmentService _departmentService;
+        private IPrintService printService;
+        private IDepartmentService departmentService;
         private Mapper mapper;
 
         public PrintController()
         {
-            _printService = new PrintService();
-            _departmentService = new DepartmentService();
+            printService = new PrintService();
+            departmentService = new DepartmentService();
             mapper = InitializeAutomapper();
 
         }
@@ -32,7 +32,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             AdvancedPrintViewModel advancedPrintViewModel = new AdvancedPrintViewModel();
 
-            List<DepartmentInfo> getAllDepartment = _departmentService.GetAll().ToList();
+            List<DepartmentInfo> getAllDepartment = departmentService.GetAll().ToList();
 
             foreach (var item in getAllDepartment)
             {
@@ -64,7 +64,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public unsafe IQueryable<PrintViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _printService.GetAll(dataTableRequest).ProjectTo<PrintViewModel>(mapper.ConfigurationProvider);
+            return printService.GetAll(dataTableRequest).ProjectTo<PrintViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()

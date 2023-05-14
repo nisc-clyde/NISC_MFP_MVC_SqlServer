@@ -20,12 +20,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
-        private IUserService _userService;
+        private IUserService userService;
         private Mapper mapper;
 
         public UserController()
         {
-            _userService = new UserService();
+            userService = new UserService();
             mapper = InitializeAutomapper();
         }
 
@@ -53,7 +53,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<UserViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _userService.GetAll(dataTableRequest).ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
+            return userService.GetAll(dataTableRequest).ProjectTo<UserViewModel>(mapper.ConfigurationProvider);
         }
 
 
@@ -67,8 +67,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult SearchDepartment(string prefix)
         {
-            DepartmentService _DepartmentService = new DepartmentService();
-            IEnumerable<DepartmentInfo> searchResult = _DepartmentService.SearchByIdAndName(prefix);
+            DepartmentService departmentService = new DepartmentService();
+            IEnumerable<DepartmentInfo> searchResult = departmentService.SearchByIdAndName(prefix);
             List<DepartmentViewModel> resultViewModel = mapper.Map<IEnumerable<DepartmentInfo>, IEnumerable<DepartmentViewModel>>(searchResult).ToList();
 
             return Json(resultViewModel, JsonRequestBehavior.AllowGet);
@@ -90,7 +90,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    UserInfo instance = _userService.Get(serial);
+                    UserInfo instance = userService.Get(serial);
                     userViewModel = mapper.Map<UserViewModel>(instance);
                 }
             }
@@ -104,61 +104,78 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(userViewModel);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult AddOrEditUser(UserViewModel User, string currentOperation)
+        public ActionResult AddOrEditUser(UserViewModel user, string currentOperation)
         {
-
             if (currentOperation == "Add")
             {
                 if (ModelState.IsValid)
                 {
-                    _userService.Insert(mapper.Map<UserViewModel, UserInfo>(User));
-                    _userService.SaveChanges();
+                    try
+                    {
+                        userService.Insert(mapper.Map<UserViewModel, UserInfo>(user));
+                        userService.SaveChanges();
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception e)
+                    {
+                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
+                    }
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
-                return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
             }
             else if (currentOperation == "Edit")
             {
                 if (ModelState.IsValid)
                 {
-                    _userService.Update(mapper.Map<UserViewModel, UserInfo>(User));
-                    _userService.SaveChanges();
+                    try
+                    {
+                        userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
+                        userService.SaveChanges();
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception e)
+                    {
+                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
+                    }
                 }
-                return Json(new { success = false, message = "Failed" }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { success = false, message = "Unexpected operation" }, JsonRequestBehavior.AllowGet);
-
-
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ActionResult DeleteUser(int serial)
         {
             UserViewModel UserViewModel = new UserViewModel();
-            UserInfo instance = _userService.Get(serial);
+            UserInfo instance = userService.Get(serial);
             UserViewModel = mapper.Map<UserViewModel>(instance);
 
             return PartialView(UserViewModel);
         }
 
         [HttpPost]
-        public ActionResult ReadyDeleteUser(UserViewModel User)
+        public ActionResult DeleteUser(UserViewModel User)
         {
-            _userService.Delete(mapper.Map<UserViewModel, UserInfo>(User));
-            _userService.SaveChanges();
+            try
+            {
+                userService.Delete(mapper.Map<UserViewModel, UserInfo>(User));
+                userService.SaveChanges();
 
-            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpGet]
         public ActionResult UserPermissionConfig(string formTitle, int serial)
         {
             UserViewModel userViewModel = new UserViewModel();
-            UserInfo instance = _userService.Get(serial);
+            UserInfo instance = userService.Get(serial);
             userViewModel = mapper.Map<UserViewModel>(instance);
             ViewBag.formTitle = formTitle;
 

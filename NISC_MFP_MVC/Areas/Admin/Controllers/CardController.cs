@@ -20,12 +20,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "1";
         private static readonly string ENABLE = "1";
-        private ICardService _cardService;
+        private ICardService cardService;
         private Mapper mapper;
 
         public CardController()
         {
-            _cardService = new CardService();
+            cardService = new CardService();
             mapper = InitializeAutomapper();
         }
 
@@ -53,7 +53,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<CardViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _cardService.GetAll(dataTableRequest).ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
+            return cardService.GetAll(dataTableRequest).ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()
@@ -77,7 +77,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    CardInfo instance = _cardService.Get(serial);
+                    CardInfo instance = cardService.Get(serial);
                     initialCardDTO = mapper.Map<CardViewModel>(instance);
                 }
             }
@@ -91,6 +91,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(initialCardDTO);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult AddOrEditCard(CardViewModel card, string currentOperation)
         {
@@ -98,8 +99,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _cardService.Insert(mapper.Map<CardViewModel, CardInfo>(card));
-                    _cardService.SaveChanges();
+                    cardService.Insert(mapper.Map<CardViewModel, CardInfo>(card));
+                    cardService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -108,8 +109,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
-                    _cardService.SaveChanges();
+                    cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
+                    cardService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -122,17 +123,17 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteCard(int serial)
         {
             CardViewModel cardViewModel = new CardViewModel();
-            CardInfo instance = _cardService.Get(serial);
+            CardInfo instance = cardService.Get(serial);
             cardViewModel = mapper.Map<CardViewModel>(instance);
 
             return PartialView(cardViewModel);
         }
 
         [HttpPost]
-        public ActionResult ReadyDeleteCard(CardViewModel Card)
+        public ActionResult DeleteCard(CardViewModel Card)
         {
-            _cardService.Delete(mapper.Map<CardViewModel, CardInfo>(Card));
-            _cardService.SaveChanges();
+            cardService.Delete(mapper.Map<CardViewModel, CardInfo>(Card));
+            cardService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
@@ -154,11 +155,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView();
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult ResetCardFreePoint(ResetFreeValueViewModel resetFreeValueViewModel)
         {
-            _cardService.UpdateResetFreeValue(resetFreeValueViewModel.freevalue);
-            _cardService.SaveChanges();
+            cardService.UpdateResetFreeValue(resetFreeValueViewModel.freevalue);
+            cardService.SaveChanges();
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
@@ -166,18 +168,19 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DepositCard(string formTitle, int serial)
         {
             CardViewModel cardViewModel = new CardViewModel();
-            CardInfo instance = _cardService.Get(serial);
+            CardInfo instance = cardService.Get(serial);
             cardViewModel = mapper.Map<CardViewModel>(instance);
             ViewBag.formTitle = formTitle;
 
             return PartialView(cardViewModel);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult DepositCard(int value, int serial)
         {
-            _cardService.UpdateDepositValue(value, serial);
-            _cardService.SaveChanges();
+            cardService.UpdateDepositValue(value, serial);
+            cardService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }

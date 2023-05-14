@@ -12,12 +12,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class DepositeController : Controller
     {
-        private IDepositService _depositService;
+        private IDepositService depositService;
         private Mapper mapper;
 
         public DepositeController()
         {
-            _depositService = new DepositService();
+            depositService = new DepositService();
             mapper = InitializeAutomapper();
         }
 
@@ -45,7 +45,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<DepositViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _depositService.GetAll(dataTableRequest).ProjectTo<DepositViewModel>(mapper.ConfigurationProvider);
+            return depositService.GetAll(dataTableRequest).ProjectTo<DepositViewModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()

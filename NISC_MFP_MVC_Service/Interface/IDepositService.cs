@@ -4,6 +4,5 @@ namespace NISC_MFP_MVC_Service.Interface
 {
     public interface IDepositService : IService<DepositInfo>
     {
-
     }
 }

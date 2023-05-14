@@ -1,4 +1,4 @@
-﻿
+﻿ 
 @{
     ViewBag.Title = "系統管理";
     ViewBag.ActiveNav = "System";
@@ -64,24 +64,27 @@
                     </div>
 
                     <div class="col justify-content-end">
-                        <button id="btnAddFromFile" type="submit" value="Add" class="btn btn-success btn-lg"
-                                data-bs-toggle="tooltip" data-bs-placement="left"
-                                data-bs-custom-class="custom-tooltip"
-                                data-bs-html="true"
-                                data-bs-title="<div class='row'><div class='col-1'><i class='fa-solid fa-lightbulb' style='color: #ffa200;'></i></div><div class='col text-start fs-6'>此操作將會<b class='text-danger'>額外加入人事資料</b>，若存在重複之帳號，則該行將略過新增，待可新增之資料完成後，再統一列出發生重複之帳號。</div></div>">
-                            新增
-                        </button>
 
-                        <button id="btnOverrideFromFile" type="submit" value="Override" class="btn btn-success btn-lg"
+                        <button id="btnResetFromFile" type="submit" value="Reset" class="btn btn-danger btn-lg"
                                 data-bs-toggle="tooltip" data-bs-placement="right"
                                 data-bs-custom-class="custom-tooltip"
                                 data-bs-html="true"
-                                data-bs-title="<div class='row'><div class='col-1'><i class='fa-solid fa-lightbulb' style='color: #ffa200;'></i></div><div class='col text-start fs-6'>此操作將會<b class='text-danger'>覆蓋原人事資料</b>，若存在重複之帳號，則該行將略過新增，待可新增之資料完成後，再統一列出發生重複之帳號。</div></div>">
+                                data-bs-title="<div class='row'><div class='col-1'><i class='fa-solid fa-lightbulb' style='color: #ffa200;'></i></div><div class='col text-start fs-6'>此操作將會<b class='text-danger'>覆蓋所有人事資料</b>，包含所有部門、使用者、卡片將會全部清除，屆時只存有匯入之資料。</div></div>">
+                            重置
+                        </button>
+                        
+                        <button id="btnImportFromFile" type="submit" value="Import" class="btn btn-success btn-lg"
+                                data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-html="true"
+                                data-bs-title="<div class='row'><div class='col-1'><i class='fa-solid fa-lightbulb' style='color: #ffa200;'></i></div><div class='col text-start fs-6'>此操作將會<b class='text-danger'>新增人事資料</b>，若存在重複之資料，則該資料將由匯入之資料取代。</div></div>">
                             匯入
                         </button>
                     </div>
 
-                    <div class="modal fade" id="employeePreviewModal" role="dialog" data-url='@Url.Action("PreviewEmployee","System")'></div>
+                    <div class="col" style="color: #1565C0">
+                        <div class="modal fade" id="employeePreviewModal" role="dialog" data-url='@Url.Action("PreviewEmployee","System")'></div>
+                    </div>
 
                 </div>
             </div>

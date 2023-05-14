@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
+using MySql.Data.MySqlClient;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Card;
+using NISC_MFP_MVC_Repository.DTOs.Department;
+using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -26,11 +30,30 @@ namespace NISC_MFP_MVC_Repository.Implement
         public void Insert(InitialCardRepoDTO instance)
         {
             this.db.tb_card.Add(mapper.Map<tb_card>(instance));
+            db.SaveChanges();
         }
 
         public IQueryable<InitialCardRepoDTO> GetAll()
         {
-            return db.tb_card.ProjectTo<InitialCardRepoDTO>(mapper.ConfigurationProvider);
+            IQueryable<InitialCardRepoDTO> tb_Cards = (from c in db.tb_card.ToList()
+                                                       join u in db.tb_user.ToList()
+                                                       on c.user_id equals u.user_id into gj
+                                                       from subd in gj.DefaultIfEmpty(new tb_user())
+                                                       select new InitialCardRepoDTONeed
+                                                       {
+                                                           card_id = c.card_id,
+                                                           value = c.value,
+                                                           freevalue = c.freevalue,
+                                                           user_id = subd.user_id,
+                                                           user_name = subd.user_name,
+                                                           card_type = c.card_type == "0" ? "遞增" : "遞減",
+                                                           enable = c.enable == "0" ? "停用" : "可用",
+                                                           serial = c.serial
+                                                       })
+                                                      .AsQueryable()
+                                                      .ProjectTo<InitialCardRepoDTO>(mapper.ConfigurationProvider);
+
+            return tb_Cards;
         }
 
         public IQueryable<InitialCardRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -122,9 +145,16 @@ namespace NISC_MFP_MVC_Repository.Implement
             return mapper.Map<tb_card, InitialCardRepoDTO>(result);
         }
 
+        public InitialCardRepoDTO Get(string column, string value, string operation)
+        {
+            tb_card result = db.tb_card.Where(column + operation, value).FirstOrDefault();
+            return mapper.Map<tb_card, InitialCardRepoDTO>(result);
+        }
+
         public void UpdateResetFreeValue(int freevalue)
         {
             db.tb_card.ForAll(d => d.freevalue = freevalue);
+            db.SaveChanges();
         }
 
         public void UpdateDepositValue(int value, int serial)
@@ -132,18 +162,43 @@ namespace NISC_MFP_MVC_Repository.Implement
             tb_card dest = db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
             dest.value += value;
             db.Entry(dest).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Update(InitialCardRepoDTO instance)
         {
             var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
-            db.Entry(dataModel).State = EntityState.Modified;
+            var existingEntity = db.tb_card.Find(dataModel.serial);
+            db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
+            db.SaveChanges();
         }
 
         public void Delete(InitialCardRepoDTO instance)
         {
             var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+
+        public void SoftDelete()
+        {
+            //using (MySqlConnection conn = DatabaseConnection.getDatabaseConnection())
+            //using (MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"))
+            //{
+            //}
+            try
+            {
+                MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
+                conn.Open();
+                string insertQuery = @"delete from tb_card";
+                MySqlCommand sqlCommand = new MySqlCommand(insertQuery, conn);
+                sqlCommand.ExecuteNonQuery();
+                conn.Close();
+            }
+            catch (DbException e)
+            {
+                throw e;
+            }
         }
 
         public void SaveChanges()

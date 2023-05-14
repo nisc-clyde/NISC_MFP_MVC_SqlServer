@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Relational;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Department;
+using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Runtime.Remoting.Contexts;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
@@ -29,15 +34,8 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// <exception cref="ArgumentNullException"></exception>
         public void Insert(InitialDepartmentRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                this.db.tb_department.Add(mapper.Map<tb_department>(instance));
-                this.SaveChanges();
-            }
+            this.db.tb_department.Add(mapper.Map<tb_department>(instance));
+            this.SaveChanges();
         }
 
         public IQueryable<InitialDepartmentRepoDTO> GetAll()
@@ -121,7 +119,6 @@ namespace NISC_MFP_MVC_Repository.Implement
             return source;
         }
 
-
         public IQueryable<InitialDepartmentRepoDTO> GetWithColumnSearch(IQueryable<InitialDepartmentRepoDTO> source, string[] columns, string[] searches)
         {
             for (int i = 0; i < columns.Length; i++)
@@ -137,53 +134,61 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialDepartmentRepoDTO Get(int serial)
         {
-            if (serial < 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_department result = db.tb_department.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-                return mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
-            }
+            tb_department result = db.tb_department.Where(d => d.serial.Equals(serial)).FirstOrDefault();
+            return mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
+        }
+
+        public InitialDepartmentRepoDTO Get(string column, string value, string operation)
+        {
+            tb_department result = db.tb_department.Where(column + operation, value).FirstOrDefault();
+            return mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
         }
 
         public void Update(InitialDepartmentRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                this.SaveChanges();
-            }
+            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            var existingEntity = db.tb_department.Find(dataModel.serial);
+            db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
+            db.SaveChanges();
         }
 
         public void Delete(InitialDepartmentRepoDTO instance)
         {
-            if (instance == null)
+            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+
+        public void SoftDelete()
+        {
+
+            //using (MySqlConnection conn = DatabaseConnection.getDatabaseConnection())
+            //using (MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"))
+            //{
+            //}
+            try
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
+                conn.Open();
+                string insertQuery = @"delete from tb_department";
+                MySqlCommand sqlCommand = new MySqlCommand(insertQuery, conn);
+                sqlCommand.ExecuteNonQuery();
+                conn.Close();
             }
-            else
+            catch (DbException e)
             {
-                var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
-                this.db.Entry(dataModel).State = EntityState.Deleted;
-                this.db.SaveChanges();
+                throw e;
             }
         }
 
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            db.SaveChanges();
         }
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -191,10 +196,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    db.Dispose();
+                    db = null;
                 }
             }
         }

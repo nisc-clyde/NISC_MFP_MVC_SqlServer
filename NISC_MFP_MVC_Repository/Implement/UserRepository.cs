@@ -1,13 +1,20 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Google.Protobuf.WellKnownTypes;
+using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Runtime.Remoting.Contexts;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
@@ -24,25 +31,13 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Insert(InitialUserRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                if (db.tb_user.Where(d => d.user_id.Equals(instance.user_id)).FirstOrDefault() == null)
-                {
-                    db.tb_user.Add(mapper.Map<tb_user>(instance));
-                }
-                else
-                {
-                    throw new Exception("重複的使用者帳號");
-                }
-            }
+            db.tb_user.Add(mapper.Map<tb_user>(instance));
+            db.SaveChanges();
         }
 
         public IQueryable<InitialUserRepoDTO> GetAll()
         {
+            //TODO
             return db.tb_user.ProjectTo<InitialUserRepoDTO>(mapper.ConfigurationProvider);
         }
 
@@ -139,54 +134,59 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialUserRepoDTO Get(int serial)
         {
-            if (serial <= 0)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                tb_user result = db.tb_user.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-                return mapper.Map<tb_user, InitialUserRepoDTO>(result);
-            }
+            tb_user result = db.tb_user.Where(d => d.serial.Equals(serial)).FirstOrDefault();
+            return mapper.Map<tb_user, InitialUserRepoDTO>(result);
+        }
+
+        public InitialUserRepoDTO Get(string column, string value, string operation)
+        {
+            tb_user result = db.tb_user.Where(column + operation, value).FirstOrDefault();
+            return mapper.Map<tb_user, InitialUserRepoDTO>(result);
         }
 
         public void Update(InitialUserRepoDTO instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
-                this.db.Entry(dataModel).State = EntityState.Modified;
-                //this.db.Entry(dataModel).Property(p=>p.user_id).IsModified = false;
-                db.SaveChanges();
-            }
+            var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
+            var existingEntity = db.tb_user.Find(dataModel.user_id);
+            db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
+            db.SaveChanges();
         }
 
         public void Delete(InitialUserRepoDTO instance)
         {
-            if (instance == null)
+            var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        public void SoftDelete()
+        {
+
+            //using (MySqlConnection conn = DatabaseConnection.getDatabaseConnection())
+            //using (MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"))
+            //{
+            //}
+            try
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
+                conn.Open();
+                string insertQuery = @"delete from tb_user";
+                MySqlCommand sqlCommand = new MySqlCommand(insertQuery, conn);
+                sqlCommand.ExecuteNonQuery();
+                conn.Close();
             }
-            else
+            catch (DbException e)
             {
-                var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
-                this.db.Entry(dataModel).State = EntityState.Deleted;
-                this.db.SaveChanges();
+                throw e;
             }
         }
-
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            db.SaveChanges();
         }
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -194,10 +194,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    db.Dispose();
+                    db = null;
                 }
             }
         }
@@ -208,5 +208,6 @@ namespace NISC_MFP_MVC_Repository.Implement
             var mapper = new Mapper(config);
             return mapper;
         }
+
     }
 }

@@ -19,15 +19,15 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
-        private ICardReaderService _cardReaderService;
-        private IMultiFunctionPrintService _multiFunctionPrintService;
+        private ICardReaderService cardReaderService;
+        private IMultiFunctionPrintService multiFunctionPrintService;
 
         private Mapper mapper;
 
         public CardReaderController()
         {
-            _cardReaderService = new CardReaderService();
-            _multiFunctionPrintService = new MultiFunctionPrintService();
+            cardReaderService = new CardReaderService();
+            multiFunctionPrintService = new MultiFunctionPrintService();
             mapper = InitializeAutomapper();
         }
 
@@ -55,7 +55,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<CardReaderModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return _cardReaderService.GetAll(dataTableRequest).ProjectTo<CardReaderModel>(mapper.ConfigurationProvider);
+            return cardReaderService.GetAll(dataTableRequest).ProjectTo<CardReaderModel>(mapper.ConfigurationProvider);
         }
 
         private Mapper InitializeAutomapper()
@@ -80,7 +80,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    CardReaderInfo instance = _cardReaderService.Get(serial);
+                    CardReaderInfo instance = cardReaderService.Get(serial);
                     cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
                 }
             }
@@ -94,6 +94,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(cardReaderViewModel);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult AddOrEditCardReader(CardReaderModel cardReader, string currentOperation)
         {
@@ -101,8 +102,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _cardReaderService.Insert(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
-                    _cardReaderService.SaveChanges();
+                    cardReaderService.Insert(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+                    cardReaderService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -111,8 +112,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _cardReaderService.Update(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
-                    _cardReaderService.SaveChanges();
+                    cardReaderService.Update(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+                    cardReaderService.SaveChanges();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -126,17 +127,17 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteCardReader(int serial)
         {
             CardReaderModel cardReaderViewModel = new CardReaderModel();
-            CardReaderInfo instance = _cardReaderService.Get(serial);
+            CardReaderInfo instance = cardReaderService.Get(serial);
             cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
 
             return PartialView(cardReaderViewModel);
         }
 
         [HttpPost]
-        public ActionResult ReadyDeleteCardReader(CardReaderModel cardReader)
+        public ActionResult DeleteCardReader(CardReaderModel cardReader)
         {
-            _cardReaderService.Delete(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
-            _cardReaderService.SaveChanges();
+            cardReaderService.Delete(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+            cardReaderService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
@@ -146,28 +147,17 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             MultiFunctionPrintViewModel multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
 
-            CardReaderInfo instance = _cardReaderService.Get(serial);
+            CardReaderInfo instance = cardReaderService.Get(serial);
             multiFunctionPrintViewModel.cardReaderModel = mapper.Map<CardReaderModel>(instance);
 
-            IQueryable<MultiFunctionPrintModel> mfpResultModel = _multiFunctionPrintService.GetMultiple(cardReaderId).ProjectTo<MultiFunctionPrintModel>(mapper.ConfigurationProvider);
+            IQueryable<MultiFunctionPrintModel> mfpResultModel = multiFunctionPrintService.GetMultiple(cardReaderId).ProjectTo<MultiFunctionPrintModel>(mapper.ConfigurationProvider);
             multiFunctionPrintViewModel.multiFunctionPrintModels = mfpResultModel.ToList();
 
             ViewBag.formTitle = formTitle;
             return PartialView(multiFunctionPrintViewModel);
         }
 
-       
-        public ActionResult CardReaderManager(int cardReaderId)
-        {
-            MultiFunctionPrintViewModel multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
-
-            IQueryable<MultiFunctionPrintModel> mfpResultModel = _multiFunctionPrintService.GetMultiple(cardReaderId).ProjectTo<MultiFunctionPrintModel>(mapper.ConfigurationProvider);
-            multiFunctionPrintViewModel.multiFunctionPrintModels = mfpResultModel.ToList();
-
-            return PartialView("CardReaderManager", multiFunctionPrintViewModel);
-        }
-
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult AddOrEditMFP(MultiFunctionPrintModel data, int cr_id, string currentOperation)
         {
@@ -175,16 +165,16 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _multiFunctionPrintService.Insert(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
-                    _multiFunctionPrintService.SaveChanges();
+                    multiFunctionPrintService.Insert(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
+                    multiFunctionPrintService.SaveChanges();
 
                     return Json(new { success = true, message = "success" }, JsonRequestBehavior.AllowGet);
                 }
             }
             else if (currentOperation == "Edit")
             {
-                _multiFunctionPrintService.Update(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
-                _multiFunctionPrintService.SaveChanges();
+                multiFunctionPrintService.Update(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
+                multiFunctionPrintService.SaveChanges();
 
                 return Json(new { success = true, message = "success" }, JsonRequestBehavior.AllowGet);
             }
@@ -194,21 +184,24 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateMFP(MultiFunctionPrintModel mfp)
+        public ActionResult DeleteMFP(MultiFunctionPrintModel mfp)
         {
-            _multiFunctionPrintService.Update(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(mfp));
-            _multiFunctionPrintService.SaveChanges();
+            multiFunctionPrintService.Delete(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(mfp));
+            multiFunctionPrintService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult DeleteMFP(MultiFunctionPrintModel mfp)
+        public ActionResult CardReaderManager(int cardReaderId)
         {
-            _multiFunctionPrintService.Delete(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(mfp));
-            _multiFunctionPrintService.SaveChanges();
+            MultiFunctionPrintViewModel multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
 
-            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+            IQueryable<MultiFunctionPrintModel> mfpResultModel = multiFunctionPrintService.GetMultiple(cardReaderId).ProjectTo<MultiFunctionPrintModel>(mapper.ConfigurationProvider);
+            multiFunctionPrintViewModel.multiFunctionPrintModels = mfpResultModel.ToList();
+
+            return PartialView("CardReaderManager", multiFunctionPrintViewModel);
         }
+
     }
 }

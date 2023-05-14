@@ -1,14 +1,15 @@
 ﻿export const CustomSweetAlert2 = (function () {
 
-    function SweetAlertTemplateHome() {
+    function SweetAlertTemplateHome(message="此操作成功後即無法復原，請再次確認此為欲刪除之資料") {
         return Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success ms-2',
                 cancelButton: 'btn btn-danger me-2'
             },
+            focusCancel:true,
             buttonsStyling: false,
             title: "確定刪除此筆資料嗎?",
-            text: "此操作成功後即無法復原，請再次確認此為欲刪除之資料",
+            text: message,
             icon: 'warning',
             showCancelButton: true,
             reverseButtons: true,
@@ -18,7 +19,7 @@
         });
     }
 
-    function SweetAlertTemplateSuccess() {
+    function SweetAlertTemplateSuccess(message="此資料已刪除") {
         return Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -26,7 +27,7 @@
             buttonsStyling: false,
             allowOutsideClick: false,
             title: "成功",
-            text: "此資料已刪除",
+            text: message,
             icon: 'success',
             confirmButtonText: "確定",
             timer: 1300,
@@ -34,9 +35,23 @@
         })
     }
 
+    function SweetAlertTemplateError(message="未知的錯誤") {
+        return Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-danger',
+            },
+            buttonsStyling: false,
+            allowOutsideClick: false,
+            title: "操作失敗",
+            text: message,
+            icon: 'error',
+        })
+    }
+
     return {
         SweetAlertTemplateHome: SweetAlertTemplateHome,
         SweetAlertTemplateSuccess: SweetAlertTemplateSuccess,
+        SweetAlertTemplateError: SweetAlertTemplateError,
     };
 
 })();
@@ -114,6 +129,17 @@ export const RequestAddOrEdit = (function () {
                                 dataTable.row(currentRow).data(form).draw();
                             })
                         }
+                    } else {
+                        Swal.fire({
+                            customClass: {
+                                confirmButton: 'btn btn-danger',
+                            },
+                            buttonsStyling: false,
+                            allowOutsideClick: false,
+                            title: '操作失敗',
+                            text: data.message,
+                            icon: 'error',
+                        })
                     }
                 }
             });
@@ -129,7 +155,7 @@ export const RequestAddOrEdit = (function () {
 
 export const RequestDelete = (function () {
 
-    function GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, getURL, postURL) {
+    function GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, url) {
         dataTable.on("click", ".btn-delete", function (e) {
             e.preventDefault();
 
@@ -140,7 +166,7 @@ export const RequestDelete = (function () {
             const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
 
             $.get(
-                getURL,
+                url,
                 { serial: uniqueId },
                 function (data) {
 
@@ -158,7 +184,7 @@ export const RequestDelete = (function () {
                         if (result.isConfirmed) {
                             $.ajax({
                                 type: "POST",
-                                url: postURL,
+                                url: url,
                                 data: dataTableAsFormSerialize,
                                 success: function (data) {
                                     dataTable.row(currentRow).remove().draw()
