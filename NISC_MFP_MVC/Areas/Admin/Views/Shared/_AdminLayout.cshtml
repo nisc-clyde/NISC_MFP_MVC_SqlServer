@@ -87,7 +87,7 @@
 
                     <li class="nav-item" role="presentation">
                         <button class="@(ViewBag.ActiveNav == "LogOut" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
-                                aria-selected="false" onclick="location.href='@Url.Action("Admin","Login")'">
+                                aria-selected="false" onclick="location.href='@Url.Action("Index","LogOut",new { area="Admin"})'">
                             <i class="fa-solid fa-right-from-bracket"></i>&ensp;登出
                         </button>
                 </ul>
