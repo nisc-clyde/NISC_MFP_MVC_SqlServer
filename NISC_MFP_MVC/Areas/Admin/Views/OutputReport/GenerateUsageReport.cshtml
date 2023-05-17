@@ -1,0 +1,19 @@
+﻿@model NISC_MFP_MVC.ViewModels.OutputReport.OutputReportViewModel
+
+@{
+
+}
+
+<table id="outputReportUsageDataTable" class="table table-striped table-bordered w-100 table-hover">
+    <thead>
+        <tr class="fs-5">
+            <th>@ViewBag.reportType</th>
+            <th>使用量（小計）</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td colspan="2" class="text-end text-danger fw-bold font-monospace fs-5">合計：@ViewBag.total</td>
+        </tr>
+    </tfoot>
+</table>

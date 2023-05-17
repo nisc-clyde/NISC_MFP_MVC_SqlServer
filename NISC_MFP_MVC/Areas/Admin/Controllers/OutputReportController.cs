@@ -1,91 +1,61 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC.ViewModels.OutputReport;
+using NISC_MFP_MVC.ViewModels.Print;
+using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Common.EmployeeHelper;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
+using NISC_MFP_MVC_Service.DTOs.Info.OutputReport;
+using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Implement;
+using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Services.Description;
+using System.Web.UI.WebControls;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     public class OutputReportController : Controller
     {
-        private Mapper mapper;
-        public ActionResult Index()
-        {
-            mapper = InitializeAutomapper();
+        private IOutputReportService _outputReportService;
+        private Mapper _mapper;
 
-            return View(InitialViewModel());
+        public OutputReportController()
+        {
+            _outputReportService = new OutputReportService();
+            _mapper = InitializeAutomapper();
         }
 
-        //[NonAction]
-        //[ActionName("InitialDataTable")]
-        //public OutputReportViewModel InitialData(MFP_DBEntities db)
-        //{
-        //OutputReportViewModel outputReportResult = new OutputReportViewModel();
-
-        //var config = new MapperConfiguration(cfg => cfg.CreateMap<DepartmentViewModel, DepartmentViewModel>());
-
-        //var mapper = new Mapper(config);
-
-        //List<DepartmentRepoDTO> departmerntsDetail = new DepartmentController().InitialData(db);
-        //List<DepartmentViewModel> departmernts = new List<DepartmentViewModel>();
-        //foreach (DepartmentRepoDTO d in departmerntsDetail)
-        //{
-        //    departmernts.Add(d.Convert2PresentationModel());
-        //}
-        //outputReportResult.departmentNames = departmernts;
-
-        //outputReportResult.searchUserDTOs = (from u in db.tb_user
-        //                                     join d in db.tb_department on u.dept_id equals d.dept_id
-        //                                     select new UserViewModel
-        //                                     {
-        //                                         user_id = u.user_id,
-        //                                         user_password = u.user_password,
-        //                                         work_id = u.work_id,
-        //                                         user_name = u.user_name,
-        //                                         dept_id = u.dept_id,
-        //                                         dept_name = d.dept_name,
-        //                                         color_enable_flag = u.color_enable_flag,
-        //                                         copy_enable_flag = u.copy_enable_flag,
-        //                                         print_enable_flag = u.print_enable_flag,
-        //                                         scan_enable_flag = u.scan_enable_flag,
-        //                                         fax_enable_flag = u.fax_enable_flag,
-        //                                         e_mail = u.e_mail,
-        //                                     }).ToList();
-
-        //outputReportResult.searchUserDTOs = new UserController().InitialData().ToList();
-        //outputReportResult.searchCardReaderDTOs = new CardReaderController().InitialData().ToList();
-        //    return PartialView();
-        //}
+        public ActionResult Index()
+        {
+            return View(InitialViewModel());
+        }
 
         [NonAction]
         public OutputReportViewModel InitialViewModel()
         {
             OutputReportViewModel outputReportViewModel = new OutputReportViewModel();
 
-            List<DepartmentInfo> departmentInfo = new DepartmentService().GetAll().ToList();
+            List<DepartmentInfo> departmentInfos = new DepartmentService().GetAll().ToList();
 
-            List<UserInfo> userInfo = new UserService().GetAll().ToList();
+            List<MultiFunctionPrintInfo> multiFunctionPrintInfos = new MultiFunctionPrintService().GetAll().ToList();
 
-            List<CardReaderInfo> cardReaderInfo = new CardReaderService().GetAll().ToList();
-
-            foreach (var item in departmentInfo)
+            foreach (var item in departmentInfos)
             {
                 outputReportViewModel.departmentNames.Add(new SelectListItem { Text = item.dept_name, Value = item.dept_id });
             }
 
-            foreach (var item in userInfo)
+            foreach (var item in multiFunctionPrintInfos)
             {
-                outputReportViewModel.userNames.Add(new SelectListItem { Text = item.user_name, Value = item.user_id });
-            }
-
-            foreach (var item in cardReaderInfo)
-            {
-                outputReportViewModel.cardReaders.Add(new SelectListItem { Text = item.cr_ip, Value = item.cr_id });
+                outputReportViewModel.multiFunctionPrints.Add(new SelectListItem { Text = item.mfp_ip, Value = item.mfp_ip });
             }
 
             return outputReportViewModel;
@@ -98,61 +68,99 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return mapper;
         }
 
+        [HttpGet]
+        public ActionResult GetAllUserByDepartmentId(string departmentId)
+        {
+            IEnumerable<UserInfo> users = _outputReportService.GetAllUserByDepartmentId(departmentId);
+            List<SelectListItem> result = new List<SelectListItem>();
+            foreach (var user in users)
+            {
+                result.Add(new SelectListItem { Text = user.user_name, Value = user.user_id });
+            }
 
-        //[NonAction]
-        //public List<DepartmentViewModel> GlobalSearch(List<DepartmentViewModel> searchData, string searchValue)
-        //{
-        //    if (!string.IsNullOrEmpty(searchValue))
-        //    {
-        //        searchData = searchData.Where(
-        //            p => p.dept_id.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.dept_name.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.dept_value.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.dept_month_sum.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.dept_usable.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.dept_email.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.serial.ToString().ToUpper().Contains(searchValue.ToUpper())
-        //            ).ToList();
-        //    }
-        //    return searchData;
-        //}
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
 
-        //[NonAction]
-        //public List<DepartmentViewModel> ColumnSearch(List<DepartmentViewModel> searchData, DataTableRequest
-        //)
-        //{
-        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_0))
-        //    {
-        //        searchData = searchData.Where(department => department.dept_id.ToUpper().Contains(searchRequest.ColumnSearch_0.ToUpper())).ToList();
-        //    }
+        [HttpGet]
+        public ActionResult GenerateUsageReport(OutputReportRequest outputReportRequest)
+        {
+            OutputReportRequestInfo outputReportRequestInfo = new OutputReportRequestInfo();
+            outputReportRequestInfo.reportType = outputReportRequest.reportType;
+            outputReportRequestInfo.reportColor = outputReportRequest.reportColor;
+            outputReportRequestInfo.deptId = outputReportRequest.deptId;
+            outputReportRequestInfo.userId = outputReportRequest.userId;
+            outputReportRequestInfo.mfpIp = outputReportRequest.mfpIp;
+            outputReportRequestInfo.date = outputReportRequest.date;
+            List<OutputReportUsageInfo> prints = _outputReportService.GetUsage(outputReportRequestInfo);
 
-        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_1))
-        //    {
-        //        searchData = searchData.Where(department => department.dept_name.ToUpper().Contains(searchRequest.ColumnSearch_1.ToUpper())).ToList();
-        //    }
+            int total = prints.Sum(s => s.SubTotal);
+            OutputReportUsageInfo totalRecord = new OutputReportUsageInfo();
+            totalRecord.Name = "合計";
+            totalRecord.SubTotal = total;
+            prints.Add(totalRecord);
 
-        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_2))
-        //    {
-        //        searchData = searchData.Where(department => department.dept_value.ToString().ToUpper().Contains(searchRequest.ColumnSearch_2.ToUpper())).ToList();
-        //    }
+            Session["DataSet"] = prints;
 
-        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_3))
-        //    {
-        //        searchData = searchData.Where(department => department.dept_month_sum.ToString().ToUpper().Contains(searchRequest.ColumnSearch_3.ToUpper())).ToList();
-        //    }
+            if (outputReportRequestInfo.reportType.Contains("dept"))
+            {
+                Session["DataSet"] = prints;
+                ViewBag.reportType = "部門";
+                ViewBag.total = total;
+                return PartialView();
+            }
+            else
+            {
+                ViewBag.reportType = "使用者";
+                ViewBag.total = total;
+                return PartialView();
+            }
+        }
 
-        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_4))
-        //    {
-        //        searchData = searchData.Where(department => department.dept_usable.ToUpper().Contains(searchRequest.ColumnSearch_4.ToUpper())).ToList();
-        //    }
+        [HttpGet]
+        public ActionResult GenerateRecordReport(OutputReportRequest outputReportRequest)
+        {
+            OutputReportRequestInfo outputReportRequestInfo = new OutputReportRequestInfo();
+            outputReportRequestInfo.reportType = outputReportRequest.reportType;
+            outputReportRequestInfo.reportColor = outputReportRequest.reportColor;
+            outputReportRequestInfo.deptId = outputReportRequest.deptId;
+            outputReportRequestInfo.userId = outputReportRequest.userId;
+            outputReportRequestInfo.mfpIp = outputReportRequest.mfpIp;
+            outputReportRequestInfo.date = outputReportRequest.date;
+            IQueryable<PrintInfo> prints = _outputReportService.GetRecord(outputReportRequestInfo);
+            Session["DataSet"] = prints.ProjectTo<PrintViewModel>(_mapper.ConfigurationProvider).ToList();
 
-        //    if (!string.IsNullOrEmpty(searchRequest.ColumnSearch_5))
-        //    {
-        //        searchData = searchData.Where(department => department.dept_email.ToUpper().Contains(searchRequest.ColumnSearch_5.ToUpper())).ToList();
-        //    }
-        //    return searchData;
-        //}
+            return PartialView();
+        }
 
+        [HttpPost]
+        public ActionResult GenerateUsageReport()
+        {
+            List<OutputReportUsageInfo> prints = Session["DataSet"] as List<OutputReportUsageInfo>;
+            DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
+            dataTableRequest.RecordsFilteredGet = prints.Count();
+            List<OutputReportUsageInfo> topLengthResult = prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+            return Json(new
+            {
+                data = topLengthResult,
+                draw = dataTableRequest.Draw,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GenerateRecordReport()
+        {
+            List<PrintViewModel> prints = Session["DataSet"] as List<PrintViewModel>;
+            DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
+            dataTableRequest.RecordsFilteredGet = prints.Count();
+            List<PrintViewModel> topLengthResult = prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+            return Json(new
+            {
+                data = topLengthResult,
+                draw = dataTableRequest.Draw,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

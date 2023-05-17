@@ -101,6 +101,12 @@ namespace NISC_MFP_MVC_Repository.Implement
             _db.Entry(dataModel).State = EntityState.Deleted;
         }
 
+        public void DeleteMFPById(string cr_id)
+        {
+            IQueryable<tb_mfp> mfps = _db.tb_mfp.Where(d => d.cr_id.Equals(cr_id));
+            _db.tb_mfp.RemoveRange(mfps);
+        }
+
         public void SaveChanges()
         {
             _db.SaveChanges();

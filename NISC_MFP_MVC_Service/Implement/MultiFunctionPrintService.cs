@@ -105,6 +105,12 @@ namespace NISC_MFP_MVC_Service.Implement
             else _multiFunctionPrintRepository.Delete(_mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance));
         }
 
+        public void DeleteMFPById(string cr_id)
+        {
+            if (string.IsNullOrEmpty(cr_id)) throw new ArgumentNullException("Reference to null instance.");
+            else _multiFunctionPrintRepository.DeleteMFPById(cr_id);
+        }
+
         public void SaveChanges()
         {
             _multiFunctionPrintRepository.SaveChanges();

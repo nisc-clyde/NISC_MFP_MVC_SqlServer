@@ -137,6 +137,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DeleteCardReader(CardReaderModel cardReader)
         {
             cardReaderService.Delete(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+            multiFunctionPrintService.DeleteMFPById(cardReader.cr_id);
+            multiFunctionPrintService.SaveChanges();
             cardReaderService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);

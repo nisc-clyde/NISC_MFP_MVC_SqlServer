@@ -6,5 +6,7 @@ namespace NISC_MFP_MVC_Repository.Interface
     public interface IMultiFunctionPrintRepository : IRepository<InitialMultiFunctionPrintRepoDTO>
     {
         IQueryable<InitialMultiFunctionPrintRepoDTO> GetMultiple(int cr_id);
+        void DeleteMFPById(string cr_id);
+
     }
 }

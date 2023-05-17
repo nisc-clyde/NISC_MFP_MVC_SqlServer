@@ -69,6 +69,9 @@
     <Reference Include="Mono.Reflection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\NISC_MFP_MVC\packages\Mono.Reflection.Core.1.1.1\lib\net45\Mono.Reflection.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\NISC_MFP_MVC\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\NISC_MFP_MVC\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
@@ -105,6 +108,8 @@
     <Compile Include="DTOs\Info\Department\DepartmentInfo.cs" />
     <Compile Include="DTOs\Info\History\HistoryInfo.cs" />
     <Compile Include="DTOs\Info\MultiFunctionPrint\MultiFunctionPrintInfo.cs" />
+    <Compile Include="DTOs\Info\OutputReport\OutputReportRequestInfo.cs" />
+    <Compile Include="DTOs\Info\OutputReport\OutputReportUsageInfo.cs" />
     <Compile Include="DTOs\Info\Print\PrintInfo.cs" />
     <Compile Include="DTOs\Info\User\UserInfo.cs" />
     <Compile Include="DTOs\Info\Watermark\WatermarkInfo.cs" />
@@ -114,11 +119,13 @@
     <Compile Include="Implement\DepositService.cs" />
     <Compile Include="Implement\HistoryService.cs" />
     <Compile Include="Implement\MultiFunctionPrintService.cs" />
+    <Compile Include="Implement\OutputReportService.cs" />
     <Compile Include="Implement\WatermarkService.cs" />
     <Compile Include="Interface\ICardReaderService.cs" />
     <Compile Include="Interface\ICardService.cs" />
     <Compile Include="Interface\IHistoryService.cs" />
     <Compile Include="Interface\IMultiFunctionPrintService.cs" />
+    <Compile Include="Interface\IOutputReportService.cs" />
     <Compile Include="Interface\IWatermarkService.cs" />
     <Compile Include="MappingProfile.cs" />
     <Compile Include="Implement\PrintService.cs" />
@@ -144,6 +151,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

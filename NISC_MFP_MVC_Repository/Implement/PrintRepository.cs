@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
+using NISC_MFP_MVC_Repository.DTOs.OutputReport;
 using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -15,12 +17,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class PrintRepository : IPrintRepository
     {
-        protected MFP_DBEntities db { get; private set; }
+        protected MFP_DBEntities _db { get; private set; }
         private Mapper _mapper;
 
         public PrintRepository()
         {
-            db = new MFP_DBEntities();
+            _db = new MFP_DBEntities();
             _mapper = InitializeAutomapper();
         }
 
@@ -31,8 +33,50 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialPrintRepoDTO> GetAll()
         {
-            return db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
+            return _db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
         }
+
+        public IQueryable<InitialPrintRepoDTO> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO)
+        {
+            IQueryable<tb_logs_print> result = _db.tb_logs_print.AsNoTracking();
+
+            if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.reportColor)) result = result.Where(d => d.page_color.Equals(initialOutputReportRepoDTO.reportColor));
+
+            if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.deptId)) result = result.Where(d => d.dept_id.Equals(initialOutputReportRepoDTO.deptId));
+
+            List<string> usageTypeList = initialOutputReportRepoDTO.usage_type.ToCharArray().Select(c => c.ToString()).ToList();
+            if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.usage_type)) result = result.Where("@0.Contains(usage_type)",usageTypeList);
+
+            if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.userId)) result = result.Where(d => d.user_id.Equals(initialOutputReportRepoDTO.userId));
+
+            if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.mfpIp)) result = result.Where(d => d.mfp_ip.Equals(initialOutputReportRepoDTO.mfpIp));
+
+            string[] postDateRange = initialOutputReportRepoDTO.date.Split('~');
+            DateTime startDate = Convert.ToDateTime(postDateRange[0]);
+            DateTime endDate = Convert.ToDateTime(postDateRange[1]);
+            result = result.Where(print => print.print_date >= startDate && print.print_date <= endDate);
+
+            IQueryable<InitialPrintRepoDTO> prints = result.AsNoTracking().Select(p => new InitialPrintRepoDTO
+            {
+                mfp_name = p.mfp_name,
+                user_id = p.user_id,
+                user_name = p.user_name,
+                dept_id=p.dept_id,
+                dept_name = p.dept_name,
+                card_id = p.card_id,
+                card_type = p.card_type == "0" ? "遞減" : "遞增",
+                usage_type = p.usage_type == "C" ? "影印" : p.usage_type == "P" ? "列印" : p.usage_type == "S" ? "掃描" : p.usage_type == "F" ? "傳真" : "",
+                page_color = p.page_color == "C" ? "C(彩色)" : "M(單色)",
+                page = p.page,
+                value = p.value,
+                print_date = p.print_date,
+                document_name = p.document_name,
+                serial = p.serial
+            }); ;
+            List<InitialPrintRepoDTO> temp = prints.ToList();
+            return prints;
+        }
+
 
         public IQueryable<InitialPrintRepoDTO> GetAll(DataTableRequest dataTableRequest)
         {
@@ -63,7 +107,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_10
             };
 
-            IQueryable<InitialPrintRepoDTO> tb_Logs_Prints = db.tb_logs_print.AsNoTracking()
+            IQueryable<InitialPrintRepoDTO> tb_Logs_Prints = _db.tb_logs_print.AsNoTracking()
                 .Select(p => new InitialPrintRepoDTONeed
                 {
                     mfp_name = p.mfp_name,
@@ -71,7 +115,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_name = p.dept_name,
                     card_id = p.card_id,
                     card_type = p.card_type == "0" ? "遞減" : "遞增",
-                    usage_type = p.usage_type == "C" ? "影印" : p.usage_type == "P" ? "列印" : p.usage_type == "S" ? "掃描" : "傳真",
+                    usage_type = p.usage_type == "C" ? "影印" : p.usage_type == "P" ? "列印" : p.usage_type == "S" ? "掃描" : p.usage_type == "F" ? "傳真" : "",
                     page_color = p.page_color == "C" ? "C(彩色)" : "M(單色)",
                     value = p.value,
                     page = p.page,
@@ -175,15 +219,15 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialPrintRepoDTO Get(string column, string value, string operation)
         {
-            tb_logs_print result = db.tb_logs_print.Where(column + operation, value).FirstOrDefault();
+            tb_logs_print result = _db.tb_logs_print.Where(column + operation, value).FirstOrDefault();
             return _mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
         }
 
         public void Update(InitialPrintRepoDTO instance)
         {
             var dataModel = _mapper.Map<InitialPrintRepoDTO, tb_logs_print>(instance);
-            this.db.Entry(dataModel).State = EntityState.Modified;
-            db.SaveChanges();
+            this._db.Entry(dataModel).State = EntityState.Modified;
+            _db.SaveChanges();
         }
 
         public void Delete(InitialPrintRepoDTO instance)
@@ -193,7 +237,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void SaveChanges()
         {
-            this.db.SaveChanges();
+            this._db.SaveChanges();
         }
 
         public void Dispose()
@@ -206,10 +250,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this.db != null)
+                if (this._db != null)
                 {
-                    this.db.Dispose();
-                    this.db = null;
+                    this._db.Dispose();
+                    this._db = null;
                 }
             }
         }

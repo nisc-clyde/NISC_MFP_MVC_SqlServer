@@ -1,9 +1,4 @@
-﻿import {
-  CustomSweetAlert2,
-  RequestAddOrEdit,
-  RequestDelete,
-  DataTableTemplate,
-} from "./Shared.js";
+﻿import { CustomSweetAlert2, RequestAddOrEdit, RequestDelete, DataTableTemplate } from "./Shared.js";
 
 /**
  * Visualization the data from Database
@@ -65,23 +60,12 @@ function SearchCardReaderDataTableInitial() {
       : $("td:eq(6)", row).html("<b class='text-danger'>離線</b>");
   };
 
-  dataTable = DataTableTemplate.DataTableInitial(
-    table,
-    url,
-    page,
-    columns,
-    columnDefs,
-    order,
-    rowCallback
-  );
+  dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
 }
 
 function ColumnSearch() {
   $("#searchCardReader_CardreaderID").keyup(function () {
-    dataTable
-      .columns(0)
-      .search($("#searchCardReader_CardreaderID").val())
-      .draw();
+    dataTable.columns(0).search($("#searchCardReader_CardreaderID").val()).draw();
   });
 
   $("#searchCardReader_IPAddress").keyup(function () {
@@ -94,10 +78,7 @@ function ColumnSearch() {
 
   $("#searchCardReader_CardMachineTypeSelect").change(function () {
     if ($("#searchCardReader_CardMachineTypeSelect").val() != "") {
-      dataTable
-        .columns(3)
-        .search($("#searchCardReader_CardMachineTypeSelect :selected").text())
-        .draw();
+      dataTable.columns(3).search($("#searchCardReader_CardMachineTypeSelect :selected").text()).draw();
     } else {
       dataTable.columns(3).search("").draw();
     }
@@ -105,10 +86,7 @@ function ColumnSearch() {
 
   $("#searchCardReader_WorkModeSelect").change(function () {
     if ($("#searchCardReader_WorkModeSelect").val() != "") {
-      dataTable
-        .columns(4)
-        .search($("#searchCardReader_WorkModeSelect :selected").text())
-        .draw();
+      dataTable.columns(4).search($("#searchCardReader_WorkModeSelect :selected").text()).draw();
     } else {
       dataTable.columns(4).search("").draw();
     }
@@ -116,10 +94,7 @@ function ColumnSearch() {
 
   $("#searchCardReader_CardOnOffSelect").change(function () {
     if ($("#searchCardReader_CardOnOffSelect").val() != "") {
-      dataTable
-        .columns(5)
-        .search($("#searchCardReader_CardOnOffSelect :selected").text())
-        .draw();
+      dataTable.columns(5).search($("#searchCardReader_CardOnOffSelect :selected").text()).draw();
     } else {
       dataTable.columns(5).search("").draw();
     }
@@ -127,10 +102,7 @@ function ColumnSearch() {
 
   $("#searchCardReader_CardStatusSelect").change(function () {
     if ($("#searchCardReader_CardStatusSelect").val() != "") {
-      dataTable
-        .columns(6)
-        .search($("#searchCardReader_CardStatusSelect :selected").text())
-        .draw();
+      dataTable.columns(6).search($("#searchCardReader_CardStatusSelect :selected").text()).draw();
     } else {
       dataTable.columns(6).search("").draw();
     }
@@ -207,26 +179,18 @@ function CardReaderManagement() {
 
 function CardReaderManagementAdd(url, cardReaderId) {
   $("#cardreaderManagermentForm").on("submit", function () {
-    if (
-      $(".btnCardReaderManagement").attr("id") == "btnCardReaderManagementAdd"
-    ) {
+    if ($(".btnCardReaderManagement").attr("id") == "btnCardReaderManagementAdd") {
       $.validator.unobtrusive.parse(this);
       if ($(this).valid()) {
         $.ajax({
           type: "POST",
           url: url,
-          data:
-            $(this).serialize() +
-            "&cr_id=" +
-            cardReaderId +
-            "&currentOperation=" +
-            "Add",
+          data: $(this).serialize() + "&cr_id=" + cardReaderId + "&currentOperation=" + "Add",
           success: function (data) {
             if (data.success) {
-              $("#cardreaderManagermentForm").load(
-                "/Admin/CardReader/CardReaderManager",
-                { cardReaderId: cardReaderId }
-              );
+              $("#cardreaderManagermentForm").load("/Admin/CardReader/CardReaderManager", {
+                cardReaderId: cardReaderId,
+              });
             }
           },
         });
@@ -239,14 +203,9 @@ function CardReaderManagementAdd(url, cardReaderId) {
 function CardReaderManagementEdit(url, cardReaderId) {
   $("#cardreaderManagermentForm").on("submit", function (e) {
     e.preventDefault();
-    if (
-      $(".btnCardReaderManagement").attr("id") == "btnCardReaderManagementEdit"
-    ) {
+    if ($(".btnCardReaderManagement").attr("id") == "btnCardReaderManagementEdit") {
       let deleteRowDataSerialize = $(this).serialize();
-      deleteRowDataSerialize = deleteRowDataSerialize.replace(
-        "multiFunctionPrintModel.",
-        ""
-      );
+      deleteRowDataSerialize = deleteRowDataSerialize.replace("multiFunctionPrintModel.", "");
 
       $.validator.unobtrusive.parse(this);
       if ($(this).valid()) {
@@ -261,10 +220,9 @@ function CardReaderManagementEdit(url, cardReaderId) {
             $("#btnCardReaderManagementEdit").val(),
           success: function (data) {
             if (data.success) {
-              $("#cardreaderManagermentForm").load(
-                "/Admin/CardReader/CardReaderManager",
-                { cardReaderId: cardReaderId }
-              );
+              $("#cardreaderManagermentForm").load("/Admin/CardReader/CardReaderManager", {
+                cardReaderId: cardReaderId,
+              });
             }
           },
         });
@@ -275,126 +233,90 @@ function CardReaderManagementEdit(url, cardReaderId) {
 }
 
 function CardReaderManagementDelete(url) {
-  $("body").on(
-    "click",
-    "#cardreaderManagermentTable #btnCardReaderManagementRowDelete",
-    function (e) {
-      e.preventDefault();
-      const sweetAlertHome = CustomSweetAlert2.SweetAlertTemplateHome();
-      const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
+  $("body").on("click", "#cardreaderManagermentTable #btnCardReaderManagementRowDelete", function (e) {
+    e.preventDefault();
+    const sweetAlertHome = CustomSweetAlert2.SweetAlertTemplateHome();
+    const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
 
-      let deleteRow = $(this).closest("tr");
-      var deleteRowDataSerialize =
-        "serial=" + $(this).closest("tr").find("input").val();
-      let $row = $(this).closest("tr"),
-        $tds = $row.find("td");
-      $.each($tds, function () {
-        if ($(this).attr("id") != undefined) {
-          deleteRowDataSerialize +=
-            "&" + $(this).attr("id") + "=" + $(this).text();
+    let deleteRow = $(this).closest("tr");
+    var deleteRowDataSerialize = "serial=" + $(this).closest("tr").find("input").val();
+    let $row = $(this).closest("tr"),
+      $tds = $row.find("td");
+    $.each($tds, function () {
+      if ($(this).attr("id") != undefined) {
+        deleteRowDataSerialize += "&" + $(this).attr("id") + "=" + $(this).text();
+      }
+    });
+    deleteRowDataSerialize = deleteRowDataSerialize.replace(/線上/g, "Online");
+    deleteRowDataSerialize = deleteRowDataSerialize.replace(/離線/g, "Offline");
+    deleteRowDataSerialize = deleteRowDataSerialize.replace(/C(彩色)/g, "C");
+    deleteRowDataSerialize = deleteRowDataSerialize.replace(/M(單色)/g, "M");
+    deleteRowDataSerialize = deleteRowDataSerialize.replace(/未知/g, "");
+
+    sweetAlertHome
+      .fire({
+        allowEnterKey: false,
+        keydownListenerCapture: true,
+      })
+      .then((result) => {
+        $(".btn-management").focus();
+        if (result.isConfirmed) {
+          $.ajax({
+            type: "POST",
+            url: url,
+            data: deleteRowDataSerialize,
+            success: function (data) {
+              if (data.success) {
+                deleteRow.remove();
+                sweetAlertSuccess.fire();
+              }
+            },
+          });
         }
       });
-      deleteRowDataSerialize = deleteRowDataSerialize.replace(
-        /線上/g,
-        "Online"
-      );
-      deleteRowDataSerialize = deleteRowDataSerialize.replace(
-        /離線/g,
-        "Offline"
-      );
-      deleteRowDataSerialize = deleteRowDataSerialize.replace(/C(彩色)/g, "C");
-      deleteRowDataSerialize = deleteRowDataSerialize.replace(/M(單色)/g, "M");
-      deleteRowDataSerialize = deleteRowDataSerialize.replace(/未知/g, "");
-
-      sweetAlertHome
-        .fire({
-          allowEnterKey: false,
-          keydownListenerCapture: true,
-        })
-        .then((result) => {
-          $(".btn-management").focus();
-          if (result.isConfirmed) {
-            $.ajax({
-              type: "POST",
-              url: url,
-              data: deleteRowDataSerialize,
-              success: function (data) {
-                if (data.success) {
-                  deleteRow.remove();
-                  sweetAlertSuccess.fire();
-                }
-              },
-            });
-          }
-        });
-    }
-  );
+  });
 }
 
 function CardReaderManagementEditSwitch() {
-  $("body").on(
-    "click",
-    "#cardreaderManagermentTable #btnCardReaderManagementRowEdit",
-    function () {
-      let mfpSerial = $(this).parent().siblings("input").val();
-      let rowData = [];
-      let $row = $(this).closest("tr"),
-        $tds = $row.find("td");
-      $.each($tds, function () {
-        rowData.push($(this).text());
-      });
+  $("body").on("click", "#cardreaderManagermentTable #btnCardReaderManagementRowEdit", function () {
+    let mfpSerial = $(this).parent().siblings("input").val();
+    let rowData = [];
+    let $row = $(this).closest("tr"),
+      $tds = $row.find("td");
+    $.each($tds, function () {
+      rowData.push($(this).text());
+    });
 
-      $("#cardreaderManagermentTable tbody tr:first #serial").val(mfpSerial);
-      $("#cardreaderManagermentTable tbody tr:first #printer_id").val(
-        rowData[0]
-      );
-      $("#cardreaderManagermentTable tbody tr:first #mfp_ip").val(rowData[1]);
-      $("#cardreaderManagermentTable tbody tr:first #mfp_name").val(rowData[2]);
-      $("#cardreaderManagermentTable tbody tr:first #mfp_color").val(
-        rowData[3].substring(0, 1)
-      );
-      $("#cardreaderManagermentTable tbody tr:first #driver_number").val(
-        rowData[4]
-      );
-      $("#cardreaderManagermentTable tbody tr:first #mfp_status").val(
-        rowData[5] == "線上" ? "Online" : "Offline"
-      );
+    $("#cardreaderManagermentTable tbody tr:first #serial").val(mfpSerial);
+    $("#cardreaderManagermentTable tbody tr:first #printer_id").val(rowData[0]);
+    $("#cardreaderManagermentTable tbody tr:first #mfp_ip").val(rowData[1]);
+    $("#cardreaderManagermentTable tbody tr:first #mfp_name").val(rowData[2]);
+    $("#cardreaderManagermentTable tbody tr:first #mfp_color").val(rowData[3].substring(0, 1));
+    $("#cardreaderManagermentTable tbody tr:first #driver_number").val(rowData[4]);
+    $("#cardreaderManagermentTable tbody tr:first #mfp_status").val(rowData[5] == "線上" ? "Online" : "Offline");
 
-      $("#cardreaderManagermentTable #btnCardReaderManagementAdd").text("修改");
-      $("#cardreaderManagermentTable #btnCardReaderManagementAdd").val("Edit");
-      $("#cardreaderManagermentTable #btnCardReaderManagementAdd").attr(
-        "id",
-        "btnCardReaderManagementEdit"
-      );
-      $("#cardreaderManagermentTable #btnCardReaderManagementCancel").show();
-    }
-  );
+    $("#cardreaderManagermentTable #btnCardReaderManagementAdd").text("修改");
+    $("#cardreaderManagermentTable #btnCardReaderManagementAdd").val("Edit");
+    $("#cardreaderManagermentTable #btnCardReaderManagementAdd").attr("id", "btnCardReaderManagementEdit");
+    $("#cardreaderManagermentTable #btnCardReaderManagementCancel").show();
+  });
 }
 
 function CardReaderManagementCancelSwitch() {
-  $("body").on(
-    "click",
-    "#cardreaderManagermentTable #btnCardReaderManagementCancel",
-    function () {
-      $("#cardreaderManagermentTable tbody tr:first #serial").val("");
-      $("#cardreaderManagermentTable tbody tr:first #printer_id").val("");
-      $("#cardreaderManagermentTable tbody tr:first #mfp_ip").val("");
-      $("#cardreaderManagermentTable tbody tr:first #mfp_name").val("");
-      $("#cardreaderManagermentTable tbody tr:first #mfp_color").val("C");
-      $("#cardreaderManagermentTable tbody tr:first #driver_number").val("");
-      $("#cardreaderManagermentTable tbody tr:first #mfp_status").val("Online");
+  $("body").on("click", "#cardreaderManagermentTable #btnCardReaderManagementCancel", function () {
+    $("#cardreaderManagermentTable tbody tr:first #serial").val("");
+    $("#cardreaderManagermentTable tbody tr:first #printer_id").val("");
+    $("#cardreaderManagermentTable tbody tr:first #mfp_ip").val("");
+    $("#cardreaderManagermentTable tbody tr:first #mfp_name").val("");
+    $("#cardreaderManagermentTable tbody tr:first #mfp_color").val("C");
+    $("#cardreaderManagermentTable tbody tr:first #driver_number").val("");
+    $("#cardreaderManagermentTable tbody tr:first #mfp_status").val("Online");
 
-      $("#cardreaderManagermentTable #btnCardReaderManagementEdit").text(
-        "新增"
-      );
-      $("#cardreaderManagermentTable #btnCardReaderManagementEdit").val("Add");
-      $("#cardreaderManagermentTable #btnCardReaderManagementEdit").attr(
-        "id",
-        "btnCardReaderManagementAdd"
-      );
-      $("#cardreaderManagermentTable #btnCardReaderManagementCancel").hide();
-    }
-  );
+    $("#cardreaderManagermentTable #btnCardReaderManagementEdit").text("新增");
+    $("#cardreaderManagermentTable #btnCardReaderManagementEdit").val("Add");
+    $("#cardreaderManagermentTable #btnCardReaderManagementEdit").attr("id", "btnCardReaderManagementAdd");
+    $("#cardreaderManagermentTable #btnCardReaderManagementCancel").hide();
+  });
 }
 
 $(function () {

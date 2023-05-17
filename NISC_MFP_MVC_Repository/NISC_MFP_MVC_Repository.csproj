@@ -142,6 +142,7 @@
     <Compile Include="DTOs\History\InitialHistoryRepoDTO.cs" />
     <Compile Include="DTOs\MultiFunctionPrint\InitialMultiFunctionPrintRepoDTO.cs" />
     <Compile Include="DTOs\MultiFunctionPrint\InitialMultiFunctionPrintRepoDTONeed.cs" />
+    <Compile Include="DTOs\OutputReport\InitialOutputReportRepoDTO.cs" />
     <Compile Include="DTOs\Print\InitialPrintRepoDTO.cs" />
     <Compile Include="DTOs\Print\InitialPrintRepoDTONeed.cs" />
     <Compile Include="DTOs\User\InitialUserRepoDTO.cs" />

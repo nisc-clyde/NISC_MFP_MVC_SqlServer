@@ -8,7 +8,6 @@ namespace NISC_MFP_MVC_Repository.Interface
     {
         void UpdateResetFreeValue(int freevalue);
         void UpdateDepositValue(int value, int serial);
-        InitialCardRepoDTO Get(string column, string value, string operation);
         void SoftDelete();
 
     }

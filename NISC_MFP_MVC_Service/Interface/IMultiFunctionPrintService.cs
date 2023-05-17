@@ -8,6 +8,7 @@ namespace NISC_MFP_MVC_Service.Interface
         IQueryable<MultiFunctionPrintInfo> GetMultiple(int cr_id);
         void Insert(MultiFunctionPrintInfo instance, int cr_id);
         void Update(MultiFunctionPrintInfo instance, int cr_id);
+        void DeleteMFPById(string cr_id);
 
     }
 }

@@ -40,6 +40,7 @@ function DateRangePicker_Initial() {
         "cancelClass": "btn-danger",
         "startDate": "2005/01/01",
         "endDate": moment(),
+        "minDate": "2005/01/01",
         "maxDate": moment(),
         "alwaysShowCalendars": true,
         "locale": {
@@ -193,7 +194,7 @@ function SearchPrintDataTableInitial() {
     const rowCallback = function (row, data) {
         (data.card_type == "遞增") ? $('td:eq(4)', row).html("<b class='text-success'>遞增</b>") : $('td:eq(4)', row).html("<b class='text-danger'>遞減</b>");
         (data.page_color == "C(彩色)") ? $('td:eq(6)', row).html("<b class='rainbow-text'>C(彩色)</b>") : $('td:eq(6)', row).html("<b>M(單色)</b>");
-    }
+    };
 
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
 };

@@ -24,7 +24,6 @@
         <div class="card text-center m-3 ">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-                    @RenderSection("DateRangePickerPopUp", required: false)
                     <li class="nav-item" role="presentation">
                         <button class="@(ViewBag.ActiveNav == "Print" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
                                 aria-selected=false onclick="location.href = '@Url.Action("Index","Print",new { area="Admin"})'">

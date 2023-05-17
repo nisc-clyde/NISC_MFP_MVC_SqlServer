@@ -243,13 +243,14 @@
     <Compile Include="ViewModels\DepositViewModel.cs" />
     <Compile Include="ViewModels\AbstractViewModel.cs" />
     <Compile Include="ViewModels\HistoryViewModel.cs" />
+    <Compile Include="ViewModels\OutputReport\OutputReportRequest.cs" />
     <Compile Include="ViewModels\Print\AdvancedPrintViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="Models\LoginTO.cs" />
     <Compile Include="Models\MappingProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\DepartmentViewModel.cs" />
-    <Compile Include="ViewModels\OutputReportViewModel.cs" />
+    <Compile Include="ViewModels\OutputReport\OutputReportViewModel.cs" />
     <Compile Include="ViewModels\Print\PrintViewModel.cs" />
     <Compile Include="ViewModels\WatermarkViewModel.cs" />
   </ItemGroup>
@@ -1357,6 +1358,8 @@
     <Content Include="lib\popperjs\core\lib\utils\within.js.flow" />
     <Content Include="App_Data\Downloads\NISC_ImportEmployee.csv" />
     <Content Include="Areas\Admin\Views\System\PreviewEmployee.cshtml" />
+    <Content Include="Areas\Admin\Views\OutputReport\GenerateUsageReport.cshtml" />
+    <Content Include="Areas\Admin\Views\OutputReport\GenerateRecordReport.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

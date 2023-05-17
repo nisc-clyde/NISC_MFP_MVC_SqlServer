@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using NISC_MFP_MVC.ViewModels.Print;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 
-namespace NISC_MFP_MVC.ViewModels
+namespace NISC_MFP_MVC.ViewModels.OutputReport
 {
     public class OutputReportViewModel : AbstractViewModel
     {
@@ -9,8 +11,7 @@ namespace NISC_MFP_MVC.ViewModels
         public OutputReportViewModel()
         {
             departmentNames = new List<SelectListItem>();
-            userNames = new List<SelectListItem>();
-            cardReaders = new List<SelectListItem>();
+            multiFunctionPrints = new List<SelectListItem>();
         }
         public int reportType { get; set; }
 
@@ -18,9 +19,7 @@ namespace NISC_MFP_MVC.ViewModels
 
         public List<SelectListItem> departmentNames { get; set; }
 
-        public List<SelectListItem> userNames { get; set; }
-
-        public List<SelectListItem> cardReaders { get; set; }
+        public List<SelectListItem> multiFunctionPrints { get; set; }
 
         public int duration { get; set; }
     }
