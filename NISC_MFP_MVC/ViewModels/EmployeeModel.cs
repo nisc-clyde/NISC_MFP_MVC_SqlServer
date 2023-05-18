@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace NISC_MFP_MVC_Common.EmployeeHelper
+namespace NISC_MFP_MVC.ViewModels
 {
     public class EmployeeModel
     {
-        public EmployeeModel(string card_id, string dept_id, string dept_name, string user_name, string user_id, string work_id, string card_type, string enable,string e_mail)
+        public EmployeeModel(string card_id, string dept_id, string dept_name, string user_name, string user_id, string work_id, string card_type, string enable, string e_mail)
         {
             this.card_id = card_id;
             this.dept_id = dept_id;

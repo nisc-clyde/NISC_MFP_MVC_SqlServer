@@ -18,7 +18,9 @@ namespace NISC_MFP_MVC.ViewModels
         [Display(Name = "姓名")]
         public string user_name { get; set; }
 
-        [Display(Name = "部門代碼")]
+        public string authority { get; set; }
+
+        [Display(Name = "部門編號")]
         public string dept_id { get; set; }
 
         [Display(Name = "部門名稱")]

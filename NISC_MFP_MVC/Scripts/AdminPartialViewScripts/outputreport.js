@@ -230,7 +230,7 @@ function UsageDataTableInitial() {
       { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
       { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
       { extend: "print", className: "btn btn-warning buttons-print buttons-html5" },
-      { extend: "pageLength", attr: { id: "btnUsagePageLength" } },
+      { extend: "pageLength", attr: { id: "btnUsagePageLength" }, className: "btn btn-info buttons-html5" },
     ],
     lengthMenu: [
       [10, 25, 50, 1000, 2000],
@@ -240,8 +240,6 @@ function UsageDataTableInitial() {
     serverSide: true,
     processing: true,
     paging: true,
-    // scrollY: 550,
-    // scroller: true,
     ordering: false,
     language: {
       processing: "資料載入中...請稍後",
@@ -288,30 +286,33 @@ function RecordDataTableInitial() {
       { data: "document_name", name: "文件名稱" },
     ],
     dom:
-      "<'row'<'col-sm-12 col-md-6 text-start'B><'col-sm-12 col-md-6'>>" +
+      "<'row'<'col-sm-12 col-md-12 text-start'B><'col-sm col-md'p>>" +
       "<'row'<'col-sm-12'tr>>" +
       "<'row'<'col-sm-12 col-md-5 text-start'i><'col-sm-12 col-md-7'p>>",
     buttons: [
       { text: "輸出：", className: "btn btn-secondary disabled" },
       { extend: "excel", className: "btn btn-warning buttons-excel buttons-html5" },
       { extend: "csv", bom: true, className: "btn btn-warning buttons-csv buttons-html5" },
-      { extend: "print", className: "btn btn-warning buttons-print buttons-html5" },
-      { extend: "pageLength", attr: { id: "btnRecordPageLength" } },
+      {
+        extend: "print",
+        exportOptions: { columns: ":visible" },
+        className: "btn btn-warning buttons-print buttons-html5",
+      },
+      { text: "選項：", className: "btn btn-secondary disabled" },
+      { extend: "pageLength", attr: { id: "btnRecordPageLength" }, className: "btn btn-info buttons-html5" },
+      { extend: "colvis", text: "顯示欄位", className: "btn btn-info buttons-html5" },
     ],
     lengthMenu: [
-      [10, 25, 50, 1000, 2000],
-      ["10筆", "25筆", "50筆", "1000筆", "2000筆"],
+      [10, 25, 50, 100, 1000, 2000],
+      ["10筆", "25筆", "50筆", "100筆", "1000筆", "2000筆"],
     ],
     deferRender: true,
     serverSide: true,
     processing: true,
     paging: true,
-    // scrollY: 550,
-    // scroller: true,
     ordering: false,
     language: {
       processing: "資料載入中...請稍後",
-      lengthMenu: "顯示 _MENU_ 筆",
       paginate: {
         first: "首頁",
         last: "尾頁",

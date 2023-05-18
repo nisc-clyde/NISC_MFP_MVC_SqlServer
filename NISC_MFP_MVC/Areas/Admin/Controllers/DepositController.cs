@@ -10,12 +10,13 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
-    public class DepositeController : Controller
+    [Authorize(Roles = "deposit")]
+    public class DepositController : Controller
     {
         private IDepositService depositService;
         private Mapper mapper;
 
-        public DepositeController()
+        public DepositController()
         {
             depositService = new DepositService();
             mapper = InitializeAutomapper();

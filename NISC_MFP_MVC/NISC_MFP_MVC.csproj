@@ -90,14 +90,20 @@
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.FileProviders.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Options, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Options.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Extensions.Primitives.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Primitives.7.0.0\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Reflection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>packages\Mono.Reflection.Core.1.1.1\lib\net45\Mono.Reflection.dll</HintPath>
@@ -221,7 +227,7 @@
     <Compile Include="Areas\Admin\Controllers\CardController.cs" />
     <Compile Include="Areas\Admin\Controllers\CardReaderController.cs" />
     <Compile Include="Areas\Admin\Controllers\DepartmentController.cs" />
-    <Compile Include="Areas\Admin\Controllers\DepositeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DepositController.cs" />
     <Compile Include="Areas\Admin\Controllers\HistoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\LogOutController.cs" />
     <Compile Include="Areas\Admin\Controllers\OutputReportController.cs" />
@@ -235,6 +241,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AdminRegister.cs" />
     <Compile Include="ViewModels\CardReader\MultiFunctionPrintModel.cs" />
     <Compile Include="ViewModels\CardReader\MultiFunctionPrintViewModel.cs" />
     <Compile Include="ViewModels\Card\CardViewModel.cs" />
@@ -242,11 +249,12 @@
     <Compile Include="ViewModels\Card\ResetFreeValueViewModel.cs" />
     <Compile Include="ViewModels\DepositViewModel.cs" />
     <Compile Include="ViewModels\AbstractViewModel.cs" />
+    <Compile Include="ViewModels\EmployeeModel.cs" />
     <Compile Include="ViewModels\HistoryViewModel.cs" />
     <Compile Include="ViewModels\OutputReport\OutputReportRequest.cs" />
     <Compile Include="ViewModels\Print\AdvancedPrintViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
-    <Compile Include="Models\LoginTO.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\MappingProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\DepartmentViewModel.cs" />
@@ -1184,7 +1192,7 @@
     <Content Include="Scripts\AdminPartialViewScripts\card.js" />
     <Content Include="Scripts\AdminPartialViewScripts\cardreader.js" />
     <Content Include="Scripts\AdminPartialViewScripts\department.js" />
-    <Content Include="Scripts\AdminPartialViewScripts\deposite.js" />
+    <Content Include="Scripts\AdminPartialViewScripts\deposit.js" />
     <Content Include="Scripts\AdminPartialViewScripts\history.js" />
     <Content Include="Scripts\AdminPartialViewScripts\outputreport.js" />
     <Content Include="Scripts\AdminPartialViewScripts\print.js" />
@@ -1362,6 +1370,7 @@
     <Content Include="Areas\Admin\Views\OutputReport\GenerateRecordReport.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
+    <Content Include="Scripts\Configuration\config.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -1393,7 +1402,7 @@
     <Content Include="Views\Login\Admin.cshtml" />
     <Content Include="Areas\Admin\Views\Print\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
-    <Content Include="Areas\Admin\Views\Deposite\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Deposit\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Department\Index.cshtml" />
     <Content Include="Areas\Admin\Views\User\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CardReader\Index.cshtml" />
@@ -1404,6 +1413,7 @@
     <Content Include="Areas\Admin\Views\OutputReport\Index.cshtml" />
     <Content Include="Areas\Admin\Views\LogOut\Index.cshtml" />
     <Content Include="Areas\User\Views\Shared\_UserLayout.cshtml" />
+    <Content Include="Views\Login\Config.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />

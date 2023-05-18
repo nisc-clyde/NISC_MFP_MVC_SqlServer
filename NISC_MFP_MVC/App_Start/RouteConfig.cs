@@ -11,6 +11,12 @@ namespace NISC_MFP_MVC
             routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
+                name: "LoginRoute",
+                url: "{controller}/{action}",
+                defaults: new { controller = "Login", action = "User" }
+                );
+
+            routes.MapRoute(
                 name: "AdminRename",
                 url: "Admin/{controller}/{action}/{id}",
                 defaults: new { controller = "Print", action = "Index", id = UrlParameter.Optional },
@@ -23,13 +29,6 @@ namespace NISC_MFP_MVC
                 defaults: new { controller = "User", action = "List", id = UrlParameter.Optional },
                 namespaces: new string[] { "NISC_MFP_MVC.Controllers" }
                 );
-
-            routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Login", action = "User", id = UrlParameter.Optional },
-                namespaces: new string[] { "NISC_MFP_MVC.Controllers" }
-            );
         }
     }
 }

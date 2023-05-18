@@ -25,6 +25,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
+            @Html.HiddenFor(d => d.authority)
 
             <div class="modal-header">
                 <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>

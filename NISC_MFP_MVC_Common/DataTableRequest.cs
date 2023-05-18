@@ -68,7 +68,7 @@ namespace NISC_MFP_MVC_Common
                             case "10": return "document_name";
                             default: return "print_date";
                         }
-                    case "deposite":
+                    case "deposit":
                         switch (SortColumnIndex)
                         {
                             case "0": return "user_name";

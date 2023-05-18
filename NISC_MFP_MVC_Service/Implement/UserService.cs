@@ -114,8 +114,19 @@ namespace NISC_MFP_MVC_Service.Implement
                     string departmentName = "";
                     if (!string.IsNullOrWhiteSpace(dataModel.dept_id))
                     {
-                        departmentName = new DepartmentService().SearchByIdAndName(dataModel.dept_id).FirstOrDefault().dept_name;
+                        IEnumerable<DepartmentInfo> departmentInfos = new DepartmentService().SearchByIdAndName(dataModel.dept_id);
+                        if (departmentInfos.Any())
+                        {
+                            departmentName = departmentInfos.FirstOrDefault().dept_name;
+                        }
+                        else
+                        {
+                            departmentName = "";
+                        }
                     }
+                    if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains(".php")) dataModel.authority = dataModel.authority.Replace(".php", "");
+                    if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains("view")) dataModel.authority = "print," + dataModel.authority;
+
                     UserInfo resultModel = _mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
                     resultModel.dept_name = departmentName;
                     return resultModel;

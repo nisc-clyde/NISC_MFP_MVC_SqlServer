@@ -87,6 +87,7 @@
       <HintPath>..\NISC_MFP_MVC\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -97,7 +98,6 @@
   <ItemGroup>
     <Compile Include="DatabaseConnection.cs" />
     <Compile Include="DataTableRequest.cs" />
-    <Compile Include="EmployeeHelper\EmployeeModel.cs" />
     <Compile Include="Facade.cs" />
     <Compile Include="Logger\CardLogHandler.cs" />
     <Compile Include="Logger\CardReaderLogHandler.cs" />

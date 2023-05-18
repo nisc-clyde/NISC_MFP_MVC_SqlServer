@@ -1,7 +1,7 @@
 ﻿ 
 @{
     ViewBag.Title = "系統管理";
-    ViewBag.ActiveNav = "System";
+    ViewBag.ActiveNav = "system";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -37,10 +37,9 @@
                     <div class="text-start">
                         <p>
                             檔案之格式要求為<b>CSV</b>，每行格式如下：<br />
-                            卡號(8-10碼),部門編號,部門名稱,姓名,帳號,功號,卡別(遞減=0，遞增=1),狀態(停用=0，啟用=1),Email<br />
+                            卡號(8-10碼),部門編號,部門名稱,姓名,帳號,工號,卡別(遞減=0，遞增=1),狀態(停用=0，啟用=1),Email<br />
                             若該行已結束請按下Enter已表示換行，若欲使用範本進行編輯，請點擊旁邊圖示將會自動下載。
                             <a href="@Url.Action("DownloadTemplate", "System", new { fileName = "NISC_ImportEmployee.csv" })"><i class="fa-solid fa-file-csv fa-3x" id="btnDownloadTemplate" style="color: #107c41;"></i></a>
-
                         </p>
                     </div>
                     <br />

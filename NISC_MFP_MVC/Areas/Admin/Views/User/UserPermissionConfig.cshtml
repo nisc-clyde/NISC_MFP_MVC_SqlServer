@@ -1,6 +1,18 @@
 ﻿@model NISC_MFP_MVC.ViewModels.UserViewModel
 
 @{
+    List<string> authoriths = new List<string>();
+    if (!string.IsNullOrWhiteSpace(Model.authority))
+    {
+        if (Model.authority.Contains(".php"))
+        {
+            authoriths = Model.authority.Replace(".php", "").Split(',').ToList();
+        }
+        else
+        {
+            authoriths = Model.authority.Split(',').ToList();
+        }
+    }
 
 }
 
@@ -40,75 +52,75 @@
                     <div class="row gy-2 fs-6">
                         <div class="col-3">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">列印紀錄</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionPrint" value="print" @(authoriths.Contains("print") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionPrint">使用紀錄</label>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                                <label class="form-check-label" for="inlineCheckbox2">檔案檢視</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionView" value="view" @(authoriths.Contains("view") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionView">檔案檢視</label>
+                            </div>
+
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionDeposit" value="deposit" @(authoriths.Contains("deposit") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionDeposit">儲值紀錄</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionDepartment" value="department" @(authoriths.Contains("department") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionDepartment">部門管理</label>
                             </div>
 
                         </div>
                         <div class="col-3">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">部門管理</label>
-                            </div>
-
-                        </div>
-                        <div class="col-3">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">使用者管理</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionUser" value="user" @(authoriths.Contains("user") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionUser">使用者管理</label>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">事務機管理</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionCardReader" value="cardreader" @(authoriths.Contains("cardreader") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionCardReader">事務機管理</label>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">卡片管理</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionCard" value="card" @(authoriths.Contains("card") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionCard">卡片管理</label>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">儲值紀錄</label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">浮水印管理</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionWatermark" value="watermark" @(authoriths.Contains("watermark") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionWatermark">浮水印管理</label>
                             </div>
                         </div>
                         <div class="col-3 border-bottom border-1 ">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">操作紀錄查詢</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionHistory" value="history" @(authoriths.Contains("history") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionHistory">操作紀錄查詢</label>
                             </div>
                         </div>
                         <div class="col-3 border-bottom border-1 ">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">系統管理</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionSystem" value="system" @(authoriths.Contains("system") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionSystem">系統管理</label>
                             </div>
                         </div>
                         <div class="col-6 border-bottom border-1 ">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                                <label class="form-check-label" for="inlineCheckbox3">報表選項</label>
+                                <input class="form-check-input" type="checkbox" id="checkBoxPermissionOutputReport" value="outputreport" @(authoriths.Contains("outputreport") ? "checked" : "")>
+                                <label class="form-check-label" for="checkBoxPermissionOutputReport">報表選項</label>
                             </div>
                         </div>
                         <div class="col">
-                            <button type="button" id="btnClearChekced" class="btn btn-danger btn-sm">清除</button>
-                            <button type="button" id="btnAllChekced" class="btn btn-info btn-sm">全選</button>
+                            <button type="button" id="btnChekcedClearAll" class="btn btn-danger btn-sm">清除</button>
+                            <button type="button" id="btnChekcedAll" class="btn btn-info btn-sm">全選</button>
                         </div>
                     </div>
                 </div>
@@ -121,14 +133,3 @@
         }
     </div>
 </div>
-
-<script>
-
-    function PermissionClearOrAll() {
-
-    }
-
-    $(function () {
-        PermissionClearOrAll();
-    })
-</script>

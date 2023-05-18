@@ -29,19 +29,34 @@
             <div id="logo">
                 <img src="~/img/logo_w.png" width="400" height="70" />
             </div>
-            @model NISC_MFP_MVC.Models.LoginTO
-            @using (Html.BeginForm("Admin", "Login", FormMethod.Post, new { @class = "form-inline" }))
+            @model NISC_MFP_MVC.Models.LoginModel
+            @using (Html.BeginForm("Admin", "Login", FormMethod.Post, new { @id = "loginForm", @class = "form-inline" }))
             {
+                @Html.AntiForgeryToken();
                 <div class="form-group">
                     <div id="login">
-                        @Html.TextBoxFor(a => a.account, new { placeholder = "管理者帳號", @class = "form-control mb-2 mr-sm-2",style= "max-width: 280px;" })
-                        @Html.TextBoxFor(p => p.password, new { placeholder = "密碼", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;",type="password" })
-                        <button type="submit" class="btn btn-outline-secondary">Log In</button>
+                        @Html.TextBoxFor(a => a.account, new { placeholder = "管理者帳號", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;" })
+                        @Html.TextBoxFor(p => p.password, new { placeholder = "密碼", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;", type = "password" })
+                        <div>
+                            @Html.ValidationMessage("ErrorMessage", new { @class = "text-danger fs-6" })
+                        </div>
+                        <button type="submit" id="btnLogin" class="btn btn-outline-secondary">Log In</button>
                     </div>
                 </div>
             }
         </div>
 
     </div>
+    @Scripts.Render("~/bundles/jquery")
 </body>
 </html>
+
+<script>
+    $("#loginForm").on("submit", function () {
+        $.ajax({
+            url: "/Login/Admin",
+            type: "POST",
+            data: { loginUser: $(this).serialize() }
+        })
+    })
+</script>

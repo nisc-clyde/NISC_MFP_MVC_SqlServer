@@ -98,7 +98,15 @@ namespace NISC_MFP_MVC_Service.Implement
                     string userName = "";
                     if (!string.IsNullOrWhiteSpace(dataModel.card_id))
                     {
-                        userName = new UserService().SearchByIdAndName(dataModel.user_id).FirstOrDefault().user_name;
+                        IEnumerable<UserInfo> userInfos = new UserService().SearchByIdAndName(dataModel.user_id);
+                        if (userInfos.Any())
+                        {
+                            userName = userInfos.FirstOrDefault().user_name;
+                        }
+                        else
+                        {
+                            userName = "";
+                        }
                     }
                     CardInfo resultModel = _mapper.Map<InitialCardRepoDTO, CardInfo>(dataModel);
                     resultModel.user_name = userName;

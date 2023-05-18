@@ -10,11 +10,9 @@
         public string authority { get; set; } = "";
         public string depositor { get; set; } = "0";
         public string dept_id { get; set; } = null;
-
         public string dept_name { get; set; } = "";
-
         public string import_flag { get; set; } = "0";
-        public virtual string color_enable_flag { get; set; } = "0";
+        public string color_enable_flag { get; set; } = "0";
         public string reserve_flag { get; set; } = "0";
         public string scan_reserve_flag { get; set; } = "0";
         public string personal_water_flag { get; set; } = "0";

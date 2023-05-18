@@ -4,7 +4,6 @@ using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.OutputReport;
 using NISC_MFP_MVC.ViewModels.Print;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Common.EmployeeHelper;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
 using NISC_MFP_MVC_Service.DTOs.Info.OutputReport;
@@ -23,6 +22,7 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "outputreport")]
     public class OutputReportController : Controller
     {
         private IOutputReportService _outputReportService;

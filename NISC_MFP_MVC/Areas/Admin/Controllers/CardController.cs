@@ -16,6 +16,7 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "card")]
     public class CardController : Controller
     {
         private static readonly string DISABLE = "1";

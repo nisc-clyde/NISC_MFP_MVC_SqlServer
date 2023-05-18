@@ -12,10 +12,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "user")]
     public class UserController : Controller
     {
         private static readonly string DISABLE = "0";
@@ -122,7 +124,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     {
                         return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
                     }
-
                 }
             }
             else if (currentOperation == "Edit")
@@ -134,7 +135,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                         userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
                         userService.SaveChanges();
 
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                        return Json(new
+                        {
+                            success = true,
+                            message = "Success",
+                            isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
+                        }, JsonRequestBehavior.AllowGet);
                     }
                     catch (Exception e)
                     {
@@ -156,14 +162,19 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteUser(UserViewModel User)
+        public ActionResult DeleteUser(UserViewModel user)
         {
             try
             {
-                userService.Delete(mapper.Map<UserViewModel, UserInfo>(User));
+                userService.Delete(mapper.Map<UserViewModel, UserInfo>(user));
                 userService.SaveChanges();
 
-                return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                return Json(new
+                {
+                    success = true,
+                    message = "Success",
+                    isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
+                }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
@@ -180,6 +191,16 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             ViewBag.formTitle = formTitle;
 
             return PartialView(userViewModel);
+        }
+
+        [HttpPost, ActionName("UserPermissionConfig")]
+        public ActionResult UserPermissionConfigPost(string authority, int serial)
+        {
+            UserViewModel userViewModel = new UserViewModel();
+            UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
+            instance.authority = authority;
+            userService.Update(instance);
+            return Json(new { success = true, message = "Success" });
         }
     }
 }

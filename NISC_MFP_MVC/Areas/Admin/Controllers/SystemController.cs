@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Ajax.Utilities;
+using Mysqlx.Expr;
 using Newtonsoft.Json;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Card;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Common.EmployeeHelper;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
@@ -21,10 +21,12 @@ using System.Management.Instrumentation;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "system")]
     public class SystemController : Controller
     {
         private Mapper mapper;

@@ -11,10 +11,10 @@
  * @param {function} rowCallback - Do things between response from backend and render to element, 
  */
 var dataTable;
-function SearchDepositeDataTableInitial() {
-    const table = $("#searchDepositeDataTable");
-    const url = "/Admin/Deposite/InitialDataTable";
-    const page = "deposite";
+function SearchDepositDataTableInitial() {
+    const table = $("#searchDepositDataTable");
+    const url = "/Admin/Deposit/InitialDataTable";
+    const page = "deposit";
     const columns = [
         { data: "user_name", name: "儲值人員" },
         { data: "user_id", name: "儲值帳號" },
@@ -34,48 +34,48 @@ function SearchDepositeDataTableInitial() {
 };
 
 function ColumnSearch() {
-    $("#searchDeposite_Name").keyup(function () {
-        dataTable.columns(0).search($("#searchDeposite_Name").val()).draw();
+    $("#searchDeposit_Name").keyup(function () {
+        dataTable.columns(0).search($("#searchDeposit_Name").val()).draw();
 
     });
 
-    $("#searchDeposite_Account").keyup(function () {
-        dataTable.columns(1).search($("#searchDeposite_Account").val()).draw();
+    $("#searchDeposit_Account").keyup(function () {
+        dataTable.columns(1).search($("#searchDeposit_Account").val()).draw();
 
     });
 
-    $("#searchDeposite_CardNumber").keyup(function () {
-        dataTable.columns(2).search($("#searchDeposite_CardNumber").val()).draw();
+    $("#searchDeposit_CardNumber").keyup(function () {
+        dataTable.columns(2).search($("#searchDeposit_CardNumber").val()).draw();
 
     });
 
-    $("#searchDeposite_CardOwnerAccount").keyup(function () {
-        dataTable.columns(3).search($("#searchDeposite_CardOwnerAccount").val()).draw();
+    $("#searchDeposit_CardOwnerAccount").keyup(function () {
+        dataTable.columns(3).search($("#searchDeposit_CardOwnerAccount").val()).draw();
 
     });
 
-    $("#searchDeposite_CardOwnerName").keyup(function () {
-        dataTable.columns(4).search($("#searchDeposite_CardOwnerName").val()).draw();
+    $("#searchDeposit_CardOwnerName").keyup(function () {
+        dataTable.columns(4).search($("#searchDeposit_CardOwnerName").val()).draw();
     });
 
-    $("#searchDeposite_BeforePoint").keyup(function () {
-        dataTable.columns(5).search($("#searchDeposite_BeforePoint").val()).draw();
+    $("#searchDeposit_BeforePoint").keyup(function () {
+        dataTable.columns(5).search($("#searchDeposit_BeforePoint").val()).draw();
     });
 
-    $("#searchDeposite_Point").keyup(function () {
-        dataTable.columns(6).search($("#searchDeposite_Point").val()).draw();
+    $("#searchDeposit_Point").keyup(function () {
+        dataTable.columns(6).search($("#searchDeposit_Point").val()).draw();
     });
 
-    $("#searchDeposite_AfterPoint").keyup(function () {
-        dataTable.columns(7).search($("#searchDeposite_AfterPoint").val()).draw();
+    $("#searchDeposit_AfterPoint").keyup(function () {
+        dataTable.columns(7).search($("#searchDeposit_AfterPoint").val()).draw();
     });
 
-    $("#searchDeposite_Time").keyup(function () {
-        dataTable.columns(8).search($("#searchDeposite_Time").val()).draw();
+    $("#searchDeposit_Time").keyup(function () {
+        dataTable.columns(8).search($("#searchDeposit_Time").val()).draw();
     });
 }
 
 $(function () {
-    SearchDepositeDataTableInitial();
+    SearchDepositDataTableInitial();
     ColumnSearch();
 })

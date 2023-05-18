@@ -2,7 +2,7 @@
 
 namespace NISC_MFP_MVC.Models
 {
-    public class LoginTO
+    public class LoginModel
     {
         [Required]
         public string account { get; set; }

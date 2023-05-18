@@ -21,9 +21,9 @@ namespace NISC_MFP_MVC.Areas.Admin
             );
 
             //context.MapRoute(
-            //    "Admin_Deposite",
-            //    "Admin/Deposite/{id}",
-            //    new { controller = "Deposite", action = "Deposite", id = UrlParameter.Optional }
+            //    "Admin_Deposit",
+            //    "Admin/Deposit/{id}",
+            //    new { controller = "Deposit", action = "Deposit", id = UrlParameter.Optional }
             //);
 
             //context.MapRoute(
