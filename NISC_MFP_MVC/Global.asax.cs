@@ -1,12 +1,8 @@
-using System.Security.Principal;
-using System.Threading;
 using System;
+using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using NISC_MFP_MVC_Service.DTOs.Info.User;
-using NISC_MFP_MVC_Service.Implement;
-using NISC_MFP_MVC_Service.Interface;
 using System.Web.Security;
 
 namespace NISC_MFP_MVC

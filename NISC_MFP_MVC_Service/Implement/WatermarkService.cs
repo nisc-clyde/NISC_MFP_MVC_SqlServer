@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
 //using NISC_MFP_MVC_Service.DTOsI.Info.Watermark;
 using NISC_MFP_MVC_Service.Interface;

@@ -9,7 +9,6 @@
     <script type="module" src="~/Scripts/AdminPartialViewScripts/watermark.js"></script>
 }
 
-
 @*欄位搜尋選項 - First Container - Start*@
 <div class="cotainer-fluid shadow p-3 mb-4 bg-body-tertiary rounded bg-light">
 
@@ -192,7 +191,7 @@
         <div class="col text-start fs-5 fw-bold" style="color: #1565C0">
             浮水印列表&nbsp;<i class="fa-solid fa-list"></i>
             <button id="btnAddWatermark" type="button" class="ms-3 btn btn-success mb-1">新增浮水印</button>
-            <div class="modal fade" id="watermarkForm" role="dialog" data-url='@Url.Action("AddOrEditWatermark","Watermark")'></div>
+            <div class="modal fade" id="watermarkForm" role="dialog" data-url='@Url.Action("AddOrEdit","Watermark")'></div>
         </div>
     </div>
 

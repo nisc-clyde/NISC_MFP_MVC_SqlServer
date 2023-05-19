@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
-using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
@@ -15,40 +14,48 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// 部門管理控制器
+    /// </summary>
     [Authorize(Roles = "department")]
-    public class DepartmentController : Controller
+    public class DepartmentController : Controller, IDataTableController<DepartmentViewModel>, IAddEditDeleteController<DepartmentViewModel>
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
         private IDepartmentService departmentService;
         private Mapper mapper;
 
+        /// <summary>
+        /// Service和AutoMapper初始化
+        /// </summary>
         public DepartmentController()
         {
             departmentService = new DepartmentService();
             mapper = InitializeAutomapper();
         }
 
+        /// <summary>
+        /// Department Index View
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpPost]
-        [ActionName("InitialDataTable")]
-        public ActionResult SearchPrintDataTable()
+        [HttpPost, ActionName("InitialDataTable")]
+        public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<DepartmentViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
+            IQueryable<DepartmentViewModel> searchResultDetail = InitialData(dataTableRequest);
 
             return Json(new
             {
-                data = searchPrintResultDetail,
+                data = searchResultDetail,
                 draw = dataTableRequest.Draw,
                 recordsFiltered = dataTableRequest.RecordsFilteredGet
             }, JsonRequestBehavior.AllowGet);
         }
-
 
         [NonAction]
         public IQueryable<DepartmentViewModel> InitialData(DataTableRequest dataTableRequest)
@@ -56,6 +63,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return departmentService.GetAll(dataTableRequest).ProjectTo<DepartmentViewModel>(mapper.ConfigurationProvider);
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
@@ -64,7 +75,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddOrEditDepartment(string formTitle, int serial)
+        public ActionResult AddOrEdit(string formTitle, int serial)
         {
             DepartmentViewModel departmentViewModel = new DepartmentViewModel();
             try
@@ -91,7 +102,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult AddOrEditDepartment(DepartmentViewModel department, string currentOperation)
+        public ActionResult AddOrEdit(DepartmentViewModel department, string currentOperation)
         {
             if (currentOperation == "Add")
             {
@@ -131,7 +142,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDepartment(int serial)
+        public ActionResult Delete(int serial)
         {
             DepartmentViewModel departmentViewModel = new DepartmentViewModel();
             DepartmentInfo instance = departmentService.Get("serial", serial.ToString(), "Equals");
@@ -141,7 +152,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteDepartment(DepartmentViewModel department)
+        public ActionResult Delete(DepartmentViewModel department)
         {
             try
             {

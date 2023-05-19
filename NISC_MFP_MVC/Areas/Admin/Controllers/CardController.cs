@@ -17,27 +17,35 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     [Authorize(Roles = "card")]
-    public class CardController : Controller
+    public class CardController : Controller, IDataTableController<CardViewModel>, IAddEditDeleteController<CardViewModel>
     {
         private static readonly string DISABLE = "1";
         private static readonly string ENABLE = "1";
         private ICardService cardService;
         private Mapper mapper;
 
+        /// <summary>
+        /// Service和AutoMapper初始化
+        /// </summary>
         public CardController()
         {
             cardService = new CardService();
             mapper = InitializeAutomapper();
         }
 
+        /// <summary>
+        /// Card Index View
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View();
         }
 
+
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchPrintDataTable()
+        public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             IQueryable<CardViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
@@ -57,6 +65,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return cardService.GetAll(dataTableRequest).ProjectTo<CardViewModel>(mapper.ConfigurationProvider);
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
@@ -64,9 +76,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return mapper;
         }
 
-
         [HttpGet]
-        public ActionResult AddOrEditCard(string formTitle, int serial)
+        public ActionResult AddOrEdit(string formTitle, int serial)
         {
             CardViewModel initialCardDTO = new CardViewModel();
             try
@@ -78,7 +89,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    CardInfo instance = cardService.Get("serial",serial.ToString(),"Equals");
+                    CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
                     initialCardDTO = mapper.Map<CardViewModel>(instance);
                 }
             }
@@ -94,7 +105,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult AddOrEditCard(CardViewModel card, string currentOperation)
+        public ActionResult AddOrEdit(CardViewModel card, string currentOperation)
         {
             if (currentOperation == "Add")
             {
@@ -116,12 +127,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
-
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public ActionResult DeleteCard(int serial)
+        public ActionResult Delete(int serial)
         {
             CardViewModel cardViewModel = new CardViewModel();
             CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
@@ -131,7 +141,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteCard(CardViewModel Card)
+        public ActionResult Delete(CardViewModel Card)
         {
             cardService.Delete(mapper.Map<CardViewModel, CardInfo>(Card));
             cardService.SaveChanges();
@@ -139,6 +149,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 查詢User，AutoComplete
+        /// </summary>
+        /// <param name="prefix">關鍵字</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SearchUser(string prefix)
         {
@@ -149,6 +164,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return Json(resultViewModel, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Render 重設免費點數的PartialView
+        /// </summary>
+        /// <param name="formTitle">PartialView的Title</param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult ResetCardFreePoint(string formTitle)
         {
@@ -156,6 +176,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// 重設所有卡片的免費點數
+        /// </summary>
+        /// <param name="resetFreeValueViewModel">重設後的免費點數</param>
+        /// <returns></returns>
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult ResetCardFreePoint(ResetFreeValueViewModel resetFreeValueViewModel)
@@ -165,6 +190,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Render 儲值卡片的PartialView
+        /// </summary>
+        /// <param name="formTitle">PartialView的Title</param>
+        /// <param name="serial">卡片之serial</param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult DepositCard(string formTitle, int serial)
         {
@@ -176,7 +207,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(cardViewModel);
         }
 
-        [ValidateAntiForgeryToken]
+        /// <summary>
+        /// 對卡片儲值
+        /// </summary>
+        /// <param name="value">儲值後的點數</param>
+        /// <param name="serial">欲儲值卡片的serial</param>
+        /// <returns></returns>
+        //[ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult DepositCard(int value, int serial)
         {

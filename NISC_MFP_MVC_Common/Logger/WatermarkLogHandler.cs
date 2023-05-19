@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NISC_MFP_MVC_Common.Logger
+﻿namespace NISC_MFP_MVC_Common.Logger
 {
-    public class WatermarkLogHandler:AbstractLogHandler
+    public class WatermarkLogHandler : AbstractLogHandler
     {
         public override object LogHandle(string type, string operate, object data)
         {

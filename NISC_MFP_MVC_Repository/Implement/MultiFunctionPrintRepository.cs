@@ -1,18 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MySql.Data.MySqlClient;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
-using System.Configuration;
 using System.Data;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Security;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
@@ -130,6 +125,10 @@ namespace NISC_MFP_MVC_Repository.Implement
             }
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());

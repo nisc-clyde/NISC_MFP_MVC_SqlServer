@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.DTOs.CardReader;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Interface;
 using System;
@@ -133,6 +131,10 @@ namespace NISC_MFP_MVC_Service.Implement
             _cardRepository.SaveChanges();
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());

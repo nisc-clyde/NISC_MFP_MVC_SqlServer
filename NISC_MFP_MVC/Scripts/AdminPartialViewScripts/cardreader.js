@@ -132,7 +132,7 @@ function PopupFormForAddOrEdit() {
  */
 function DeleteAlertPopUp() {
   const uniqueIdProperty = "serial";
-  const url = "/Admin/CardReader/DeleteCardReader";
+  const url = "/Admin/CardReader/Delete";
   RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, url);
 }
 

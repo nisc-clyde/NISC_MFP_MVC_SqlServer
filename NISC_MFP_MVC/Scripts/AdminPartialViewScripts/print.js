@@ -1,4 +1,4 @@
-﻿import { DataTableTemplate } from "./Shared.js"
+﻿import { CustomSweetAlert2, DataTableTemplate } from "./Shared.js"
 
 //Global Variable - Start
 var dataTable;
@@ -187,13 +187,20 @@ function SearchPrintDataTableInitial() {
         { data: "page", name: "張數" },
         { data: "value", name: "使用點數" },
         { data: "print_date", name: "列印時間" },
-        { data: "document_name", name: "文件名稱" }
+        { data: "document_name", name: "文件名稱" },
+        { data: "file_path", name: "檔案路徑" },
+        { data: "file_name", name: "檔案名稱" }
     ];
-    const columnDefs = [];
+    const columnDefs = [
+        { visible: false, target: 11 },
+        { visible: false, target: 12 },
+    ];
     const order = [9, "desc"];
     const rowCallback = function (row, data) {
         (data.card_type == "遞增") ? $('td:eq(4)', row).html("<b class='text-success'>遞增</b>") : $('td:eq(4)', row).html("<b class='text-danger'>遞減</b>");
         (data.page_color == "C(彩色)") ? $('td:eq(6)', row).html("<b class='rainbow-text'>C(彩色)</b>") : $('td:eq(6)', row).html("<b>M(單色)</b>");
+        (data.file_path != null && data.file_name != null) ? $('td:eq(10)', row).html('<a href="' + data.file_path + data.file_name + '">' + data.document_name + '</a>')
+            : data.document_name;
     };
 
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
@@ -267,6 +274,39 @@ function DateRangePickerColumnHeight() {
     $("#dateRangePickerRow").css("height", $("#operationRow").outerHeight());
 }
 
+function DocumentDownload() {
+    $("#searchPrintDataTable").DataTable().on("click", "a", function (e) {
+
+        let currentRow;
+        if ($(this).parents("tr").prev().hasClass("dt-hasChild")) {
+            //Is In Responsiveness
+            currentRow = $(this).parents("tr").prev();
+        } else {
+            //Not In Responsiveness
+            currentRow = $(this).closest("tr");
+        }
+        const rowData = dataTable.row(currentRow).data();
+
+        $.ajax({
+            url: '/Admin/Print/DownloadDocument',
+            type: 'GET',
+            data: { filePath: rowData["file_path"], fileName: rowData["file_name"] },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (response) {
+                if (response != null) {
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var fileURL = URL.createObjectURL(blob);
+                    window.open(fileURL);
+                } else {
+                    CustomSweetAlert2.SweetAlertTemplateError("發生錯誤，檔案不存在可能已刪除");
+                }
+            }
+        });
+    });
+}
+
 $(function () {
     SearchPrintDataTableInitial();
     DateRangePicker_Initial();
@@ -274,4 +314,5 @@ $(function () {
     FormSelect_Select();
     FormSelect_UnSelect();
     ColumnSearch();
+    DocumentDownload();
 });

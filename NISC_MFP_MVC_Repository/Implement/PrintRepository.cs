@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
-using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.DTOs.OutputReport;
 using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Interface;
@@ -45,7 +43,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.deptId)) result = result.Where(d => d.dept_id.Equals(initialOutputReportRepoDTO.deptId));
 
             List<string> usageTypeList = initialOutputReportRepoDTO.usage_type.ToCharArray().Select(c => c.ToString()).ToList();
-            if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.usage_type)) result = result.Where("@0.Contains(usage_type)",usageTypeList);
+            if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.usage_type)) result = result.Where("@0.Contains(usage_type)", usageTypeList);
 
             if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.userId)) result = result.Where(d => d.user_id.Equals(initialOutputReportRepoDTO.userId));
 
@@ -61,7 +59,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 mfp_name = p.mfp_name,
                 user_id = p.user_id,
                 user_name = p.user_name,
-                dept_id=p.dept_id,
+                dept_id = p.dept_id,
                 dept_name = p.dept_name,
                 card_id = p.card_id,
                 card_type = p.card_type == "0" ? "遞減" : "遞增",
@@ -73,10 +71,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 document_name = p.document_name,
                 serial = p.serial
             }); ;
-            List<InitialPrintRepoDTO> temp = prints.ToList();
             return prints;
         }
-
 
         public IQueryable<InitialPrintRepoDTO> GetAll(DataTableRequest dataTableRequest)
         {
@@ -121,6 +117,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                     page = p.page,
                     print_date = p.print_date,
                     document_name = p.document_name,
+                    file_path = p.file_path.ToUpper() == "NULL"?null:p.file_path,
+                    file_name = p.file_name.ToUpper() == "NULL" ? null : p.file_name,
                     serial = p.serial
                 })
                 .ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
@@ -137,8 +135,8 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Logs_Prints = tb_Logs_Prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialPrintRepoDTO> takeTenRecords = tb_Logs_Prints.ToList();
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            //List<InitialPrintRepoDTO> takeTenRecords = tb_Logs_Prints.ToList();
+            return tb_Logs_Prints.AsNoTracking();
         }
 
         public IQueryable<InitialPrintRepoDTO> GetWithGlobalSearch(IQueryable<InitialPrintRepoDTO> source, string search)
@@ -258,6 +256,10 @@ namespace NISC_MFP_MVC_Repository.Implement
             }
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());

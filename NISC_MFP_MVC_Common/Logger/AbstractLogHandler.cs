@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
-
-namespace NISC_MFP_MVC_Common.Logger
+﻿namespace NISC_MFP_MVC_Common.Logger
 {
     public abstract class AbstractLogHandler : ILogHandler
     {

@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
-using MySql.Data.MySqlClient;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Card;
-using NISC_MFP_MVC_Repository.DTOs.CardReader;
-using NISC_MFP_MVC_Repository.DTOs.Department;
-using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -25,6 +20,9 @@ namespace NISC_MFP_MVC_Repository.Implement
         public CardRepository()
         {
             _db = new MFP_DBEntities();
+            //@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"
+            //DatabaseConnection.setDatabaseConnection("localhost", "mywebni1_managerc", "root", "root");
+            //_db.Database.Connection.ConnectionString = DatabaseConnection.getDatabaseConnection().ConnectionString;
             _mapper = InitializeAutomapper();
         }
 
@@ -181,19 +179,20 @@ namespace NISC_MFP_MVC_Repository.Implement
             //using (MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"))
             //{
             //}
-            try
-            {
-                MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
-                conn.Open();
-                string insertQuery = @"delete from tb_card";
-                MySqlCommand sqlCommand = new MySqlCommand(insertQuery, conn);
-                sqlCommand.ExecuteNonQuery();
-                conn.Close();
-            }
-            catch (DbException e)
-            {
-                throw e;
-            }
+            //try
+            //{
+            //    MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
+            //    conn.Open();
+            //    string insertQuery = @"delete from tb_card";
+            //    MySqlCommand sqlCommand = new MySqlCommand(insertQuery, conn);
+            //    sqlCommand.ExecuteNonQuery();
+            //    conn.Close();
+            //}
+            //catch (DbException e)
+            //{
+            //    throw e;
+            //}
+            _db.Database.ExecuteSqlCommand("delete from tb_card");
         }
 
         public void SaveChanges()
@@ -219,6 +218,10 @@ namespace NISC_MFP_MVC_Repository.Implement
             }
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());

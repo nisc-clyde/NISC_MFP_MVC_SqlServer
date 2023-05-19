@@ -11,17 +11,24 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     [Authorize(Roles = "history")]
-    public class HistoryController : Controller
+    public class HistoryController : Controller, IDataTableController<HistoryViewModel>
     {
         private IHistoryService historyService;
         private Mapper mapper;
 
+        /// <summary>
+        /// Service和AutoMapper初始化
+        /// </summary>
         public HistoryController()
         {
             historyService = new HistoryService();
             mapper = InitializeAutomapper();
         }
 
+        /// <summary>
+        /// History Index View
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View();
@@ -29,7 +36,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchPrintDataTable()
+        public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             IQueryable<HistoryViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
@@ -104,6 +111,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         //    return searchData;
         //}
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());

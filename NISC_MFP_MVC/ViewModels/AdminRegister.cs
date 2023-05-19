@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NISC_MFP_MVC.ViewModels
 {
@@ -16,6 +11,11 @@ namespace NISC_MFP_MVC.ViewModels
         [Required(ErrorMessage = "此欄位為必填資料")]
         [Display(Name = "密碼")]
         public string user_password { get; set; }
+
+        [Required(ErrorMessage = "此欄位為必填資料")]
+        [Compare("user_password", ErrorMessage = "密碼不一致")]
+        [Display(Name = "密碼確認")]
+        public string user_password_confirm { get; set; }
 
         [Display(Name = "姓名")]
         public string user_name { get; set; }

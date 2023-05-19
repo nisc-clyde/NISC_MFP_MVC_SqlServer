@@ -6,7 +6,6 @@ using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
 using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
-using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -16,7 +15,7 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     [Authorize(Roles = "cardreader")]
-    public class CardReaderController : Controller
+    public class CardReaderController : Controller, IDataTableController<CardReaderModel>, IAddEditDeleteController<CardReaderModel>
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
@@ -25,6 +24,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         private Mapper mapper;
 
+        /// <summary>
+        /// Service和AutoMapper初始化
+        /// </summary>
         public CardReaderController()
         {
             cardReaderService = new CardReaderService();
@@ -32,6 +34,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             mapper = InitializeAutomapper();
         }
 
+        /// <summary>
+        /// CardReader Index View
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View();
@@ -39,7 +45,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchPrintDataTable()
+        public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             IQueryable<CardReaderModel> searchPrintResultDetail = InitialData(dataTableRequest);
@@ -59,6 +65,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return cardReaderService.GetAll(dataTableRequest).ProjectTo<CardReaderModel>(mapper.ConfigurationProvider);
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
@@ -68,7 +78,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddOrEditCardReader(string formTitle, int serial)
+        public ActionResult AddOrEdit(string formTitle, int serial)
         {
             CardReaderModel cardReaderViewModel = new CardReaderModel();
             try
@@ -81,7 +91,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 else if (serial >= 0)
                 {
-                    CardReaderInfo instance = cardReaderService.Get("serial",serial.ToString(),"Equals");
+                    CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
                     cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
                 }
             }
@@ -97,7 +107,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult AddOrEditCardReader(CardReaderModel cardReader, string currentOperation)
+        public ActionResult AddOrEdit(CardReaderModel cardReader, string currentOperation)
         {
             if (currentOperation == "Add")
             {
@@ -125,7 +135,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public ActionResult DeleteCardReader(int serial)
+        public ActionResult Delete(int serial)
         {
             CardReaderModel cardReaderViewModel = new CardReaderModel();
             CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
@@ -135,7 +145,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteCardReader(CardReaderModel cardReader)
+        public ActionResult Delete(CardReaderModel cardReader)
         {
             cardReaderService.Delete(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
             multiFunctionPrintService.DeleteMFPById(cardReader.cr_id);
@@ -145,6 +155,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Render CardReader管理的PartialView
+        /// </summary>
+        /// <param name="formTitle">PartialView的Title</param>
+        /// <param name="serial">CardReader的serial</param>
+        /// <param name="cardReaderId">CardReader的cr_id</param>
+        /// <returns>MultiFunctionPrintViewModel</returns>
         [HttpGet]
         public ActionResult CardReaderManagement(string formTitle, int serial, int cardReaderId)
         {
@@ -160,6 +177,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(multiFunctionPrintViewModel);
         }
 
+        /// <summary>
+        /// 新增或修改MFP
+        /// </summary>
+        /// <param name="data">MFP的資料</param>
+        /// <param name="cr_id">要新增到哪個CardReader底下</param>
+        /// <param name="currentOperation">Add或Edit</param>
+        /// <returns></returns>
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult AddOrEditMFP(MultiFunctionPrintModel data, int cr_id, string currentOperation)
@@ -186,6 +210,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         }
 
+        /// <summary>
+        /// 刪除MFP
+        /// </summary>
+        /// <param name="mfp">要刪除的MFP</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult DeleteMFP(MultiFunctionPrintModel mfp)
         {
@@ -195,6 +224,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 取回所有CardReader底下的MFP
+        /// </summary>
+        /// <param name="cardReaderId">CardReader的cr_id</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult CardReaderManager(int cardReaderId)
         {

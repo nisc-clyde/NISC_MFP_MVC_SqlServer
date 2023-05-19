@@ -1,8 +1,4 @@
 ﻿using AutoMapper;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.Ajax.Utilities;
-using Mysqlx.Expr;
-using Newtonsoft.Json;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Card;
 using NISC_MFP_MVC_Common;
@@ -12,16 +8,11 @@ using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Web.Services.Description;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
@@ -31,16 +22,28 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private Mapper mapper;
 
+        /// <summary>
+        /// AutoMapper初始化
+        /// </summary>
         public SystemController()
         {
             mapper = InitializeAutomapper();
 
         }
 
+        /// <summary>
+        /// System Index View
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View();
         }
+
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
@@ -48,6 +51,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return mapper;
         }
 
+        /// <summary>
+        /// 下載匯入範本
+        /// </summary>
+        /// <param name="fileName">範本檔名</param>
+        /// <returns></returns>
         public FileResult DownloadTemplate(string fileName)
         {
             string path = Server.MapPath("~/App_Data/Downloads/") + fileName;
@@ -55,6 +63,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return File(bytes, "application/octet-stream", fileName);
         }
 
+        /// <summary>
+        /// 上傳人事資料.csv
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult UploadFile()
         {
@@ -93,6 +105,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                             }
                         }
 
+                        //card_id不足10碼補0
                         string prefixZero = "";
                         if (columns[0].Length != 10)
                         {
@@ -121,6 +134,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Render Preview DataTable PartialView
+        /// </summary>
+        /// <param name="formTitle">Preview DataTable PartialView的Title</param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult PreviewEmployee(string formTitle)
         {
@@ -128,6 +146,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Preview DataTable PartialView分頁
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult PreviewEmployee()
         {
@@ -143,11 +165,18 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 匯入人事資料
+        /// <para>card_id dept_id  dept_name user_name user_id work_id card_type                enable                     e-mail</para>
+        /// <para>卡號    部門編號 部門名稱  姓名      帳號    工號    卡屬性(遞減= 0，遞增= 1) 卡狀態(停用 = 0，啟用 = 1) Email</para>
+        /// <para>Reset : 全部覆蓋，tb_department、tb_card、tb_user先全部刪除再新增</para>
+        /// <para>Import : 部分新增，直接新增資料到table，若發生user_id重複，則舊的資料會被新的資料覆蓋</para>
+        /// </summary>
+        /// <param name="currentOperation">Reset或是Import</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult ImportEmployeeFromFile(string currentOperation)
         {
-            //card_id dept_id  dept_name user_name user_id work_id card_type                enable                     e-mail
-            //卡號    部門編號 部門名稱  姓名      帳號    工號    卡屬性(遞減= 0，遞增= 1) 卡狀態(停用 = 0，啟用 = 1) Email
             IDepartmentService departmentService = new DepartmentService();
             IUserService userService = new UserService();
             ICardService cardService = new CardService();
@@ -174,6 +203,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return Json(new { success = true, message = "Post Success" }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 負責Department新增或刪除
+        /// <para>部門 = null : 新增部門</para>
+        /// <para>部門 &#33;= null : 更新部門</para>
+        /// </summary>
+        /// <param name="departmentService">部門Service</param>
+        /// <param name="departmentViewModel">部門ViewModel</param>
+        /// <param name="employee">此筆資料的部門相關資料</param>
         private void DepartmentAddOrEdit(IDepartmentService departmentService, DepartmentViewModel departmentViewModel, EmployeeModel employee)
         {
             if (departmentViewModel == null)
@@ -192,6 +229,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// 負責User新增或刪除
+        /// <para>使用者 = null : 新增使用者</para>
+        /// <para>使用者 &#33;= null : 更新使用者</para>
+        /// </summary>
+        /// <param name="userService">使用者Service</param>
+        /// <param name="userViewModel">使用者ViewModel</param>
+        /// <param name="employee">此筆資料的部門相關資料</param>
         private void UserAddOrEdit(IUserService userService, UserViewModel userViewModel, EmployeeModel employee)
         {
             if (userViewModel == null)
@@ -227,6 +272,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// 負責Card新增或刪除
+        /// <para>卡片 = null : 新增卡片</para>
+        /// <para>卡片 &#33;= null : 更新卡片</para>
+        /// </summary>
+        /// <param name="cardService">卡片Service</param>
+        /// <param name="cardViewModel">卡片ViewModel</param>
+        /// <param name="employee">此筆資料的卡片相關資料</param>
         private void CardAddOrEdit(ICardService cardService, CardViewModel cardViewModel, EmployeeModel employee)
         {
             if (cardViewModel == null)

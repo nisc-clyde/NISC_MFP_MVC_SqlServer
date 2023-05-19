@@ -1,6 +1,4 @@
-﻿using NISC_MFP_MVC.ViewModels.Print;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace NISC_MFP_MVC.ViewModels.OutputReport

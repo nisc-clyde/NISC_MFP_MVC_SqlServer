@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NISC_MFP_MVC_Repository.DTOs.OutputReport
+﻿namespace NISC_MFP_MVC_Repository.DTOs.OutputReport
 {
     public class InitialOutputReportRepoDTO
     {

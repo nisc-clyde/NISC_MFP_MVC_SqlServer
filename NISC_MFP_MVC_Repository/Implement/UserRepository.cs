@@ -1,20 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Google.Protobuf.WellKnownTypes;
-using MySql.Data.MySqlClient;
-using Mysqlx.Crud;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Runtime.Remoting.Contexts;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
@@ -156,22 +149,25 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
 
             //using (MySqlConnection conn = DatabaseConnection.getDatabaseConnection())
+            //{
+            //    try
+            //    {
+            //        //MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
+            //        conn.Open();
+            //        string insertQuery = @"delete from tb_user";
+            //        MySqlCommand sqlCommand = new MySqlCommand("asd", conn);
+            //        sqlCommand.ExecuteNonQuery();
+            //        conn.Close();
+            //    }
+            //    catch (DbException e)
+            //    {
+            //        throw e;
+            //    }
+            //}
             //using (MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"))
             //{
             //}
-            try
-            {
-                MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
-                conn.Open();
-                string insertQuery = @"delete from tb_user";
-                MySqlCommand sqlCommand = new MySqlCommand(insertQuery, conn);
-                sqlCommand.ExecuteNonQuery();
-                conn.Close();
-            }
-            catch (DbException e)
-            {
-                throw e;
-            }
+            _db.Database.ExecuteSqlCommand("delete from tb_user where serial != 1");
         }
         public void SaveChanges()
         {
@@ -196,6 +192,10 @@ namespace NISC_MFP_MVC_Repository.Implement
             }
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());

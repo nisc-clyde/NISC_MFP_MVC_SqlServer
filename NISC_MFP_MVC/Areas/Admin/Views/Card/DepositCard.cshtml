@@ -26,8 +26,6 @@
     <div class="modal-content">
         @using (Html.BeginForm("DepositCard", "Card", FormMethod.Post, new { @id = "depositcardForm", @class = "overflow-auto" }))
         {
-            @Html.AntiForgeryToken()
-
             <div class="modal-header">
                 <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

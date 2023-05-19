@@ -13,6 +13,8 @@
         public int? value { get; set; }
         public string print_date { get; set; }
         public string document_name { get; set; }
+        public string file_path { get; set; } = null;
+        public string file_name { get; set; } = null;
         public int serial { get; set; }
     }
 }

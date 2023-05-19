@@ -1,11 +1,9 @@
-﻿using Microsoft.Ajax.Utilities;
-using NISC_MFP_MVC.Models;
+﻿using NISC_MFP_MVC.Models;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
-using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -121,8 +119,7 @@ namespace NISC_MFP_MVC.Controllers
                     return Json(new { success = false, message = "已註冊管理員" });
                 }
             }
-            return Json(new { success = false, message = "Failed" });
-
+            return View();
         }
 
         //[HttpPost]

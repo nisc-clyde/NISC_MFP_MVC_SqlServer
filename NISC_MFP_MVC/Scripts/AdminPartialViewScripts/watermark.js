@@ -164,7 +164,7 @@ function PopupFormForAddOrEdit() {
  */
 function DeleteAlertPopUp() {
   const uniqueIdProperty = "id";
-  const url = "/Admin/Watermark/DeleteWatermark";
+  const url = "/Admin/Watermark/Delete";
 
   RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, url);
 }

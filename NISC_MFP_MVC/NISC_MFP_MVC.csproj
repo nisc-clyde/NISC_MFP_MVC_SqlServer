@@ -218,6 +218,7 @@
       <Private>True</Private>
       <HintPath>packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -235,6 +236,8 @@
     <Compile Include="Areas\Admin\Controllers\SystemController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\WatermarkController.cs" />
+    <Compile Include="Areas\Admin\IAddEditDeleteController.cs" />
+    <Compile Include="Areas\Admin\IDataTableController.cs" />
     <Compile Include="Areas\User\Controllers\UserAreaRegistration.cs" />
     <Compile Include="Areas\User\Controllers\UserController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -1248,12 +1251,12 @@
     <Content Include="Areas\User\Views\User\List.cshtml" />
     <Content Include="lib\bootstrap-daterangepicker\daterangepicker.min.css.map" />
     <Content Include="lib\bootstrap-daterangepicker\daterangepicker.min.js.map" />
-    <Content Include="Areas\Admin\Views\Department\AddOrEditDepartment.cshtml" />
-    <Content Include="Areas\Admin\Views\User\AddOrEditUser.cshtml" />
-    <Content Include="Areas\Admin\Views\CardReader\AddOrEditCardReader.cshtml" />
-    <Content Include="Areas\Admin\Views\Card\AddOrEditCard.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\AddOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\User\AddOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\AddOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Card\AddOrEdit.cshtml" />
     <Content Include="Areas\Admin\Views\Card\ResetCardFreePoint.cshtml" />
-    <Content Include="Areas\Admin\Views\Watermark\AddOrEditWatermark.cshtml" />
+    <Content Include="Areas\Admin\Views\Watermark\AddOrEdit.cshtml" />
     <Content Include="lib\sweetalert2\LICENSE" />
     <Content Include="lib\sweetalert2\package.json" />
     <Content Include="lib\sweetalert2\README.md" />
@@ -1267,11 +1270,11 @@
     <Content Include="lib\sweetalert2\src\scss\_toasts.scss" />
     <Content Include="lib\sweetalert2\src\sweetalert2.scss" />
     <Content Include="lib\sweetalert2\src\variables.scss" />
-    <Content Include="Areas\Admin\Views\Department\DeleteDepartment.cshtml" />
-    <Content Include="Areas\Admin\Views\User\DeleteUser.cshtml" />
-    <Content Include="Areas\Admin\Views\CardReader\DeleteCardReader.cshtml" />
-    <Content Include="Areas\Admin\Views\Card\DeleteCard.cshtml" />
-    <Content Include="Areas\Admin\Views\Watermark\DeleteWatermark.cshtml" />
+    <Content Include="Areas\Admin\Views\Department\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\CardReader\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Card\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Watermark\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\User\UserPermissionConfig.cshtml" />
     <Content Include="Areas\Admin\Views\Card\DepositCard.cshtml" />
     <Content Include="Areas\Admin\Views\CardReader\CardReaderManagement.cshtml" />

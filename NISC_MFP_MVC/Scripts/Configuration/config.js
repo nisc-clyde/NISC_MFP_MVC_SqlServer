@@ -22,14 +22,18 @@ function ConfigurationSkip() {
 
 function RegisterAdmin() {
     $("#adminRegisterForm").on("submit", function () {
-
         $.ajax({
             url: "/Login/ConfigAdminRegister",
             type: "POST",
             data: $(this).serialize(),
             success: function (data) {
                 if (data.success) {
-                    CustomSweetAlert2.SweetAlertTemplateSuccess("管理者註冊成功").fire();
+                    CustomSweetAlert2.SweetAlertTemplateSuccess(data.message).fire()
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                $("#adminRegisterForm").trigger("reset");
+                            }
+                        });
                 } else {
                     CustomSweetAlert2.SweetAlertTemplateError(data.message).fire();
                 }

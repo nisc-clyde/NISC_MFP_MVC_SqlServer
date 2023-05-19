@@ -18,7 +18,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("AddOrEditWatermark", "Watermark", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("AddOrEdit", "Watermark", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
         {
 
             @Html.AntiForgeryToken()

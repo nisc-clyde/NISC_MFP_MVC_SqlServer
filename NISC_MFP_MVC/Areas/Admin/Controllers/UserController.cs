@@ -12,25 +12,31 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     [Authorize(Roles = "user")]
-    public class UserController : Controller
+    public class UserController : Controller, IDataTableController<UserViewModel>, IAddEditDeleteController<UserViewModel>
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
         private IUserService userService;
         private Mapper mapper;
 
+        /// <summary>
+        /// Service和AutoMapper初始化
+        /// </summary>
         public UserController()
         {
             userService = new UserService();
             mapper = InitializeAutomapper();
         }
 
+        /// <summary>
+        /// User Index View
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View();
@@ -38,7 +44,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchPrintDataTable()
+        public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             IQueryable<UserViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
@@ -59,6 +65,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
@@ -77,7 +87,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddOrEditUser(string formTitle, int serial)
+        public ActionResult AddOrEdit(string formTitle, int serial)
         {
             UserViewModel userViewModel = new UserViewModel();
             try
@@ -108,7 +118,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult AddOrEditUser(UserViewModel user, string currentOperation)
+        public ActionResult AddOrEdit(UserViewModel user, string currentOperation)
         {
             if (currentOperation == "Add")
             {
@@ -152,7 +162,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteUser(int serial)
+        public ActionResult Delete(int serial)
         {
             UserViewModel UserViewModel = new UserViewModel();
             UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
@@ -162,7 +172,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteUser(UserViewModel user)
+        public ActionResult Delete(UserViewModel user)
         {
             try
             {
@@ -182,6 +192,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Render 使用者權限的PartialView
+        /// </summary>
+        /// <param name="formTitle">PartialView的Title</param>
+        /// <param name="serial">User serial</param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult UserPermissionConfig(string formTitle, int serial)
         {
@@ -193,6 +209,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView(userViewModel);
         }
 
+        /// <summary>
+        /// 處理使用者權限
+        /// </summary>
+        /// <param name="authority">修改後的權限</param>
+        /// <param name="serial">User serial</param>
+        /// <returns></returns>
         [HttpPost, ActionName("UserPermissionConfig")]
         public ActionResult UserPermissionConfigPost(string authority, int serial)
         {

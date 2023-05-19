@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Newtonsoft.Json;
 using NISC_MFP_MVC.ViewModels.OutputReport;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.OutputReport;
@@ -10,12 +9,9 @@ using NISC_MFP_MVC_Service.DTOs.Info.OutputReport;
 using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Interface;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NISC_MFP_MVC_Service.Implement
 {

@@ -75,7 +75,7 @@
                         此帳號只會註冊一次，日後為唯一最高權限之帳號
                     </div>
                 </p>
-                @*@using (Html.BeginForm("AddOrEditCardReader", "CardReader", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))*@
+                @*@using (Html.BeginForm("AddOrEdit", "CardReader", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))*@
 
                 @using (Html.BeginForm("ConfigAdminRegister", "Login", FormMethod.Post, new { @id = "adminRegisterForm", @class = "overflow-auto px-5 pb-5 pt-1" }))
                 {
@@ -91,8 +91,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="adminRegisterPasswordRepeat" class="form-label">請再次輸入密碼</label>
-                        @Html.TextBoxFor(d => d.user_password, new { @class = "form-control bg-opacity-10 border border-primary", @id = "adminRegisterPasswordRepeat", @type = "password" })
-                        @Html.ValidationMessageFor(d => d.user_password, "", new { @class = "text-danger fs-6" })
+                        @Html.TextBoxFor(d => d.user_password_confirm, new { @class = "form-control bg-opacity-10 border border-primary", @id = "adminRegisterPasswordConfirm", @type = "password" })
+                        @Html.ValidationMessageFor(d => d.user_password_confirm, "", new { @class = "text-danger fs-6" })
                     </div>
                     <div class="mb-3">
                         <label for="adminRegisterName" class="form-label">名稱</label>
@@ -107,7 +107,7 @@
                 <div class="row">
                     <div class="col d-flex justify-content-between">
                         <button id="btnPrevious" class="btn btn-outline-primary">上一頁</button>
-                        <button id="btnSkip" class="btn btn-outline-primary">跳過</button>
+                        <button id="btnSkip" class="btn btn-outline-primary">回到登入</button>
                     </div>
                 </div>
             </div>
@@ -120,8 +120,6 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jqueryvalmin")
     @Scripts.Render("~/lib/sweetalert2-js")
-
-    
 
 </body>
 </html>

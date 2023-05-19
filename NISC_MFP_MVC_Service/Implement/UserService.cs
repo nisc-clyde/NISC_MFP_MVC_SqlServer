@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository;
 using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
@@ -13,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Expressions;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -157,6 +155,10 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
+                if (instance.serial == 1)
+                {
+                    throw new Exception("管理員帳號不可刪除");
+                }
                 _userRepository.Delete(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }

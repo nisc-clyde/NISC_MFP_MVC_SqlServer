@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.OutputReport;
 using NISC_MFP_MVC.ViewModels.Print;
 using NISC_MFP_MVC_Common;
@@ -9,14 +8,11 @@ using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
 using NISC_MFP_MVC_Service.DTOs.Info.OutputReport;
 using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
-using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Services.Description;
 using System.Web.UI.WebControls;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
@@ -28,17 +24,28 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         private IOutputReportService _outputReportService;
         private Mapper _mapper;
 
+        /// <summary>
+        /// Service和AutoMapper初始化
+        /// </summary>
         public OutputReportController()
         {
             _outputReportService = new OutputReportService();
             _mapper = InitializeAutomapper();
         }
 
+        /// <summary>
+        /// Render OutputReport Index View並同時載入部門、使用者、事務機IP資料
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View(InitialViewModel());
         }
 
+        /// <summary>
+        /// 初始化部門名稱、MFP IP資料
+        /// </summary>
+        /// <returns></returns>
         [NonAction]
         public OutputReportViewModel InitialViewModel()
         {
@@ -61,6 +68,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return outputReportViewModel;
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
@@ -68,6 +79,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return mapper;
         }
 
+        /// <summary>
+        /// 同部門的所有使用者
+        /// </summary>
+        /// <param name="departmentId">部門dept_id</param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult GetAllUserByDepartmentId(string departmentId)
         {
@@ -81,6 +97,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 取得用量並Render到Usage DataTable
+        /// </summary>
+        /// <param name="outputReportRequest"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult GenerateUsageReport(OutputReportRequest outputReportRequest)
         {
@@ -116,6 +137,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// 取得紀錄並Render到Record DataTable
+        /// </summary>
+        /// <param name="outputReportRequest"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult GenerateRecordReport(OutputReportRequest outputReportRequest)
         {
@@ -132,6 +158,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Usage DataTable分頁
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult GenerateUsageReport()
         {
@@ -147,6 +177,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Record DataTable分頁
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult GenerateRecordReport()
         {

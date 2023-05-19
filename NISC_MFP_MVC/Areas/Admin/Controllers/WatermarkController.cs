@@ -14,11 +14,14 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     [Authorize(Roles = "watermark")]
-    public class WatermarkController : Controller
+    public class WatermarkController : Controller, IDataTableController<WatermarkViewModel>, IAddEditDeleteController<WatermarkViewModel>
     {
         private IWatermarkService watermarkService;
         private Mapper mapper;
 
+        /// <summary>
+        /// Service和AutoMapper初始化
+        /// </summary>
         public WatermarkController()
         {
             watermarkService = new WatermarkService();
@@ -26,6 +29,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
 
+        /// <summary>
+        /// Watermark Index View
+        /// </summary>
+        /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
             return View();
@@ -33,7 +40,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ActionName("InitialDataTable")]
-        public ActionResult SearchPrintDataTable()
+        public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             IQueryable<WatermarkViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
@@ -52,6 +59,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return watermarkService.GetAll(dataTableRequest).ProjectTo<WatermarkViewModel>(mapper.ConfigurationProvider);
         }
 
+        /// <summary>
+        /// 建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
@@ -60,7 +71,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddOrEditWatermark(string formTitle, int serial)
+        public ActionResult AddOrEdit(string formTitle, int serial)
         {
             WatermarkViewModel initialWatermarkDTO = new WatermarkViewModel();
             try
@@ -91,7 +102,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult AddOrEditWatermark(WatermarkViewModel watermark, string currentOperation)
+        public ActionResult AddOrEdit(WatermarkViewModel watermark, string currentOperation)
         {
             try
             {
@@ -127,9 +138,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        #region Request For DeleteWaterMark
         [HttpGet]
-        public ActionResult DeleteWatermark(int serial)
+        public ActionResult Delete(int serial)
         {
             WatermarkViewModel watermarkViewModel = new WatermarkViewModel();
             WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
@@ -139,13 +149,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteWatermark(WatermarkViewModel watermark)
+        public ActionResult Delete(WatermarkViewModel watermark)
         {
             watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
             watermarkService.SaveChanges();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
-        #endregion
+
     }
 }
