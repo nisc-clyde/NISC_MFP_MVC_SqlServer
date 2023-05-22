@@ -15,9 +15,31 @@
 
 <body class="bg-black bg-gradient">
     <header class="header pt-4 ps-2  bg-dark bg-gradient">
-        <a href="@Url.Action("Index", "Print", new { area="Admin"})" class="logo">
-            <img src="~/img/logo.png" alt="Logo">
-        </a>
+        @{
+            if (TempData["ActiveNav"] != null)
+            {
+                ViewBag.ActiveNav = TempData["ActiveNav"].ToString();
+            }
+        }
+
+        <div class="d-flex justify-content-between">
+            <div>
+                <a href="@Url.Action("Index", @ViewBag.ActiveNav, new { area = "Admin" })" class="logo text-start">
+                    <img src="~/img/logo.png" alt="Logo">
+                </a>
+            </div>
+            <div class="d-flex align-items-center me-5 fs-3 text-white fw-bold text-decoration-underline">
+                @{
+                    string user_id = "";
+                    if (HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        user_id = HttpContext.Current.User.Identity.Name;
+                    }
+                }
+                帳號：@user_id
+            </div>
+
+        </div>
     </header>
 
     <div class="container-fluid wrapper">
@@ -25,10 +47,6 @@
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                     @{
-                        if (TempData["ActiveNav"] != null)
-                        {
-                            ViewBag.ActiveNav = TempData["ActiveNav"].ToString();
-                        }
 
                         if (User.IsInRole("print"))
                         {
