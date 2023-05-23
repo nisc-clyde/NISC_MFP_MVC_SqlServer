@@ -69,6 +69,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 value = p.value,
                 print_date = p.print_date,
                 document_name = p.document_name,
+                file_path = p.file_path.ToUpper() == "NULL" ? null : p.file_path,
+                file_name = p.file_name.ToUpper() == "NULL" ? null : p.file_name,
                 serial = p.serial
             }); ;
             return prints;
