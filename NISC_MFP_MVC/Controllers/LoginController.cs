@@ -59,6 +59,9 @@ namespace NISC_MFP_MVC.Controllers
 
                         string firstAuthority = userInfo.authority.Split(',')[0];
                         TempData["ActiveNav"] = firstAuthority;
+
+                        new NLogHelper("使用者登入", loginUser.account);
+
                         return RedirectToAction("Index",
                             firstAuthority,
                             new { area = "Admin" });

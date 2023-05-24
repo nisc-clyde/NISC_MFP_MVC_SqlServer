@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System;
+using System.Web.Mvc;
 using System.Web.Security;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
@@ -12,7 +14,22 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <returns>reutrn to Admin Login View</returns>
         public ActionResult Index()
         {
+            // 原本號稱可以清除所有 Cookie 的方法...
             FormsAuthentication.SignOut();
+
+            //清除所有的 session
+            Session.RemoveAll();
+
+            // 建立一個同名的 Cookie 來覆蓋原本的 Cookie
+            HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+            cookie1.Expires = DateTime.Now.AddYears(-1);
+            Response.Cookies.Add(cookie1);
+
+            // 建立 ASP.NET 的 Session Cookie 同樣是為了覆蓋
+            HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
+            cookie2.Expires = DateTime.Now.AddYears(-1);
+            Response.Cookies.Add(cookie2);
+
             return RedirectToAction("Admin", "Login", new { area = "" });
         }
 
@@ -23,7 +40,22 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult LogOutForJavaScript()
         {
+            // 原本號稱可以清除所有 Cookie 的方法...
             FormsAuthentication.SignOut();
+
+            //清除所有的 session
+            Session.RemoveAll();
+
+            // 建立一個同名的 Cookie 來覆蓋原本的 Cookie
+            HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+            cookie1.Expires = DateTime.Now.AddYears(-1);
+            Response.Cookies.Add(cookie1);
+
+            // 建立 ASP.NET 的 Session Cookie 同樣是為了覆蓋
+            HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
+            cookie2.Expires = DateTime.Now.AddYears(-1);
+            Response.Cookies.Add(cookie2);
+
             return JavaScript("location.reload(true)");
         }
     }
