@@ -4,14 +4,7 @@
     List<string> authoriths = new List<string>();
     if (!string.IsNullOrWhiteSpace(Model.authority))
     {
-        if (Model.authority.Contains(".php"))
-        {
-            authoriths = Model.authority.Replace(".php", "").Split(',').ToList();
-        }
-        else
-        {
-            authoriths = Model.authority.Split(',').ToList();
-        }
+        authoriths = Model.authority.Split(',').ToList();
     }
 
 }

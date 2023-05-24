@@ -30,21 +30,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(UserInfo instance)
         {
-            if (instance == null)
+            if (instance != null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                UserInfo userViewModel = Get("user_id", instance.user_id, "Equals");
-                if (userViewModel != null)
-                {
-                    throw new Exception("此帳號已存在，請使用其他帳號");
-                }
-                else
-                {
-                    _userRepository.Insert(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
-                }
+                _userRepository.Insert(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
         }
 
@@ -122,7 +110,9 @@ namespace NISC_MFP_MVC_Service.Implement
                             departmentName = "";
                         }
                     }
+                    //相容舊系統以*.php表示權限
                     if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains(".php")) dataModel.authority = dataModel.authority.Replace(".php", "");
+                    //若有view權限但沒有print權限，自動補上
                     if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains("view")) dataModel.authority = "print," + dataModel.authority;
 
                     UserInfo resultModel = _mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
@@ -130,6 +120,19 @@ namespace NISC_MFP_MVC_Service.Implement
                     return resultModel;
                 }
             }
+        }
+
+        public void setUserPermission(string authority, string user_id)
+        {
+            //若有view權限但沒有print權限，自動補上
+            if (authority.Contains("view") && !authority.Contains("print"))
+            {
+                authority = "print," + authority;
+            }
+            //更新User權限
+            UserInfo instance = Get("user_id", user_id, "Equals");
+            instance.authority = authority;
+            _userRepository.Update(_mapper.Map<InitialUserRepoDTO>(instance));
         }
 
         public IEnumerable<UserInfo> SearchByIdAndName(string prefix)

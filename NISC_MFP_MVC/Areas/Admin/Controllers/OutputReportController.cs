@@ -113,6 +113,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             outputReportRequestInfo.mfpIp = outputReportRequest.mfpIp;
             outputReportRequestInfo.date = outputReportRequest.date;
             List<OutputReportUsageInfo> prints = _outputReportService.GetUsage(outputReportRequestInfo);
+            Session["DataSet"] = prints;
 
             int total = prints.Sum(s => s.SubTotal);
             OutputReportUsageInfo totalRecord = new OutputReportUsageInfo();
@@ -120,21 +121,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             totalRecord.SubTotal = total;
             prints.Add(totalRecord);
 
-            Session["DataSet"] = prints;
+            new NLogHelper("產生用量報表", "");
 
-            if (outputReportRequestInfo.reportType.Contains("dept"))
-            {
-                Session["DataSet"] = prints;
-                ViewBag.reportType = "部門";
-                ViewBag.total = total;
-                return PartialView();
-            }
-            else
-            {
-                ViewBag.reportType = "使用者";
-                ViewBag.total = total;
-                return PartialView();
-            }
+            ViewBag.reportType = outputReportRequestInfo.reportType.Contains("dept") ? "部門" : "使用者";
+            ViewBag.total = total;
+            return PartialView();
         }
 
         /// <summary>
@@ -154,6 +145,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             outputReportRequestInfo.date = outputReportRequest.date;
             IQueryable<PrintInfo> prints = _outputReportService.GetRecord(outputReportRequestInfo);
             Session["DataSet"] = prints.ProjectTo<PrintViewModel>(_mapper.ConfigurationProvider).ToList();
+
+            new NLogHelper("產生紀錄報表", "");
 
             return PartialView();
         }

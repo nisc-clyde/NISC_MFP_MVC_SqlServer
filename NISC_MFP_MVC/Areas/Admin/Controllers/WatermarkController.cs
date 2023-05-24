@@ -113,6 +113,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     {
                         watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
                         watermarkService.SaveChanges();
+                        new NLogHelper("新增浮水印", $"");
 
                         return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                     }
@@ -124,6 +125,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     {
                         watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
                         watermarkService.SaveChanges();
+                        new NLogHelper("修改浮水印", $"");
 
                         return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                     }
@@ -153,6 +155,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
             watermarkService.SaveChanges();
+            new NLogHelper("刪除浮水印", $"");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }

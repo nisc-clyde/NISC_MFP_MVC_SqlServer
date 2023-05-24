@@ -4,6 +4,7 @@ using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
+using System.Text.Json;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -47,7 +48,7 @@ namespace NISC_MFP_MVC.Controllers
                             issueDate: DateTime.Now,
                             expiration: DateTime.Now.AddMinutes(30),
                             isPersistent: false,
-                            userData: userInfo.authority,
+                            userData: userInfo.authority+","+userInfo.user_name,//Save "authority...,user_name" in cookie
                             cookiePath: FormsAuthentication.FormsCookiePath
                             );
                         var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))

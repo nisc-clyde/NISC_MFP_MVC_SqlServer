@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
+using System.Windows.Markup;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
@@ -22,8 +24,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
-        private IDepartmentService departmentService;
-        private Mapper mapper;
+        private readonly IDepartmentService departmentService;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -108,34 +110,27 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    try
-                    {
-                        departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                        departmentService.SaveChanges();
+                    departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
+                    departmentService.SaveChanges();
+                    new NLogHelper("新增部門", $"{department.dept_id}/{department.dept_name}");
 
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (Exception e)
-                    {
-                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
-                    }
+                    return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }
             }
             else if (currentOperation == "Edit")
             {
                 if (ModelState.IsValid)
                 {
-                    try
-                    {
-                        departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                        departmentService.SaveChanges();
+                    DepartmentInfo originalDepartment = departmentService.Get("serial", department.serial.ToString(), "Equals");
+                    string logMessage = $"(修改前){originalDepartment.dept_id}/{originalDepartment.dept_name}<br/>";
 
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (Exception e)
-                    {
-                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
-                    }
+                    departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
+                    departmentService.SaveChanges();
+
+                    logMessage += $"(修改後){department.dept_id}/{department.dept_name}";
+                    new NLogHelper("修改部門", logMessage);
+
+                    return Json(new { success = true, message = "修改成功" }, JsonRequestBehavior.AllowGet);
                 }
             }
             return RedirectToAction("Index");
@@ -154,17 +149,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(DepartmentViewModel department)
         {
-            try
-            {
-                departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                departmentService.SaveChanges();
+            departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
+            departmentService.SaveChanges();
+            new NLogHelper("刪除部門", $"{department.dept_id}/{department.dept_name}");
 
-                return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
-            }
+            return Json(new { success = true, message = "刪除成功" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

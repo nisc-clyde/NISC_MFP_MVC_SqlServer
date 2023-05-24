@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.Controllers;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
@@ -8,6 +9,7 @@ using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -21,8 +23,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private static readonly string DISABLE = "0";
         private static readonly string ENABLE = "1";
-        private IUserService userService;
-        private Mapper mapper;
+        private readonly IUserService userService;
+        private readonly Mapper mapper;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -90,28 +93,20 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult AddOrEdit(string formTitle, int serial)
         {
             UserViewModel userViewModel = new UserViewModel();
-            try
-            {
-                if (serial < 0)
-                {
-                    userViewModel.color_enable_flag = DISABLE;
-                    userViewModel.copy_enable_flag = DISABLE;
-                    userViewModel.print_enable_flag = DISABLE;
-                    userViewModel.scan_enable_flag = DISABLE;
-                    userViewModel.fax_enable_flag = DISABLE;
-                }
-                else if (serial >= 0)
-                {
-                    UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
-                    userViewModel = mapper.Map<UserViewModel>(instance);
-                }
-            }
-            catch (HttpException he)
-            {
-                Debug.WriteLine(he.Message);
-                //throw he;
-            }
 
+            if (serial < 0)
+            {
+                userViewModel.color_enable_flag = DISABLE;
+                userViewModel.copy_enable_flag = DISABLE;
+                userViewModel.print_enable_flag = DISABLE;
+                userViewModel.scan_enable_flag = DISABLE;
+                userViewModel.fax_enable_flag = DISABLE;
+            }
+            else if (serial >= 0)
+            {
+                UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
+                userViewModel = mapper.Map<UserViewModel>(instance);
+            }
             ViewBag.formTitle = formTitle;
             return PartialView(userViewModel);
         }
@@ -124,38 +119,37 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    try
+                    if (userService.Get("user_id", user.user_id, "Equals") != null)
                     {
-                        userService.Insert(mapper.Map<UserViewModel, UserInfo>(user));
-                        userService.SaveChanges();
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = false, message = "此帳號已存在，請使用其他帳號" }, JsonRequestBehavior.AllowGet);
                     }
-                    catch (Exception e)
-                    {
-                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
-                    }
+                    userService.Insert(mapper.Map<UserViewModel, UserInfo>(user));
+                    userService.SaveChanges();
+                    new NLogHelper("新增使用者", $"{user.user_id}/{user.user_name}");
+
+                    return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }
             }
             else if (currentOperation == "Edit")
             {
                 if (ModelState.IsValid)
                 {
-                    try
-                    {
-                        userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
-                        userService.SaveChanges();
+                    //若修改資料之使用者為當前登入之使用者，由前端強迫登出
+                    UserInfo originalUser = userService.Get("user_id", user.user_id.ToString(), "Equals");
+                    string logMessage = $"(修改前){originalUser.user_id}/{originalUser.user_name}<br/>";
 
-                        return Json(new
-                        {
-                            success = true,
-                            message = "Success",
-                            isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
-                        }, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (Exception e)
+                    userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
+                    userService.SaveChanges();
+
+                    logMessage += $"(修改後){user.user_id}/{user.user_name}";
+                    new NLogHelper("修改使用者", logMessage);
+
+                    return Json(new
                     {
-                        return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
-                    }
+                        success = true,
+                        message = "修改成功",
+                        isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
+                    }, JsonRequestBehavior.AllowGet);
                 }
             }
             return RedirectToAction("Index");
@@ -164,46 +158,46 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int serial)
         {
-            UserViewModel UserViewModel = new UserViewModel();
+            UserViewModel userViewModel = new UserViewModel();
             UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
-            UserViewModel = mapper.Map<UserViewModel>(instance);
+            if (instance != null)
+            {
+                userViewModel = mapper.Map<UserViewModel>(instance);
+            }
 
-            return PartialView(UserViewModel);
+            return PartialView(userViewModel);
         }
 
         [HttpPost]
         public ActionResult Delete(UserViewModel user)
         {
-            try
-            {
-                userService.Delete(mapper.Map<UserViewModel, UserInfo>(user));
-                userService.SaveChanges();
+            userService.Delete(mapper.Map<UserViewModel, UserInfo>(user));
+            userService.SaveChanges();
+            new NLogHelper("刪除使用者", $"{user.user_id}/{user.user_name}");
 
-                return Json(new
-                {
-                    success = true,
-                    message = "Success",
-                    isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
-                }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
+            return Json(new
             {
-                return Json(new { success = false, message = e.Message }, JsonRequestBehavior.AllowGet);
-            }
+                success = true,
+                message = "刪除成功",
+                isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
+            }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
         /// Render 使用者權限的PartialView
         /// </summary>
         /// <param name="formTitle">PartialView的Title</param>
-        /// <param name="serial">User serial</param>
+        /// <param name="user_id">user_id</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult UserPermissionConfig(string formTitle, int serial)
+        public ActionResult UserPermissionConfig(string formTitle, string user_id)
         {
             UserViewModel userViewModel = new UserViewModel();
-            UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
-            userViewModel = mapper.Map<UserViewModel>(instance);
+            UserInfo instance = userService.Get("user_id", user_id, "Equals");
+            if (instance != null)
+            {
+                userViewModel = mapper.Map<UserViewModel>(instance);
+            }
             ViewBag.formTitle = formTitle;
 
             return PartialView(userViewModel);
@@ -213,16 +207,15 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// 處理使用者權限
         /// </summary>
         /// <param name="authority">修改後的權限</param>
-        /// <param name="serial">User serial</param>
+        /// <param name="user_id">user_id</param>
         /// <returns></returns>
         [HttpPost, ActionName("UserPermissionConfig")]
-        public ActionResult UserPermissionConfigPost(string authority, int serial)
+        public ActionResult UserPermissionConfigPost(string authority, string user_id)
         {
-            UserViewModel userViewModel = new UserViewModel();
-            UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
-            instance.authority = authority;
-            userService.Update(instance);
-            return Json(new { success = true, message = "Success" });
+            userService.setUserPermission(authority, user_id);
+            new NLogHelper("修改使用者權限", user_id);
+
+            return Json(new { success = true, message = "權限已修改" });
         }
     }
 }

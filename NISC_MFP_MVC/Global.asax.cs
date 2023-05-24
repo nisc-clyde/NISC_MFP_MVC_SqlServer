@@ -1,3 +1,4 @@
+using NISC_MFP_MVC.App_Start;
 using System;
 using System.Security.Principal;
 using System.Web.Mvc;
@@ -15,6 +16,9 @@ namespace NISC_MFP_MVC
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //Add filter for catch exception by NLog
+            GlobalFilters.Filters.Add(new CustomErrorFilterAttribute());
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

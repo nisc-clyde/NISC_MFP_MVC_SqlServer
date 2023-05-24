@@ -83,12 +83,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return printService.GetAll(dataTableRequest).ProjectTo<PrintViewModel>(mapper.ConfigurationProvider);
         }
 
+        [Authorize(Roles = "view")]
         public ActionResult DownloadDocument(string filePath, string fileName)
         {
             string path = Path.Combine(filePath, fileName);
             if (System.IO.File.Exists(path))
             {
                 byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+                new NLogHelper("下載文件", fileName);
                 return File(fileBytes, "application/pdf", fileName);
             }
             return null;

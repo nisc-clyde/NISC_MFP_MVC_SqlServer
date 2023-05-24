@@ -4,6 +4,7 @@ using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Card;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
+using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
@@ -113,6 +114,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     cardService.Insert(mapper.Map<CardViewModel, CardInfo>(card));
                     cardService.SaveChanges();
+                    new NLogHelper("新增卡片", $"{card.card_id}/{card.user_id}");
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -121,8 +123,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    CardInfo originalCard = cardService.Get("serial", card.serial.ToString(), "Equals");
+                    string logMessage = $"(修改前){originalCard.card_id}/{originalCard.user_id}<br/>";
+
                     cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
                     cardService.SaveChanges();
+
+                    logMessage += $"(修改後){card.card_id}/{card.user_id}";
+                    new NLogHelper("修改卡片", logMessage);
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
@@ -141,10 +149,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(CardViewModel Card)
+        public ActionResult Delete(CardViewModel card)
         {
-            cardService.Delete(mapper.Map<CardViewModel, CardInfo>(Card));
+            cardService.Delete(mapper.Map<CardViewModel, CardInfo>(card));
             cardService.SaveChanges();
+            new NLogHelper("修改卡片", $"{card.card_id}/{card.user_id}");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
@@ -187,6 +196,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             cardService.UpdateResetFreeValue(resetFreeValueViewModel.freevalue);
             cardService.SaveChanges();
+            new NLogHelper("重設免費點數", $"{resetFreeValueViewModel.freevalue}");
+
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
@@ -217,10 +228,16 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult DepositCard(int value, int serial)
         {
+            CardInfo originalCard = cardService.Get("serial", serial.ToString(), "Equals");
+            string logMessage = $"(修改前){originalCard.card_id}/{originalCard.value}<br/>";
+
             cardService.UpdateDepositValue(value, serial);
             cardService.SaveChanges();
 
-            return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
+            logMessage += $"(修改後){originalCard.card_id}/{value}";
+            new NLogHelper("修改卡片點數", logMessage);
+
+            return Json(new { success = true, message = "修改點數成功" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

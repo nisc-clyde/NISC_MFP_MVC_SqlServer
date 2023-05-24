@@ -130,9 +130,9 @@ function EditUserPermissionConfig() {
         e.preventDefault();
         const currentRow = $(this).closest("tr");
         const rowData = dataTable.row(currentRow).data();
-        const serial = $(this).data("id");
+        const user_id = rowData["user_id"];
 
-        $.get(url, { formTitle: "使用者權限設定", serial: serial }, function (data) {
+        $.get(url, { formTitle: "使用者權限設定", user_id: user_id }, function (data) {
             $("#" + modalForm).html(data);
             $("#" + modalForm).modal("show");
             PermissionCheckedAll();
@@ -146,13 +146,13 @@ function EditUserPermissionConfig() {
 
                 $.ajax({
                     url: url,
-                    data: { authority: authoritys.join(","), serial: serial },
+                    data: { authority: authoritys.join(","), user_id: user_id },
                     type: "POST",
                     success: function (data) {
                         if (data.success) {
-                            CustomSweetAlert2.SweetAlertTemplateSuccess().fire({
-                                text: "權限已修改",
-                            });
+                            CustomSweetAlert2.SweetAlertTemplateSuccess(data.message).fire();
+                        } else {
+                            CustomSweetAlert2.SweetAlertTemplateError(data.message).fire();
                         }
                         $("#" + modalForm).modal("hide");
                     },

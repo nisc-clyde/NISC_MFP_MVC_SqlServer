@@ -187,6 +187,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 departmentService.SoftDelete();
                 userService.SoftDelete();
                 cardService.SoftDelete();
+                new NLogHelper("人事資料重置", $"下筆操作紀錄將紀錄匯入之筆數");
             }
             foreach (EmployeeModel employee in employees)
             {
@@ -199,6 +200,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 CardViewModel cardViewModel = mapper.Map<CardInfo, CardViewModel>(cardService.Get("card_id", employee.card_id, "Equals"));
                 CardAddOrEdit(cardService, cardViewModel, employee);
             }
+            new NLogHelper("人事資料匯入", $"匯入總筆數：{employees.Count()}");
 
             return Json(new { success = true, message = "Post Success" }, JsonRequestBehavior.AllowGet);
         }

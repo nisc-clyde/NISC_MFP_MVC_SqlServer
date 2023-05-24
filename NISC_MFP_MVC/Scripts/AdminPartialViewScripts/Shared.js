@@ -58,7 +58,7 @@ export const RequestAddOrEdit = (function () {
     function GetAddOrEditTemplate(btnAdd, modalForm, dataTable, title) {
         const url = $("#" + modalForm).data("url");
 
-        //Add Department
+        //Add
         $("#" + btnAdd).on("click", function () {
             $.get(url, { formTitle: $(this).text(), serial: -1 }, function (data) {
                 $("#" + modalForm).html(data);
@@ -70,7 +70,7 @@ export const RequestAddOrEdit = (function () {
             });
         });
 
-        //Edit Department
+        //Edit
         dataTable.on("click", ".btn-edit", function (e) {
             e.preventDefault();
 
@@ -111,7 +111,7 @@ export const RequestAddOrEdit = (function () {
                             dataTable.ajax.reload();
                             CustomSweetAlert2.SweetAlertTemplateSuccess("新增成功").fire();
                         } else {
-                            //From all page update except user page
+                            //除User Page之外的Page修改，isCurrentUserUpdate必為空
                             if (data.isCurrentUserUpdate == null || data.isCurrentUserUpdate.updatedUserId != data.isCurrentUserUpdate.currentUserId) {
                                 $("#" + modalForm).modal("hide");
                                 CustomSweetAlert2.SweetAlertTemplateSuccess("修改成功").fire();
@@ -120,8 +120,8 @@ export const RequestAddOrEdit = (function () {
                                     currentRow.removeClass("animate__animated animate__flash animate__faster animate__repeat-2");
                                     dataTable.row(currentRow).data(form).draw();
                                 });
-                                //From user page update and the updated user is current login user
                             } else {
+                                //只有對當前登入的User進行資料修改時才執行，在User Page時isCurrentUserUpdate非空
                                 $("#" + modalForm).modal("hide");
                                 CustomSweetAlert2.SweetAlertTemplateSuccess()
                                     .fire({
@@ -192,6 +192,7 @@ export const RequestDelete = (function () {
                                     if (data.isCurrentUserUpdate == null || data.isCurrentUserUpdate.updatedUserId != data.isCurrentUserUpdate.currentUserId) {
                                         CustomSweetAlert2.SweetAlertTemplateSuccess().fire();
                                     } else {
+                                        //只有在User Page對當前登入使用者進行Delete時才執行
                                         CustomSweetAlert2.SweetAlertTemplateSuccess()
                                             .fire({
                                                 title: "修改成功",

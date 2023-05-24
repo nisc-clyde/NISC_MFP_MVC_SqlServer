@@ -65,6 +65,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Pipelines, Version=5.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\NISC_MFP_MVC\packages\System.IO.Pipelines.5.0.2\lib\net461\System.IO.Pipelines.dll</HintPath>
     </Reference>
@@ -101,17 +102,6 @@
   <ItemGroup>
     <Compile Include="DatabaseConnection.cs" />
     <Compile Include="DataTableRequest.cs" />
-    <Compile Include="Facade.cs" />
-    <Compile Include="Logger\CardLogHandler.cs" />
-    <Compile Include="Logger\CardReaderLogHandler.cs" />
-    <Compile Include="Logger\DepartmentLogHandler.cs" />
-    <Compile Include="Logger\ILogHandler.cs" />
-    <Compile Include="Logger\AbstractLogHandler.cs" />
-    <Compile Include="Logger\LogRequest.cs" />
-    <Compile Include="Logger\LogResponse.cs" />
-    <Compile Include="Logger\SystemLogHandler.cs" />
-    <Compile Include="Logger\UserLogHandler.cs" />
-    <Compile Include="Logger\WatermarkLogHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

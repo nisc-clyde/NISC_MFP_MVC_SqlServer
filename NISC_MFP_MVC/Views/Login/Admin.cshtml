@@ -53,6 +53,7 @@
 
 <script>
     $("#loginForm").on("submit", function () {
+        $.validator.unobtrusive.parse($(this));
         $.ajax({
             url: "/Login/Admin",
             type: "POST",
