@@ -1,8 +1,14 @@
-﻿
+﻿@model NISC_MFP_MVC.ViewModels.User.UserAreas.UserViewModel
 @{
     ViewBag.Title = "使用者自我管理畫面";
-    ViewBag.ActiveNav = "List";
+    ViewBag.ActiveNav = "user";
     Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+
+@section UserJS{
+    @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/jqueryui")
+    <script type="module" src="@Url.Content("~/Scripts/UserPartialViewScripts/user.js")"></script>
 }
 
 <div class="d-grid gap-4">
@@ -25,7 +31,16 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <a class="fs-4 float-start text-decoration-none">TestTest</a>
+                            <a class="fs-4 float-start text-decoration-none">
+                                @{
+                                    string user_id = "";
+                                    if (HttpContext.Current.User.Identity.IsAuthenticated)
+                                    {
+                                        user_id = HttpContext.Current.User.Identity.Name;
+                                    }
+                                }
+                                <div id="user_idDiv">@Model.user_id</div>
+                            </a>
                         </div>
 
                     </div>
@@ -38,11 +53,7 @@
                             </div>
                         </div>
                         <div class="col-3 py-2 float-start">
-                            <select class="form-select">
-                                <option selected value="0">---</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                            </select>
+                            @Html.DropDownListFor(card => card.cards, Model.cards, new { @id = "userCardSelect", @class = "form-select" })
                             @*Dynamic binding data*@
                         </div>
 
@@ -56,7 +67,7 @@
                             </div>
                         </div>
                         <div class="col-3 py-2 float-start">
-                            <a class="fs-4 float-start text-decoration-none">100000</a>
+                            <a class="fs-4 float-start text-decoration-none" id="userCardUsedValue"></a>
                         </div>
 
                     </div>
@@ -70,7 +81,6 @@
                         </div>
                     </div>
 
-
                     <div class="row">
                     </div>
 
@@ -80,15 +90,16 @@
             </div>
 
             <div class="col-2">
-
                 <div class="container-fluid shadow-sm p-3 bg-body rounded border border-light">
                     <div class="d-grid gap-2">
-                        <button class="btn btn-info">修改使用者密碼</button>
+                        <button id="btnEditUserPassword" class="btn btn-info">修改使用者密碼</button>
                         <button class="btn btn-success">近期影列印紀錄</button>
                     </div>
-
                 </div>
+            </div>
 
+            <div class="col text-start fs-5 fw-bold mb-1" style="color: #1565C0">
+                <div class="modal fade" id="generalUserForm" role="dialog" data-url='@Url.Action("Edit","User")'></div>
             </div>
 
         </div>

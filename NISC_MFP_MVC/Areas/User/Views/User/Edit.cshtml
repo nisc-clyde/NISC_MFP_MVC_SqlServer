@@ -1,0 +1,84 @@
+﻿@model  NISC_MFP_MVC.ViewModels.User.UserAreas.UserEditViewModel
+
+@{
+
+}
+
+<style>
+    #userForm ul li:not(:first-child) {
+        border-top: 1px #ccc solid;
+    }
+</style>
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @id = "userEditForm", @class = "overflow-auto" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">修改使用者</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body ui-front">
+                <div class="container">
+
+                    <div class="row row-cols-1 g-2">
+                        <div class="col">
+                            <div class="form-froup">
+                                @Html.LabelFor(d => d.user_id, new { @class = "form-label fw-semibold me-2" })
+                                @Html.TextBoxFor(d => d.user_id, new { @class = "form-control bg-light text-dark", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-froup">
+                                <div class="input-group ps-0">
+                                    @Html.LabelFor(d => d.user_password, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(d => d.user_password, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.user_password, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-froup">
+                                <div class="input-group ps-0">
+                                    @Html.LabelFor(d => d.new_user_password, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(d => d.new_user_password, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.new_user_password, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="input-group ps-0">
+                                    @Html.LabelFor(d => d.new_user_password_confirm, new { @class = "form-label fw-semibold me-2" })
+                                    <div class="input-group-addon">
+                                        <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(d => d.new_user_password_confirm, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.new_user_password_confirm, "", new { @class = "text-danger fs-6" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" id="btnSubmmit" class="btn btn-success">修改</button>
+            </div>
+        }
+    </div>
+</div>

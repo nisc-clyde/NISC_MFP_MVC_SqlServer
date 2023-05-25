@@ -16,8 +16,8 @@ namespace NISC_MFP_MVC.Areas.User
         {
             context.MapRoute(
                 "User_User",
-                "User/User/{id}",
-                new { controller = "User", action = "List", id = UrlParameter.Optional }
+                "User/{controller}/{action}/{id}",
+                new { controller = "User", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.Controllers;
 using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC.ViewModels.User.AdminAreas;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.User;

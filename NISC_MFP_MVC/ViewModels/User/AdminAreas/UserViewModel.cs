@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NISC_MFP_MVC.ViewModels
+namespace NISC_MFP_MVC.ViewModels.User.AdminAreas
 {
     //$user_id, $user_password, $work_id, $user_name, $dept_id, $dept_name, $depositor, $color_enable_flag, $copy_enable_flag, $print_enable_flag, $scan_enable_flag, $fax_enable_flag, $e_mail, $serial
     public class UserViewModel : AbstractViewModel

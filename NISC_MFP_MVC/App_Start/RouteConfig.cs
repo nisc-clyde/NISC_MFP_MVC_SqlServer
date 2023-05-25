@@ -17,17 +17,17 @@ namespace NISC_MFP_MVC
                 );
 
             routes.MapRoute(
-                name: "AdminRename",
-                url: "Admin/{controller}/{action}/{id}",
-                defaults: new { controller = "Print", action = "Index", id = UrlParameter.Optional },
+                name: "AdminRoute",
+                url: "Admin/{controller}/{action}",
+                defaults: new { controller = "Print", action = "Index"},
                 namespaces: new string[] { "NISC_MFP_MVC.Areas.Admin.Controllers" }
                 );
 
             routes.MapRoute(
                 name: "UserRoute",
-                url: "User/{controller}/{action}/{id}",
-                defaults: new { controller = "User", action = "List", id = UrlParameter.Optional },
-                namespaces: new string[] { "NISC_MFP_MVC.Controllers" }
+                url: "User/{controller}/{action}",
+                defaults: new { controller = "User", action = "Index"},
+                namespaces: new string[] { "NISC_MFP_MVC.Areas.User.Controllers" }
                 );
         }
     }

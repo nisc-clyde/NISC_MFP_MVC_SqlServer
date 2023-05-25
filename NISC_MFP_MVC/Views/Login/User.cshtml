@@ -26,21 +26,37 @@
     <div id="wapper">
         <div id="index_main">
             <div id="logo">
-                <img src="~/img/logo_b.png" width="400" height="70" />
+                <img src="~/img/logo_w.png" width="400" height="70" />
             </div>
-
             @model NISC_MFP_MVC.Models.LoginModel
-            @using (Html.BeginForm("User", "Login", FormMethod.Post, new { @class = "form-inline" }))
+            @using (Html.BeginForm("User", "Login", FormMethod.Post, new { @id = "loginForm", @class = "form-inline" }))
             {
-                <div id="login">
-                    @Html.TextBoxFor(a => a.account, new { placeholder = "使用者帳號", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;" })
-                    @Html.TextBoxFor(p => p.password, new { placeholder = "Password", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;" })
-                    <button type="button" class="btn btn-outline-secondary">Log In</button>
+                @Html.AntiForgeryToken();
+                <div class="form-group">
+                    <div id="login">
+                        @Html.TextBoxFor(a => a.account, new { placeholder = "使用者帳號", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;" })
+                        @Html.TextBoxFor(p => p.password, new { placeholder = "密碼", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;", type = "password" })
+                        <div>
+                            @Html.ValidationMessage("ErrorMessage", new { @class = "text-danger fs-6" })
+                        </div>
+                        <button type="submit" id="btnLogin" class="btn btn-outline-secondary">Log In</button>
+                    </div>
                 </div>
             }
         </div>
     </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryvalmin")
 </body>
 </html>
 
-
+<script>
+    $("#loginForm").on("submit", function () {
+        $.validator.unobtrusive.parse($(this));
+        $.ajax({
+            url: "/Login/User",
+            type: "POST",
+            data: { loginUser: $(this).serialize() }
+        })
+    })
+</script>

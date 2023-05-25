@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Card;
+using NISC_MFP_MVC.ViewModels.User.AdminAreas;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;

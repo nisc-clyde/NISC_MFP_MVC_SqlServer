@@ -1,43 +1,31 @@
 ﻿<!DOCTYPE html>
-
 <html>
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/lib/datatable-css")
+
 </head>
+
 <body class="bg-black bg-gradient">
-    <header class=" header p-3 mb-2 bg-dark bg-gradient">
-
-        <a href="@Url.Action("Print","Admin")" class="logo" data-original-title="">
-            <img src="../img/logo.png" alt="Logo">
+    <header class="header pt-4 ps-2  bg-dark bg-gradient">
+        <a href="@Url.Action("Index", "User", new { area = "User" })" class="logo text-start">
+            <img src="~/img/logo.png" alt="Logo">
         </a>
-
-        <style>
-            .gridline {
-                outline: 3px fa-solid #9E9E9E;
-                text-align: center;
-                marign: 1px;
-            }
-        </style>
     </header>
 
-    <div class="container-fluid">
+    <div class="container-fluid wrapper">
         <div class="card text-center m-3 ">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="@(ViewBag.ActiveNav == "List" ? "nav-link active":"nav-link")" data-bs-toggle="tab" type="button" role="tab"
-                                aria-selected=false onclick="location.href ='@Url.Action("list","User")'">
-                            <i class="fa-solid fa-bars"></i>&ensp;使用紀錄
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="@(ViewBag.ActiveNav == "LogOut" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
-                                aria-selected="false" onclick="location.href ='@Url.Action("User","Login")'">
+                        <button class="@(ViewBag.ActiveNav == "logout" ? "nav-link active":"nav-link")" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
+                                aria-selected="false" onclick="location.href='@Url.Action("Index","LogOut",new { area="User"})'">
                             <i class="fa-solid fa-right-from-bracket"></i>&ensp;登出
                         </button>
                     </li>
@@ -45,15 +33,30 @@
             </div>
             <div class="card-body">
                 <div class="tab-content">
-                    @RenderBody()
+                    <div class="tab-pane fade show active" role="tabpanel">
+                        @RenderBody()
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer class="footer text-start" style="background-color: #3693cf;">
+        <div class="py-3 ps-4">
+            <p class="h6">
+                © 2005 Copyright:
+                <a class="text-dark" href="https://www.nisc.com.tw/">新印科技股份有限公司</a>
+            </p>
+        </div>
+    </footer>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/lib/datatable-js")
+    @Scripts.Render("~/bundles/jqueryvalmin")
+
+    @RenderSection("UserJS", required: false)
 
 </body>
 </html>

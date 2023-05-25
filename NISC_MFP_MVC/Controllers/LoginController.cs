@@ -19,9 +19,51 @@ namespace NISC_MFP_MVC.Controllers
             _userService = new UserService();
         }
 
-        // GET: UserLogin
+        [HttpGet]
         public ActionResult User()
         {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult User(LoginModel loginUser)
+        {
+            if (ModelState.IsValid)
+            {
+                UserInfo userInfo = _userService.Get("user_id", loginUser.account, "Equals");
+                if (userInfo != null && userInfo.user_password == loginUser.password)
+                {
+                    var authTicket = new FormsAuthenticationTicket(
+                        version: 1,
+                        name: loginUser.account,
+                        issueDate: DateTime.Now,
+                        expiration: DateTime.Now.AddMinutes(30),
+                        isPersistent: false,
+                        userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
+                        cookiePath: FormsAuthentication.FormsCookiePath
+                        );
+                    var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
+                    {
+                        HttpOnly = true
+                    };
+                    Response.Cookies.Add(authCookie);
+
+                    new NLogHelper("使用者登入", loginUser.account);
+
+                    return RedirectToAction("Index",
+                        "User",
+                        new { area = "User" });
+                }
+                else
+                {
+                    ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("ErrorMessage", "請輸入帳號和密碼");
+            }
             return View();
         }
 
@@ -48,7 +90,7 @@ namespace NISC_MFP_MVC.Controllers
                             issueDate: DateTime.Now,
                             expiration: DateTime.Now.AddMinutes(30),
                             isPersistent: false,
-                            userData: userInfo.authority+","+userInfo.user_name,//Save "authority...,user_name" in cookie
+                            userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
                             cookiePath: FormsAuthentication.FormsCookiePath
                             );
                         var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
@@ -60,7 +102,7 @@ namespace NISC_MFP_MVC.Controllers
                         string firstAuthority = userInfo.authority.Split(',')[0];
                         TempData["ActiveNav"] = firstAuthority;
 
-                        new NLogHelper("使用者登入", loginUser.account);
+                        new NLogHelper("管理者登入", loginUser.account);
 
                         return RedirectToAction("Index",
                             firstAuthority,
@@ -125,10 +167,5 @@ namespace NISC_MFP_MVC.Controllers
             }
             return View();
         }
-
-        //[HttpPost]
-        //public ActionResult CreateSuperAdminstrator() { 
-
-        //}
     }
 }

@@ -3,6 +3,7 @@ using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Card;
 using NISC_MFP_MVC.ViewModels.CardReader;
 using NISC_MFP_MVC.ViewModels.Print;
+using NISC_MFP_MVC.ViewModels.User.AdminAreas;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
 using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
