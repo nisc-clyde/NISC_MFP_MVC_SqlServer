@@ -72,6 +72,9 @@ function SearchCardDataTableInitial() {
     );
 }
 
+/**
+ * 輸入欲搜尋之欄位資料並Refresh DataTable
+ */
 function ColumnSearch() {
     $("#searchCard_CardID").keyup(function () {
         dataTable.columns(0).search($("#searchCard_CardID").val()).draw();
@@ -143,15 +146,25 @@ function DeleteAlertPopUp() {
     RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, url);
 }
 
+/**
+ * 重設所有免費點數
+ */
 function ResetFreePoint() {
     $("#btnResetCardFreePoint").on("click", function () {
         const url = "/Admin/Card/ResetCardFreePoint";
         const modalForm = "cardForm";
         const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
 
+        /**
+         * 載入重設點數之Partial View
+         */
         $.get(url, { formTitle: $(this).text() }, function (data) {
             $("#" + modalForm).html(data);
             $("#" + modalForm).modal("show");
+
+            /**
+             * 提交欲重設之免費點數
+             */
             $("#resetFreeValueForm").on("submit", function () {
                 $.validator.unobtrusive.parse(this);
                 if ($(this).valid()) {
@@ -160,12 +173,13 @@ function ResetFreePoint() {
                         url: url,
                         data: $(this).serialize(),
                         success: function (data) {
+                            /**
+                             * 若提交成功Refresh DataTable並提示使用者
+                             */
                             if (data.success) {
                                 $("#" + modalForm).modal("hide");
                                 dataTable.ajax.reload();
-                                sweetAlertSuccess.fire({
-                                    text: "免費點數已重設",
-                                });
+                                CustomSweetAlert2.SweetAlertTemplateSuccess("免費點數已重設").fire();
                             }
                         },
                     });
@@ -176,19 +190,24 @@ function ResetFreePoint() {
     });
 }
 
-var addedValue = 0;
-var originalValue;
+var addedValue = 0;//暫存新增了多少點數
+var originalValue;//原本持有之點數
+/**
+ * 卡片儲值
+ */
 function DepositCardValue() {
     const url = "/Admin/Card/DepositCard";
     const modalForm = "cardForm";
     const sweetAlertHome = CustomSweetAlert2.SweetAlertTemplateHome();
-    const sweetAlertSuccess = CustomSweetAlert2.SweetAlertTemplateSuccess();
 
     dataTable.on("click", ".btn-deposit", function (e) {
         e.preventDefault();
         const currentRow = $(this).closest("tr");
         const serial = $(this).data("id");
 
+        /**
+         * 載入儲值之Partial View
+         */
         $.get(url, { formTitle: "卡片儲值", serial: serial }, function (data) {
             $("#" + modalForm).html(data);
             $("#" + modalForm).modal("show");
@@ -212,9 +231,7 @@ function DepositCardValue() {
                                         $("#" + modalForm).modal("hide");
                                         if (data.success) {
                                             dataTable.ajax.reload();
-                                            sweetAlertSuccess.fire({
-                                                text: "儲值成功",
-                                            });
+                                            CustomSweetAlert2.SweetAlertTemplateSuccess("儲值成功").fire();
                                         }
                                     },
                                 });
@@ -227,10 +244,20 @@ function DepositCardValue() {
     });
 }
 
+/**
+ * 自定義儲值或是快速儲值
+ */
 function CustomDeposit() {
     originalValue = $("tr[id=depositCardRowData] th[id=value]").text();
+
+    /**
+     * 自定義儲值，addedValue暫存儲值了多少
+     */
     $("#btnCustomDeposit").on("click", function () {
         addedValue += parseInt($("#customDeposit").val());
+        /**
+         * 修改HTML以文字顯示儲值了多少，遞增綠字，遞減紅字，沒變移除文字
+         */
         if (addedValue > 0) {
             $("tr[id=depositCardRowData] th[id=value]").html(
                 originalValue +
@@ -249,7 +276,10 @@ function CustomDeposit() {
             $("tr[id=depositCardRowData] th[id=value]").text(originalValue);
         }
     });
-
+    
+    /**
+     * 同自定義儲值，對每個按鈕監聽
+     */
     $("#templateDepositParent .templateDeposit").each(function (index) {
         $(this).on("click", function () {
             if ($(this).text() == "儲值") {

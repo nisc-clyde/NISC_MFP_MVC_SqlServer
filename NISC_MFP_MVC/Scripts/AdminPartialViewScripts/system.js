@@ -6,6 +6,9 @@ const uploadFileURL = "/Admin/System/UploadFile";
 const previewEmployeeURL = "/Admin/System/PreviewEmployee";
 const modalForm = "employeePreviewModal";
 
+/**
+ * 重置人事資料並預覽資料
+ */
 function ResetEmployeeFromFile() {
     $("#btnResetFromFile").on("click", function () {
         CustomSweetAlert2.SweetAlertTemplateHome()
@@ -17,10 +20,14 @@ function ResetEmployeeFromFile() {
                 if (result.isConfirmed) {
                     bootstrap.Tooltip.getOrCreateInstance($(this)).hide(); // Hide Tooltips
 
+                    /**
+                     * 取得上傳之檔案
+                     */
                     let formData = new FormData();
                     let files = $("#fileResource").get(0).files;
                     if (files.length > 0) formData.append("EmployeeSource", files[0]);
-                    currentOperation = $(this).val();
+
+                    currentOperation = $(this).val();//操作為重置或是匯入而已
 
                     $.ajax({
                         url: uploadFileURL,
@@ -46,6 +53,9 @@ function ResetEmployeeFromFile() {
     });
 }
 
+/**
+ * 匯入人事資料並預覽資料
+ */
 function ImportEmployeeFromFile() {
     $("#btnImportFromFile").on("click", function () {
         bootstrap.Tooltip.getOrCreateInstance($(this)).hide(); // Hide Tooltips
@@ -77,6 +87,9 @@ function ImportEmployeeFromFile() {
     });
 }
 
+/**
+ * 預覽資料之DataTable初始化
+ */
 function EmployeePreviewDataTableInitial() {
     const previewEmployeeURL = "/Admin/System/PreviewEmployee";
 
@@ -129,9 +142,16 @@ function EmployeePreviewDataTableInitial() {
     dataTable.columns.adjust().draw();
 }
 
+/**
+ * 提交匯入之資料，檔案資料由後端Session暫存
+ */
 function ImportEmployee() {
     $("#employeePreviewForm").on("submit", function (e) {
         e.preventDefault();
+
+        /**
+         * 提交後關閉按鈕並開啟Spinner
+         */
         $("#btnSubmmit").attr("disabled", true);
         $("#btnSubmmitSpinner").show();
 
@@ -146,9 +166,13 @@ function ImportEmployee() {
                 }
             },
             error: function (response) {
+                //出現格式等錯誤時，提示使用者出現錯誤的第一筆資料
                 CustomSweetAlert2.SweetAlertTemplateError(response).fire();
             },
         }).done(function (response) {
+            /**
+             * 提交完成後開啟按鈕並關閉Spinner
+             */
             $("#btnSubmmit").attr("disabled", false);
             $("#btnSubmmitSpinner").hide();
         });

@@ -57,6 +57,9 @@ function SearchUserDataTableInitial() {
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
 }
 
+/**
+ * 輸入欲搜尋之欄位資料並Refresh DataTable
+ */
 function ColumnSearch() {
     $("#searchUser_Account").keyup(function () {
         dataTable.columns(0).search($("#searchUser_Account").val()).draw();
@@ -122,6 +125,9 @@ function DeleteAlertPopUp() {
     RequestDelete.GetAndPostDeleteTemplate(dataTable, uniqueIdProperty, url);
 }
 
+/**
+ * 載入編輯權限之Partial View
+ */
 function EditUserPermissionConfig() {
     const url = "/Admin/User/UserPermissionConfig";
     const modalForm = "userForm";
@@ -138,15 +144,23 @@ function EditUserPermissionConfig() {
             PermissionCheckedAll();
             PermissionCheckedClearAll();
 
+            /**
+             * 提交權限更新
+             */
             $("#permissionForm").on("submit", function () {
-                let authoritys = [];
+
+                /**
+                 * 所有勾選之權限加入至Array
+                 */
+                let authorities = [];
                 $(".container input[type=checkbox]:checked").each(function () {
-                    authoritys.push($(this).val());
+                    authorities.push($(this).val());
                 });
 
                 $.ajax({
                     url: url,
-                    data: { authority: authoritys.join(","), user_id: user_id },
+                    //權限Array轉換成字串以「,」逗號分隔
+                    data: { authority: authorities.join(","), user_id: user_id },
                     type: "POST",
                     success: function (data) {
                         if (data.success) {
@@ -163,6 +177,9 @@ function EditUserPermissionConfig() {
     });
 }
 
+/**
+ * 控制DOM，選取所有權限
+ */
 function PermissionCheckedAll() {
     $("#btnChekcedAll").on("click", function () {
         $(".container input[type=checkbox]").each(function () {
@@ -171,6 +188,9 @@ function PermissionCheckedAll() {
     });
 }
 
+/**
+ * 控DOM，取消選取所有權限
+ */
 function PermissionCheckedClearAll() {
     $("#btnChekcedClearAll").on("click", function () {
         $(".container input[type=checkbox]").each(function () {

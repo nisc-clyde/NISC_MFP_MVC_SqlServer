@@ -25,6 +25,11 @@ namespace NISC_MFP_MVC.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 登入成功之User寫入Cookie和Session，同時取得Authority第一個為登入成功後顯示的頁面
+        /// </summary>
+        /// <param name="loginUser">欲登入之Usrr</param>
+        /// <returns>第一個擁有的權限Admin頁面</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult User(LoginModel loginUser)
@@ -34,6 +39,7 @@ namespace NISC_MFP_MVC.Controllers
                 UserInfo userInfo = _userService.Get("user_id", loginUser.account, "Equals");
                 if (userInfo != null && userInfo.user_password == loginUser.password)
                 {
+                    //寫入Cookie
                     var authTicket = new FormsAuthenticationTicket(
                         version: 1,
                         name: loginUser.account,
@@ -43,6 +49,7 @@ namespace NISC_MFP_MVC.Controllers
                         userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
                         cookiePath: FormsAuthentication.FormsCookiePath
                         );
+                    //Cookie加密且Cookie限定Server存取
                     var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
                     {
                         HttpOnly = true
@@ -73,6 +80,11 @@ namespace NISC_MFP_MVC.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 登入成功之User寫入Cookie和Session，同時取得Authority第一個為登入成功後顯示的頁面
+        /// </summary>
+        /// <param name="loginUser">欲登入之Usrr</param>
+        /// <returns>第一個擁有的權限Admin頁面</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Admin(LoginModel loginUser)
@@ -82,6 +94,7 @@ namespace NISC_MFP_MVC.Controllers
                 UserInfo userInfo = _userService.Get("user_id", loginUser.account, "Equals");
                 if (userInfo != null && userInfo.user_password == loginUser.password)
                 {
+                    //寫入Cookie
                     if (!string.IsNullOrWhiteSpace(userInfo.authority))
                     {
                         var authTicket = new FormsAuthenticationTicket(
@@ -93,12 +106,15 @@ namespace NISC_MFP_MVC.Controllers
                             userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
                             cookiePath: FormsAuthentication.FormsCookiePath
                             );
+
+                        //Cookie加密且Cookie限定Server存取
                         var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
                         {
                             HttpOnly = true
                         };
                         Response.Cookies.Add(authCookie);
 
+                        //取得第一個擁有權限並Redirect之蓋管理頁面
                         string firstAuthority = userInfo.authority.Split(',')[0];
                         TempData["ActiveNav"] = firstAuthority;
 
@@ -132,6 +148,11 @@ namespace NISC_MFP_MVC.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 自訂Admin帳號，取得所有權限
+        /// </summary>
+        /// <param name="admin">欲新增之Admin</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult ConfigAdminRegister(AdminRegister admin)
         {

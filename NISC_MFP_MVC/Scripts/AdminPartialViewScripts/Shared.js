@@ -25,7 +25,7 @@
             },
             buttonsStyling: false,
             allowOutsideClick: false,
-            title: "成功",
+            title: "操作成功",
             text: message,
             icon: "success",
             confirmButtonText: "確定",

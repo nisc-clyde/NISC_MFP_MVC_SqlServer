@@ -65,6 +65,9 @@ function SearchDepartmentDataTableInitial() {
   );
 }
 
+/**
+ * 輸入欲搜尋之欄位資料並Refresh DataTable
+ */
 function ColumnSearch() {
   $("#searchDepartment_DepartmentID").keyup(function () {
     dataTable

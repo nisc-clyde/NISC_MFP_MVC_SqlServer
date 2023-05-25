@@ -6,22 +6,8 @@ var dateStart;
 var dateEnd;
 //Global Variable - End
 
-function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
-
-    return [year, month, day].join('-');
-}
-
 dateStart = "2005/01/01";
-dateEnd = formatDate(new Date());
+dateEnd = moment().format("YYYY-MM-DD");
 
 function DateRangePicker_Initial() {
     var dateRangePicker = $('#dateRangePicker').daterangepicker({
@@ -92,13 +78,22 @@ function DateRangePicker_Initial() {
     });
 }
 
+/**
+ * 複製來源Select的Option新增至目的再把原Select的Option刪除
+ * @param {any} orign
+ * @param {any} dest
+ */
 function FormSelect_Move(orign, dest) {
     var selectedItem = $(orign + " option:selected");
     $(dest).append($(selectedItem).clone());
     $(selectedItem).remove();
 }
 
+/**
+ * 部門和操作行為多選，從未選擇移至已選擇
+ */
 function FormSelect_UnSelect() {
+    //操作
     $("#searchPrint_OperationUnSelect").click(function () {
         FormSelect_Move("#searchPrint_OperationUnSelect", "#searchPrint_OperationSelect");
 
@@ -114,6 +109,7 @@ function FormSelect_UnSelect() {
         }
     })
 
+    //部門
     $("#searchPrint_DepartmentUnSelect").click(function () {
         FormSelect_Move("#searchPrint_DepartmentUnSelect", "#searchPrint_DepartmentSelect");
 
@@ -130,7 +126,11 @@ function FormSelect_UnSelect() {
     })
 }
 
+/**
+ * 部門和操作行為多選，從已選擇移至未選擇
+ */
 function FormSelect_Select() {
+    //操作
     $("#searchPrint_OperationSelect").click(function () {
         FormSelect_Move("#searchPrint_OperationSelect", "#searchPrint_OperationUnSelect");
 
@@ -146,6 +146,7 @@ function FormSelect_Select() {
         }
     })
 
+    //部門
     $("#searchPrint_DepartmentSelect").click(function () {
         FormSelect_Move("#searchPrint_DepartmentSelect", "#searchPrint_DepartmentUnSelect");
 
@@ -206,6 +207,9 @@ function SearchPrintDataTableInitial() {
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
 };
 
+/**
+ * 輸入欲搜尋之欄位資料並Refresh DataTable
+ */
 function ColumnSearch() {
     $("#searchPrint_Printer").keyup(function () {
         dataTable.columns(0).search($("#searchPrint_Printer").val()).draw();
@@ -274,9 +278,15 @@ function DateRangePickerColumnHeight() {
     $("#dateRangePickerRow").css("height", $("#operationRow").outerHeight());
 }
 
+/**
+ * 下載留存之檔案，若權限不足檔案無法打開，由後端決定
+ */
 function DocumentDownload() {
     $("#searchPrintDataTable").DataTable().on("click", "a", function (e) {
 
+        /**
+         * 該Row資料
+         */
         let currentRow;
         if ($(this).parents("tr").prev().hasClass("dt-hasChild")) {
             //Is In Responsiveness
@@ -287,6 +297,9 @@ function DocumentDownload() {
         }
         const rowData = dataTable.row(currentRow).data();
 
+        /**
+         * 提交下載，後端傳回BLOB檔案(二進制之PDF)
+         */
         $.ajax({
             url: '/Admin/Print/DownloadDocument',
             type: 'GET',

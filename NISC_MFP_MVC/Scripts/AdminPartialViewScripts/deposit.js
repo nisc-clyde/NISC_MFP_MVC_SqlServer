@@ -33,6 +33,9 @@ function SearchDepositDataTableInitial() {
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
 };
 
+/**
+ * 輸入欲搜尋之欄位資料並Refresh DataTable
+ */
 function ColumnSearch() {
     $("#searchDeposit_Name").keyup(function () {
         dataTable.columns(0).search($("#searchDeposit_Name").val()).draw();
