@@ -153,7 +153,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         public void UpdateDepositValue(int value, int serial)
         {
             tb_card dest = _db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
-            dest.value += value;
+            if (dest != null)
+            {
+                dest.value += value;
+            }
             _db.Entry(dest).State = EntityState.Modified;
             _db.SaveChanges();
         }
