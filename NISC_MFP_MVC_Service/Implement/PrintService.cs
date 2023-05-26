@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
+using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Service.DTOs.Info.Print;
 using NISC_MFP_MVC_Service.Interface;
@@ -31,7 +32,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _printRepository.Insert(_mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
+                _printRepository.Insert(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
             }
         }
 
@@ -158,7 +159,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _printRepository.Update(_mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
+                _printRepository.Update(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
             }
         }
 
@@ -170,7 +171,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                _printRepository.Delete(_mapper.Map<PrintInfo, InitialPrintRepoDTO>(instance));
+                _printRepository.Delete(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
             }
         }
 

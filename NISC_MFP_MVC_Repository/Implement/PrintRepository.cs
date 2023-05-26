@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.OutputReport;
 using NISC_MFP_MVC_Repository.DTOs.Print;
@@ -15,12 +16,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class PrintRepository : IPrintRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private Mapper _mapper;
 
         public PrintRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             _mapper = InitializeAutomapper();
         }
 
@@ -54,7 +55,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             DateTime endDate = Convert.ToDateTime(postDateRange[1]);
             result = result.Where(print => print.print_date >= startDate && print.print_date <= endDate);
 
-            IQueryable<InitialPrintRepoDTO> prints = result.AsNoTracking().Select(p => new InitialPrintRepoDTO
+            IQueryable<InitialPrintRepoDTO> prints = result.AsNoTracking().Select(p => new InitialPrintRepoDTONeed
             {
                 mfp_name = p.mfp_name,
                 user_id = p.user_id,
@@ -72,7 +73,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 file_path = p.file_path.ToUpper() == "NULL" ? null : p.file_path,
                 file_name = p.file_name.ToUpper() == "NULL" ? null : p.file_name,
                 serial = p.serial
-            }); ;
+            });
             return prints;
         }
 
@@ -105,6 +106,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_10
             };
 
+
             IQueryable<InitialPrintRepoDTO> tb_Logs_Prints = _db.tb_logs_print.AsNoTracking()
                 .Select(p => new InitialPrintRepoDTONeed
                 {
@@ -119,11 +121,10 @@ namespace NISC_MFP_MVC_Repository.Implement
                     page = p.page,
                     print_date = p.print_date,
                     document_name = p.document_name,
-                    file_path = p.file_path.ToUpper() == "NULL"?null:p.file_path,
+                    file_path = p.file_path.ToUpper() == "NULL" ? null : p.file_path,
                     file_name = p.file_name.ToUpper() == "NULL" ? null : p.file_name,
                     serial = p.serial
-                })
-                .ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
+                });
 
             //GlobalSearch
             tb_Logs_Prints = GetWithGlobalSearch(tb_Logs_Prints, dataTableRequest.GlobalSearchValue);
@@ -137,25 +138,42 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Logs_Prints = tb_Logs_Prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            //List<InitialPrintRepoDTO> takeTenRecords = tb_Logs_Prints.ToList();
-            return tb_Logs_Prints.AsNoTracking();
+            return tb_Logs_Prints;
         }
 
         public IQueryable<InitialPrintRepoDTO> GetWithGlobalSearch(IQueryable<InitialPrintRepoDTO> source, string search)
         {
             source = source
                 .Where(p =>
-                    ((!string.IsNullOrEmpty(p.mfp_name)) && p.mfp_name.ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.user_name)) && p.user_name.ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.dept_name)) && p.dept_name.ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.card_id)) && p.card_id.ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.card_type)) && (p.card_type.ToUpper()).Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.usage_type)) && (p.usage_type.ToUpper()).Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.page_color)) && (p.page_color.ToUpper().Contains(search.ToUpper())) ||
-                    ((p.page != null) && p.page.ToString().ToUpper().Contains(search.ToUpper())) ||
-                    ((p.value != null) && p.value.ToString().ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.print_date.ToString())) && p.print_date.ToString().ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.document_name)) && p.document_name.ToUpper().Contains(search.ToUpper()))));
+                    ((!string.IsNullOrEmpty(p.mfp_name)) && p.mfp_name.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.user_name)) && p.user_name.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.dept_name)) && p.dept_name.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.card_id)) && p.card_id.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.card_type)) && p.card_type.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.usage_type)) && p.usage_type.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.page_color)) && p.page_color.Contains(search)) ||
+                    ((p.page != null) && p.page.ToString().Contains(search)) ||
+                    ((p.value != null) && p.value.ToString().Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.print_date.ToString())) && p.print_date.ToString().Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.document_name)) && p.document_name.Contains(search)));
+
+            //string[] columns = {
+            //    "mfp_name",
+            //    "user_name",
+            //    "dept_name",
+            //    "card_id",
+            //    "card_type",
+            //    "usage_type",
+            //    "page_color",
+            //    "page",
+            //    "value",
+            //    "print_date",
+            //    "document_name"
+            //};
+
+            //string query = string.Join(" or ", columns.Select(c => $"{c.ToUpper()}.ToString().ToUpper().Contains(\"{search.ToUpper()}\")"));
+
+            //source = source.AsQueryable().Where(query);
 
             return source;
         }
@@ -189,7 +207,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                         List<string> operationList = searches[i].Split(',').ToList();
                         source = operationList.Count == 1 ?
                             source.Where(columns[i] + ".ToString().ToUpper().Contains" + "(\"" + searches[i].ToString().ToUpper() + "\")") :
-                            source.Where("@0.Contains(usage_type)", operationList);
+                            source.Where("p => @0.Any(s => p.usage_type.Contains(s))", operationList);
+
                     }
                 }
                 else if (columns[i] == "dept_name")
@@ -203,7 +222,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                         List<string> departmentList = searches[i].Split(',').ToList();
                         source = departmentList.Count == 1 ?
                             source.Where(columns[i] + ".ToString().ToUpper().Contains" + "(\"" + searches[i].ToString().ToUpper() + "\")") :
-                            source.Where("@0.Contains(dept_name)", departmentList);
+                            source.Where("p => @0.Any(s => p.dept_name.Contains(s))", departmentList);
                     }
                 }
                 else

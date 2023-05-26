@@ -2,6 +2,7 @@
 using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -14,12 +15,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class CardRepository : ICardRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private readonly Mapper _mapper;
 
         public CardRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             //@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"
             //DatabaseConnection.setDatabaseConnection("localhost", "mywebni1_managerc", "root", "root");
             //_db.Database.Connection.ConnectionString = DatabaseConnection.getDatabaseConnection().ConnectionString;
@@ -107,21 +108,20 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Cards = tb_Cards.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialCardRepoDTO> takeTenRecords = tb_Cards.ToList();
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            return tb_Cards.AsQueryable().AsNoTracking();
         }
 
         public IQueryable<InitialCardRepoDTO> GetWithGlobalSearch(IQueryable<InitialCardRepoDTO> source, string search)
         {
             source = source
                 .Where(p =>
-                (p.card_id != null && p.card_id.ToUpper().Contains(search.ToUpper())) ||
-                (p.value != null && p.value.ToString().ToUpper().Contains(search.ToUpper())) ||
-                p.freevalue.ToString().ToUpper().Contains(search.ToUpper()) ||
-                (p.user_id != null && p.user_id.ToUpper().Contains(search.ToUpper())) ||
-                (p.user_name != null && p.user_name.ToUpper().Contains(search.ToUpper())) ||
-                (p.card_type != null && p.card_type.ToUpper().Contains(search.ToUpper())) ||
-                (p.enable != null && p.enable.ToUpper().Contains(search.ToUpper())));
+                (p.card_id != null && p.card_id.Contains(search)) ||
+                (p.value != null && p.value.ToString().Contains(search)) ||
+                p.freevalue.ToString().Contains(search) ||
+                (p.user_id != null && p.user_id.Contains(search)) ||
+                (p.user_name != null && p.user_name.Contains(search)) ||
+                (p.card_type != null && p.card_type.Contains(search)) ||
+                (p.enable != null && p.enable.Contains(search)));
 
             return source;
         }

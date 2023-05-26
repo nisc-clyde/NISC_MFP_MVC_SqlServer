@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.DTOs.CardReader;
 using NISC_MFP_MVC_Repository.DTOs.Department;

@@ -135,12 +135,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="doc_detail.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="doc_mng.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
+    <Compile Include="DB\doc_detail.cs" />
+    <Compile Include="DB\doc_mng.cs" />
+    <Compile Include="DB\MFP_DB.cs" />
+    <Compile Include="DB\tblusers.cs" />
+    <Compile Include="DB\tb_card.cs" />
+    <Compile Include="DB\tb_cardreader.cs" />
+    <Compile Include="DB\tb_deleted_card.cs" />
+    <Compile Include="DB\tb_deleted_department.cs" />
+    <Compile Include="DB\tb_deleted_user.cs" />
+    <Compile Include="DB\tb_department.cs" />
+    <Compile Include="DB\tb_group.cs" />
+    <Compile Include="DB\tb_logs_cardreader.cs" />
+    <Compile Include="DB\tb_logs_deposit.cs" />
+    <Compile Include="DB\tb_logs_history.cs" />
+    <Compile Include="DB\tb_logs_import.cs" />
+    <Compile Include="DB\tb_logs_print.cs" />
+    <Compile Include="DB\tb_logs_remote_history.cs" />
+    <Compile Include="DB\tb_logs_sentmail.cs" />
+    <Compile Include="DB\tb_mfp.cs" />
+    <Compile Include="DB\tb_pdfback.cs" />
+    <Compile Include="DB\tb_print_price.cs" />
+    <Compile Include="DB\tb_scan.cs" />
+    <Compile Include="DB\tb_token.cs" />
+    <Compile Include="DB\tb_user.cs" />
+    <Compile Include="DB\tb_use_page.cs" />
+    <Compile Include="DB\tb_watermark.cs" />
+    <Compile Include="DB\watermark.cs" />
     <Compile Include="DTOs\CardReader\InitialCardReaderRepoDTONeed.cs" />
     <Compile Include="DTOs\Card\InitialCardRepoDTONeed.cs" />
     <Compile Include="DTOs\CardReader\InitialCardReaderRepoDTO.cs" />
@@ -178,114 +199,19 @@
     <Compile Include="Interface\IPrintRepository.cs" />
     <Compile Include="Interface\IRepository.cs" />
     <Compile Include="Interface\IUserRepository.cs" />
-    <Compile Include="MFP_DB.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MFP_DB.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MFP_DB.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MFP_DB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MFP_DB.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tblusers.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_card.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_cardreader.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_department.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_group.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_logs_cardreader.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_logs_deposit.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_logs_history.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_logs_import.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_logs_print.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_logs_remote_history.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_logs_sentmail.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_mfp.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_pdfback.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_print_price.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_scan.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_token.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_user.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_use_page.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tb_watermark.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="watermark.cs">
-      <DependentUpon>MFP_DB.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NISC_MFP_MVC\.sonarlint\nisc_mfp_mvccsharp.ruleset">
       <Link>nisc_mfp_mvccsharp.ruleset</Link>
     </None>
     <None Include="App.config" />
-    <EntityDeploy Include="MFP_DB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MFP_DB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="MFP_DB.edmx.diagram">
-      <DependentUpon>MFP_DB.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\NISC_MFP_MVC\.sonarlint\nisc_mfp_mvc\CSharp\SonarLint.xml">
       <Link>SonarLint.xml</Link>
     </AdditionalFiles>
-    <Content Include="MFP_DB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MFP_DB.Context.cs</LastGenOutput>
-      <DependentUpon>MFP_DB.edmx</DependentUpon>
-    </Content>
-    <Content Include="MFP_DB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MFP_DB.edmx</DependentUpon>
-      <LastGenOutput>MFP_DB.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -297,6 +223,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

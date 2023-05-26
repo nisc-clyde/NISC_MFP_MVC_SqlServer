@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,12 +14,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class WatermarkRepository : IWatermarkRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private Mapper mapper;
 
         public WatermarkRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             mapper = InitializeAutomapper();
         }
 
@@ -103,25 +104,24 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Watermarks = tb_Watermarks.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialWatermarkRepoDTO> takeTenRecords = tb_Watermarks.ToList();
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            return tb_Watermarks.AsQueryable().AsNoTracking();
         }
 
         public IQueryable<InitialWatermarkRepoDTO> GetWithGlobalSearch(IQueryable<InitialWatermarkRepoDTO> source, string search)
         {
             source = source
                     .Where(p =>
-                     p.type.ToString().ToUpper().Contains(search.ToUpper()) ||
-                    p.left_offset.ToString().ToUpper().Contains(search.ToUpper()) ||
-                    p.right_offset.ToString().ToUpper().Contains(search.ToUpper()) ||
-                    p.top_offset.ToString().ToUpper().Contains(search.ToUpper()) ||
-                    p.bottom_offset.ToString().ToUpper().Contains(search.ToUpper()) ||
-                    p.position_mode.ToString().ToUpper().Contains(search.ToUpper()) ||
-                    ((!string.IsNullOrEmpty(p.fill_mode)) && p.fill_mode.ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.text)) && p.text.ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.image_path)) && p.image_path.ToUpper().Contains(search.ToUpper())) ||
-                    ((p.rotation != null) && p.rotation.ToString().ToUpper().Contains(search.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.color)) && p.color.ToUpper().Contains(search.ToUpper())));
+                     p.type.ToString().Contains(search) ||
+                    p.left_offset.ToString().Contains(search) ||
+                    p.right_offset.ToString().Contains(search) ||
+                    p.top_offset.ToString().Contains(search) ||
+                    p.bottom_offset.ToString().Contains(search) ||
+                    p.position_mode.ToString().Contains(search) ||
+                    ((!string.IsNullOrEmpty(p.fill_mode)) && p.fill_mode.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.text)) && p.text.Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.image_path)) && p.image_path.Contains(search)) ||
+                    ((p.rotation != null) && p.rotation.ToString().Contains(search)) ||
+                    ((!string.IsNullOrEmpty(p.color)) && p.color.Contains(search)));
 
             return source;
         }

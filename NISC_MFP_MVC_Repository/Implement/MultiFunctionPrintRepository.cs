@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,12 +14,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class MultiFunctionPrintRepository : IMultiFunctionPrintRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private Mapper _mapper;
 
         public MultiFunctionPrintRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             _mapper = InitializeAutomapper();
         }
 

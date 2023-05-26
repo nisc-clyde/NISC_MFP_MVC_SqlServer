@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,12 +14,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class UserRepository : IUserRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private Mapper _mapper;
 
         public UserRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             _mapper = InitializeAutomapper();
         }
 
@@ -93,22 +94,21 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Users = tb_Users.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialUserRepoDTO> takeTenRecords = tb_Users.ToList();
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            return tb_Users.AsQueryable().AsNoTracking();
         }
 
         public IQueryable<InitialUserRepoDTO> GetWithGlobalSearch(IQueryable<InitialUserRepoDTO> source, string search)
         {
             source = source
                 .Where(p =>
-                (p.user_id != null && p.user_id.ToUpper().Contains(search.ToUpper())) ||
-                (p.user_password != null && p.user_password.ToUpper().Contains(search.ToUpper())) ||
-                (p.work_id != null && p.work_id.ToUpper().Contains(search.ToUpper())) ||
-                (p.user_name != null && p.user_name.ToUpper().Contains(search.ToUpper())) ||
-                (p.dept_id != null && p.dept_id.ToUpper().Contains(search.ToUpper())) ||
-                (p.dept_name != null && p.dept_name.ToUpper().Contains(search.ToUpper())) ||
-                (p.color_enable_flag != null && p.color_enable_flag.ToUpper().Contains(search.ToUpper())) ||
-                (p.e_mail != null && p.e_mail.ToUpper().Contains(search.ToUpper())));
+                (p.user_id != null && p.user_id.Contains(search)) ||
+                (p.user_password != null && p.user_password.Contains(search)) ||
+                (p.work_id != null && p.work_id.Contains(search)) ||
+                (p.user_name != null && p.user_name.Contains(search)) ||
+                (p.dept_id != null && p.dept_id.Contains(search)) ||
+                (p.dept_name != null && p.dept_name.Contains(search)) ||
+                (p.color_enable_flag != null && p.color_enable_flag.Contains(search)) ||
+                (p.e_mail != null && p.e_mail.Contains(search)));
 
             return source;
         }

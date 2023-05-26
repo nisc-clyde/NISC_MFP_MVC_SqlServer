@@ -1,8 +1,9 @@
-﻿using System;
+﻿using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
+using System;
 
 namespace NISC_MFP_MVC_Repository.DTOs.Print
 {
-    public class InitialPrintRepoDTONeed
+    public class InitialPrintRepoDTONeed : InitialPrintRepoDTO
     {
         private int? _value = 0;
         private int? _page = 0;
@@ -10,6 +11,8 @@ namespace NISC_MFP_MVC_Repository.DTOs.Print
         public string mfp_name { get; set; } = null;
         public string user_name { get; set; } = null;
         public string dept_name { get; set; } = null;
+        public string user_id { get; set; } = null;
+        public string dept_id { get; set; } = null;
         public string card_id { get; set; } = null;
         public string card_type { get; set; } = null;
         public string usage_type { get; set; } = null;

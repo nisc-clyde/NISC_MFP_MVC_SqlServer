@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,12 +14,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class DepositRepository : IDepositRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private Mapper _mapper;
 
         public DepositRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             _mapper = InitializeAutomapper();
         }
 
@@ -72,24 +73,22 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Logs_Deposit = tb_Logs_Deposit.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialDepositRepoDTO> takeTenRecords = tb_Logs_Deposit.ToList();
-
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            return tb_Logs_Deposit.AsQueryable().AsNoTracking();
         }
 
         public IQueryable<InitialDepositRepoDTO> GetWithGlobalSearch(IQueryable<InitialDepositRepoDTO> source, string search)
         {
             source = source
                 .Where(p =>
-                ((!string.IsNullOrEmpty(p.user_name)) && p.user_name.ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.user_id)) && p.user_id.ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.card_id)) && p.card_id.ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.card_user_id)) && p.card_user_id.ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.card_user_name)) && p.card_user_name.ToUpper().Contains(search.ToUpper())) ||
-                ((p.pbalance != null) && p.pbalance.ToString().ToUpper().Contains(search.ToUpper())) ||
-                ((p.deposit_value != null) && p.deposit_value.ToString().Contains(search.ToUpper())) ||
-                ((p.final_value != null) && p.final_value.ToString().ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.deposit_date.ToString())) && p.deposit_date.ToString().ToUpper().Contains(search.ToUpper())));
+                ((!string.IsNullOrEmpty(p.user_name)) && p.user_name.Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.user_id)) && p.user_id.Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.card_id)) && p.card_id.Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.card_user_id)) && p.card_user_id.Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.card_user_name)) && p.card_user_name.Contains(search)) ||
+                ((p.pbalance != null) && p.pbalance.ToString().Contains(search)) ||
+                ((p.deposit_value != null) && p.deposit_value.ToString().Contains(search)) ||
+                ((p.final_value != null) && p.final_value.ToString().Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.deposit_date.ToString())) && p.deposit_date.ToString().Contains(search)));
 
             return source;
         }

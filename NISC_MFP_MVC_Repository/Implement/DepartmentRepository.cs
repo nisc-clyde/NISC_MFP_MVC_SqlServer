@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,12 +14,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private Mapper _mapper;
 
         public DepartmentRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             _mapper = InitializeAutomapper();
         }
 
@@ -96,20 +97,19 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Departments = tb_Departments.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialDepartmentRepoDTO> takeTenRecords = tb_Departments.ToList();
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            return tb_Departments.AsQueryable().AsNoTracking();
         }
 
         public IQueryable<InitialDepartmentRepoDTO> GetWithGlobalSearch(IQueryable<InitialDepartmentRepoDTO> source, string search)
         {
             source = source
                .Where(p =>
-               (!string.IsNullOrEmpty(p.dept_id)) && p.dept_id.ToUpper().Contains(search.ToUpper()) ||
-               (!string.IsNullOrEmpty(p.dept_name)) && p.dept_name.ToUpper().Contains(search.ToUpper()) ||
-               (p.dept_value != null) && p.dept_value.ToString().ToUpper().Contains(search.ToUpper()) ||
-               (p.dept_month_sum != null) && p.dept_month_sum.ToString().ToUpper().Contains(search.ToUpper()) ||
-               (p.dept_usable != null) && p.dept_usable.ToUpper().Contains(search.ToUpper()) ||
-               (!string.IsNullOrEmpty(p.dept_email)) && p.dept_email.ToUpper().Contains(search.ToUpper()));
+               (!string.IsNullOrEmpty(p.dept_id)) && p.dept_id.Contains(search) ||
+               (!string.IsNullOrEmpty(p.dept_name)) && p.dept_name.Contains(search) ||
+               (p.dept_value != null) && p.dept_value.ToString().Contains(search) ||
+               (p.dept_month_sum != null) && p.dept_month_sum.ToString().Contains(search) ||
+               (p.dept_usable != null) && p.dept_usable.Contains(search) ||
+               (!string.IsNullOrEmpty(p.dept_email)) && p.dept_email.Contains(search));
 
             return source;
         }

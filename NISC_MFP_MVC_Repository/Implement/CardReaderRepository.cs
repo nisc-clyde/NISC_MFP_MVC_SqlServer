@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.CardReader;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,12 +14,13 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class CardReaderRepository : ICardReaderRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+
+        protected MFP_DB _db { get; private set; }
         private Mapper _mapper;
 
         public CardReaderRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             _mapper = InitializeAutomapper();
         }
 
@@ -80,21 +82,20 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_CardReaders = tb_CardReaders.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialCardReaderRepoDTO> takeTenRecords = tb_CardReaders.ToList();
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            return tb_CardReaders.AsQueryable().AsNoTracking();
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetWithGlobalSearch(IQueryable<InitialCardReaderRepoDTO> source, string search)
         {
             source = source
                     .Where(p =>
-                    (!string.IsNullOrEmpty(p.cr_id)) && p.cr_id.ToUpper().Contains(search.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_ip)) && p.cr_ip.ToUpper().Contains(search.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_port)) && p.cr_port.ToUpper().Contains(search.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_type)) && p.cr_type.ToUpper().Contains(search.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_mode)) && p.cr_mode.ToUpper().Contains(search.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_card_switch)) && p.cr_card_switch.ToUpper().Contains(search.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_status)) && p.cr_status.ToUpper().Contains(search.ToUpper()));
+                    (!string.IsNullOrEmpty(p.cr_id)) && p.cr_id.Contains(search) ||
+                    (!string.IsNullOrEmpty(p.cr_ip)) && p.cr_ip.Contains(search) ||
+                    (!string.IsNullOrEmpty(p.cr_port)) && p.cr_port.Contains(search) ||
+                    (!string.IsNullOrEmpty(p.cr_type)) && p.cr_type.Contains(search) ||
+                    (!string.IsNullOrEmpty(p.cr_mode)) && p.cr_mode.Contains(search) ||
+                    (!string.IsNullOrEmpty(p.cr_card_switch)) && p.cr_card_switch.Contains(search) ||
+                    (!string.IsNullOrEmpty(p.cr_status)) && p.cr_status.Contains(search));
 
             return source;
         }

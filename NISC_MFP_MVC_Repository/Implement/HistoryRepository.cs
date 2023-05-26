@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -13,12 +14,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class HistoryRepository : IHistoryRepository
     {
-        protected MFP_DBEntities _db { get; private set; }
+        protected MFP_DB _db { get; private set; }
         private Mapper _mapper;
 
         public HistoryRepository()
         {
-            _db = new MFP_DBEntities();
+            _db = new MFP_DB();
             _mapper = InitializeAutomapper();
         }
 
@@ -64,20 +65,18 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Logs_History = tb_Logs_History.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
 
-            List<InitialHistoryRepoDTO> takeTenRecords = tb_Logs_History.ToList();
-
-            return takeTenRecords.AsQueryable().AsNoTracking();
+            return tb_Logs_History.AsQueryable().AsNoTracking();
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetWithGlobalSearch(IQueryable<InitialHistoryRepoDTO> source, string search)
         {
             source = source
                 .Where(p =>
-                ((p.date_time != null) && p.date_time.ToString().ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.login_user_id)) && p.login_user_id.ToString().ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.login_user_name)) && p.login_user_name.ToString().ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.operation)) && p.operation.ToString().ToUpper().Contains(search.ToUpper())) ||
-                ((!string.IsNullOrEmpty(p.affected_data)) && p.affected_data.ToString().ToUpper().Contains(search.ToUpper())));
+                ((p.date_time != null) && p.date_time.ToString().Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.login_user_id)) && p.login_user_id.ToString().Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.login_user_name)) && p.login_user_name.ToString().Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.operation)) && p.operation.ToString().Contains(search)) ||
+                ((!string.IsNullOrEmpty(p.affected_data)) && p.affected_data.ToString().Contains(search)));
 
             return source;
         }
