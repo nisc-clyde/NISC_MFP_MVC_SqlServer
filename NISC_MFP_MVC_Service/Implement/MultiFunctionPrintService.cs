@@ -15,7 +15,7 @@ namespace NISC_MFP_MVC_Service.Implement
     public class MultiFunctionPrintService : IMultiFunctionPrintService
     {
         private readonly IMultiFunctionPrintRepository _multiFunctionPrintRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public MultiFunctionPrintService()
         {
@@ -32,7 +32,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
@@ -60,13 +60,13 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (cr_id <= 0)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("cr_id", "cr_id卡機編號不得小於等於零");
             }
             else
             {
                 IQueryable<InitialMultiFunctionPrintRepoDTO> dataModel = _multiFunctionPrintRepository.GetMultiple(cr_id);
                 IQueryable<MultiFunctionPrintInfo> resultModel = dataModel.ProjectTo<MultiFunctionPrintInfo>(_mapper.ConfigurationProvider);
-                List<MultiFunctionPrintInfo> temp = resultModel.ToList();
+
                 return resultModel;
             }
         }
@@ -84,28 +84,26 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(MultiFunctionPrintInfo instance, int cr_id)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = _mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
-                initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
-                _multiFunctionPrintRepository.Update(initialMultiFunctionPrintRepoDTO);
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            cr_id = cr_id <= 0 ? throw new ArgumentNullException("cr_id", "cr_id卡機編號不得小於等於零") : cr_id;
+
+            InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = _mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
+            initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
+            _multiFunctionPrintRepository.Update(initialMultiFunctionPrintRepoDTO);
         }
 
         public void Delete(MultiFunctionPrintInfo instance)
         {
-            if (instance == null) throw new ArgumentNullException("Reference to null instance.");
-            else _multiFunctionPrintRepository.Delete(_mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance));
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _multiFunctionPrintRepository.Delete(_mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance));
         }
 
         public void DeleteMFPById(string cr_id)
         {
-            if (string.IsNullOrEmpty(cr_id)) throw new ArgumentNullException("Reference to null instance.");
-            else _multiFunctionPrintRepository.DeleteMFPById(cr_id);
+            cr_id = cr_id ?? throw new ArgumentNullException("cr_id", "Reference to null instance.");
+
+            _multiFunctionPrintRepository.DeleteMFPById(cr_id);
         }
 
         public void SaveChanges()

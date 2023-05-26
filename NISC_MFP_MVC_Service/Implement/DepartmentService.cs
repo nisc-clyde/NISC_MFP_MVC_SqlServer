@@ -17,7 +17,7 @@ namespace NISC_MFP_MVC_Service.Implement
     public class DepartmentService : IDepartmentService
     {
         private readonly IDepartmentRepository _departmentRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
         public DepartmentService()
         {
             _departmentRepository = new DepartmentRepository();
@@ -26,21 +26,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(DepartmentInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                try
-                {
-                    _departmentRepository.Insert(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.Message);
-                }
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _departmentRepository.Insert(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
         }
 
         public IQueryable<DepartmentInfo> GetAll()
@@ -56,28 +44,25 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public DepartmentInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialDepartmentRepoDTO dataModel = null;
-                if (operation == "Equals")
-                {
-                    dataModel = _departmentRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _departmentRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                return _mapper.Map<InitialDepartmentRepoDTO, DepartmentInfo>(dataModel);
+            InitialDepartmentRepoDTO dataModel = null;
+            if (operation == "Equals")
+            {
+                dataModel = _departmentRepository.Get(column, value, ".ToString().ToUpper() == @0");
             }
+            else if (operation == "Contains")
+            {
+                dataModel = _departmentRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
+            }
+            return _mapper.Map<InitialDepartmentRepoDTO, DepartmentInfo>(dataModel);
         }
 
         public IEnumerable<DepartmentInfo> SearchByIdAndName(string prefix)
@@ -97,26 +82,16 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(DepartmentInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _departmentRepository.Update(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _departmentRepository.Update(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
         }
 
         public void Delete(DepartmentInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _departmentRepository.Delete(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _departmentRepository.Delete(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
         }
 
         public void SoftDelete()

@@ -19,7 +19,7 @@ namespace NISC_MFP_MVC_Service.Implement
     {
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentRepository _departmentRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public UserService()
         {
@@ -74,51 +74,47 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public UserInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
+            InitialUserRepoDTO dataModel = null;
+            if (operation == "Equals")
+            {
+                dataModel = _userRepository.Get(column, value, ".ToString().ToUpper() == @0");
+            }
+            else if (operation == "Contains")
+            {
+                dataModel = _userRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
             }
             else
             {
-                InitialUserRepoDTO dataModel = null;
-                if (operation == "Equals")
+                string departmentName = "";
+                if (!string.IsNullOrWhiteSpace(dataModel.dept_id))
                 {
-                    dataModel = _userRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _userRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
-
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                else
-                {
-                    string departmentName = "";
-                    if (!string.IsNullOrWhiteSpace(dataModel.dept_id))
+                    IEnumerable<DepartmentInfo> departmentInfos = new DepartmentService().SearchByIdAndName(dataModel.dept_id);
+                    if (departmentInfos.Any())
                     {
-                        IEnumerable<DepartmentInfo> departmentInfos = new DepartmentService().SearchByIdAndName(dataModel.dept_id);
-                        if (departmentInfos.Any())
-                        {
-                            departmentName = departmentInfos.FirstOrDefault().dept_name;
-                        }
-                        else
-                        {
-                            departmentName = "";
-                        }
+                        departmentName = departmentInfos.FirstOrDefault().dept_name;
                     }
-                    //相容舊系統以*.php表示權限
-                    if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains(".php")) dataModel.authority = dataModel.authority.Replace(".php", "");
-                    //若有view權限但沒有print權限，自動補上
-                    if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains("view")) dataModel.authority = "print," + dataModel.authority;
-
-                    UserInfo resultModel = _mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
-                    resultModel.dept_name = departmentName;
-                    return resultModel;
+                    else
+                    {
+                        departmentName = "";
+                    }
                 }
+                //相容舊系統以*.php表示權限
+                if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains(".php")) dataModel.authority = dataModel.authority.Replace(".php", "");
+                //若有view權限但沒有print權限，自動補上
+                if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains("view")) dataModel.authority = "print," + dataModel.authority;
+
+                UserInfo resultModel = _mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
+                resultModel.dept_name = departmentName;
+                return resultModel;
             }
         }
 
@@ -154,13 +150,13 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
                 if (instance.serial == 1)
                 {
-                    throw new Exception("管理員帳號不可刪除");
+                    throw new ArgumentNullException("instance.serial", "管理員帳號不可刪除");
                 }
                 _userRepository.Delete(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
             }
@@ -171,7 +167,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {

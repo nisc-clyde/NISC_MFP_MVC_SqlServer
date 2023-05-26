@@ -14,8 +14,8 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class PrintService : IPrintService
     {
-        private PrintRepository _printRepository;
-        private Mapper _mapper;
+        private readonly PrintRepository _printRepository;
+        private readonly Mapper _mapper;
 
         public PrintService()
         {
@@ -27,7 +27,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
@@ -50,28 +50,25 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public PrintInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialPrintRepoDTO dataModel = null;
-                if (operation == "Equals")
-                {
-                    dataModel = _printRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _printRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                return _mapper.Map<InitialPrintRepoDTO, PrintInfo>(dataModel);
+            InitialPrintRepoDTO dataModel = null;
+            if (operation == "Equals")
+            {
+                dataModel = _printRepository.Get(column, value, ".ToString().ToUpper() == @0");
             }
+            else if (operation == "Contains")
+            {
+                dataModel = _printRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
+            }
+            return _mapper.Map<InitialPrintRepoDTO, PrintInfo>(dataModel);
         }
 
         public IQueryable<PrintInfo> GetWithGlobalSearch(IQueryable<PrintInfo> searchData, string searchValue)
@@ -157,7 +154,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
@@ -169,7 +166,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {

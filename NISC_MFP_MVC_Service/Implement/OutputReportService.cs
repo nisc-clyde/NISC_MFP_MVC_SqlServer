@@ -18,7 +18,7 @@ namespace NISC_MFP_MVC_Service.Implement
     public class OutputReportService : IOutputReportService
     {
         private readonly IPrintRepository _printRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
         public OutputReportService()
         {
             _printRepository = new PrintRepository();

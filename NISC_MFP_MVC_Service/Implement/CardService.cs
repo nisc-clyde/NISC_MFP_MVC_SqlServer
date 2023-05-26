@@ -29,15 +29,10 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(CardInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                instance.card_id = instance.card_id.PadLeft(10, '0');
-                _cardRepository.Insert(_mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            instance.card_id = instance.card_id.PadLeft(10, '0');
+            _cardRepository.Insert(_mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
         }
 
         public IQueryable<CardInfo> GetAll()
@@ -53,45 +48,42 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public CardInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
+
+            InitialCardRepoDTO dataModel = null;
+            if (operation == "Equals")
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper() == @0");
+            }
+            else if (operation == "Contains")
+            {
+                dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
             }
             else
             {
-                InitialCardRepoDTO dataModel = null;
-                if (operation == "Equals")
+                string userName = "";
+                if (!string.IsNullOrWhiteSpace(dataModel.card_id))
                 {
-                    dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
-
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                else
-                {
-                    string userName = "";
-                    if (!string.IsNullOrWhiteSpace(dataModel.card_id))
+                    IEnumerable<UserInfo> userInfos = new UserService().SearchByIdAndName(dataModel.user_id);
+                    if (userInfos.Any())
                     {
-                        IEnumerable<UserInfo> userInfos = new UserService().SearchByIdAndName(dataModel.user_id);
-                        if (userInfos.Any())
-                        {
-                            userName = userInfos.FirstOrDefault().user_name;
-                        }
-                        else
-                        {
-                            userName = "";
-                        }
+                        userName = userInfos.FirstOrDefault().user_name;
                     }
-                    CardInfo resultModel = _mapper.Map<InitialCardRepoDTO, CardInfo>(dataModel);
-                    resultModel.user_name = userName;
-                    return resultModel;
+                    else
+                    {
+                        userName = "";
+                    }
                 }
+                CardInfo resultModel = _mapper.Map<InitialCardRepoDTO, CardInfo>(dataModel);
+                resultModel.user_name = userName;
+                return resultModel;
             }
         }
 
@@ -99,7 +91,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (freevalue < 0)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentException("freevalue不得小於0", "freevalue");
             }
             else
             {
@@ -111,7 +103,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (serial < 0)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("serial", "Reference to null instance.");
             }
             else
             {
@@ -123,7 +115,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
@@ -135,7 +127,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {

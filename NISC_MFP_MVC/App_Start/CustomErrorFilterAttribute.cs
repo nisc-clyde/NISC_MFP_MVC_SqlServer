@@ -15,7 +15,9 @@ namespace NISC_MFP_MVC.App_Start
         {
             if (!filterContext.ExceptionHandled)
             {
-                logger.Error(filterContext.Exception.ToString(),"Exception End");
+                var controllerName = filterContext.RouteData.Values["controller"];
+                var actionName = filterContext.RouteData.Values["action"];
+                logger.Error($"發生Controller：{controllerName}\n發生Action：{actionName}\n錯誤訊息：{ filterContext.Exception.ToString()}","Exception End");
                 filterContext.ExceptionHandled = true;
             }
         }

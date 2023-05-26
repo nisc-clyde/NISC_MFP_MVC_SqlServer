@@ -16,7 +16,7 @@ namespace NISC_MFP_MVC_Service.Implement
     public class HistoryService : IHistoryService
     {
         private readonly IHistoryRepository _historyRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public HistoryService()
         {
@@ -28,7 +28,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
@@ -52,28 +52,26 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public HistoryInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialHistoryRepoDTO dataModel = null;
-                if (operation == "Equals")
-                {
-                    dataModel = _historyRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _historyRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                return _mapper.Map<InitialHistoryRepoDTO, HistoryInfo>(dataModel);
+            InitialHistoryRepoDTO dataModel = null;
+            if (operation == "Equals")
+            {
+                dataModel = _historyRepository.Get(column, value, ".ToString().ToUpper() == @0");
             }
+            else if (operation == "Contains")
+            {
+                dataModel = _historyRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
+            }
+            return _mapper.Map<InitialHistoryRepoDTO, HistoryInfo>(dataModel);
+
         }
 
         public IQueryable<HistoryInfo> GetWithGlobalSearch(IQueryable<HistoryInfo> searchData, string searchValue)
@@ -106,26 +104,16 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(HistoryInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _historyRepository.Update(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _historyRepository.Update(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
         }
 
         public void Delete(HistoryInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _historyRepository.Delete(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _historyRepository.Delete(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
         }
 
         public void SaveChanges()

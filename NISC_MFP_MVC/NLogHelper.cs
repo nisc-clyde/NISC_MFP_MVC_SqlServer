@@ -17,7 +17,7 @@ namespace NISC_MFP_MVC
     public class NLogHelper
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("OperationLog");
-        private static readonly Lazy<NLogHelper> lazy = new Lazy<NLogHelper>(() => new NLogHelper());
+        private static readonly Lazy<NLogHelper> lazy=new Lazy<NLogHelper>(() => new NLogHelper());
 
         private NLogHelper()
         {

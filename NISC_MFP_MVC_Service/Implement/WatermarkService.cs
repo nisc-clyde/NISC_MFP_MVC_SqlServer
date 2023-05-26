@@ -5,7 +5,6 @@ using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
-//using NISC_MFP_MVC_Service.DTOsI.Info.Watermark;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace NISC_MFP_MVC_Service.Implement
     public class WatermarkService : IWatermarkService
     {
         private readonly IWatermarkRepository _watermarkRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public WatermarkService()
         {
@@ -28,7 +27,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
@@ -50,28 +49,25 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public WatermarkInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialWatermarkRepoDTO dataModel = null;
-                if (operation == "Equals")
-                {
-                    dataModel = _watermarkRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _watermarkRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                return _mapper.Map<InitialWatermarkRepoDTO, WatermarkInfo>(dataModel);
+            InitialWatermarkRepoDTO dataModel = null;
+            if (operation == "Equals")
+            {
+                dataModel = _watermarkRepository.Get(column, value, ".ToString().ToUpper() == @0");
             }
+            else if (operation == "Contains")
+            {
+                dataModel = _watermarkRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
+            }
+            return _mapper.Map<InitialWatermarkRepoDTO, WatermarkInfo>(dataModel);
         }
 
         public IQueryable<WatermarkInfo> GetWithGlobalSearch(IQueryable<WatermarkInfo> searchData, string searchValue)
@@ -113,7 +109,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {
@@ -125,7 +121,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("Reference to null instance.");
+                throw new ArgumentNullException("instance", "Reference to null instance.");
             }
             else
             {

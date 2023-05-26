@@ -57,7 +57,7 @@
         $.ajax({
             url: "/Login/Admin",
             type: "POST",
-            data: { loginUser: $(this).serialize() }
+            data: $(this).serialize() 
         })
     })
 </script>

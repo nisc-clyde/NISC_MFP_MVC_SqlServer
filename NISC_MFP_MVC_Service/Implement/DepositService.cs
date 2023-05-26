@@ -14,7 +14,7 @@ namespace NISC_MFP_MVC_Service.Implement
     public class DepositService : IDepositService
     {
         private readonly IDepositRepository _depositRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public DepositService()
         {
@@ -37,64 +37,46 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public DepositInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialDepositRepoDTO dataModel = null;
-                if (operation == "Equals")
-                {
-                    dataModel = _depositRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _depositRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                return _mapper.Map<InitialDepositRepoDTO, DepositInfo>(dataModel);
+            InitialDepositRepoDTO dataModel = null;
+            if (operation == "Equals")
+            {
+                dataModel = _depositRepository.Get(column, value, ".ToString().ToUpper() == @0");
             }
+            else if (operation == "Contains")
+            {
+                dataModel = _depositRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
+            }
+            return _mapper.Map<InitialDepositRepoDTO, DepositInfo>(dataModel);
         }
 
         public void Insert(DepositInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _depositRepository.Insert(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _depositRepository.Insert(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
         }
 
         public void Delete(DepositInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _depositRepository.Delete(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _depositRepository.Delete(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
         }
 
         public void Update(DepositInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _depositRepository.Update(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _depositRepository.Update(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
         }
 
         public void SaveChanges()
