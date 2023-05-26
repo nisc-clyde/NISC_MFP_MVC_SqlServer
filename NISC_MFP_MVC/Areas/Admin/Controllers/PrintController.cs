@@ -25,9 +25,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "print")]
     public class PrintController : Controller, IDataTableController<PrintViewModel>
     {
-        private IPrintService printService;
-        private IDepartmentService departmentService;
-        private Mapper mapper;
+        private readonly IPrintService printService;
+        private readonly IDepartmentService departmentService;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -90,7 +90,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             if (System.IO.File.Exists(path))
             {
                 byte[] fileBytes = System.IO.File.ReadAllBytes(path);
-                new NLogHelper("下載文件", fileName);
+                NLogHelper.Instance.Logging("下載文件", fileName);
                 return File(fileBytes, "application/pdf", fileName);
             }
             return null;

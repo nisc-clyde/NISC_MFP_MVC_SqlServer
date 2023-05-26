@@ -20,10 +20,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "card")]
     public class CardController : Controller, IDataTableController<CardViewModel>, IAddEditDeleteController<CardViewModel>
     {
-        private static readonly string DISABLE = "1";
-        private static readonly string ENABLE = "1";
-        private ICardService cardService;
-        private Mapper mapper;
+        private static readonly string DISABLE = "0";
+        private readonly ICardService cardService;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -81,25 +80,16 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult AddOrEdit(string formTitle, int serial)
         {
             CardViewModel initialCardDTO = new CardViewModel();
-            try
+            if (serial < 0)
             {
-                if (serial < 0)
-                {
-                    initialCardDTO.card_type = DISABLE;
-                    initialCardDTO.enable = DISABLE;
-                }
-                else if (serial >= 0)
-                {
-                    CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
-                    initialCardDTO = mapper.Map<CardViewModel>(instance);
-                }
+                initialCardDTO.card_type = DISABLE;
+                initialCardDTO.enable = DISABLE;
             }
-            catch (HttpException he)
+            else if (serial >= 0)
             {
-                Debug.WriteLine(he.Message);
-                //throw he;
+                CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
+                initialCardDTO = mapper.Map<CardViewModel>(instance);
             }
-
             ViewBag.formTitle = formTitle;
             return PartialView(initialCardDTO);
         }
@@ -114,26 +104,23 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     cardService.Insert(mapper.Map<CardViewModel, CardInfo>(card));
                     cardService.SaveChanges();
-                    new NLogHelper("新增卡片", $"{card.card_id}/{card.user_id}");
+                    NLogHelper.Instance.Logging("新增卡片", $"卡號：{card.card_id}<br/>使用者帳號：{card.user_id}");
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            else if (currentOperation == "Edit")
+            else if (currentOperation == "Edit" && ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    CardInfo originalCard = cardService.Get("serial", card.serial.ToString(), "Equals");
-                    string logMessage = $"(修改前){originalCard.card_id}/{originalCard.user_id}<br/>";
+                CardInfo originalCard = cardService.Get("serial", card.serial.ToString(), "Equals");
+                string logMessage = $"(修改前){originalCard.card_id}/{originalCard.user_id}<br/>";
 
-                    cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
-                    cardService.SaveChanges();
+                cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
+                cardService.SaveChanges();
 
-                    logMessage += $"(修改後){card.card_id}/{card.user_id}";
-                    new NLogHelper("修改卡片", logMessage);
+                logMessage += $"(修改後){card.card_id}/{card.user_id}";
+                NLogHelper.Instance.Logging("修改卡片", logMessage);
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
             }
             return RedirectToAction("Index");
         }
@@ -141,9 +128,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int serial)
         {
-            CardViewModel cardViewModel = new CardViewModel();
             CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
-            cardViewModel = mapper.Map<CardViewModel>(instance);
+            CardViewModel cardViewModel = mapper.Map<CardViewModel>(instance);
 
             return PartialView(cardViewModel);
         }
@@ -153,7 +139,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             cardService.Delete(mapper.Map<CardViewModel, CardInfo>(card));
             cardService.SaveChanges();
-            new NLogHelper("修改卡片", $"{card.card_id}/{card.user_id}");
+            NLogHelper.Instance.Logging("刪除卡片", $"卡號：{card.card_id}<br/>使用者帳號：{card.user_id}");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
@@ -196,7 +182,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             cardService.UpdateResetFreeValue(resetFreeValueViewModel.freevalue);
             cardService.SaveChanges();
-            new NLogHelper("重設免費點數", $"{resetFreeValueViewModel.freevalue}");
+            NLogHelper.Instance.Logging("重設免費點數", $"{resetFreeValueViewModel.freevalue}");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
@@ -210,9 +196,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult DepositCard(string formTitle, int serial)
         {
-            CardViewModel cardViewModel = new CardViewModel();
             CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
-            cardViewModel = mapper.Map<CardViewModel>(instance);
+            CardViewModel cardViewModel = mapper.Map<CardViewModel>(instance);
             ViewBag.formTitle = formTitle;
 
             return PartialView(cardViewModel);
@@ -235,7 +220,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             cardService.SaveChanges();
 
             logMessage += $"(修改後){originalCard.card_id}/{value}";
-            new NLogHelper("修改卡片點數", logMessage);
+            NLogHelper.Instance.Logging("修改卡片點數", logMessage);
 
             return Json(new { success = true, message = "修改點數成功" }, JsonRequestBehavior.AllowGet);
         }

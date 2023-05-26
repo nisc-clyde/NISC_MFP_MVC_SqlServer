@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Web;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
@@ -21,7 +22,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "system")]
     public class SystemController : Controller
     {
-        private Mapper mapper;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// AutoMapper初始化
@@ -29,7 +30,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public SystemController()
         {
             mapper = InitializeAutomapper();
-
         }
 
         /// <summary>
@@ -107,16 +107,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                         }
 
                         //card_id不足10碼補0
-                        string prefixZero = "";
-                        if (columns[0].Length != 10)
-                        {
-                            for (int i = 0; i < 10 - columns[0].Length; i++)
-                            {
-                                prefixZero += "0";
-                            }
-                            prefixZero += columns[0];
-                            columns[0] = prefixZero;
-                        }
+                        columns[0] = columns[0].PadLeft(10, '0');
 
                         employees.Add(new EmployeeModel(columns[0], columns[1], columns[2], columns[3], columns[4], columns[5], columns[6], columns[7], columns[8]));
                     }
@@ -156,7 +147,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             List<EmployeeModel> employees = Session["employees"] as List<EmployeeModel>;
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            dataTableRequest.RecordsFilteredGet = employees.Count();
+            dataTableRequest.RecordsFilteredGet = employees.Count;
             List<EmployeeModel> topLengthResult = employees.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
             return Json(new
             {
@@ -188,7 +179,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 departmentService.SoftDelete();
                 userService.SoftDelete();
                 cardService.SoftDelete();
-                new NLogHelper("人事資料重置", $"下筆操作紀錄將紀錄匯入之筆數");
+                NLogHelper.Instance.Logging("人事資料重置", $"下筆操作紀錄將紀錄匯入之筆數");
             }
             foreach (EmployeeModel employee in employees)
             {
@@ -201,7 +192,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 CardViewModel cardViewModel = mapper.Map<CardInfo, CardViewModel>(cardService.Get("card_id", employee.card_id, "Equals"));
                 CardAddOrEdit(cardService, cardViewModel, employee);
             }
-            new NLogHelper("人事資料匯入", $"匯入總筆數：{employees.Count()}");
+            NLogHelper.Instance.Logging("人事資料匯入", $"匯入總筆數：{employees.Count}");
 
             return Json(new { success = true, message = "Post Success" }, JsonRequestBehavior.AllowGet);
         }

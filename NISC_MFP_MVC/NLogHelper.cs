@@ -5,18 +5,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
+using System.Web.Services.Description;
+using System.Windows.Markup;
 
 namespace NISC_MFP_MVC
 {
     public class NLogHelper
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("OperationLog");
-        public NLogHelper(string operation, string data)
+        private static readonly Lazy<NLogHelper> lazy = new Lazy<NLogHelper>(() => new NLogHelper());
+
+        private NLogHelper()
         {
 
+        }
+
+        public static NLogHelper Instance { get { return lazy.Value; } }
+
+        public void Logging(string operation, string data)
+        {
             if (HttpContext.Current.User != null && HttpContext.Current.User.Identity is FormsIdentity)
             {
                 FormsAuthenticationTicket ticket = ((FormsIdentity)HttpContext.Current.User.Identity).Ticket;

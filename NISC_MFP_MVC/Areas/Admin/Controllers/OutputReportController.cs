@@ -21,8 +21,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "outputreport")]
     public class OutputReportController : Controller
     {
-        private IOutputReportService _outputReportService;
-        private Mapper _mapper;
+        private readonly IOutputReportService _outputReportService;
+        private readonly Mapper _mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -55,14 +55,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             List<MultiFunctionPrintInfo> multiFunctionPrintInfos = new MultiFunctionPrintService().GetAll().ToList();
 
-            foreach (var item in departmentInfos)
+            foreach (SelectListItem item in departmentInfos.Select(i => new SelectListItem { Text = i.dept_name, Value = i.dept_id }))
             {
-                outputReportViewModel.departmentNames.Add(new SelectListItem { Text = item.dept_name, Value = item.dept_id });
+                outputReportViewModel.departmentNames.Add(item);
             }
 
-            foreach (var item in multiFunctionPrintInfos)
+            foreach (SelectListItem item in multiFunctionPrintInfos.Select(i => new SelectListItem { Text = i.mfp_ip, Value = i.mfp_ip }))
             {
-                outputReportViewModel.multiFunctionPrints.Add(new SelectListItem { Text = item.mfp_ip, Value = item.mfp_ip });
+                outputReportViewModel.multiFunctionPrints.Add(item);
             }
 
             return outputReportViewModel;
@@ -121,7 +121,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             totalRecord.SubTotal = total;
             prints.Add(totalRecord);
 
-            new NLogHelper("產生用量報表", "");
+            NLogHelper.Instance.Logging("產生用量報表", "");
 
             ViewBag.reportType = outputReportRequestInfo.reportType.Contains("dept") ? "部門" : "使用者";
             ViewBag.total = total;
@@ -146,7 +146,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             IQueryable<PrintInfo> prints = _outputReportService.GetRecord(outputReportRequestInfo);
             Session["DataSet"] = prints.ProjectTo<PrintViewModel>(_mapper.ConfigurationProvider).ToList();
 
-            new NLogHelper("產生紀錄報表", "");
+            NLogHelper.Instance.Logging("產生紀錄報表", "");
 
             return PartialView();
         }
@@ -160,7 +160,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             List<OutputReportUsageInfo> prints = Session["DataSet"] as List<OutputReportUsageInfo>;
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            dataTableRequest.RecordsFilteredGet = prints.Count();
+            dataTableRequest.RecordsFilteredGet = prints.Count;
             List<OutputReportUsageInfo> topLengthResult = prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
             return Json(new
             {
@@ -179,7 +179,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             List<PrintViewModel> prints = Session["DataSet"] as List<PrintViewModel>;
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            dataTableRequest.RecordsFilteredGet = prints.Count();
+            dataTableRequest.RecordsFilteredGet = prints.Count;
             List<PrintViewModel> topLengthResult = prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
             return Json(new
             {

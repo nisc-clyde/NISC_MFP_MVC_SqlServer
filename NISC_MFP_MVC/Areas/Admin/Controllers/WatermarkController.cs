@@ -16,8 +16,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "watermark")]
     public class WatermarkController : Controller, IDataTableController<WatermarkViewModel>, IAddEditDeleteController<WatermarkViewModel>
     {
-        private IWatermarkService watermarkService;
-        private Mapper mapper;
+        private readonly IWatermarkService watermarkService;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -74,29 +74,21 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult AddOrEdit(string formTitle, int serial)
         {
             WatermarkViewModel initialWatermarkDTO = new WatermarkViewModel();
-            try
+            if (serial < 0)
             {
-                if (serial < 0)
-                {
-                    initialWatermarkDTO.type = "0";
-                    initialWatermarkDTO.position_mode = "0";
-                    initialWatermarkDTO.fill_mode = "0";
-                    //Popup for Add
-                }
-                else if (serial >= 0)
-                {
-                    //Popup for Edit
-                    WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
-                    initialWatermarkDTO = mapper.Map<WatermarkViewModel>(instance);
-                }
+                //Popup for Add
+                initialWatermarkDTO.type = "0";
+                initialWatermarkDTO.position_mode = "0";
+                initialWatermarkDTO.fill_mode = "0";
             }
-            catch (HttpException he)
+            else if (serial >= 0)
             {
-                Debug.WriteLine(he.Message);
-                //throw he;
+                //Popup for Edit
+                WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
+                initialWatermarkDTO = mapper.Map<WatermarkViewModel>(instance);
             }
-
             ViewBag.formTitle = formTitle;
+
             return PartialView(initialWatermarkDTO);
         }
 
@@ -104,37 +96,25 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult AddOrEdit(WatermarkViewModel watermark, string currentOperation)
         {
-            try
+            if (currentOperation == "Add")
             {
-                if (currentOperation == "Add")
+                //Popup for Add
+                if (ModelState.IsValid)
                 {
-                    //Popup for Add
-                    if (ModelState.IsValid)
-                    {
-                        watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
-                        watermarkService.SaveChanges();
-                        new NLogHelper("新增浮水印", $"");
+                    watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
+                    watermarkService.SaveChanges();
+                    NLogHelper.Instance.Logging("新增浮水印", $"");
 
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                    }
-                }
-                else if (currentOperation == "Edit")
-                {
-                    //Popup for Edit
-                    if (ModelState.IsValid)
-                    {
-                        watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
-                        watermarkService.SaveChanges();
-                        new NLogHelper("修改浮水印", $"");
-
-                        return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                    }
+                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            catch (HttpException he)
+            else if (currentOperation == "Edit" && ModelState.IsValid)
             {
-                Debug.WriteLine(he.Message);
-                //throw he;
+                watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
+                watermarkService.SaveChanges();
+                NLogHelper.Instance.Logging("修改浮水印", $"");
+
+                return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
             }
 
             return RedirectToAction("Index");
@@ -143,9 +123,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int serial)
         {
-            WatermarkViewModel watermarkViewModel = new WatermarkViewModel();
             WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
-            watermarkViewModel = mapper.Map<WatermarkViewModel>(instance);
+            WatermarkViewModel watermarkViewModel = mapper.Map<WatermarkViewModel>(instance);
 
             return PartialView(watermarkViewModel);
         }
@@ -155,7 +134,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
             watermarkService.SaveChanges();
-            new NLogHelper("刪除浮水印", $"");
+            NLogHelper.Instance.Logging("刪除浮水印", $"");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }

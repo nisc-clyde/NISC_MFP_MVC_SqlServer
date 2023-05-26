@@ -7,7 +7,6 @@ namespace NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint
         private int _meter_current = 0;
         private string _printer_id = "";
         private string _driver_number = "";
-        private string _cr_id = "";
 
         public int serial { get; set; }
         public string cr_id { get; set; }

@@ -60,7 +60,7 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
                     instance.user_password = user.new_user_password;
                     userService.Update(instance);
                     userService.SaveChanges();
-                    new NLogHelper("使用者修改資料", "");
+                    NLogHelper.Instance.Logging("使用者修改資料", "");
 
                     return Json(new { success = true, message = "密碼修改成功" }, JsonRequestBehavior.AllowGet);
                 }

@@ -13,8 +13,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "history")]
     public class HistoryController : Controller, IDataTableController<HistoryViewModel>
     {
-        private IHistoryService historyService;
-        private Mapper mapper;
+        private readonly IHistoryService historyService;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -54,62 +54,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             return historyService.GetAll(dataTableRequest).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
         }
-
-        //[HttpPost]
-        //[ActionName("InitialDataTable")]
-        //public ActionResult SearchHistoryDataTable()
-        //{
-        //    DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-        //    IQueryable<HistoryViewModel> searchHistoryResultDetail = InitialData();
-        //    dataTableRequest.RecordsTotalGet = searchHistoryResultDetail.AsQueryable().Count();
-        //    //searchHistoryResultDetail = GlobalSearch(searchHistoryResultDetail, dataTableRequest.GlobalSearchValue);
-        //    searchHistoryResultDetail = searchHistoryResultDetail.AsQueryable().OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
-        //    dataTableRequest.RecordsFilteredGet = searchHistoryResultDetail.AsQueryable().Count();
-        //    searchHistoryResultDetail = searchHistoryResultDetail.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
-
-        //    return Json(new
-        //    {
-        //        data = searchHistoryResultDetail,
-        //        draw = dataTableRequest.Draw,
-        //        recordsTotal = dataTableRequest.RecordsTotalGet,
-        //        recordsFiltered = dataTableRequest.RecordsFilteredGet
-        //    }, JsonRequestBehavior.AllowGet);
-        //}
-
-
-        //[NonAction]
-        //public IQueryable<HistoryViewModel> InitialData()
-        //{
-        //    IQueryable<HistoryInfo> resultModel = _historyService.GetAll();
-        //    IQueryable<HistoryViewModel> viewmodel = resultModel.ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
-
-        //    return viewmodel;
-        //}
-
-        //[NonAction]
-        //public IQueryable<HistoryViewModel> GlobalSearch(IQueryable<HistoryViewModel> searchData, string searchValue)
-        //{
-        //    IQueryable<HistoryInfo> viewmodelBefore = searchData.ProjectTo<HistoryInfo>(mapper.ConfigurationProvider);
-        //    IQueryable<HistoryViewModel> viewmodelAfter = _historyService.GetWithGlobalSearch(viewmodelBefore, searchValue).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
-
-        //    return viewmodelAfter;
-        //}
-
-        //[NonAction]
-        //public List<SearchHistoryDTO> GlobalSearch(List<SearchHistoryDTO> searchData, string searchValue)
-        //{
-        //    if (!string.IsNullOrEmpty(searchValue))
-        //    {
-        //        searchData = searchData.Where(
-        //            p => p.date_time.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.login_user_id.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.login_user_name.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.operation.ToUpper().Contains(searchValue.ToUpper()) ||
-        //            p.affected_data.ToUpper().Contains(searchValue.ToUpper())
-        //            ).ToList();
-        //    }
-        //    return searchData;
-        //}
 
         /// <summary>
         /// 建立AutoMapper配置

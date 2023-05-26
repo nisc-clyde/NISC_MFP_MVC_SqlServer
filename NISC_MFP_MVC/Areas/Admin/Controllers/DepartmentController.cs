@@ -23,7 +23,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     public class DepartmentController : Controller, IDataTableController<DepartmentViewModel>, IAddEditDeleteController<DepartmentViewModel>
     {
         private static readonly string DISABLE = "0";
-        private static readonly string ENABLE = "1";
         private readonly IDepartmentService departmentService;
         private readonly Mapper mapper;
 
@@ -80,22 +79,15 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult AddOrEdit(string formTitle, int serial)
         {
             DepartmentViewModel departmentViewModel = new DepartmentViewModel();
-            try
+
+            if (serial < 0)
             {
-                if (serial < 0)
-                {
-                    departmentViewModel.dept_usable = DISABLE;
-                }
-                else if (serial >= 0)
-                {
-                    DepartmentInfo instance = departmentService.Get("serial", serial.ToString(), "Equals");
-                    departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
-                }
+                departmentViewModel.dept_usable = DISABLE;
             }
-            catch (HttpException he)
+            else if (serial >= 0)
             {
-                Debug.WriteLine(he.Message);
-                //throw he;
+                DepartmentInfo instance = departmentService.Get("serial", serial.ToString(), "Equals");
+                departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
             }
 
             ViewBag.formTitle = formTitle;
@@ -112,26 +104,23 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
                     departmentService.SaveChanges();
-                    new NLogHelper("新增部門", $"{department.dept_id}/{department.dept_name}");
+                    NLogHelper.Instance.Logging("新增部門", $"部門編號：{department.dept_id}<br/>部門名稱{department.dept_name}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            else if (currentOperation == "Edit")
+            else if (currentOperation == "Edit" && ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    DepartmentInfo originalDepartment = departmentService.Get("serial", department.serial.ToString(), "Equals");
-                    string logMessage = $"(修改前){originalDepartment.dept_id}/{originalDepartment.dept_name}<br/>";
+                DepartmentInfo originalDepartment = departmentService.Get("serial", department.serial.ToString(), "Equals");
+                string logMessage = $"(修改前){originalDepartment.dept_id}/{originalDepartment.dept_name}<br/>";
 
-                    departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                    departmentService.SaveChanges();
+                departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
+                departmentService.SaveChanges();
 
-                    logMessage += $"(修改後){department.dept_id}/{department.dept_name}";
-                    new NLogHelper("修改部門", logMessage);
+                logMessage += $"(修改後){department.dept_id}/{department.dept_name}";
+                NLogHelper.Instance.Logging("修改部門", logMessage);
 
-                    return Json(new { success = true, message = "修改成功" }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { success = true, message = "修改成功" }, JsonRequestBehavior.AllowGet);
             }
             return RedirectToAction("Index");
         }
@@ -139,9 +128,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int serial)
         {
-            DepartmentViewModel departmentViewModel = new DepartmentViewModel();
             DepartmentInfo instance = departmentService.Get("serial", serial.ToString(), "Equals");
-            departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
+            DepartmentViewModel departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
 
             return PartialView(departmentViewModel);
         }
@@ -151,7 +139,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
             departmentService.SaveChanges();
-            new NLogHelper("刪除部門", $"{department.dept_id}/{department.dept_name}");
+            NLogHelper.Instance.Logging("刪除部門", $"部門編號：{department.dept_id}<br/>部門名稱：{department.dept_name}");
 
             return Json(new { success = true, message = "刪除成功" }, JsonRequestBehavior.AllowGet);
         }

@@ -16,8 +16,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "deposit")]
     public class DepositController : Controller
     {
-        private IDepositService depositService;
-        private Mapper mapper;
+        private readonly IDepositService depositService;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化

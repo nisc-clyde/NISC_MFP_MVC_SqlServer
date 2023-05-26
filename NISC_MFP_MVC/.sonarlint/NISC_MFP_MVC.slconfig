@@ -1,0 +1,28 @@
+{
+  "ServerUri": "http://192.168.172.27:9000/",
+  "Organization": null,
+  "ProjectKey": "NISC_MFP_MVC",
+  "ProjectName": "NISC_MFP_MVC",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AYg3SHn5PK5jYK1YdX7i",
+      "ProfileTimestamp": "2023-05-20T03:51:16Z"
+    },
+    "Js": {
+      "ProfileKey": "AYg3SG3BPK5jYK1YdXjh",
+      "ProfileTimestamp": "2023-05-20T03:51:13Z"
+    },
+    "Ts": {
+      "ProfileKey": "AYg3SJHMPK5jYK1YdY1r",
+      "ProfileTimestamp": "2023-05-20T03:51:22Z"
+    },
+    "Css": {
+      "ProfileKey": "AYg3SGVHPK5jYK1YdXUZ",
+      "ProfileTimestamp": "2023-05-20T03:51:11Z"
+    },
+    "Secrets": {
+      "ProfileKey": "AYg3SHSdPK5jYK1YdXwM",
+      "ProfileTimestamp": "2023-05-20T03:51:15Z"
+    }
+  }
+}

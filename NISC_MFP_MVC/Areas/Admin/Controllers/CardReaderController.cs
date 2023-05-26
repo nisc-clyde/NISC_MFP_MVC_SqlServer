@@ -17,12 +17,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "cardreader")]
     public class CardReaderController : Controller, IDataTableController<CardReaderModel>, IAddEditDeleteController<CardReaderModel>
     {
-        private static readonly string DISABLE = "0";
-        private static readonly string ENABLE = "1";
-        private ICardReaderService cardReaderService;
-        private IMultiFunctionPrintService multiFunctionPrintService;
-
-        private Mapper mapper;
+        private readonly ICardReaderService cardReaderService;
+        private readonly IMultiFunctionPrintService multiFunctionPrintService;
+        private readonly Mapper mapper;
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -107,26 +104,23 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     cardReaderService.Insert(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
                     cardReaderService.SaveChanges();
-                    new NLogHelper("新增事務機", $"{cardReader.cr_id}/{cardReader.cr_ip}");
+                    NLogHelper.Instance.Logging("新增事務機", $"卡機編號：{cardReader.cr_id}<br/>IP位置：{cardReader.cr_ip}");
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            else if (currentOperation == "Edit")
+            else if (currentOperation == "Edit" && ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    CardReaderInfo originalCardReader = cardReaderService.Get("serial", cardReader.serial.ToString(), "Equals");
-                    string logMessage = $"(修改前){originalCardReader.cr_id}/{originalCardReader.cr_ip}<br/>";
+                CardReaderInfo originalCardReader = cardReaderService.Get("serial", cardReader.serial.ToString(), "Equals");
+                string logMessage = $"(修改前){originalCardReader.cr_id}/{originalCardReader.cr_ip}<br/>";
 
-                    cardReaderService.Update(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
-                    cardReaderService.SaveChanges();
+                cardReaderService.Update(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+                cardReaderService.SaveChanges();
 
-                    logMessage += $"(修改後){cardReader.cr_id}/{cardReader.cr_ip}";
-                    new NLogHelper("修改事務機", logMessage);
+                logMessage += $"(修改後){cardReader.cr_id}/{cardReader.cr_ip}";
+                NLogHelper.Instance.Logging("修改事務機", logMessage);
 
-                    return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
             }
 
             return RedirectToAction("Index");
@@ -136,9 +130,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int serial)
         {
-            CardReaderModel cardReaderViewModel = new CardReaderModel();
             CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
-            cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
+            CardReaderModel cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
 
             return PartialView(cardReaderViewModel);
         }
@@ -150,7 +143,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             multiFunctionPrintService.DeleteMFPById(cardReader.cr_id);
             multiFunctionPrintService.SaveChanges();
             cardReaderService.SaveChanges();
-            new NLogHelper("刪除事務機", $"{cardReader.cr_id}/{cardReader.cr_ip}");
+            NLogHelper.Instance.Logging("刪除事務機", $"卡機編號：{cardReader.cr_id}<br/>IP位置：{cardReader.cr_ip}");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
@@ -194,7 +187,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     multiFunctionPrintService.Insert(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
                     multiFunctionPrintService.SaveChanges();
-                    new NLogHelper("新增事務機管理", $"控制編號：{data.printer_id} <br/> IP位置：{data.mfp_ip}");
+                    NLogHelper.Instance.Logging("新增事務機管理", $"控制編號：{data.printer_id}<br/>IP位置：{data.mfp_ip}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }
@@ -208,7 +201,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 multiFunctionPrintService.SaveChanges();
 
                 logMessage += $"(修改後){data.printer_id}/{data.mfp_ip}";
-                new NLogHelper("修改事務機管理", logMessage);
+                NLogHelper.Instance.Logging("修改事務機管理", logMessage);
 
                 return Json(new { success = true, message = "修改成功" }, JsonRequestBehavior.AllowGet);
             }
@@ -226,7 +219,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             multiFunctionPrintService.Delete(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(mfp));
             multiFunctionPrintService.SaveChanges();
-            new NLogHelper("刪除事務機管理", $"{mfp.printer_id}/{mfp.mfp_ip}");
+            NLogHelper.Instance.Logging("刪除事務機管理", $"{mfp.printer_id}/{mfp.mfp_ip}");
 
             return Json(new { success = true, message = "刪除成功" }, JsonRequestBehavior.AllowGet);
         }

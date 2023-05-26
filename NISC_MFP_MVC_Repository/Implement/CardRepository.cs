@@ -15,7 +15,7 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class CardRepository : ICardRepository
     {
         protected MFP_DBEntities _db { get; private set; }
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public CardRepository()
         {
@@ -45,7 +45,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                            freevalue = c.freevalue,
                                                            user_id = subd.user_id,
                                                            user_name = subd.user_name,
-                                                           card_type = c.card_type == "0" ? "遞增" : "遞減",
+                                                           card_type = c.card_type == "0" ? "遞減" : "遞增",
                                                            enable = c.enable == "0" ? "停用" : "可用",
                                                            serial = c.serial
                                                        })
@@ -88,7 +88,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                            freevalue = c.freevalue,
                                                            user_id = subd.user_id,
                                                            user_name = subd.user_name,
-                                                           card_type = c.card_type == "0" ? "遞增" : "遞減",
+                                                           card_type = c.card_type == "0" ? "遞減" : "遞增",
                                                            enable = c.enable == "0" ? "停用" : "可用",
                                                            serial = c.serial
                                                        })
@@ -208,13 +208,10 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && _db != null)
             {
-                if (_db != null)
-                {
-                    _db.Dispose();
-                    _db = null;
-                }
+                _db.Dispose();
+                _db = null;
             }
         }
 

@@ -13,10 +13,10 @@ namespace NISC_MFP_MVC.Controllers
 {
     public class LoginController : Controller
     {
-        private IUserService _userService;
+        private readonly IUserService userService;
         public LoginController()
         {
-            _userService = new UserService();
+            userService = new UserService();
         }
 
         [HttpGet]
@@ -36,7 +36,7 @@ namespace NISC_MFP_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserInfo userInfo = _userService.Get("user_id", loginUser.account, "Equals");
+                UserInfo userInfo = userService.Get("user_id", loginUser.account, "Equals");
                 if (userInfo != null && userInfo.user_password == loginUser.password)
                 {
                     //寫入Cookie
@@ -56,7 +56,7 @@ namespace NISC_MFP_MVC.Controllers
                     };
                     Response.Cookies.Add(authCookie);
 
-                    new NLogHelper("使用者登入", loginUser.account);
+                    NLogHelper.Instance.Logging("使用者登入", loginUser.account);
 
                     return RedirectToAction("Index",
                         "User",
@@ -91,7 +91,7 @@ namespace NISC_MFP_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserInfo userInfo = _userService.Get("user_id", loginUser.account, "Equals");
+                UserInfo userInfo = userService.Get("user_id", loginUser.account, "Equals");
                 if (userInfo != null && userInfo.user_password == loginUser.password)
                 {
                     //寫入Cookie
@@ -118,7 +118,7 @@ namespace NISC_MFP_MVC.Controllers
                         string firstAuthority = userInfo.authority.Split(',')[0];
                         TempData["ActiveNav"] = firstAuthority;
 
-                        new NLogHelper("管理者登入", loginUser.account);
+                        NLogHelper.Instance.Logging("管理者登入", loginUser.account);
 
                         return RedirectToAction("Index",
                             firstAuthority,
@@ -163,20 +163,22 @@ namespace NISC_MFP_MVC.Controllers
                 if (adminInfo == null)
                 {
                     //無執行user_id primary key重複之檢查
-                    adminInfo = new UserInfo();
-                    adminInfo.user_id = admin.user_id;
-                    adminInfo.user_password = admin.user_password;
-                    adminInfo.work_id = "work_id_admin";
-                    adminInfo.user_name = admin.user_name;
-                    adminInfo.authority = "print,view,department,user,cardreader,card,deposit,watermark,history,system,outputreport";
-                    adminInfo.dept_id = "dept_id_1";
-                    adminInfo.color_enable_flag = "1";
-                    adminInfo.copy_enable_flag = "1";
-                    adminInfo.print_enable_flag = "1";
-                    adminInfo.scan_enable_flag = "1";
-                    adminInfo.fax_enable_flag = "1";
-                    adminInfo.e_mail = "";
-                    adminInfo.serial = 1;//Not Working
+                    adminInfo = new UserInfo
+                    {
+                        user_id = admin.user_id,
+                        user_password = admin.user_password,
+                        work_id = "work_id_admin",
+                        user_name = admin.user_name,
+                        authority = "print,view,department,user,cardreader,card,deposit,watermark,history,system,outputreport",
+                        dept_id = "dept_id_1",
+                        color_enable_flag = "1",
+                        copy_enable_flag = "1",
+                        print_enable_flag = "1",
+                        scan_enable_flag = "1",
+                        fax_enable_flag = "1",
+                        e_mail = "",
+                        serial = 1//Not Working
+                    };
                     userService.Insert(adminInfo);
 
                     return Json(new { success = true, message = "管理員註冊成功" });

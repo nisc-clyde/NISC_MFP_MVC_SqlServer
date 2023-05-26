@@ -18,7 +18,7 @@ namespace NISC_MFP_MVC_Service.Implement
     {
         private readonly IUserRepository _userRepository;
         private readonly ICardRepository _cardRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public CardService()
         {
@@ -35,25 +35,8 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                string card_id = "";
-                if (instance.card_id.Length != 10)
-                {
-                    for (int i = 0; i < 10 - instance.card_id.Length; i++)
-                    {
-                        card_id += "0";
-                    }
-                    card_id += instance.card_id;
-                    instance.card_id = card_id;
-                }
-
-                try
-                {
-                    _cardRepository.Insert(_mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.Message);
-                }
+                instance.card_id = instance.card_id.PadLeft(10, '0');
+                _cardRepository.Insert(_mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
             }
         }
 

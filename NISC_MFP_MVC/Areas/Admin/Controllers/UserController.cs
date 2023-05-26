@@ -23,10 +23,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     public class UserController : Controller, IDataTableController<UserViewModel>, IAddEditDeleteController<UserViewModel>
     {
         private static readonly string DISABLE = "0";
-        private static readonly string ENABLE = "1";
         private readonly IUserService userService;
         private readonly Mapper mapper;
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -124,34 +122,32 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     {
                         return Json(new { success = false, message = "此帳號已存在，請使用其他帳號" }, JsonRequestBehavior.AllowGet);
                     }
+
                     userService.Insert(mapper.Map<UserViewModel, UserInfo>(user));
                     userService.SaveChanges();
-                    new NLogHelper("新增使用者", $"{user.user_id}/{user.user_name}");
+                    NLogHelper.Instance.Logging("新增使用者", $"帳號：{user.user_id}<br/>姓名：{user.user_name}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            else if (currentOperation == "Edit")
+            else if (currentOperation == "Edit" && ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                //若修改資料之使用者為當前登入之使用者，由前端強迫登出
+                UserInfo originalUser = userService.Get("user_id", user.user_id.ToString(), "Equals");
+                string logMessage = $"(修改前){originalUser.user_id}/{originalUser.user_name}<br/>";
+
+                userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
+                userService.SaveChanges();
+
+                logMessage += $"(修改後){user.user_id}/{user.user_name}";
+                NLogHelper.Instance.Logging("修改使用者", logMessage);
+
+                return Json(new
                 {
-                    //若修改資料之使用者為當前登入之使用者，由前端強迫登出
-                    UserInfo originalUser = userService.Get("user_id", user.user_id.ToString(), "Equals");
-                    string logMessage = $"(修改前){originalUser.user_id}/{originalUser.user_name}<br/>";
-
-                    userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
-                    userService.SaveChanges();
-
-                    logMessage += $"(修改後){user.user_id}/{user.user_name}";
-                    new NLogHelper("修改使用者", logMessage);
-
-                    return Json(new
-                    {
-                        success = true,
-                        message = "修改成功",
-                        isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
-                    }, JsonRequestBehavior.AllowGet);
-                }
+                    success = true,
+                    message = "修改成功",
+                    isCurrentUserUpdate = new { updatedUserId = user.user_id, currentUserId = HttpContext.User.Identity.Name }
+                }, JsonRequestBehavior.AllowGet);
             }
             return RedirectToAction("Index");
         }
@@ -174,7 +170,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             userService.Delete(mapper.Map<UserViewModel, UserInfo>(user));
             userService.SaveChanges();
-            new NLogHelper("刪除使用者", $"{user.user_id}/{user.user_name}");
+            NLogHelper.Instance.Logging("刪除使用者", $"帳號：{user.user_id}<br/>姓名：{user.user_name}");
 
             return Json(new
             {
@@ -214,7 +210,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult UserPermissionConfigPost(string authority, string user_id)
         {
             userService.setUserPermission(authority, user_id);
-            new NLogHelper("修改使用者權限", user_id);
+            NLogHelper.Instance.Logging("修改使用者權限", $"帳號：{user_id}");
 
             return Json(new { success = true, message = "權限已修改" });
         }
