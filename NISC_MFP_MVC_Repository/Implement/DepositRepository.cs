@@ -67,7 +67,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //Column Search
             tb_Logs_Deposit = GetWithColumnSearch(tb_Logs_Deposit, columns, searches);
 
-            tb_Logs_Deposit = tb_Logs_Deposit.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            tb_Logs_Deposit = tb_Logs_Deposit.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Logs_Deposit.Count();
             //-----------------Performance BottleNeck-----------------

@@ -91,7 +91,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //Column Search
             tb_Departments = GetWithColumnSearch(tb_Departments, columns, searches);
 
-            tb_Departments = tb_Departments.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            tb_Departments = tb_Departments.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Departments.Count();
             //-----------------Performance BottleNeck-----------------

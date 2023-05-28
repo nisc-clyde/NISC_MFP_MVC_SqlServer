@@ -88,7 +88,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //Column Search
             tb_Users = GetWithColumnSearch(tb_Users, columns, searches);
 
-            tb_Users = tb_Users.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            tb_Users = tb_Users.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Users.Count();
             //-----------------Performance BottleNeck-----------------

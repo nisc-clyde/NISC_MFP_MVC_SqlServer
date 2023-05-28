@@ -102,7 +102,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //Column Search
             tb_Cards = GetWithColumnSearch(tb_Cards, columns, searches);
 
-            tb_Cards = tb_Cards.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            tb_Cards = tb_Cards.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Cards.Count();
             //-----------------Performance BottleNeck-----------------

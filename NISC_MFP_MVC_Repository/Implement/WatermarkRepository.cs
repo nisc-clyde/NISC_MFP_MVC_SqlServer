@@ -98,7 +98,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //Column Search
             tb_Watermarks = GetWithColumnSearch(tb_Watermarks, columns, searches);
 
-            tb_Watermarks = tb_Watermarks.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            tb_Watermarks = tb_Watermarks.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Watermarks.Count();
             //-----------------Performance BottleNeck-----------------

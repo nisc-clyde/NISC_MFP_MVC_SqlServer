@@ -134,12 +134,12 @@ namespace NISC_MFP_MVC_Repository.Implement
             tb_Logs_Prints = GetWithColumnSearch(tb_Logs_Prints, columns, searches);//0~1
 
             //-----------------Performance BottleNeck-----------------
-            dataTableRequest.RecordsFilteredGet = tb_Logs_Prints.Count();
+            dataTableRequest.RecordsFilteredGet = tb_Logs_Prints.Where(p => p.serial > 0).Count();
             //-----------------Performance BottleNeck-----------------
 
-            tb_Logs_Prints = tb_Logs_Prints.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);//0
+            tb_Logs_Prints = tb_Logs_Prints.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);//0
 
-            tb_Logs_Prints = tb_Logs_Prints.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_Logs_Prints = tb_Logs_Prints.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
             return tb_Logs_Prints;
         }

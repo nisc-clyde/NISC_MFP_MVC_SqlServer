@@ -76,7 +76,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //Column Search
             tb_CardReaders = GetWithColumnSearch(tb_CardReaders, columns, searches);
 
-            tb_CardReaders = tb_CardReaders.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            tb_CardReaders = tb_CardReaders.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_CardReaders.Count();
             //-----------------Performance BottleNeck-----------------

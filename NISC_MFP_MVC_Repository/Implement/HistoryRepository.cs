@@ -59,7 +59,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //Column Search
             tb_Logs_History = GetWithColumnSearch(tb_Logs_History, columns, searches);
 
-            tb_Logs_History = tb_Logs_History.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
+            tb_Logs_History = tb_Logs_History.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Logs_History.Count();
             //-----------------Performance BottleNeck-----------------
