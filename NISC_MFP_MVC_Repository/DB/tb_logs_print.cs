@@ -18,6 +18,7 @@ namespace NISC_MFP_MVC_Repository.DB
         [StringLength(100)]
         public string dept_name { get; set; }
 
+        [Range(0, int.MaxValue)]
         public int? dept_value { get; set; }
 
         [StringLength(50)]
@@ -50,8 +51,10 @@ namespace NISC_MFP_MVC_Repository.DB
         [StringLength(10)]
         public string driver_number { get; set; }
 
+        [Range(0,int.MaxValue)]
         public int? value { get; set; }
 
+        [Range(0, int.MaxValue)]
         public int? page { get; set; }
 
         public int? copies { get; set; }
@@ -68,15 +71,19 @@ namespace NISC_MFP_MVC_Repository.DB
         [StringLength(1)]
         public string usage_type { get; set; }
 
-        [Column(TypeName = "datetime2")]
+        [Column(TypeName = "datetime")]
         public DateTime? print_date { get; set; }
 
         public string scan_destination { get; set; }
 
+        [Column(TypeName = "nvarchar(MAX)")]
+
         public string document_name { get; set; }
 
+        [Column(TypeName = "nvarchar(MAX)")]
         public string file_path { get; set; }
 
+        [Column(TypeName = "nvarchar(MAX)")]
         public string file_name { get; set; }
 
         [StringLength(50)]

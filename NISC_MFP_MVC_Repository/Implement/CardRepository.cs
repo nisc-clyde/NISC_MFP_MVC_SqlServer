@@ -106,7 +106,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Cards.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Cards = tb_Cards.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            tb_Cards = tb_Cards.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
 
             return tb_Cards.AsQueryable().AsNoTracking();
         }

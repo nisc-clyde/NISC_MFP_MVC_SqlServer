@@ -9,6 +9,7 @@ using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -127,16 +128,18 @@ namespace NISC_MFP_MVC_Repository.Implement
                 });
 
             //GlobalSearch
-            tb_Logs_Prints = GetWithGlobalSearch(tb_Logs_Prints, dataTableRequest.GlobalSearchValue);
+            tb_Logs_Prints = GetWithGlobalSearch(tb_Logs_Prints, dataTableRequest.GlobalSearchValue);//0
 
             //Column Search
-            tb_Logs_Prints = GetWithColumnSearch(tb_Logs_Prints, columns, searches);
+            tb_Logs_Prints = GetWithColumnSearch(tb_Logs_Prints, columns, searches);//0~1
 
-            tb_Logs_Prints = tb_Logs_Prints.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Logs_Prints.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Logs_Prints = tb_Logs_Prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+
+            tb_Logs_Prints = tb_Logs_Prints.OrderBy(dataTableRequest.SortColumnProperty + " " + dataTableRequest.SortDirection);//0
+
+            tb_Logs_Prints = tb_Logs_Prints.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
 
             return tb_Logs_Prints;
         }
@@ -157,6 +160,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     ((!string.IsNullOrEmpty(p.print_date.ToString())) && p.print_date.ToString().Contains(search)) ||
                     ((!string.IsNullOrEmpty(p.document_name)) && p.document_name.Contains(search)));
 
+            //---------------------Dynamic Linq---------------------
             //string[] columns = {
             //    "mfp_name",
             //    "user_name",
@@ -170,8 +174,8 @@ namespace NISC_MFP_MVC_Repository.Implement
             //    "print_date",
             //    "document_name"
             //};
-
             //string query = string.Join(" or ", columns.Select(c => $"{c.ToUpper()}.ToString().ToUpper().Contains(\"{search.ToUpper()}\")"));
+            //---------------------Dynamic Linq---------------------
 
             //source = source.AsQueryable().Where(query);
 

@@ -63,7 +63,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Logs_History.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Logs_History = tb_Logs_History.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            tb_Logs_History = tb_Logs_History.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
 
             return tb_Logs_History.AsQueryable().AsNoTracking();
         }

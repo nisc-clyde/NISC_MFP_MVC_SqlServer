@@ -102,7 +102,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Watermarks.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Watermarks = tb_Watermarks.Skip(dataTableRequest.Start).Take(dataTableRequest.Length);
+            tb_Watermarks = tb_Watermarks.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
 
             return tb_Watermarks.AsQueryable().AsNoTracking();
         }
