@@ -64,7 +64,7 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
 
                     return Json(new { success = true, message = "密碼修改成功" }, JsonRequestBehavior.AllowGet);
                 }
-                return Json(new { success = false, message = "原密碼錯誤" }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, message = "目前密碼錯誤" }, JsonRequestBehavior.AllowGet);
             }
             return RedirectToAction("Index");
         }

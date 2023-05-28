@@ -31,6 +31,8 @@ function SearchDepositDataTableInitial() {
     const rowCallback = function () { };
 
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
+    dataTable.draw();
+
 };
 
 /**

@@ -29,7 +29,7 @@ namespace NISC_MFP_MVC.Controllers
         /// 登入成功之User寫入Cookie和Session，同時取得Authority第一個為登入成功後顯示的頁面
         /// </summary>
         /// <param name="loginUser">欲登入之Usrr</param>
-        /// <returns>第一個擁有的權限Admin頁面</returns>
+        /// <returns>使用者自我管理頁面</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult User(LoginModel loginUser)
@@ -66,10 +66,6 @@ namespace NISC_MFP_MVC.Controllers
                 {
                     ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                 }
-            }
-            else
-            {
-                ModelState.AddModelError("ErrorMessage", "請輸入帳號和密碼");
             }
             return View();
         }
@@ -133,10 +129,6 @@ namespace NISC_MFP_MVC.Controllers
                 {
                     ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                 }
-            }
-            else
-            {
-                ModelState.AddModelError("ErrorMessage", "請輸入帳號和密碼");
             }
             return View();
         }

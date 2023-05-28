@@ -250,6 +250,7 @@ export const DataTableTemplate = (function () {
             paging: true,
             pagingType: "full_numbers",
             deferRender: true,
+            deferLoading:true,
             serverSide: true,
             processing: true,
             responsive: true,

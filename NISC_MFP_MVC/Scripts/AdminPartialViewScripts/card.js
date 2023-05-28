@@ -70,6 +70,8 @@ function SearchCardDataTableInitial() {
         order,
         rowCallback
     );
+    dataTable.draw();
+
 }
 
 /**

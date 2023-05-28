@@ -69,6 +69,8 @@ function SearchWatermarkDataTableInitial() {
         order,
         rowCallback
     );
+    dataTable.draw();
+
 }
 
 /**

@@ -4,10 +4,10 @@ namespace NISC_MFP_MVC.Models
 {
     public class LoginModel
     {
-        [Required]
+        [Required(ErrorMessage =("請輸入帳號"))]
         public string account { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = ("請輸入密碼"))]
         public string password { get; set; }
     }
 }

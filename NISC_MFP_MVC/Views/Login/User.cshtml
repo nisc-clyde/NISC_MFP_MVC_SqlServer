@@ -35,7 +35,13 @@
                 <div class="form-group">
                     <div id="login">
                         @Html.TextBoxFor(a => a.account, new { placeholder = "使用者帳號", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;" })
+                        <div>
+                            @Html.ValidationMessageFor(a => a.account, "", new { @class = "text-danger fs-6" })
+                        </div>
                         @Html.TextBoxFor(p => p.password, new { placeholder = "密碼", @class = "form-control mb-2 mr-sm-2", style = "max-width: 280px;", type = "password" })
+                        <div>
+                            @Html.ValidationMessageFor(a => a.password, "", new { @class = "text-danger fs-6" })
+                        </div>
                         <div>
                             @Html.ValidationMessage("ErrorMessage", new { @class = "text-danger fs-6" })
                         </div>

@@ -61,6 +61,8 @@ function SearchCardReaderDataTableInitial() {
     };
 
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
+    dataTable.draw();
+
 }
 
 /**

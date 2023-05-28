@@ -10,6 +10,7 @@
  * @param {string[]} order - Specify default orderable by column when data table already.
  * @param {function} rowCallback - Do things between response from backend and render to element, 
  */
+var dataTable;
 function SearchHistoryDataTableInitial() {
 
     const table = $("#searchHistoryDataTable");
@@ -27,6 +28,8 @@ function SearchHistoryDataTableInitial() {
     const rowCallback = function () { };
 
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
+    dataTable.draw();
+
 }
 
 $(function () {

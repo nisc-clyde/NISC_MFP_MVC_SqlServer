@@ -6,7 +6,8 @@ var dateStart;
 var dateEnd;
 //Global Variable - End
 
-dateStart = "2005/01/01";
+//dateStart = "2005/01/01";
+dateStart = moment().subtract(365, 'days').format("YYYY-MM-DD");
 dateEnd = moment().format("YYYY-MM-DD");
 
 function DateRangePicker_Initial() {
@@ -19,12 +20,13 @@ function DateRangePicker_Initial() {
             '30天前': [moment().subtract(29, 'days'), moment()],
             '1年前': [moment().subtract(365, 'days'), moment()],
             '當月': [moment().startOf('month'), moment().endOf('month')],
+            '歷年紀錄': ["2005/01/01", moment()],
             '上個月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
         },
         "drops": "auto",
         "showCustomRangeLabel": true,
         "cancelClass": "btn-danger",
-        "startDate": "2005/01/01",
+        "startDate": dateStart,
         "endDate": moment(),
         "minDate": "2005/01/01",
         "maxDate": moment(),
@@ -72,7 +74,7 @@ function DateRangePicker_Initial() {
     });
 
     dateRangePicker.on('cancel.daterangepicker', function (ev, picker) {
-        dateRangePicker.data('daterangepicker').setStartDate('2005/01/01');
+        dateRangePicker.data('daterangepicker').setStartDate(dateStart);
         dateRangePicker.data('daterangepicker').setEndDate(moment());
         dataTable.columns(9).search("").draw();
     });
@@ -187,7 +189,7 @@ function SearchPrintDataTableInitial() {
         { data: "page_color", name: "顏色" },
         { data: "page", name: "張數" },
         { data: "value", name: "使用點數" },
-        { data: "print_date", name: "列印時間" },
+        { data: "print_date", name: "列印時間", "defaultContent": dateStart + "~" + dateEnd },
         { data: "document_name", name: "文件名稱" },
         { data: "file_path", name: "檔案路徑" },
         { data: "file_name", name: "檔案名稱" }
@@ -205,6 +207,10 @@ function SearchPrintDataTableInitial() {
     };
 
     dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
+    dataTable.columns(9).search(moment().subtract(365, 'days').format("YYYY-MM-DD") + "~" + moment().format("YYYY-MM-DD"));
+    dataTable.draw();
+
+    //dateStart + "~" + dateEnd
 };
 
 /**
@@ -321,9 +327,9 @@ function DocumentDownload() {
 }
 
 $(function () {
-    SearchPrintDataTableInitial();
     DateRangePicker_Initial();
     DateRangePickerColumnHeight();
+    SearchPrintDataTableInitial();
     FormSelect_Select();
     FormSelect_UnSelect();
     ColumnSearch();
