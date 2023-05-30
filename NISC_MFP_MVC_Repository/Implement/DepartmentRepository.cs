@@ -6,7 +6,11 @@ using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -15,7 +19,7 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class DepartmentRepository : IDepartmentRepository
     {
         protected MFP_DB _db { get; private set; }
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public DepartmentRepository()
         {
@@ -30,8 +34,70 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// <exception cref="ArgumentNullException"></exception>
         public void Insert(InitialDepartmentRepoDTO instance)
         {
-            this._db.tb_department.Add(_mapper.Map<tb_department>(instance));
-            this.SaveChanges();
+            _db.tb_department.Add(_mapper.Map<tb_department>(instance));
+            SaveChanges();
+        }
+
+        public void InsertBulkData(List<InitialDepartmentRepoDTO> instance)
+        {
+            ListToDataTableConverter converter = new ListToDataTableConverter();
+            DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_department>>(instance));
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MFPContext"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                //Create temp table
+                SqlCommand createTempDataTable = new SqlCommand(
+                    $"if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
+                    $" WHERE TABLE_NAME = N'tb_department_temp' " +
+                    $" AND TABLE_SCHEMA = N'mywebni1_managerc') " +
+                    $"begin " +
+                    $"select * into mywebni1_managerc.tb_department_temp from mywebni1_managerc.tb_department " +
+                    $"end;",
+                     conn);
+                createTempDataTable.ExecuteNonQuery();
+
+                //Set Identity On
+                SqlCommand IDENTITY_INSERT_ON = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_department ON;", conn);
+                IDENTITY_INSERT_ON.ExecuteNonQuery();
+
+                //Bulk insert data to temp table
+                using (SqlBulkCopy sqlBC = new SqlBulkCopy(connectionString))
+                {
+                    sqlBC.BatchSize = 100;
+                    sqlBC.DestinationTableName = "mywebni1_managerc.tb_department_temp";
+                    sqlBC.WriteToServer(dataTable);
+                }
+
+                //Merge temp table to target
+                //SqlCommand mergeTable = new SqlCommand(
+                //    "merge mywebni1_managerc.tb_department as target\r\nusing mywebni1_managerc.tb_department_temp as source\r\non (target.dept_id=source.dept_id)\r\nwhen not matched then insert(serial,dept_id,dept_name,dept_value,dept_month_sum,dept_usable,dept_email,if_deleted)\r\n\t\t\t\t\t　values(source.serial,source.dept_id,source.dept_name,source.dept_value,source.dept_month_sum,source.dept_usable,source.dept_email,source.if_deleted);",
+                //    conn);
+                //mergeTable.ExecuteNonQuery();
+                SqlCommand mergeTable = new SqlCommand(
+                    $"merge mywebni1_managerc.tb_department as target " +
+                    $"using mywebni1_managerc.tb_department_temp as source " +
+                    $"on (target.dept_id = source.dept_id) " +
+                    $"when not matched then " +
+                    $"insert(serial,dept_id,dept_name) " +
+                    $"values(source.serial,source.dept_id,source.dept_name);",
+                    conn);
+                mergeTable.ExecuteNonQuery();
+
+                //Drop temp table
+                SqlCommand dropTable = new SqlCommand("drop table mywebni1_managerc.tb_department_temp", conn);
+                dropTable.ExecuteNonQuery();
+
+                //Set Identity Off
+                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_department OFF;", conn);
+                IDENTITY_INSERT_OFF.ExecuteNonQuery();
+
+                conn.Close();
+            }
+
+            //_db.tb_department.AddRange(_mapper.Map<List<tb_department>>(instance));
+            //SaveChanges();
         }
 
         public IQueryable<InitialDepartmentRepoDTO> GetAll()
@@ -95,7 +161,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Departments.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Departments = tb_Departments.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_Departments = tb_Departments.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
             return tb_Departments.AsQueryable().AsNoTracking();
         }
@@ -129,7 +195,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialDepartmentRepoDTO Get(string column, string value, string operation)
         {
-            tb_department result = _db.tb_department.Where(column + operation, value).FirstOrDefault();
+            tb_department result = _db.tb_department.Where(column + operation, value).AsNoTracking().FirstOrDefault();
             return _mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
         }
 
@@ -168,7 +234,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //{
             //    throw e;
             //}
-            _db.Database.ExecuteSqlCommand("delete from tb_department");
+            _db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_department");
 
         }
 

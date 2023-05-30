@@ -14,6 +14,6 @@ namespace NISC_MFP_MVC_Repository.Interface
         /// </summary>
         /// <param name="initialOutputReportRepoDTO">Filter</param>
         /// <returns></returns>
-        IQueryable<InitialPrintRepoDTO> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO);
+        IQueryable<InitialPrintRepoDTONeed> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO);
     }
 }

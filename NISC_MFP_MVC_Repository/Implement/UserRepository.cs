@@ -2,20 +2,26 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DB;
+using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Reflection;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
     public class UserRepository : IUserRepository
     {
         protected MFP_DB _db { get; private set; }
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public UserRepository()
         {
@@ -27,6 +33,62 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             _db.tb_user.Add(_mapper.Map<tb_user>(instance));
             _db.SaveChanges();
+        }
+
+        public void InsertBulkData(List<InitialUserRepoDTO> instance)
+        {
+            ListToDataTableConverter converter = new ListToDataTableConverter();
+            DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_user>>(instance));
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MFPContext"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                //Create temp table
+                SqlCommand createTempDataTable = new SqlCommand(
+                    $"if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
+                    $" WHERE TABLE_NAME = N'tb_user_temp' " +
+                    $" AND TABLE_SCHEMA = N'mywebni1_managerc') " +
+                    $"begin " +
+                    $"select * into mywebni1_managerc.tb_user_temp from mywebni1_managerc.tb_user " +
+                    $"end;",
+                     conn);
+                createTempDataTable.ExecuteNonQuery();
+
+                //Set Identity On
+                SqlCommand IDENTITY_INSERT_ON = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_user ON;", conn);
+                IDENTITY_INSERT_ON.ExecuteNonQuery();
+
+                //Bulk insert data to temp table
+                using (SqlBulkCopy sqlBC = new SqlBulkCopy(connectionString))
+                {
+                    sqlBC.BatchSize = 100;
+                    sqlBC.DestinationTableName = "mywebni1_managerc.tb_user_temp";
+                    sqlBC.WriteToServer(dataTable);
+                }
+
+                //Merge temp table to target
+                SqlCommand mergeTable = new SqlCommand(
+                    $"merge mywebni1_managerc.tb_user as target " +
+                    $"using mywebni1_managerc.tb_user_temp as source " +
+                    $"on (target.user_id = source.user_id) " +
+                    $"when not matched then " +
+                    $"insert(serial,user_id,user_password,work_id,user_name,dept_id,e_mail) " +
+                    $"values(source.serial,source.user_id,source.user_password,source.work_id,source.user_name,source.dept_id,source.e_mail);",
+                    conn);
+                mergeTable.ExecuteNonQuery();
+
+                //Drop temp table
+                SqlCommand dropTable = new SqlCommand("drop table mywebni1_managerc.tb_user_temp", conn);
+                dropTable.ExecuteNonQuery();
+
+                //Set Identity Off
+                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_user OFF;", conn);
+                IDENTITY_INSERT_OFF.ExecuteNonQuery();
+
+                conn.Close();
+            }
         }
 
         public IQueryable<InitialUserRepoDTO> GetAll()
@@ -92,7 +154,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Users.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Users = tb_Users.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_Users = tb_Users.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
             return tb_Users.AsQueryable().AsNoTracking();
         }
@@ -127,7 +189,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialUserRepoDTO Get(string column, string value, string operation)
         {
-            tb_user result = _db.tb_user.Where(column + operation, value).FirstOrDefault();
+            tb_user result = _db.tb_user.Where(column + operation, value).AsNoTracking().FirstOrDefault();
             return _mapper.Map<tb_user, InitialUserRepoDTO>(result);
         }
 
@@ -167,7 +229,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //using (MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"))
             //{
             //}
-            _db.Database.ExecuteSqlCommand("delete from tb_user where serial != 1");
+            _db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_user where serial != 1");
         }
         public void SaveChanges()
         {

@@ -35,6 +35,13 @@ namespace NISC_MFP_MVC_Service.Implement
             _cardRepository.Insert(_mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
         }
 
+        public void InsertBulkData(List<CardInfo> instance)
+        {
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _cardRepository.InsertBulkData(_mapper.Map<List<InitialCardRepoDTO>>(instance));
+        }
+
         public IQueryable<CardInfo> GetAll()
         {
             IQueryable<InitialCardRepoDTO> datamodel = _cardRepository.GetAll();

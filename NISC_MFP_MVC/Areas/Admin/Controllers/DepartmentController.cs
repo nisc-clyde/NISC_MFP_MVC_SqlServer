@@ -104,7 +104,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
                     departmentService.SaveChanges();
-                    NLogHelper.Instance.Logging("新增部門", $"部門編號：{department.dept_id}<br/>部門名稱{department.dept_name}");
+                    NLogHelper.Instance.Logging("新增部門", $"部門編號：{department.dept_id}<br/>部門名稱：{department.dept_name}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }
@@ -112,12 +112,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             else if (currentOperation == "Edit" && ModelState.IsValid)
             {
                 DepartmentInfo originalDepartment = departmentService.Get("serial", department.serial.ToString(), "Equals");
-                string logMessage = $"(修改前){originalDepartment.dept_id}/{originalDepartment.dept_name}<br/>";
+                string logMessage = $"(修改前)部門編號：{originalDepartment.dept_id}, 部門名稱：{originalDepartment.dept_name}<br/>";
 
                 departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
                 departmentService.SaveChanges();
 
-                logMessage += $"(修改後){department.dept_id}/{department.dept_name}";
+                logMessage += $"(修改後)部門編號：{department.dept_id}, 部門名稱：{department.dept_name}";
                 NLogHelper.Instance.Logging("修改部門", logMessage);
 
                 return Json(new { success = true, message = "修改成功" }, JsonRequestBehavior.AllowGet);

@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DB;
+using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -15,7 +16,7 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class MultiFunctionPrintRepository : IMultiFunctionPrintRepository
     {
         protected MFP_DB _db { get; private set; }
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public MultiFunctionPrintRepository()
         {
@@ -62,8 +63,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialMultiFunctionPrintRepoDTO Get(string column, string value, string operation)
         {
-            //NOP
-            return null;
+            tb_mfp result = _db.tb_mfp.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            return _mapper.Map<tb_mfp, InitialMultiFunctionPrintRepoDTO>(result);
         }
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetMultiple(int cr_id)

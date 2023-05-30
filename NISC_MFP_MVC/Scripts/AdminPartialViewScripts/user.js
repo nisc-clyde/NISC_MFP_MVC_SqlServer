@@ -54,9 +54,7 @@ function SearchUserDataTableInitial() {
             : $("td:eq(6)", row).html("<b class='text-danger'>無</b>");
     };
 
-    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
-    dataTable.draw();
-
+    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback).draw();
 }
 
 /**

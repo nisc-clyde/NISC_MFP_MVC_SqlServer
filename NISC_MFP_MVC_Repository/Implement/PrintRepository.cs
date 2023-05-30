@@ -18,7 +18,7 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class PrintRepository : IPrintRepository
     {
         protected MFP_DB _db { get; private set; }
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public PrintRepository()
         {
@@ -36,7 +36,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             return _db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
         }
 
-        public IQueryable<InitialPrintRepoDTO> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO)
+        public IQueryable<InitialPrintRepoDTONeed> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO)
         {
             IQueryable<tb_logs_print> result = _db.tb_logs_print.AsNoTracking();
 
@@ -56,7 +56,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             DateTime endDate = Convert.ToDateTime(postDateRange[1]);
             result = result.Where(print => print.print_date >= startDate && print.print_date <= endDate);
 
-            IQueryable<InitialPrintRepoDTO> prints = result.AsNoTracking().Select(p => new InitialPrintRepoDTONeed
+            IQueryable<InitialPrintRepoDTONeed> prints = result.Select(p => new InitialPrintRepoDTONeed
             {
                 mfp_name = p.mfp_name,
                 user_id = p.user_id,
@@ -242,7 +242,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialPrintRepoDTO Get(string column, string value, string operation)
         {
-            tb_logs_print result = _db.tb_logs_print.Where(column + operation, value).FirstOrDefault();
+            tb_logs_print result = _db.tb_logs_print.Where(column + operation, value).AsNoTracking().FirstOrDefault();
             return _mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
         }
 

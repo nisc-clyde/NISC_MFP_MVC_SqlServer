@@ -31,6 +31,13 @@ namespace NISC_MFP_MVC_Service.Implement
             _departmentRepository.Insert(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
         }
 
+        public void InsertBulkData(List<DepartmentInfo> instance)
+        {
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _departmentRepository.InsertBulkData(_mapper.Map<List<InitialDepartmentRepoDTO>>(instance));
+        }
+
         public IQueryable<DepartmentInfo> GetAll()
         {
             IQueryable<InitialDepartmentRepoDTO> datamodel = _departmentRepository.GetAll();
@@ -69,8 +76,8 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             IEnumerable<DepartmentInfo> result = _departmentRepository.GetAll()
                 .Where(d =>
-                ((d.dept_id != null) && d.dept_id.ToUpper().Contains(prefix.ToUpper())) ||
-                ((d.dept_name != null) && d.dept_name.ToUpper().Contains(prefix.ToUpper())))
+                ((d.dept_id != null) && d.dept_id.Contains(prefix)) ||
+                ((d.dept_name != null) && d.dept_name.Contains(prefix)))
                 .Select(d => new DepartmentInfo
                 {
                     dept_id = d.dept_id,

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DTOs.CardReader;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
+using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -73,8 +75,28 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public MultiFunctionPrintInfo Get(string column, string value, string operation)
         {
-            //NOP
-            return null;
+            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
+            {
+                throw new ArgumentNullException("Reference to null instance.");
+            }
+            else
+            {
+                InitialMultiFunctionPrintRepoDTO dataModel = null;
+                if (operation == "Equals")
+                {
+                    dataModel = _multiFunctionPrintRepository.Get(column, value, ".ToString().ToUpper() == @0");
+                }
+                else if (operation == "Contains")
+                {
+                    dataModel = _multiFunctionPrintRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+                }
+
+                if (dataModel == null)
+                {
+                    return null;
+                }
+                return _mapper.Map<InitialMultiFunctionPrintRepoDTO, MultiFunctionPrintInfo>(dataModel);
+            }
         }
 
         public void Update(MultiFunctionPrintInfo instance)

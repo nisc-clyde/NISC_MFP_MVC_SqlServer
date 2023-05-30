@@ -151,7 +151,7 @@ namespace NISC_MFP_MVC.Controllers
             if (ModelState.IsValid)
             {
                 IUserService userService = new UserService();
-                UserInfo adminInfo = userService.Get("serial", "1", "Equals");
+                UserInfo adminInfo = userService.Get("serial", admin.user_id, "Equals");
                 if (adminInfo == null)
                 {
                     //無執行user_id primary key重複之檢查
@@ -173,11 +173,11 @@ namespace NISC_MFP_MVC.Controllers
                     };
                     userService.Insert(adminInfo);
 
-                    return Json(new { success = true, message = "管理員註冊成功" });
+                    return Json(new { success = true, message = "註冊成功" });
                 }
                 else
                 {
-                    return Json(new { success = false, message = "已註冊管理員" });
+                    return Json(new { success = false, message = "此帳號已存在" });
                 }
             }
             return View();

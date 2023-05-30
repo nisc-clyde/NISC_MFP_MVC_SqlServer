@@ -1,4 +1,5 @@
-﻿using NISC_MFP_MVC_Service.DTOs.Info.User;
+﻿using NISC_MFP_MVC_Repository.DTOs.User;
+using NISC_MFP_MVC_Service.DTOs.Info.User;
 using System.Collections.Generic;
 
 namespace NISC_MFP_MVC_Service.Interface
@@ -23,6 +24,8 @@ namespace NISC_MFP_MVC_Service.Interface
         /// <param name="prefix">關鍵字</param>
         /// <returns></returns>
         IEnumerable<UserInfo> SearchByIdAndName(string prefix);
+
+        void InsertBulkData(List<UserInfo> instance);
 
     }
 }

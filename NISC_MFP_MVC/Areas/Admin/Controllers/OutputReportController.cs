@@ -89,9 +89,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             IEnumerable<UserInfo> users = _outputReportService.GetAllUserByDepartmentId(departmentId);
             List<SelectListItem> result = new List<SelectListItem>();
-            foreach (var user in users)
+            if (result.Any())
             {
-                result.Add(new SelectListItem { Text = user.user_name, Value = user.user_id });
+                foreach (var user in users)
+                {
+                    result.Add(new SelectListItem { Text = user.user_name, Value = user.user_id });
+                }
             }
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

@@ -5,14 +5,17 @@ using NISC_MFP_MVC.ViewModels.User.AdminAreas;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.Card;
 using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
@@ -112,12 +115,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             else if (currentOperation == "Edit" && ModelState.IsValid)
             {
                 CardInfo originalCard = cardService.Get("serial", card.serial.ToString(), "Equals");
-                string logMessage = $"(修改前){originalCard.card_id}/{originalCard.user_id}<br/>";
+                string logMessage = $"(修改前)卡號：{originalCard.card_id}, 使用者帳號：{originalCard.user_id}<br/>";
 
                 cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
                 cardService.SaveChanges();
 
-                logMessage += $"(修改後){card.card_id}/{card.user_id}";
+                logMessage += $"(修改後)卡號：{card.card_id}, 使用者帳號：{card.user_id}";
                 NLogHelper.Instance.Logging("修改卡片", logMessage);
 
                 return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -152,8 +155,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult SearchUser(string prefix)
         {
-            UserService _UserService = new UserService();
-            IEnumerable<UserInfo> searchResult = _UserService.SearchByIdAndName(prefix);
+            UserService cardServiceObject = new UserService();
+            IEnumerable<UserInfo> searchResult = cardServiceObject.SearchByIdAndName(prefix);
             List<UserViewModel> resultViewModel = mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserViewModel>>(searchResult).ToList();
 
             return Json(resultViewModel, JsonRequestBehavior.AllowGet);
@@ -213,13 +216,30 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult DepositCard(int value, int serial)
         {
+            IDepositService depositService = new DepositService();
+
             CardInfo originalCard = cardService.Get("serial", serial.ToString(), "Equals");
-            string logMessage = $"(修改前){originalCard.card_id}/{originalCard.value}<br/>";
+            string logMessage = $"(修改前)卡號：{originalCard.card_id}, 點數：{originalCard.value}<br/>";
 
+            //寫入儲值紀錄 - Start
+            DepositInfo depositInfo = new DepositInfo();
+            depositInfo.user_id = HttpContext.User.Identity.Name;
+            depositInfo.user_name = ((FormsIdentity)HttpContext.User.Identity).Ticket.UserData.Split(',').Last();
+            depositInfo.card_id = originalCard.card_id;
+            depositInfo.card_user_id = originalCard.user_id;
+            depositInfo.card_user_name = originalCard.user_name;
+            depositInfo.deposit_value = value;
+            depositInfo.pbalance = originalCard.value;
+            depositInfo.final_value = originalCard.value + value;
+            depositInfo.deposit_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            depositService.Insert(depositInfo);
+            //寫入儲值紀錄 - End
+
+            //更新卡片儲值後點數 - Start
             cardService.UpdateDepositValue(value, serial);
-            cardService.SaveChanges();
+            //更新卡片儲值後點數 - End
 
-            logMessage += $"(修改後){originalCard.card_id}/{value}";
+            logMessage += $"(修改後)卡號：{originalCard.card_id}, 點數：{value}";
             NLogHelper.Instance.Logging("修改卡片點數", logMessage);
 
             return Json(new { success = true, message = "修改點數成功" }, JsonRequestBehavior.AllowGet);

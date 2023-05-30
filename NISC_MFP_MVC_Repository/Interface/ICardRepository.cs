@@ -1,4 +1,6 @@
 ﻿using NISC_MFP_MVC_Repository.DTOs.Card;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace NISC_MFP_MVC_Repository.Interface
 {
@@ -21,6 +23,8 @@ namespace NISC_MFP_MVC_Repository.Interface
         /// 刪除全部資料
         /// </summary>
         void SoftDelete();
+
+        void InsertBulkData(List<InitialCardRepoDTO> instance);
 
     }
 }

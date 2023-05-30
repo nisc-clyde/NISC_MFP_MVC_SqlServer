@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Ajax.Utilities;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Card;
 using NISC_MFP_MVC.ViewModels.User.AdminAreas;
@@ -162,7 +163,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <para>card_id dept_id  dept_name user_name user_id work_id card_type                enable                     e-mail</para>
         /// <para>卡號    部門編號 部門名稱  姓名      帳號    工號    卡屬性(遞減= 0，遞增= 1) 卡狀態(停用 = 0，啟用 = 1) Email</para>
         /// <para>Reset : 全部覆蓋，tb_department、tb_card、tb_user先全部刪除再新增</para>
-        /// <para>Import : 部分新增，直接新增資料到table，若發生user_id重複，則舊的資料會被新的資料覆蓋</para>
+        /// <para>Import : 部分新增，直接新增資料到table，若發生user_id重複，則該筆資料視為無效之資料</para>
         /// </summary>
         /// <param name="currentOperation">Reset或是Import</param>
         /// <returns></returns>
@@ -172,6 +173,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             IDepartmentService departmentService = new DepartmentService();
             IUserService userService = new UserService();
             ICardService cardService = new CardService();
+            List<DepartmentViewModel> departmentDatas = new List<DepartmentViewModel>();
+            List<UserViewModel> userDatas = new List<UserViewModel>();
+            List<CardViewModel> cardDatas = new List<CardViewModel>();
+
             List<EmployeeModel> employees = Session["employees"] as List<EmployeeModel>;
 
             if (currentOperation == "Reset")
@@ -183,15 +188,18 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             }
             foreach (EmployeeModel employee in employees)
             {
-                DepartmentViewModel departmentViewModel = mapper.Map<DepartmentInfo, DepartmentViewModel>(departmentService.Get("dept_id", employee.dept_id, "Equals"));
-                DepartmentAddOrEdit(departmentService, departmentViewModel, employee);
-
-                UserViewModel userViewModel = mapper.Map<UserInfo, UserViewModel>(userService.Get("user_id", employee.user_id, "Equals"));
-                UserAddOrEdit(userService, userViewModel, employee);
-
-                CardViewModel cardViewModel = mapper.Map<CardInfo, CardViewModel>(cardService.Get("card_id", employee.card_id, "Equals"));
-                CardAddOrEdit(cardService, cardViewModel, employee);
+                DepartmentAdd(departmentDatas, employee);
+                UserAdd(userDatas, employee);
+                CardAdd(cardDatas, employee);
             }
+            departmentDatas = departmentDatas.DistinctBy(p => p.dept_id).ToList();
+            userDatas = userDatas.DistinctBy(p => p.user_id).ToList();
+            cardDatas = cardDatas.DistinctBy(p => p.card_id).ToList();
+            
+            departmentService.InsertBulkData(mapper.Map<List<DepartmentInfo>>(departmentDatas));
+            userService.InsertBulkData(mapper.Map<List<UserInfo>>(userDatas));
+            cardService.InsertBulkData(mapper.Map<List<CardInfo>>(cardDatas));
+
             NLogHelper.Instance.Logging("人事資料匯入", $"匯入總筆數：{employees.Count}");
 
             return Json(new { success = true, message = "Post Success" }, JsonRequestBehavior.AllowGet);
@@ -205,22 +213,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <param name="departmentService">部門Service</param>
         /// <param name="departmentViewModel">部門ViewModel</param>
         /// <param name="employee">此筆資料的部門相關資料</param>
-        private void DepartmentAddOrEdit(IDepartmentService departmentService, DepartmentViewModel departmentViewModel, EmployeeModel employee)
+        private void DepartmentAdd(List<DepartmentViewModel> departmentDatas, EmployeeModel employee)
         {
-            if (departmentViewModel == null)
-            {
-                departmentViewModel = new DepartmentViewModel();
-                departmentViewModel.serial = -1;
-                departmentViewModel.dept_id = employee.dept_id;
-                departmentViewModel.dept_name = employee.dept_name;
-                departmentViewModel.dept_usable = "0";
-                departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(departmentViewModel));
-            }
-            else
-            {
-                departmentViewModel.dept_name = employee.dept_name;
-                departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(departmentViewModel));
-            }
+            DepartmentViewModel departmentViewModel = new DepartmentViewModel();
+            departmentViewModel.serial = -1;
+            departmentViewModel.dept_id = employee.dept_id;
+            departmentViewModel.dept_name = employee.dept_name;
+            departmentViewModel.dept_usable = "0";
+            departmentDatas.Add(departmentViewModel);
         }
 
         /// <summary>
@@ -231,39 +231,21 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <param name="userService">使用者Service</param>
         /// <param name="userViewModel">使用者ViewModel</param>
         /// <param name="employee">此筆資料的部門相關資料</param>
-        private void UserAddOrEdit(IUserService userService, UserViewModel userViewModel, EmployeeModel employee)
+        private void UserAdd(List<UserViewModel> userDatas, EmployeeModel employee)
         {
-            if (userViewModel == null)
-            {
-                try
-                {
-                    userViewModel = new UserViewModel();
-                    userViewModel.serial = -1;
-                    userViewModel.user_id = employee.user_id;
-                    userViewModel.user_name = employee.user_name;
-                    userViewModel.work_id = employee.work_id;
-                    userViewModel.dept_id = employee.dept_id;
-                    userViewModel.e_mail = employee.e_mail;
-                    userViewModel.color_enable_flag = "0";
-                    userViewModel.copy_enable_flag = "0";
-                    userViewModel.fax_enable_flag = "0";
-                    userViewModel.print_enable_flag = "0";
-                    userViewModel.scan_enable_flag = "0";
-                    userService.Insert(mapper.Map<UserViewModel, UserInfo>(userViewModel));
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-            else
-            {
-                userViewModel.user_name = employee.user_name;
-                userViewModel.work_id = employee.work_id;
-                userViewModel.dept_id = employee.dept_id;
-                userViewModel.e_mail = employee.e_mail;
-                userService.Update(mapper.Map<UserViewModel, UserInfo>(userViewModel));
-            }
+            UserViewModel userViewModel = new UserViewModel();
+            userViewModel.serial = -1;
+            userViewModel.user_id = employee.user_id;
+            userViewModel.user_name = employee.user_name;
+            userViewModel.work_id = employee.work_id;
+            userViewModel.dept_id = employee.dept_id;
+            userViewModel.e_mail = employee.e_mail;
+            userViewModel.color_enable_flag = "0";
+            userViewModel.copy_enable_flag = "0";
+            userViewModel.fax_enable_flag = "0";
+            userViewModel.print_enable_flag = "0";
+            userViewModel.scan_enable_flag = "0";
+            userDatas.Add(userViewModel);
         }
 
         /// <summary>
@@ -274,26 +256,16 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <param name="cardService">卡片Service</param>
         /// <param name="cardViewModel">卡片ViewModel</param>
         /// <param name="employee">此筆資料的卡片相關資料</param>
-        private void CardAddOrEdit(ICardService cardService, CardViewModel cardViewModel, EmployeeModel employee)
+        private void CardAdd(List<CardViewModel> cardDatas, EmployeeModel employee)
         {
-            if (cardViewModel == null)
-            {
-                cardViewModel = new CardViewModel();
-                cardViewModel.serial = -1;
-                cardViewModel.card_id = employee.card_id;
-                cardViewModel.user_id = employee.user_id;
-                cardViewModel.card_type = employee.card_type;
-                cardViewModel.enable = employee.enable;
-                cardViewModel.freevalue = 0;
-                cardService.Insert(mapper.Map<CardViewModel, CardInfo>(cardViewModel));
-            }
-            else
-            {
-                cardViewModel.user_id = employee.user_id;
-                cardViewModel.card_type = employee.card_type;
-                cardViewModel.enable = employee.enable;
-                cardService.Update(mapper.Map<CardViewModel, CardInfo>(cardViewModel));
-            }
+            CardViewModel cardViewModel = new CardViewModel();
+            cardViewModel.serial = -1;
+            cardViewModel.card_id = employee.card_id;
+            cardViewModel.user_id = employee.user_id;
+            cardViewModel.card_type = employee.card_type;
+            cardViewModel.enable = employee.enable;
+            cardViewModel.freevalue = 0;
+            cardDatas.Add(cardViewModel);
         }
 
     }

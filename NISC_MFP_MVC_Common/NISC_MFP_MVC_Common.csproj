@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="DatabaseConnection.cs" />
     <Compile Include="DataTableRequest.cs" />
+    <Compile Include="ListToDataTableConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

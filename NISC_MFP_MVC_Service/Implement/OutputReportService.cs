@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels.OutputReport;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.OutputReport;
+using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.Info.OutputReport;
@@ -49,8 +50,7 @@ namespace NISC_MFP_MVC_Service.Implement
             initialOutputReportRepoDTO.mfpIp = outputReportRequestInfo.mfpIp;
             initialOutputReportRepoDTO.date = outputReportRequestInfo.date;
 
-            IQueryable<InitialPrintRepoDTO> prints = _printRepository.GetRecord(initialOutputReportRepoDTO);
-            List<InitialPrintRepoDTO> printList = prints.ToList();
+            List<InitialPrintRepoDTONeed> printList = _printRepository.GetRecord(initialOutputReportRepoDTO).ToList();
 
             if (initialOutputReportRepoDTO.reportType == "dept")
             {

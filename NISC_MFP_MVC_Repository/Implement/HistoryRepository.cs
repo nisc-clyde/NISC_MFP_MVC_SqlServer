@@ -15,7 +15,7 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class HistoryRepository : IHistoryRepository
     {
         protected MFP_DB _db { get; private set; }
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public HistoryRepository()
         {
@@ -95,7 +95,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialHistoryRepoDTO Get(string column, string value, string operation)
         {
-            tb_logs_history result = _db.tb_logs_history.Where(column + operation, value).FirstOrDefault();
+            tb_logs_history result = _db.tb_logs_history.Where(column + operation, value).AsNoTracking().FirstOrDefault();
             return _mapper.Map<tb_logs_history, InitialHistoryRepoDTO>(result);
         }
 

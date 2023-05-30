@@ -30,10 +30,16 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(UserInfo instance)
         {
-            if (instance != null)
-            {
-                _userRepository.Insert(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _userRepository.Insert(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
+        }
+
+        public void InsertBulkData(List<UserInfo> instance)
+        {
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _userRepository.InsertBulkData(_mapper.Map<List<InitialUserRepoDTO>>(instance));
         }
 
         public IQueryable<UserInfo> GetAll()
@@ -135,8 +141,8 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             IEnumerable<UserInfo> result = _userRepository.GetAll()
                 .Where(d =>
-                ((!string.IsNullOrEmpty(d.user_id)) && d.user_id.ToUpper().Contains(prefix.ToUpper())) ||
-                ((!string.IsNullOrEmpty(d.user_name)) && d.user_name.ToUpper().Contains(prefix.ToUpper())))
+                ((!string.IsNullOrEmpty(d.user_id)) && d.user_id.Contains(prefix)) ||
+                ((!string.IsNullOrEmpty(d.user_name)) && d.user_name.Contains(prefix)))
                 .Select(d => new UserInfo
                 {
                     user_id = d.user_id,

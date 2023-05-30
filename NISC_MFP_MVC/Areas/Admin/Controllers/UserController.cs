@@ -134,12 +134,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 //若修改資料之使用者為當前登入之使用者，由前端強迫登出
                 UserInfo originalUser = userService.Get("user_id", user.user_id.ToString(), "Equals");
-                string logMessage = $"(修改前){originalUser.user_id}/{originalUser.user_name}<br/>";
+                string logMessage = $"(修改前)帳號：{originalUser.user_id}, 姓名：{originalUser.user_name}<br/>";
 
                 userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
                 userService.SaveChanges();
 
-                logMessage += $"(修改後){user.user_id}/{user.user_name}";
+                logMessage += $"(修改後)帳號：{user.user_id}, 姓名：{user.user_name}";
                 NLogHelper.Instance.Logging("修改使用者", logMessage);
 
                 return Json(new
@@ -155,12 +155,17 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int serial)
         {
-            UserViewModel userViewModel = new UserViewModel();
-            UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
-            if (instance != null)
+            if (serial == 1)
             {
-                userViewModel = mapper.Map<UserViewModel>(instance);
+                return Json(new
+                {
+                    success = false,
+                    message = "此帳號不可刪除",
+                }, JsonRequestBehavior.AllowGet);
             }
+
+            UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
+            UserViewModel userViewModel = mapper.Map<UserViewModel>(instance);
 
             return PartialView(userViewModel);
         }

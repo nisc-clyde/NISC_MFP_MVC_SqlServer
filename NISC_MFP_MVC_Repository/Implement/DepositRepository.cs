@@ -15,7 +15,7 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class DepositRepository : IDepositRepository
     {
         protected MFP_DB _db { get; private set; }
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public DepositRepository()
         {
@@ -25,7 +25,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Insert(InitialDepositRepoDTO instance)
         {
-            //NOP
+            _db.tb_logs_deposit.Add(_mapper.Map<tb_logs_deposit>(instance));
+            _db.SaveChanges();
         }
 
         public IQueryable<InitialDepositRepoDTO> GetAll()
@@ -107,7 +108,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialDepositRepoDTO Get(string column, string value, string operation)
         {
-            tb_logs_deposit result = _db.tb_logs_deposit.Where(column + operation, value).FirstOrDefault();
+            tb_logs_deposit result = _db.tb_logs_deposit.Where(column + operation, value).AsNoTracking().FirstOrDefault();
             return _mapper.Map<tb_logs_deposit, InitialDepositRepoDTO>(result);
         }
 

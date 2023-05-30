@@ -7,7 +7,11 @@ using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -29,8 +33,65 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Insert(InitialCardRepoDTO instance)
         {
-            this._db.tb_card.Add(_mapper.Map<tb_card>(instance));
+            _db.tb_card.Add(_mapper.Map<tb_card>(instance));
             _db.SaveChanges();
+        }
+
+        public void InsertBulkData(List<InitialCardRepoDTO> instance)
+        {
+            ListToDataTableConverter converter = new ListToDataTableConverter();
+            DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_card>>(instance));
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MFPContext"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                //Create temp table
+                SqlCommand createTempDataTable = new SqlCommand(
+                    $"if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
+                    $" WHERE TABLE_NAME = N'tb_card_temp' " +
+                    $" AND TABLE_SCHEMA = N'mywebni1_managerc') " +
+                    $"begin " +
+                    $"select * into mywebni1_managerc.tb_card_temp from mywebni1_managerc.tb_card " +
+                    $"end;",
+                     conn);
+                createTempDataTable.ExecuteNonQuery();
+
+                //Set Identity On
+                SqlCommand IDENTITY_INSERT_ON = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_card ON;", conn);
+                IDENTITY_INSERT_ON.ExecuteNonQuery();
+
+                //Bulk insert data to temp table
+                using (SqlBulkCopy sqlBC = new SqlBulkCopy(connectionString))
+                {
+                    sqlBC.BatchSize = 100;
+                    sqlBC.DestinationTableName = "mywebni1_managerc.tb_card_temp";
+                    sqlBC.WriteToServer(dataTable);
+                }
+
+                //Merge temp table to target
+                SqlCommand mergeTable = new SqlCommand(
+                    $"merge mywebni1_managerc.tb_card as target " +
+                    $"using mywebni1_managerc.tb_card_temp as source " +
+                    $"on (target.card_id=source.card_id) " +
+                    $"when not matched then insert(serial,card_id,card_type,freevalue,enable,user_id) " +
+                    $"values(source.serial,source.card_id,source.card_type,source.freevalue,source.enable,source.user_id);",
+                    conn);
+                mergeTable.ExecuteNonQuery();
+
+                //Drop temp table
+                SqlCommand dropTable = new SqlCommand("drop table mywebni1_managerc.tb_card_temp", conn);
+                dropTable.ExecuteNonQuery();
+
+                //Set Identity Off
+                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_card OFF;", conn);
+                IDENTITY_INSERT_OFF.ExecuteNonQuery();
+
+                conn.Close();
+            }
+
+            //_db.tb_card.AddRange(_mapper.Map<List<tb_card>>(instance));
+            //_db.SaveChanges();
         }
 
         public IQueryable<InitialCardRepoDTO> GetAll()
@@ -106,7 +167,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Cards.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Cards = tb_Cards.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_Cards = tb_Cards.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
             return tb_Cards.AsQueryable().AsNoTracking();
         }
@@ -140,7 +201,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialCardRepoDTO Get(string column, string value, string operation)
         {
-            tb_card result = _db.tb_card.Where(column + operation, value).FirstOrDefault();
+            tb_card result = _db.tb_card.Where(column + operation, value).AsNoTracking().FirstOrDefault();
             return _mapper.Map<tb_card, InitialCardRepoDTO>(result);
         }
 
@@ -195,7 +256,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //{
             //    throw e;
             //}
-            _db.Database.ExecuteSqlCommand("delete from tb_card");
+            _db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_card");
         }
 
         public void SaveChanges()

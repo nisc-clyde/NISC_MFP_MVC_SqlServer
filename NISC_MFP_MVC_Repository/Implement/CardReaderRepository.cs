@@ -114,7 +114,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialCardReaderRepoDTO Get(string column, string value, string operation)
         {
-            tb_cardreader result = _db.tb_cardreader.Where(column + operation, value).FirstOrDefault();
+            tb_cardreader result = _db.tb_cardreader.Where(column + operation, value).AsNoTracking().FirstOrDefault();
             return _mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
         }
 
