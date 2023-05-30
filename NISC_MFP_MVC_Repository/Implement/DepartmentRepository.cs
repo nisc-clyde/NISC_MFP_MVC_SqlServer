@@ -18,13 +18,13 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        protected MFP_DB _db { get; private set; }
-        private readonly Mapper _mapper;
+        protected MFP_DB db { get; private set; }
+        private readonly Mapper mapper;
 
         public DepartmentRepository()
         {
-            _db = new MFP_DB();
-            _mapper = InitializeAutomapper();
+            db = new MFP_DB();
+            mapper = InitializeAutomapper();
         }
 
         /// <summary>
@@ -34,14 +34,14 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// <exception cref="ArgumentNullException"></exception>
         public void Insert(InitialDepartmentRepoDTO instance)
         {
-            _db.tb_department.Add(_mapper.Map<tb_department>(instance));
+            db.tb_department.Add(mapper.Map<tb_department>(instance));
             SaveChanges();
         }
 
         public void InsertBulkData(List<InitialDepartmentRepoDTO> instance)
         {
             ListToDataTableConverter converter = new ListToDataTableConverter();
-            DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_department>>(instance));
+            DataTable dataTable = converter.ToDataTable(mapper.Map<List<tb_department>>(instance));
 
             string connectionString = ConfigurationManager.ConnectionStrings["MFPContext"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -102,7 +102,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialDepartmentRepoDTO> GetAll()
         {
-            IQueryable<InitialDepartmentRepoDTO> tb_Departments = _db.tb_department.AsNoTracking()
+            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department.AsNoTracking()
                 .Select(p => new InitialDepartmentRepoDTONeed
                 {
                     dept_id = p.dept_id,
@@ -113,7 +113,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_email = p.dept_email,
                     serial = p.serial
                 })
-                .ProjectTo<InitialDepartmentRepoDTO>(_mapper.ConfigurationProvider).AsQueryable();
+                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider).AsQueryable();
 
             return tb_Departments;
         }
@@ -138,7 +138,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_5
             };
 
-            IQueryable<InitialDepartmentRepoDTO> tb_Departments = _db.tb_department.AsNoTracking()
+            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department.AsNoTracking()
                 .Select(p => new InitialDepartmentRepoDTONeed
                 {
                     dept_id = p.dept_id,
@@ -149,7 +149,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_email = p.dept_email,
                     serial = p.serial
                 })
-                .ProjectTo<InitialDepartmentRepoDTO>(_mapper.ConfigurationProvider).AsQueryable();
+                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider).AsQueryable();
 
             //GlobalSearch
             tb_Departments = GetWithGlobalSearch(tb_Departments, dataTableRequest.GlobalSearchValue);
@@ -195,23 +195,23 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialDepartmentRepoDTO Get(string column, string value, string operation)
         {
-            tb_department result = _db.tb_department.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return _mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
+            tb_department result = db.tb_department.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            return mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
         }
 
         public void Update(InitialDepartmentRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
-            var existingEntity = _db.tb_department.Find(dataModel.serial);
-            _db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            var existingEntity = db.tb_department.Find(dataModel.serial);
+            db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
+            db.SaveChanges();
         }
 
         public void Delete(InitialDepartmentRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
-            _db.Entry(dataModel).State = EntityState.Deleted;
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
         }
 
         public void SoftDelete()
@@ -234,13 +234,13 @@ namespace NISC_MFP_MVC_Repository.Implement
             //{
             //    throw e;
             //}
-            _db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_department");
+            db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_department");
 
         }
 
         public void SaveChanges()
         {
-            _db.SaveChanges();
+            db.SaveChanges();
         }
 
         public void Dispose()
@@ -253,10 +253,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (_db != null)
+                if (db != null)
                 {
-                    _db.Dispose();
-                    _db = null;
+                    db.Dispose();
+                    db = null;
                 }
             }
         }
@@ -268,8 +268,8 @@ namespace NISC_MFP_MVC_Repository.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
+            
+            return new Mapper(config);
         }
     }
 

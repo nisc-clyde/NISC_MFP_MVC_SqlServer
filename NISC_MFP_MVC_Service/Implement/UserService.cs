@@ -154,31 +154,17 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Delete(UserInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                if (instance.serial == 1)
-                {
-                    throw new ArgumentNullException("instance.serial", "管理員帳號不可刪除");
-                }
-                _userRepository.Delete(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _userRepository.Delete(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
         }
 
 
         public void Update(UserInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _userRepository.Update(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _userRepository.Update(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
         }
 
         public void SoftDelete()

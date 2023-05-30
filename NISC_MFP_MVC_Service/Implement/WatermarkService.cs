@@ -25,14 +25,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(WatermarkInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _watermarkRepository.Insert(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _watermarkRepository.Insert(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
         }
 
         public IQueryable<WatermarkInfo> GetAll()
@@ -107,26 +102,16 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Delete(WatermarkInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _watermarkRepository.Delete(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _watermarkRepository.Delete(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
         }
 
         public void Update(WatermarkInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _watermarkRepository.Update(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _watermarkRepository.Update(_mapper.Map<WatermarkInfo, InitialWatermarkRepoDTO>(instance));
         }
 
         public void SaveChanges()

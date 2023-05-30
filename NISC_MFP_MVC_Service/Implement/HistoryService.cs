@@ -26,14 +26,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(HistoryInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _historyRepository.Insert(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _historyRepository.Insert(_mapper.Map<HistoryInfo, InitialHistoryRepoDTO>(instance));
         }
 
         public IQueryable<HistoryInfo> GetAll()
@@ -72,34 +67,6 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             return _mapper.Map<InitialHistoryRepoDTO, HistoryInfo>(dataModel);
 
-        }
-
-        public IQueryable<HistoryInfo> GetWithGlobalSearch(IQueryable<HistoryInfo> searchData, string searchValue)
-        {
-            if (searchValue == "")
-            {
-                return searchData;
-            }
-
-            IQueryable<HistoryInfo> resultModel = searchData
-                    .Where(p =>
-                    ((p.date_time != null) && p.date_time.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.login_user_id)) && p.login_user_id.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.login_user_name)) && p.login_user_name.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.operation)) && p.operation.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.affected_data)) && p.affected_data.ToString().ToUpper().Contains(searchValue.ToUpper())));
-
-            return resultModel;
-        }
-
-        public IQueryable<HistoryInfo> GetWithColumnSearch(IQueryable<HistoryInfo> searchData, string column, string searchValue)
-        {
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchData = searchData.Where(column + "!=null &&" + column + ".ToString().ToUpper().Contains" + "(\"" + searchValue.ToString().ToUpper() + "\")");
-            }
-
-            return searchData;
         }
 
         public void Update(HistoryInfo instance)

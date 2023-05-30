@@ -19,28 +19,28 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class CardRepository : ICardRepository
     {
-        protected MFP_DB _db { get; private set; }
-        private readonly Mapper _mapper;
+        protected MFP_DB db { get; private set; }
+        private readonly Mapper mapper;
 
         public CardRepository()
         {
-            _db = new MFP_DB();
+            db = new MFP_DB();
             //@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"
             //DatabaseConnection.setDatabaseConnection("localhost", "mywebni1_managerc", "root", "root");
             //_db.Database.Connection.ConnectionString = DatabaseConnection.getDatabaseConnection().ConnectionString;
-            _mapper = InitializeAutomapper();
+            mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialCardRepoDTO instance)
         {
-            _db.tb_card.Add(_mapper.Map<tb_card>(instance));
-            _db.SaveChanges();
+            db.tb_card.Add(mapper.Map<tb_card>(instance));
+            db.SaveChanges();
         }
 
         public void InsertBulkData(List<InitialCardRepoDTO> instance)
         {
             ListToDataTableConverter converter = new ListToDataTableConverter();
-            DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_card>>(instance));
+            DataTable dataTable = converter.ToDataTable(mapper.Map<List<tb_card>>(instance));
 
             string connectionString = ConfigurationManager.ConnectionStrings["MFPContext"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -96,8 +96,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialCardRepoDTO> GetAll()
         {
-            IQueryable<InitialCardRepoDTO> tb_Cards = (from c in _db.tb_card.ToList()
-                                                       join u in _db.tb_user.ToList()
+            IQueryable<InitialCardRepoDTO> tb_Cards = (from c in db.tb_card.ToList()
+                                                       join u in db.tb_user.ToList()
                                                        on c.user_id equals u.user_id into gj
                                                        from subd in gj.DefaultIfEmpty(new tb_user())
                                                        select new InitialCardRepoDTONeed
@@ -112,7 +112,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                            serial = c.serial
                                                        })
                                                       .AsQueryable()
-                                                      .ProjectTo<InitialCardRepoDTO>(_mapper.ConfigurationProvider);
+                                                      .ProjectTo<InitialCardRepoDTO>(mapper.ConfigurationProvider);
 
             return tb_Cards;
         }
@@ -139,8 +139,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_6
             };
 
-            IQueryable<InitialCardRepoDTO> tb_Cards = (from c in _db.tb_card.ToList()
-                                                       join u in _db.tb_user.ToList()
+            IQueryable<InitialCardRepoDTO> tb_Cards = (from c in db.tb_card.ToList()
+                                                       join u in db.tb_user.ToList()
                                                        on c.user_id equals u.user_id into gj
                                                        from subd in gj.DefaultIfEmpty(new tb_user())
                                                        select new InitialCardRepoDTONeed
@@ -155,7 +155,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                            serial = c.serial
                                                        })
                                                       .AsQueryable()
-                                                      .ProjectTo<InitialCardRepoDTO>(_mapper.ConfigurationProvider);
+                                                      .ProjectTo<InitialCardRepoDTO>(mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Cards = GetWithGlobalSearch(tb_Cards, dataTableRequest.GlobalSearchValue);
@@ -201,40 +201,40 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialCardRepoDTO Get(string column, string value, string operation)
         {
-            tb_card result = _db.tb_card.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return _mapper.Map<tb_card, InitialCardRepoDTO>(result);
+            tb_card result = db.tb_card.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            return mapper.Map<tb_card, InitialCardRepoDTO>(result);
         }
 
         public void UpdateResetFreeValue(int freevalue)
         {
-            _db.tb_card.ForAll(d => d.freevalue = freevalue);
-            _db.SaveChanges();
+            db.tb_card.ForAll(d => d.freevalue = freevalue);
+            db.SaveChanges();
         }
 
         public void UpdateDepositValue(int value, int serial)
         {
-            tb_card dest = _db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
+            tb_card dest = db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
             if (dest != null)
             {
                 dest.value += value;
             }
-            _db.Entry(dest).State = EntityState.Modified;
-            _db.SaveChanges();
+            db.Entry(dest).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Update(InitialCardRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialCardRepoDTO, tb_card>(instance);
-            var existingEntity = _db.tb_card.Find(dataModel.serial);
-            _db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
+            var existingEntity = db.tb_card.Find(dataModel.serial);
+            db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
+            db.SaveChanges();
         }
 
         public void Delete(InitialCardRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialCardRepoDTO, tb_card>(instance);
-            _db.Entry(dataModel).State = EntityState.Deleted;
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialCardRepoDTO, tb_card>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
         }
 
         public void SoftDelete()
@@ -256,12 +256,12 @@ namespace NISC_MFP_MVC_Repository.Implement
             //{
             //    throw e;
             //}
-            _db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_card");
+            db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_card");
         }
 
         public void SaveChanges()
         {
-            _db.SaveChanges();
+            db.SaveChanges();
         }
 
         public void Dispose()
@@ -272,10 +272,10 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing && _db != null)
+            if (disposing && db != null)
             {
-                _db.Dispose();
-                _db = null;
+                db.Dispose();
+                db = null;
             }
         }
 
@@ -286,8 +286,8 @@ namespace NISC_MFP_MVC_Repository.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
+            
+            return new Mapper(config);
         }
     }
 }

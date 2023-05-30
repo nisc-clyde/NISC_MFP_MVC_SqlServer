@@ -15,7 +15,7 @@ namespace NISC_MFP_MVC_Service.Implement
     public class CardReaderService : ICardReaderService
     {
         private readonly ICardReaderRepository _cardRepository;
-        private Mapper _mapper;
+        private readonly Mapper _mapper;
 
         public CardReaderService()
         {
@@ -25,14 +25,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(CardReaderInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _cardRepository.Insert(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _cardRepository.Insert(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
         }
 
         public IQueryable<CardReaderInfo> GetAll()
@@ -48,82 +43,39 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public CardReaderInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialCardReaderRepoDTO dataModel = null;
-                if (operation == "Equals")
-                {
-                    dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                return _mapper.Map<InitialCardReaderRepoDTO, CardReaderInfo>(dataModel);
-            }
-        }
-
-        public IQueryable<CardReaderInfo> GetWithGlobalSearch(IQueryable<CardReaderInfo> searchData, string searchValue)
-        {
-            if (searchValue == "")
+            InitialCardReaderRepoDTO dataModel = null;
+            if (operation == "Equals")
             {
-                return searchData;
+                dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper() == @0");
+            }
+            else if (operation == "Contains")
+            {
+                dataModel = _cardRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
             }
 
-            IQueryable<CardReaderInfo> resultModel = searchData
-                    .Where(p =>
-                    (!string.IsNullOrEmpty(p.cr_id)) && p.cr_id.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_ip)) && p.cr_ip.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_port)) && p.cr_port.ToString().ToUpper().Contains(searchValue.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_type)) && p.cr_type.ToUpper().Contains(searchValue.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_mode)) && p.cr_mode.ToUpper().Contains(searchValue.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_card_switch)) && p.cr_card_switch.ToUpper().Contains(searchValue.ToUpper()) ||
-                    (!string.IsNullOrEmpty(p.cr_status)) && p.cr_status.ToUpper().Contains(searchValue.ToUpper()));
-
-            return resultModel;
-        }
-
-        public IQueryable<CardReaderInfo> GetWithColumnSearch(IQueryable<CardReaderInfo> searchData, string column, string searchValue)
-        {
-            if (!string.IsNullOrEmpty(searchValue))
+            if (dataModel == null)
             {
-                searchData = searchData.Where(column + "!=null &&" + column + ".ToString().ToUpper().Contains" + "(\"" + searchValue.ToString().ToUpper() + "\")");
+                return null;
             }
-
-            return searchData;
+            return _mapper.Map<InitialCardReaderRepoDTO, CardReaderInfo>(dataModel);
         }
 
         public void Update(CardReaderInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _cardRepository.Update(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _cardRepository.Update(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
         }
 
         public void Delete(CardReaderInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                _cardRepository.Delete(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _cardRepository.Delete(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
         }
 
         public void SaveChanges()
@@ -138,8 +90,7 @@ namespace NISC_MFP_MVC_Service.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
+            return new Mapper(config);
         }
 
         public void Dispose()

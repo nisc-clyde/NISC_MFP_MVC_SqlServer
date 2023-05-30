@@ -32,16 +32,11 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(MultiFunctionPrintInfo instance, int cr_id)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = _mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
-                initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
-                _multiFunctionPrintRepository.Insert(initialMultiFunctionPrintRepoDTO);
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            InitialMultiFunctionPrintRepoDTO initialMultiFunctionPrintRepoDTO = _mapper.Map<MultiFunctionPrintInfo, InitialMultiFunctionPrintRepoDTO>(instance);
+            initialMultiFunctionPrintRepoDTO.cr_id = cr_id.ToString();
+            _multiFunctionPrintRepository.Insert(initialMultiFunctionPrintRepoDTO);
         }
 
         public IQueryable<MultiFunctionPrintInfo> GetAll()
@@ -75,28 +70,25 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public MultiFunctionPrintInfo Get(string column, string value, string operation)
         {
-            if (string.IsNullOrEmpty(column) || string.IsNullOrEmpty(value) || string.IsNullOrEmpty(operation))
-            {
-                throw new ArgumentNullException("Reference to null instance.");
-            }
-            else
-            {
-                InitialMultiFunctionPrintRepoDTO dataModel = null;
-                if (operation == "Equals")
-                {
-                    dataModel = _multiFunctionPrintRepository.Get(column, value, ".ToString().ToUpper() == @0");
-                }
-                else if (operation == "Contains")
-                {
-                    dataModel = _multiFunctionPrintRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
-                }
+            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
 
-                if (dataModel == null)
-                {
-                    return null;
-                }
-                return _mapper.Map<InitialMultiFunctionPrintRepoDTO, MultiFunctionPrintInfo>(dataModel);
+            InitialMultiFunctionPrintRepoDTO dataModel = null;
+            if (operation == "Equals")
+            {
+                dataModel = _multiFunctionPrintRepository.Get(column, value, ".ToString().ToUpper() == @0");
             }
+            else if (operation == "Contains")
+            {
+                dataModel = _multiFunctionPrintRepository.Get(column, value, ".ToString().ToUpper().Contains(@0)");
+            }
+
+            if (dataModel == null)
+            {
+                return null;
+            }
+            return _mapper.Map<InitialMultiFunctionPrintRepoDTO, MultiFunctionPrintInfo>(dataModel);
         }
 
         public void Update(MultiFunctionPrintInfo instance)

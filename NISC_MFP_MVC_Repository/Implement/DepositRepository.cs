@@ -14,24 +14,24 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class DepositRepository : IDepositRepository
     {
-        protected MFP_DB _db { get; private set; }
-        private readonly Mapper _mapper;
+        protected MFP_DB db { get; private set; }
+        private readonly Mapper mapper;
 
         public DepositRepository()
         {
-            _db = new MFP_DB();
-            _mapper = InitializeAutomapper();
+            db = new MFP_DB();
+            mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialDepositRepoDTO instance)
         {
-            _db.tb_logs_deposit.Add(_mapper.Map<tb_logs_deposit>(instance));
-            _db.SaveChanges();
+            db.tb_logs_deposit.Add(mapper.Map<tb_logs_deposit>(instance));
+            db.SaveChanges();
         }
 
         public IQueryable<InitialDepositRepoDTO> GetAll()
         {
-            return _db.tb_logs_deposit.ProjectTo<InitialDepositRepoDTO>(_mapper.ConfigurationProvider);
+            return db.tb_logs_deposit.ProjectTo<InitialDepositRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialDepositRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -60,7 +60,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_8,
             };
 
-            IQueryable<InitialDepositRepoDTO> tb_Logs_Deposit = _db.tb_logs_deposit.AsNoTracking().ProjectTo<InitialDepositRepoDTO>(_mapper.ConfigurationProvider);
+            IQueryable<InitialDepositRepoDTO> tb_Logs_Deposit = db.tb_logs_deposit.AsNoTracking().ProjectTo<InitialDepositRepoDTO>(mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Logs_Deposit = GetWithGlobalSearch(tb_Logs_Deposit, dataTableRequest.GlobalSearchValue);
@@ -108,28 +108,28 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialDepositRepoDTO Get(string column, string value, string operation)
         {
-            tb_logs_deposit result = _db.tb_logs_deposit.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return _mapper.Map<tb_logs_deposit, InitialDepositRepoDTO>(result);
+            tb_logs_deposit result = db.tb_logs_deposit.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            return mapper.Map<tb_logs_deposit, InitialDepositRepoDTO>(result);
         }
 
 
         public void Update(InitialDepositRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
-            _db.Entry(dataModel).State = EntityState.Modified;
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
+            db.Entry(dataModel).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(InitialDepositRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
-            _db.Entry(dataModel).State = EntityState.Deleted;
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
         }
 
         public void SaveChanges()
         {
-            _db.SaveChanges();
+            db.SaveChanges();
         }
         public void Dispose()
         {
@@ -141,10 +141,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (_db != null)
+                if (db != null)
                 {
-                    _db.Dispose();
-                    _db = null;
+                    db.Dispose();
+                    db = null;
                 }
             }
         }
@@ -156,8 +156,8 @@ namespace NISC_MFP_MVC_Repository.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
+            
+            return new Mapper(config);
         }
     }
 }

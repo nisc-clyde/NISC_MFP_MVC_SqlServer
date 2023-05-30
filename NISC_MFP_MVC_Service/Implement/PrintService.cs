@@ -26,14 +26,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(PrintInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _printRepository.Insert(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _printRepository.Insert(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
         }
 
         public IQueryable<PrintInfo> GetAll()
@@ -153,26 +148,16 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(PrintInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _printRepository.Update(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _printRepository.Update(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
         }
 
         public void Delete(PrintInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
-            }
-            else
-            {
-                _printRepository.Delete(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
-            }
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _printRepository.Delete(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
         }
 
         public void SaveChanges()

@@ -15,23 +15,23 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class CardReaderRepository : ICardReaderRepository
     {
 
-        protected MFP_DB _db { get; private set; }
-        private Mapper _mapper;
+        protected MFP_DB db { get; private set; }
+        private Mapper mapper;
 
         public CardReaderRepository()
         {
-            _db = new MFP_DB();
-            _mapper = InitializeAutomapper();
+            db = new MFP_DB();
+            mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialCardReaderRepoDTO instance)
         {
-            _db.tb_cardreader.Add(_mapper.Map<tb_cardreader>(instance));
+            db.tb_cardreader.Add(mapper.Map<tb_cardreader>(instance));
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll()
         {
-            return _db.tb_cardreader.ProjectTo<InitialCardReaderRepoDTO>(_mapper.ConfigurationProvider);
+            return db.tb_cardreader.ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -56,7 +56,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_6
             };
 
-            IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = _db.tb_cardreader
+            IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
                 .Select(p => new InitialCardReaderRepoDTONeed
                 {
                     cr_id = p.cr_id,
@@ -68,7 +68,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     cr_status = p.cr_status == "Online" ? "線上" : "離線",
                     serial = p.serial
                 })
-                .AsNoTracking().ProjectTo<InitialCardReaderRepoDTO>(_mapper.ConfigurationProvider);
+                .AsNoTracking().ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_CardReaders = GetWithGlobalSearch(tb_CardReaders, dataTableRequest.GlobalSearchValue);
@@ -114,25 +114,25 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialCardReaderRepoDTO Get(string column, string value, string operation)
         {
-            tb_cardreader result = _db.tb_cardreader.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return _mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
+            tb_cardreader result = db.tb_cardreader.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            return mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
         }
 
         public void Update(InitialCardReaderRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
-            _db.Entry(dataModel).State = EntityState.Modified;
+            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            db.Entry(dataModel).State = EntityState.Modified;
         }
 
         public void Delete(InitialCardReaderRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
-            _db.Entry(dataModel).State = EntityState.Deleted;
+            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            db.Entry(dataModel).State = EntityState.Deleted;
         }
 
         public void SaveChanges()
         {
-            _db.SaveChanges();
+            db.SaveChanges();
         }
         public void Dispose()
         {
@@ -144,10 +144,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (_db != null)
+                if (db != null)
                 {
-                    _db.Dispose();
-                    _db = null;
+                    db.Dispose();
+                    db = null;
                 }
             }
         }
@@ -159,8 +159,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
+            return new Mapper(config);
         }
     }
 }

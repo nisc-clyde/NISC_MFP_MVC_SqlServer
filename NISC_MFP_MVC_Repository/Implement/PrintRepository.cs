@@ -17,13 +17,13 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class PrintRepository : IPrintRepository
     {
-        protected MFP_DB _db { get; private set; }
-        private readonly Mapper _mapper;
+        protected MFP_DB db { get; private set; }
+        private readonly Mapper mapper;
 
         public PrintRepository()
         {
-            _db = new MFP_DB();
-            _mapper = InitializeAutomapper();
+            db = new MFP_DB();
+            mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialPrintRepoDTO instance)
@@ -33,12 +33,12 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialPrintRepoDTO> GetAll()
         {
-            return _db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
+            return db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialPrintRepoDTONeed> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO)
         {
-            IQueryable<tb_logs_print> result = _db.tb_logs_print.AsNoTracking();
+            IQueryable<tb_logs_print> result = db.tb_logs_print.AsNoTracking();
 
             if (!string.IsNullOrEmpty(initialOutputReportRepoDTO.reportColor)) result = result.Where(d => d.page_color.Equals(initialOutputReportRepoDTO.reportColor));
 
@@ -108,7 +108,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             };
 
 
-            IQueryable<InitialPrintRepoDTO> tb_Logs_Prints = _db.tb_logs_print.AsNoTracking()
+            IQueryable<InitialPrintRepoDTO> tb_Logs_Prints = db.tb_logs_print.AsNoTracking()
                 .Select(p => new InitialPrintRepoDTONeed
                 {
                     mfp_name = p.mfp_name,
@@ -242,15 +242,15 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialPrintRepoDTO Get(string column, string value, string operation)
         {
-            tb_logs_print result = _db.tb_logs_print.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return _mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
+            tb_logs_print result = db.tb_logs_print.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            return mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
         }
 
         public void Update(InitialPrintRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialPrintRepoDTO, tb_logs_print>(instance);
-            this._db.Entry(dataModel).State = EntityState.Modified;
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialPrintRepoDTO, tb_logs_print>(instance);
+            this.db.Entry(dataModel).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(InitialPrintRepoDTO instance)
@@ -260,7 +260,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void SaveChanges()
         {
-            this._db.SaveChanges();
+            this.db.SaveChanges();
         }
 
         public void Dispose()
@@ -273,10 +273,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (this._db != null)
+                if (this.db != null)
                 {
-                    this._db.Dispose();
-                    this._db = null;
+                    this.db.Dispose();
+                    this.db = null;
                 }
             }
         }
@@ -288,8 +288,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
+            return new Mapper(config);
         }
     }
 }

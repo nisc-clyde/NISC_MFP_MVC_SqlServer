@@ -14,23 +14,23 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class WatermarkRepository : IWatermarkRepository
     {
-        protected MFP_DB _db { get; private set; }
-        private readonly Mapper _mapper;
+        protected MFP_DB db { get; private set; }
+        private readonly Mapper mapper;
 
         public WatermarkRepository()
         {
-            _db = new MFP_DB();
-            _mapper = InitializeAutomapper();
+            db = new MFP_DB();
+            mapper = InitializeAutomapper();
         }
 
         public void Insert(InitialWatermarkRepoDTO instance)
         {
-            this._db.tb_watermark.Add(_mapper.Map<tb_watermark>(instance));
+            this.db.tb_watermark.Add(mapper.Map<tb_watermark>(instance));
         }
 
         public IQueryable<InitialWatermarkRepoDTO> GetAll()
         {
-            return _db.tb_watermark.ProjectTo<InitialWatermarkRepoDTO>(_mapper.ConfigurationProvider);
+            return db.tb_watermark.ProjectTo<InitialWatermarkRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialWatermarkRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -63,7 +63,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_10
             };
 
-            IQueryable<InitialWatermarkRepoDTO> tb_Watermarks = _db.tb_watermark.AsNoTracking()
+            IQueryable<InitialWatermarkRepoDTO> tb_Watermarks = db.tb_watermark.AsNoTracking()
                 .Select(p => new InitialWatermarkRepoDTO
                 {
                     id = p.id,
@@ -141,8 +141,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public InitialWatermarkRepoDTO Get(string column, string value, string operation)
         {
-            tb_watermark result = _db.tb_watermark.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            InitialWatermarkRepoDTO resultSubstitution = _mapper.Map<tb_watermark, InitialWatermarkRepoDTO>(result);
+            tb_watermark result = db.tb_watermark.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            InitialWatermarkRepoDTO resultSubstitution = mapper.Map<tb_watermark, InitialWatermarkRepoDTO>(result);
             resultSubstitution.type = resultSubstitution.type.ToString() == "0" ? "圖片" : "文字";
             resultSubstitution.position_mode = resultSubstitution.position_mode.ToString() == "0" ? "左上" :
                 resultSubstitution.position_mode.ToString() == "1" ? "左下" :
@@ -159,21 +159,21 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Update(InitialWatermarkRepoDTO instance)
         {
-            var dataModel = _mapper.Map<InitialWatermarkRepoDTO, tb_watermark>(instance);
-            _db.Entry(dataModel).State = EntityState.Modified;
-            _db.SaveChanges();
+            var dataModel = mapper.Map<InitialWatermarkRepoDTO, tb_watermark>(instance);
+            db.Entry(dataModel).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(InitialWatermarkRepoDTO instance)
         {
-            tb_watermark dataModel = _db.tb_watermark.Where(p => p.id.Equals(instance.id)).FirstOrDefault();
-            this._db.Entry(dataModel).State = EntityState.Deleted;
-            this._db.SaveChanges();
+            tb_watermark dataModel = db.tb_watermark.Where(p => p.id.Equals(instance.id)).FirstOrDefault();
+            this.db.Entry(dataModel).State = EntityState.Deleted;
+            this.db.SaveChanges();
         }
 
         public void SaveChanges()
         {
-            _db.SaveChanges();
+            db.SaveChanges();
         }
 
         public void Dispose()
@@ -186,10 +186,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             if (disposing)
             {
-                if (_db != null)
+                if (db != null)
                 {
-                    _db.Dispose();
-                    _db = null;
+                    db.Dispose();
+                    db = null;
                 }
             }
         }
@@ -201,8 +201,8 @@ namespace NISC_MFP_MVC_Repository.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
+            
+            return new Mapper(config);
         }
     }
 }
