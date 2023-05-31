@@ -69,11 +69,16 @@ namespace NISC_MFP_MVC_Common
             {
                 connectionString = "";
                 //Reflection Object and convert to format-> 「${object json property name}=${object property value by name};」
-                foreach (PropertyInfo property in connectionModel.GetType().GetProperties())
+                SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder()
                 {
-                    var jsonPropertyAttribute = property.GetCustomAttribute<JsonPropertyAttribute>();
-                    connectionString += $"{jsonPropertyAttribute.PropertyName}={property.GetValue(connectionModel)};";
-                }
+                    DataSource = connectionModel.data_source??"",
+                    InitialCatalog = connectionModel.initial_catalog??"",
+                    IntegratedSecurity = connectionModel.integrated_security,
+                    UserID = connectionModel.user_id??"",
+                    Password = connectionModel.password??"",
+                    ConnectTimeout=7
+                };
+                connectionString = sqlConnectionStringBuilder.ToString();
 
                 return connectionString;
             }
