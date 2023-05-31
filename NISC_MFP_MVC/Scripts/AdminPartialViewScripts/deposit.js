@@ -26,7 +26,12 @@ function SearchDepositDataTableInitial() {
         { data: "final_value", name: "儲值後點數" },
         { data: "deposit_date", name: "儲值時間" }
     ];
-    const columnDefs = [];
+    const columnDefs = [
+        { width: "8%", target: 2 },
+        { width: "8%", target: 5 },
+        { width: "8%", target: 6 },
+        { width: "8%", target: 7 },
+    ];
     const order = [8, "desc"];
     const rowCallback = function () { };
 

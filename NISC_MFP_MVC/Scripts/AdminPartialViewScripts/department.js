@@ -44,6 +44,7 @@ function SearchDepartmentDataTableInitial() {
         { data: "serial", name: "serial" },
     ];
     const columnDefs = [
+        { width: "5%", target: 4 },
         { width: "10%", target: 6 },
         { visible: false, target: 7 },
     ];

@@ -39,3 +39,10 @@ textarea {
     /* hsl(hue saturation lightness / alpha) */
     background: linear-gradient(90deg, hsl(0, 100%, 50%), hsl(60, 100%,50%), hsl(216, 100%, 50%));
 }
+
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: none;
+}

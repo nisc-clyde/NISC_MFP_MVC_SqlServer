@@ -240,7 +240,7 @@ function GenerateRecord() {
 function UsageDataTableInitial() {
     const previewReportURL = "/Admin/OutputReport/GenerateUsageReport";
 
-    var usageDataTable = $("#outputReportUsageDataTable").DataTable({
+    let usageDataTable = $("#outputReportUsageDataTable").DataTable({
         ajax: {
             url: previewReportURL,
             type: "POST",
@@ -299,7 +299,7 @@ function UsageDataTableInitial() {
 function RecordDataTableInitial() {
     const previewReportURL = "/Admin/OutputReport/GenerateRecordReport";
 
-    var recordDataTable = $("#outputReportRecordDataTable").DataTable({
+    let recordDataTable = $("#outputReportRecordDataTable").DataTable({
         ajax: {
             url: previewReportURL,
             type: "POST",
@@ -365,10 +365,28 @@ function RecordDataTableInitial() {
     });
 }
 
+function BackToTop() {
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 80) {
+            $("#back-to-top").fadeIn();
+        } else {
+            $("#back-to-top").fadeOut();
+        }
+    });
+
+    $("#back-to-top").on("click", function () {
+        $("body,html").animate({
+            scrollTop: 0,
+        }, 400);
+        return false;
+    });
+}
+
 $(function () {
     FormSelect_Select();
     DateRangePickerInitial();
     CustomDateRangePicker();
     GenerateUsage();
     GenerateRecord();
+    BackToTop();
 });

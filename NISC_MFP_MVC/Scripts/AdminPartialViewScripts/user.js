@@ -44,6 +44,7 @@ function SearchUserDataTableInitial() {
         { data: "serial", name: "serial" },
     ];
     const columnDefs = [
+        { width: "10%", targets: 6 },
         { width: "15%", targets: 8 },
         { visible: false, target: 9 },
     ];

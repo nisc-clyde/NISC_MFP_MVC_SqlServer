@@ -2,6 +2,7 @@ using NISC_MFP_MVC_Common;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace NISC_MFP_MVC_Repository.DB

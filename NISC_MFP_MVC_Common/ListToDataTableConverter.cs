@@ -10,6 +10,12 @@ namespace NISC_MFP_MVC_Common
 {
     public class ListToDataTableConverter
     {
+        /// <summary>
+        /// 把List<typeparamref name="T"/> 的各Item轉換成DataTable中的每列Row
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="items">欲轉換之List</param>
+        /// <returns></returns>
         public DataTable ToDataTable<T>(List<T> items)
         {
             DataTable dataTable = new DataTable(typeof(T).Name);

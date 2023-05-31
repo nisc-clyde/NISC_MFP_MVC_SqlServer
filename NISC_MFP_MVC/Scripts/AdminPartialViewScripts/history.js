@@ -23,7 +23,9 @@ function SearchHistoryDataTableInitial() {
         { data: "operation", name: "操作動作" },
         { data: "affected_data", name: "操作資料" },
     ];
-    const columnDefs = [];
+    const columnDefs = [
+        { width: "13%", targets: 0 },
+    ];
     const order = [0, "desc"];
     const rowCallback = function () { };
 

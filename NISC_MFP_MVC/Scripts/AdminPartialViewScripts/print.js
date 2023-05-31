@@ -195,6 +195,8 @@ function SearchPrintDataTableInitial() {
         { data: "file_name", name: "檔案名稱" }
     ];
     const columnDefs = [
+        { width: "5%", target: 4 },
+        { width: "5%", target: 5 },
         { visible: false, target: 11 },
         { visible: false, target: 12 },
     ];
