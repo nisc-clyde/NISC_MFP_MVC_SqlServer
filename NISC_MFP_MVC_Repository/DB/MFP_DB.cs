@@ -1,3 +1,4 @@
+using NISC_MFP_MVC_Common;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -8,9 +9,10 @@ namespace NISC_MFP_MVC_Repository.DB
     public partial class MFP_DB : DbContext
     {
         public MFP_DB()
-            : base("name=MFPContext")
         {
+            this.Database.Connection.ConnectionString = DatabaseConnectionHelper.GetConnectionStringFromFile();
         }
+        //"name=MFPContext"
 
         public virtual DbSet<doc_detail> doc_detail { get; set; }
         public virtual DbSet<doc_mng> doc_mng { get; set; }

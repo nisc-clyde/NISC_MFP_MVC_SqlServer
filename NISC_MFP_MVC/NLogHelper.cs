@@ -1,6 +1,8 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Microsoft.Build.Evaluation;
+using NISC_MFP_MVC_Common;
 using NLog;
+using NLog.Targets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +19,13 @@ namespace NISC_MFP_MVC
     public class NLogHelper
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("OperationLog");
-        private static readonly Lazy<NLogHelper> lazy=new Lazy<NLogHelper>(() => new NLogHelper());
+        private static readonly Lazy<NLogHelper> lazy = new Lazy<NLogHelper>(() => new NLogHelper());
 
         private NLogHelper()
         {
-
+            var databaseTarget = (DatabaseTarget)LogManager.Configuration.FindTargetByName("Db");
+            databaseTarget.ConnectionString = DatabaseConnectionHelper.GetConnectionStringFromFile();
+            LogManager.ReconfigExistingLoggers();
         }
 
         public static NLogHelper Instance { get { return lazy.Value; } }

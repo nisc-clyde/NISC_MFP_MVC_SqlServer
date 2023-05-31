@@ -1,9 +1,14 @@
 ﻿using NISC_MFP_MVC.Models;
-using NISC_MFP_MVC.ViewModels;
+using NISC_MFP_MVC.ViewModels.Config;
+using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Messaging;
 using System.Text.Json;
 using System.Web;
 using System.Web.Mvc;
@@ -14,6 +19,8 @@ namespace NISC_MFP_MVC.Controllers
     public class LoginController : Controller
     {
         private readonly IUserService userService;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public LoginController()
         {
             userService = new UserService();
@@ -36,36 +43,47 @@ namespace NISC_MFP_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserInfo userInfo = userService.Get("user_id", loginUser.account, "Equals");
-                if (userInfo != null && userInfo.user_password == loginUser.password)
+                //Check Connection
+                UserInfo userInfo = null;
+                try
                 {
-                    //寫入Cookie
-                    var authTicket = new FormsAuthenticationTicket(
-                        version: 1,
-                        name: loginUser.account,
-                        issueDate: DateTime.Now,
-                        expiration: DateTime.Now.AddMinutes(30),
-                        isPersistent: false,
-                        userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
-                        cookiePath: FormsAuthentication.FormsCookiePath
-                        );
-                    //Cookie加密且Cookie限定Server存取
-                    var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
+                    userInfo = userService.Get("user_id", loginUser.account, "Equals");
+                    if (userInfo != null && userInfo.user_password == loginUser.password)
                     {
-                        HttpOnly = true
-                    };
-                    Response.Cookies.Add(authCookie);
+                        //寫入Cookie
+                        var authTicket = new FormsAuthenticationTicket(
+                            version: 1,
+                            name: loginUser.account,
+                            issueDate: DateTime.Now,
+                            expiration: DateTime.Now.AddMinutes(30),
+                            isPersistent: false,
+                            userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
+                            cookiePath: FormsAuthentication.FormsCookiePath
+                            );
+                        //Cookie加密且Cookie限定Server存取
+                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
+                        {
+                            HttpOnly = true
+                        };
+                        Response.Cookies.Add(authCookie);
 
-                    NLogHelper.Instance.Logging("使用者登入", loginUser.account);
+                        NLogHelper.Instance.Logging("使用者登入", loginUser.account);
 
-                    return RedirectToAction("Index",
-                        "User",
-                        new { area = "User" });
+                        return RedirectToAction("Index",
+                            "User",
+                            new { area = "User" });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
+                    ModelState.AddModelError("ErrorMessage", "連線失敗，請重新確認連線之資訊是否正確");
+                    logger.Error($"發生Controller：Login\n發生Action：User\n錯誤訊息：{e}", "Exception End");
                 }
+
             }
             return View();
         }
@@ -87,47 +105,57 @@ namespace NISC_MFP_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserInfo userInfo = userService.Get("user_id", loginUser.account, "Equals");
-                if (userInfo != null && userInfo.user_password == loginUser.password)
+                UserInfo userInfo = null;
+                try
                 {
-                    //寫入Cookie
-                    if (!string.IsNullOrWhiteSpace(userInfo.authority))
+                    userInfo = userService.Get("user_id", loginUser.account, "Equals");
+
+                    if (userInfo != null && userInfo.user_password == loginUser.password)
                     {
-                        var authTicket = new FormsAuthenticationTicket(
-                            version: 1,
-                            name: loginUser.account,
-                            issueDate: DateTime.Now,
-                            expiration: DateTime.Now.AddMinutes(30),
-                            isPersistent: false,
-                            userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
-                            cookiePath: FormsAuthentication.FormsCookiePath
-                            );
-
-                        //Cookie加密且Cookie限定Server存取
-                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
+                        //寫入Cookie
+                        if (!string.IsNullOrWhiteSpace(userInfo.authority))
                         {
-                            HttpOnly = true
-                        };
-                        Response.Cookies.Add(authCookie);
+                            var authTicket = new FormsAuthenticationTicket(
+                                version: 1,
+                                name: loginUser.account,
+                                issueDate: DateTime.Now,
+                                expiration: DateTime.Now.AddMinutes(30),
+                                isPersistent: false,
+                                userData: userInfo.authority + "," + userInfo.user_name,//Save "authority...,user_name" in cookie
+                                cookiePath: FormsAuthentication.FormsCookiePath
+                                );
 
-                        //取得第一個擁有權限並Redirect之蓋管理頁面
-                        string firstAuthority = userInfo.authority.Split(',')[0];
-                        TempData["ActiveNav"] = firstAuthority;
+                            //Cookie加密且Cookie限定Server存取
+                            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
+                            {
+                                HttpOnly = true
+                            };
+                            Response.Cookies.Add(authCookie);
 
-                        NLogHelper.Instance.Logging("管理者登入", loginUser.account);
+                            //取得第一個擁有權限並Redirect之蓋管理頁面
+                            string firstAuthority = userInfo.authority.Split(',')[0];
+                            TempData["ActiveNav"] = firstAuthority;
 
-                        return RedirectToAction("Index",
-                            firstAuthority,
-                            new { area = "Admin" });
+                            NLogHelper.Instance.Logging("管理者登入", loginUser.account);
+
+                            return RedirectToAction("Index",
+                                firstAuthority,
+                                new { area = "Admin" });
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("ErrorMessage", "您尚未擁有任何管理相關的權限");
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError("ErrorMessage", "您尚未擁有任何管理相關的權限");
+                        ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
+                    ModelState.AddModelError("ErrorMessage", "連線失敗，請重新確認連線之資訊是否正確");
+                    logger.Error($"發生Controller：Login\n發生Action：Admin\n錯誤訊息：{e}", "Exception End");
                 }
             }
             return View();
@@ -151,7 +179,7 @@ namespace NISC_MFP_MVC.Controllers
             if (ModelState.IsValid)
             {
                 IUserService userService = new UserService();
-                UserInfo adminInfo = userService.Get("serial", admin.user_id, "Equals");
+                UserInfo adminInfo = userService.Get("user_id", admin.user_id, "Equals");
                 if (adminInfo == null)
                 {
                     //無執行user_id primary key重複之檢查
@@ -181,6 +209,38 @@ namespace NISC_MFP_MVC.Controllers
                 }
             }
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult SetWindowsAuthConnection(ConnectionModel connectionModel)
+        {
+            DatabaseConnectionHelper.SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog);
+            return Json(new { success = true, message = "連線資訊儲存成功" });
+        }
+
+        [HttpPost]
+        public ActionResult SetSqlServerAuthConnection(ConnectionModel connectionModel)
+        {
+            DatabaseConnectionHelper.SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog, false, connectionModel.user_id, connectionModel.password);
+            return Json(new { success = true, message = "連線資訊儲存成功" });
+        }
+
+        [HttpPost]
+        public ActionResult TestConnection(ConnectionModel connectionModel)
+        {
+            string connectionString = DatabaseConnectionHelper.ConvertModel2StringAndSave(connectionModel);
+            try
+            {
+                SqlConnection sqlConnection = new SqlConnection(connectionString);
+                sqlConnection.Open();
+                sqlConnection.Close();
+                return Json(new { success = true, message = "連線成功" });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "連線失敗，請重新輸入" });
+            }
+
         }
     }
 }

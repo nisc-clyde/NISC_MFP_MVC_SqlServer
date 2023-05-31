@@ -55,14 +55,3 @@
     @Scripts.Render("~/bundles/jqueryvalmin")
 </body>
 </html>
-
-<script>
-    $("#loginForm").on("submit", function () {
-        $.validator.unobtrusive.parse($(this));
-        $.ajax({
-            url: "/Login/User",
-            type: "POST",
-            data: { loginUser: $(this).serialize() }
-        })
-    })
-</script>
