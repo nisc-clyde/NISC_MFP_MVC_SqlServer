@@ -70,4 +70,12 @@ In addition, there is another reason why needed to install Visual Studio 2019, i
 - Business Layer（named for \*Service）
 - Data Access Layer（named for \*Repository）
 
+### Project Diagram
+
+<details>
+  <summary>Software Architecture Diagram</summary>
+  
+   ![Alt](NISC_MFP_MVC_Architecture.svg)
+</details>
+
 [1]: https://downloads.mysql.com/archives/visualstudio/
