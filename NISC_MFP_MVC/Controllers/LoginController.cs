@@ -1,4 +1,5 @@
-﻿using NISC_MFP_MVC.Models;
+﻿using MySql.Data.MySqlClient;
+using NISC_MFP_MVC.Models;
 using NISC_MFP_MVC.ViewModels.Config;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.Info.User;
@@ -214,33 +215,36 @@ namespace NISC_MFP_MVC.Controllers
         [HttpPost]
         public ActionResult SetWindowsAuthConnection(ConnectionModel connectionModel)
         {
-            DatabaseConnectionHelper.SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog);
+            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog);
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 
         [HttpPost]
         public ActionResult SetSqlServerAuthConnection(ConnectionModel connectionModel)
         {
-            DatabaseConnectionHelper.SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog, false, connectionModel.user_id, connectionModel.password);
+            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog, false, connectionModel.user_id, connectionModel.password);
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 
         [HttpPost]
         public ActionResult TestConnection(ConnectionModel connectionModel)
         {
-            string connectionString = DatabaseConnectionHelper.ConvertModel2StringAndSave(connectionModel);
+            string connectionString = DatabaseConnectionHelper.GetInstance().ConvertModel2String(connectionModel);
+            SqlConnection sqlConnection = new SqlConnection();
             try
             {
-                SqlConnection sqlConnection = new SqlConnection(connectionString);
+                sqlConnection.ConnectionString = connectionString;
                 sqlConnection.Open();
-                sqlConnection.Close();
                 return Json(new { success = true, message = "連線成功" });
             }
             catch (Exception)
             {
                 return Json(new { success = false, message = "連線失敗，請重新輸入" });
             }
-
+            finally
+            {
+                sqlConnection.Close();
+            }
         }
     }
 }

@@ -42,7 +42,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             ListToDataTableConverter converter = new ListToDataTableConverter();
             DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_card>>(instance));
 
-            string connectionString = DatabaseConnectionHelper.GetConnectionStringFromFile();
+            string connectionString = DatabaseConnectionHelper.GetInstance().GetConnectionString();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();

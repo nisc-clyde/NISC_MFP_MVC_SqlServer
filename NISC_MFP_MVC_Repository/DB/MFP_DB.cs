@@ -11,7 +11,7 @@ namespace NISC_MFP_MVC_Repository.DB
     {
         public MFP_DB()
         {
-            this.Database.Connection.ConnectionString = DatabaseConnectionHelper.GetConnectionStringFromFile();
+            this.Database.Connection.ConnectionString = DatabaseConnectionHelper.GetInstance().GetConnectionStringFromFile();
         }
         //"name=MFPContext"
 

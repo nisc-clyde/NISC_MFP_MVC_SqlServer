@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,23 @@ namespace NISC_MFP_MVC_Common
 {
     public class DatabaseConnectionHelper
     {
-        private static string connectionString = null;
+        private static DatabaseConnectionHelper instance = null;
+        private string connectionString = null;
+
         //Server.MapPath()之根目錄為起始專案之目錄，回上層兩次後指到Common Library的conneciton_string.json
-        private static readonly string PATH = Path.GetDirectoryName(HttpContext.Current.Server.MapPath("..")) + @"\NISC_MFP_MVC_Common\connection_string.json";
+        private static readonly string PATH = Path.GetDirectoryName(Path.GetDirectoryName(HttpContext.Current.Server.MapPath("~"))) + @"\NISC_MFP_MVC_Common\connection_string.json";
 
         private DatabaseConnectionHelper()
         {
+        }
+
+        public static DatabaseConnectionHelper GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new DatabaseConnectionHelper();
+            }
+            return instance;
         }
 
         /// <summary>
@@ -33,7 +45,7 @@ namespace NISC_MFP_MVC_Common
         /// <param name="integrated_security">是否Windows驗證</param>
         /// <param name="user_id">資料庫帳號</param>
         /// <param name="password">資料庫密碼</param>
-        public static void SetConnectionString(string data_source, string initial_catalog, bool integrated_security = true, string user_id = "", string password = "")
+        public void SetConnectionString(string data_source, string initial_catalog, bool integrated_security = true, string user_id = "", string password = "")
         {
             ConnectionModel connectionModel = new ConnectionModel()
             {
@@ -49,14 +61,14 @@ namespace NISC_MFP_MVC_Common
             File.WriteAllText(PATH, output);
 
             //Update Singleton String Object
-            ConvertModel2StringAndSave(connectionModel);
+            Save(ConvertModel2String(connectionModel));
         }
 
         /// <summary>
         /// 從connection_string.json轉換成SQL Connection String
         /// </summary>
         /// <returns>SQL Connection String</returns>
-        public static string GetConnectionStringFromFile()
+        public string GetConnectionStringFromFile()
         {
             if (connectionString != null)
             {
@@ -65,31 +77,50 @@ namespace NISC_MFP_MVC_Common
             string readText = File.ReadAllText(PATH);
             ConnectionModel newConnectionModel = JsonConvert.DeserializeObject<ConnectionModel>(readText);
 
-            return ConvertModel2StringAndSave(newConnectionModel);
+            Save(ConvertModel2String(newConnectionModel));
+
+            return GetConnectionString();
         }
 
         /// <summary>
-        /// ConnectionModel轉換成connection string後儲存在connectionString此static string
+        /// 取得Connection String
         /// </summary>
-        /// <param name="connectionModel">欲儲存之ConnectionModel</param>
+        /// <returns>Connection String</returns>
+        public string GetConnectionString()
+        {
+            return connectionString;
+        }
+
+        /// <summary>
+        /// 儲存Connection String
+        /// </summary>
+        /// <param name="newConnectionString">欲儲存之Connection String</param>
+        public void Save(string newConnectionString)
+        {
+            connectionString = newConnectionString;
+        }
+        
+        /// <summary>
+        /// 欲轉換之Connection Model轉換成Connection String
+        /// </summary>
+        /// <param name="connectionModel">欲轉換之Connection Model</param>
         /// <returns></returns>
-        public static string ConvertModel2StringAndSave(ConnectionModel connectionModel)
+        public string ConvertModel2String(ConnectionModel connectionModel)
         {
             if (connectionModel != null)
             {
-                connectionString = "";
                 //Reflection Object and convert to format-> 「${object json property name}=${object property value by name};」
                 SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder()
                 {
-                    DataSource = connectionModel.data_source??"",
-                    InitialCatalog = connectionModel.initial_catalog??"",
+                    DataSource = connectionModel.data_source ?? "",
+                    InitialCatalog = connectionModel.initial_catalog ?? "",
                     IntegratedSecurity = connectionModel.integrated_security,
-                    UserID = connectionModel.user_id??"",
-                    Password = connectionModel.password??"",
+                    UserID = connectionModel.user_id ?? "",
+                    Password = connectionModel.password ?? "",
+                    ConnectTimeout = 7,
                 };
-                connectionString = sqlConnectionStringBuilder.ToString();
 
-                return connectionString;
+                return sqlConnectionStringBuilder.ToString();
             }
             return null;
         }

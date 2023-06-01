@@ -41,8 +41,8 @@ namespace NISC_MFP_MVC_Repository.Implement
             ListToDataTableConverter converter = new ListToDataTableConverter();
             DataTable dataTable = converter.ToDataTable(mapper.Map<List<tb_user>>(instance));
 
-            string connectionString = DatabaseConnectionHelper.GetConnectionStringFromFile();
-            using (SqlConnection conn = new SqlConnection(DatabaseConnectionHelper.GetConnectionStringFromFile()))
+            string connectionString = DatabaseConnectionHelper.GetInstance().GetConnectionString();
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 

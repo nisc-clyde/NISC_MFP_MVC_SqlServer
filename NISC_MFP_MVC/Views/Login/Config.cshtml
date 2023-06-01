@@ -49,7 +49,7 @@
 
                     <div class="mb-3">
                         @Html.LabelFor(d => d.connectionModel.data_source, new { @class = "form-label" })
-                        @Html.TextBoxFor(d => d.connectionModel.data_source, new { Name = "data_source", @Value = "NISC\\MFP\\SQLEXPRESS", @class = "form-control bg-opacity-10 border border-primary" })
+                        @Html.TextBoxFor(d => d.connectionModel.data_source, new { Name = "data_source", @Value = ".\\NISC_SQLEXPRESS", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>
                     <div class="mb-3">
                         @Html.LabelFor(d => d.connectionModel.initial_catalog, new { @class = "form-label" })

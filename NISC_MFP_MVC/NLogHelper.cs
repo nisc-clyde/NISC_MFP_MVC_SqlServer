@@ -25,7 +25,7 @@ namespace NISC_MFP_MVC
         {
             //動態取得connection string
             var databaseTarget = (DatabaseTarget)LogManager.Configuration.FindTargetByName("Db");
-            databaseTarget.ConnectionString = DatabaseConnectionHelper.GetConnectionStringFromFile();
+            databaseTarget.ConnectionString = DatabaseConnectionHelper.GetInstance().GetConnectionStringFromFile();
             LogManager.ReconfigExistingLoggers();
         }
 
