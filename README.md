@@ -24,7 +24,7 @@ In addition, there is another reason why needed to install Visual Studio 2019, i
 - Git（Version Control）
 - Sourcetree（Visualization for Git, optional）
 
-### Programming Language
+### Build With
 
 - C#
 - HTML
@@ -70,12 +70,12 @@ In addition, there is another reason why needed to install Visual Studio 2019, i
 - Business Layer（named for \*Service）
 - Data Access Layer（named for \*Repository）
 
-### Project Diagram
+## Diagram
 
 <details>
-  <summary>Software Architecture Diagram</summary>
+  <summary>Software Architecture</summary>
   
-   ![Alt](NISC_MFP_MVC_Architecture.svg)
+   ![Software Architecture Diagram](NISC_MFP_MVC_Architecture.svg)
 </details>
 
 [1]: https://downloads.mysql.com/archives/visualstudio/
