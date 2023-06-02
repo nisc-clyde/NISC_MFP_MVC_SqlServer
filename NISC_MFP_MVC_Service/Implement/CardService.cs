@@ -76,7 +76,7 @@ namespace NISC_MFP_MVC_Service.Implement
             else
             {
                 string userName = "";
-                if (!string.IsNullOrWhiteSpace(dataModel.card_id))
+                if (!string.IsNullOrWhiteSpace(dataModel.user_id))
                 {
                     IEnumerable<UserInfo> userInfos = new UserService().SearchByIdAndName(dataModel.user_id);
                     if (userInfos.Any())
