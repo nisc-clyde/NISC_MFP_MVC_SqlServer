@@ -1,14 +1,54 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width" />
-    <title>錯誤</title>
+    <title>Page Not Found</title>
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 36px;
+            text-align: center;
+            text-shadow: 1px 1px #fff;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            padding-top: 50px;
+            width: 400px;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        a {
+            color: #333;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+            a:hover {
+                color: #666;
+                text-decoration: underline;
+            }
+    </style>
 </head>
 <body>
-    <hgroup>
-        <h1>錯誤。</h1>
-        <h2>處理您的要求時發生錯誤。</h2>
-    </hgroup>
+    <h1>糟糕! 找不到此頁面.</h1>
+    <h1>錯誤 @ViewBag.ErrorCode</h1>
+    <img src="~/img/nisc_logo.png" style="width:auto;height:auto" alt="NISC">
+    <p>很抱歉我們並無此頁面. 請重新檢查輸入之網址是否正確或是回到 <a href="javascript:history.back()">上一頁</a>.</p>
 </body>
 </html>

@@ -377,6 +377,12 @@
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".sonarlint\nisc_mfp_mvc\CSharp\SonarLint.xml" />
+    <Content Include="Error\403.aspx" />
+    <Content Include="Error\403.html" />
+    <Content Include="Error\404.aspx" />
+    <Content Include="Error\404.html" />
+    <Content Include="Error\500.aspx" />
+    <Content Include="Error\500.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -435,6 +441,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Error\error_template.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
@@ -444,6 +451,7 @@
     <Content Include="img\logo.png" />
     <Content Include="img\logo_b.png" />
     <Content Include="img\logo_w.png" />
+    <Content Include="img\nisc_logo.png" />
     <Content Include="img\wb.jpg" />
     <Content Include="lib\animate.css\animate.compat.css" />
     <Content Include="lib\animate.css\animate.compat.min.css" />
@@ -1390,7 +1398,6 @@
     <Content Include="Areas\Admin\Views\Card\DepositCard.cshtml" />
     <Content Include="Areas\Admin\Views\CardReader\CardReaderManagement.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\CardReader\CardReaderManager.cshtml" />
     <Content Include="lib\popperjs\core\dist\cjs\enums.js.flow" />
     <Content Include="lib\popperjs\core\dist\cjs\enums.js.map" />
