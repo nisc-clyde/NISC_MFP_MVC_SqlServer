@@ -10,6 +10,7 @@ using NISC_MFP_MVC_Service.DTOs.Info.User;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -103,14 +104,10 @@ namespace NISC_MFP_MVC_Service.Implement
                 string departmentName = "";
                 if (!string.IsNullOrWhiteSpace(dataModel.dept_id))
                 {
-                    IEnumerable<DepartmentInfo> departmentInfos = new DepartmentService().SearchByIdAndName(dataModel.dept_id);
-                    if (departmentInfos.Any())
+                    DepartmentInfo departmentInfos = new DepartmentService().Get("dept_id", dataModel.dept_id, "Equals");
+                    if (departmentInfos != null)
                     {
-                        departmentName = departmentInfos.FirstOrDefault().dept_name;
-                    }
-                    else
-                    {
-                        departmentName = "";
+                        departmentName = departmentInfos.dept_name;
                     }
                 }
                 //相容舊系統以*.php表示權限

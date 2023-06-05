@@ -106,7 +106,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     cardService.Insert(mapper.Map<CardViewModel, CardInfo>(card));
-                    cardService.SaveChanges();
                     NLogHelper.Instance.Logging("新增卡片", $"卡號：{card.card_id}<br/>使用者帳號：{card.user_id}");
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);

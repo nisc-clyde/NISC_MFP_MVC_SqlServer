@@ -106,7 +106,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionModel.cs" />
     <Compile Include="DatabaseConnectionHelper.cs" />
     <Compile Include="DataTableRequest.cs" />
     <Compile Include="ListToDataTableConverter.cs" />

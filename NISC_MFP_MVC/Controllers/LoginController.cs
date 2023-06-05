@@ -213,23 +213,23 @@ namespace NISC_MFP_MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult SetWindowsAuthConnection(ConnectionModel connectionModel)
+        public ActionResult SetWindowsAuthConnection(SqlConnectionStringBuilder connectionModel)
         {
-            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog);
+            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog);
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 
         [HttpPost]
-        public ActionResult SetSqlServerAuthConnection(ConnectionModel connectionModel)
+        public ActionResult SetSqlServerAuthConnection(SqlConnectionStringBuilder connectionModel)
         {
-            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.data_source, connectionModel.initial_catalog, false, connectionModel.user_id, connectionModel.password);
+            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog, false, connectionModel.UserID, connectionModel.Password);
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 
         [HttpPost]
-        public ActionResult TestConnection(ConnectionModel connectionModel)
+        public ActionResult TestConnection(SqlConnectionStringBuilder connectionModel)
         {
-            string connectionString = DatabaseConnectionHelper.GetInstance().ConvertModel2String(connectionModel);
+            string connectionString = connectionModel.ToString();
             SqlConnection sqlConnection = new SqlConnection();
             try
             {

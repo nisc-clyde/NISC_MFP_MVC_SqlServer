@@ -42,6 +42,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             DataTable dataTable = converter.ToDataTable(mapper.Map<List<tb_user>>(instance));
 
             string connectionString = DatabaseConnectionHelper.GetInstance().GetConnectionString();
+            string databaseName = new SqlConnectionStringBuilder(connectionString).InitialCatalog;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -50,29 +51,29 @@ namespace NISC_MFP_MVC_Repository.Implement
                 SqlCommand createTempDataTable = new SqlCommand(
                     $"if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
                     $" WHERE TABLE_NAME = N'tb_user_temp' " +
-                    $" AND TABLE_SCHEMA = N'mywebni1_managerc') " +
+                    $" AND TABLE_SCHEMA = N'{databaseName}') " +
                     $"begin " +
-                    $"select * into mywebni1_managerc.tb_user_temp from mywebni1_managerc.tb_user " +
+                    $"select * into {databaseName}.tb_user_temp from {databaseName}.tb_user " +
                     $"end;",
                      conn);
                 createTempDataTable.ExecuteNonQuery();
 
                 //Set Identity On
-                SqlCommand IDENTITY_INSERT_ON = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_user ON;", conn);
+                SqlCommand IDENTITY_INSERT_ON = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_user ON;", conn);
                 IDENTITY_INSERT_ON.ExecuteNonQuery();
 
                 //Bulk insert data to temp table
                 using (SqlBulkCopy sqlBC = new SqlBulkCopy(connectionString))
                 {
                     sqlBC.BatchSize = 100;
-                    sqlBC.DestinationTableName = "mywebni1_managerc.tb_user_temp";
+                    sqlBC.DestinationTableName = $"{databaseName}.tb_user_temp";
                     sqlBC.WriteToServer(dataTable);
                 }
 
                 //Merge temp table to target
                 SqlCommand mergeTable = new SqlCommand(
-                    $"merge mywebni1_managerc.tb_user as target " +
-                    $"using mywebni1_managerc.tb_user_temp as source " +
+                    $"merge {databaseName}.tb_user as target " +
+                    $"using {databaseName}.tb_user_temp as source " +
                     $"on (target.user_id = source.user_id) " +
                     $"when not matched then " +
                     $"insert(serial,user_id,user_password,work_id,user_name,dept_id,e_mail) " +
@@ -81,11 +82,11 @@ namespace NISC_MFP_MVC_Repository.Implement
                 mergeTable.ExecuteNonQuery();
 
                 //Drop temp table
-                SqlCommand dropTable = new SqlCommand("drop table mywebni1_managerc.tb_user_temp", conn);
+                SqlCommand dropTable = new SqlCommand($"drop table {databaseName}.tb_user_temp", conn);
                 dropTable.ExecuteNonQuery();
 
                 //Set Identity Off
-                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand("set IDENTITY_INSERT mywebni1_managerc.tb_user OFF;", conn);
+                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_user OFF;", conn);
                 IDENTITY_INSERT_OFF.ExecuteNonQuery();
 
                 conn.Close();
@@ -231,27 +232,9 @@ namespace NISC_MFP_MVC_Repository.Implement
         }
         public void SoftDelete()
         {
+            string databaseName = new SqlConnectionStringBuilder(DatabaseConnectionHelper.GetInstance().GetConnectionString()).InitialCatalog;
 
-            //using (MySqlConnection conn = DatabaseConnection.getDatabaseConnection())
-            //{
-            //    try
-            //    {
-            //        //MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
-            //        conn.Open();
-            //        string insertQuery = @"delete from tb_user";
-            //        MySqlCommand sqlCommand = new MySqlCommand("asd", conn);
-            //        sqlCommand.ExecuteNonQuery();
-            //        conn.Close();
-            //    }
-            //    catch (DbException e)
-            //    {
-            //        throw e;
-            //    }
-            //}
-            //using (MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;"))
-            //{
-            //}
-            db.Database.ExecuteSqlCommand("delete from mywebni1_managerc.tb_user where serial != 1");
+            db.Database.ExecuteSqlCommand($"DELETE FROM {databaseName}.tb_user where serial != 1");
         }
         public void SaveChanges()
         {

@@ -63,9 +63,9 @@ function TestConnection() {
         $("#btnTestConnection").attr("disabled", true);
 
         if ($("#btnWindowsAuth").is(":checked")) {
-            $("input[name=integrated_security]").val(true);
+            $("input[name=IntegratedSecurity]").val(true);
         } else {
-            $("input[name=integrated_security]").val(false);
+            $("input[name=IntegratedSecurity]").val(false);
         }
 
         $.ajax({

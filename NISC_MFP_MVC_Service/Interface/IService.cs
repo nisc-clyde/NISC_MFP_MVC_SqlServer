@@ -31,7 +31,7 @@ namespace NISC_MFP_MVC_Service.Interface
 
         /// <summary>
         /// 邏輯判斷後取得資料
-        /// <para>operation = Euqals : 完全查詢，例: value == "value"</para>
+        /// <para>operation = Equals : 完全查詢，例: value == "value"</para>
         /// <para>operation = Contains : 模糊查詢，例: value == "%value%"</para>
         /// </summary>
         /// <param name="column">欲查詢之欄位</param>

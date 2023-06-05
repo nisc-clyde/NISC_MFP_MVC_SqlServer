@@ -1,7 +1,7 @@
 ﻿@model NISC_MFP_MVC.ViewModels.Config.ConfigViewModel
 
 @{
-    ViewBag.Title = "高級管理員帳號設置";
+    ViewBag.Title = "系統環境設置";
     Layout = null;
     <script type="module" src="@Url.Content("~/Scripts/Configuration/config.js")"></script>
 }
@@ -29,7 +29,7 @@
 
             <div id="databaseDiv">
                 <p class="text-center fs-2 mb-0">
-                    資料庫配置
+                    資料庫設置
                     <div class="text-secondary text-center">
                         請輸入欲連接之資料庫帳號及密碼
                     </div>
@@ -45,23 +45,23 @@
 
                 @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "databaseConfigForm", @class = "overflow-auto px-5 pb-5 pt-1" }))
                 {
-                    @Html.HiddenFor(d => d.connectionModel.integrated_security, new { Name = "integrated_security" })
+                    @Html.HiddenFor(d => d.connectionModel.IntegratedSecurity, new { Name = "IntegratedSecurity" })
 
                     <div class="mb-3">
-                        @Html.LabelFor(d => d.connectionModel.data_source, new { @class = "form-label" })
-                        @Html.TextBoxFor(d => d.connectionModel.data_source, new { Name = "data_source", @Value = ".\\NISC_SQLEXPRESS", @class = "form-control bg-opacity-10 border border-primary" })
+                        @Html.Label("資料來源", new { @class = "form-label" })
+                        @Html.TextBoxFor(d => d.connectionModel.DataSource, new { Name = "DataSource", @Value = ".\\NISC_SQLEXPRESS", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>
                     <div class="mb-3">
-                        @Html.LabelFor(d => d.connectionModel.initial_catalog, new { @class = "form-label" })
-                        @Html.TextBoxFor(d => d.connectionModel.initial_catalog, new { Name = "initial_catalog", @Value = "mywebni1_managerc", @class = "form-control bg-opacity-10 border border-primary" })
+                        @Html.Label("資料庫名稱", new { @class = "form-label" })
+                        @Html.TextBoxFor(d => d.connectionModel.InitialCatalog, new { Name = "InitialCatalog", @Value = "mywebni1_managerc", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>
                     <div class="mb-3" id="databaseAccountDiv" style="display: none;">
-                        @Html.LabelFor(d => d.connectionModel.user_id, new { @class = "form-label" })
-                        @Html.TextBoxFor(d => d.connectionModel.user_id, new { Name = "user_id", @class = "form-control bg-opacity-10 border border-primary" })
+                        @Html.Label("資料庫登入帳號", new { @class = "form-label" })
+                        @Html.TextBoxFor(d => d.connectionModel.UserID, new { Name = "UserID", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>
                     <div class="mb-3" id="databasePasswordDiv" style="display: none;">
-                        @Html.LabelFor(d => d.connectionModel.password, new { @class = "form-label" })
-                        @Html.TextBoxFor(d => d.connectionModel.password, new { Name = "password", @class = "form-control bg-opacity-10 border border-primary" })
+                        @Html.Label("資料庫登入密碼", new { @class = "form-label" })
+                        @Html.TextBoxFor(d => d.connectionModel.Password, new { Name = "Password", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>
 
                     <div class="my-4 d-grid">

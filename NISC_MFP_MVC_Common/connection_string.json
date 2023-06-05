@@ -1,7 +1,8 @@
 {
-  "data source": ".\\SQLEXPRESS",
-  "initial catalog": "mywebni1_managerc",
-  "integrated security": true,
-  "user id": "",
-  "password": ""
+  "Data Source": ".\\SQLEXPRESS",
+  "Initial Catalog": "mywebni1_managerc",
+  "Integrated Security": "False",
+  "User ID": "clyde",
+  "Password": "clyde",
+  "Connect Timeout": "7"
 }

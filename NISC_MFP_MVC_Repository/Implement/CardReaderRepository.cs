@@ -31,7 +31,21 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll()
         {
-            return db.tb_cardreader.ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+            IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
+                .Select(p => new InitialCardReaderRepoDTONeed
+                {
+                    cr_id = p.cr_id,
+                    cr_ip = p.cr_ip,
+                    cr_port = p.cr_port,
+                    cr_type = p.cr_type == "M" ? "事務機" : p.cr_type == "F" ? "影印機" : "印表機",
+                    cr_mode = p.cr_mode == "F" ? "離線" : "連線",
+                    cr_card_switch = p.cr_card_switch == "F" ? "關閉" : "開啟",
+                    cr_status = p.cr_status == "Online" ? "線上" : "離線",
+                    serial = p.serial
+                })
+                .AsNoTracking().ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+
+            return tb_CardReaders;
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll(DataTableRequest dataTableRequest)
