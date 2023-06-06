@@ -1,0 +1,35 @@
+﻿
+<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+        @using (Html.BeginForm("RecentlyDepositRecord", "User", FormMethod.Post, new { @id = "recentlyPrintRecordForm", @class = "overflow-auto" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="recentlyDepositRecordDataTable" class="table table-striped table-bordered w-100 fs-6 nowrap table-hover">
+                        <thead>
+                            <tr>
+                                <th>儲值人員帳號</th>
+                                <th>儲值人員姓名</th>
+                                <th>儲值前點數</th>
+                                <th>儲值點數</th>
+                                <th>儲值後點數</th>
+                                <th>儲值時間</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
+        }
+    </div>
+</div>

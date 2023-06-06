@@ -1,5 +1,5 @@
 ﻿
-using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.CardReader;
 
 namespace NISC_MFP_MVC_Service.Interface
 {

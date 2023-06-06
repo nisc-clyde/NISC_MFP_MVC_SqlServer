@@ -1494,6 +1494,8 @@
     <Content Include="Areas\User\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\User\Views\User\Edit.cshtml" />
     <Content Include=".sonarlint\nisc_mfp_mvccsharp.ruleset" />
+    <Content Include="Areas\User\Views\User\RecentlyPrintRecord.cshtml" />
+    <Content Include="Areas\User\Views\User\RecentlyDepositRecord.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\Configuration\config.js" />

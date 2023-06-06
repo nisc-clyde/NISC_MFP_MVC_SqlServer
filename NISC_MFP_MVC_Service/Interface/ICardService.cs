@@ -1,4 +1,4 @@
-﻿using NISC_MFP_MVC_Service.DTOs.Info.Card;
+﻿using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Card;
 using System.Collections.Generic;
 
 namespace NISC_MFP_MVC_Service.Interface

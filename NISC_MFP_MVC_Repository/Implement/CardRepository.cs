@@ -94,14 +94,15 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             IQueryable<InitialCardRepoDTO> tb_Cards = (from c in _db.tb_card.ToList()
                                                        join u in _db.tb_user.ToList()
-                                                       on c.user_id equals u.user_id into gj
+                                                       on (c.user_id ?? "").Trim() equals u.user_id into gj
                                                        from subd in gj.DefaultIfEmpty(new tb_user())
                                                        select new InitialCardRepoDTONeed
                                                        {
                                                            card_id = c.card_id,
                                                            value = c.value,
                                                            freevalue = c.freevalue,
-                                                           user_id = subd.user_id,
+                                                           //user_id = string.IsNullOrEmpty(subd.user_id) ? subd.user_id : subd.user_id.Trim(),
+                                                           user_id = (subd.user_id ?? "").Trim(),
                                                            user_name = subd.user_name,
                                                            card_type = c.card_type == "0" ? "遞減" : "遞增",
                                                            enable = c.enable == "0" ? "停用" : "可用",
@@ -137,14 +138,14 @@ namespace NISC_MFP_MVC_Repository.Implement
 
             IQueryable<InitialCardRepoDTO> tb_Cards = (from c in _db.tb_card.ToList()
                                                        join u in _db.tb_user.ToList()
-                                                       on c.user_id equals u.user_id into gj
+                                                       on (c.user_id??"").Trim() equals u.user_id into gj
                                                        from subd in gj.DefaultIfEmpty(new tb_user())
                                                        select new InitialCardRepoDTONeed
                                                        {
                                                            card_id = c.card_id,
                                                            value = c.value,
                                                            freevalue = c.freevalue,
-                                                           user_id = subd.user_id,
+                                                           user_id = (subd.user_id ?? "").Trim(),
                                                            user_name = subd.user_name,
                                                            card_type = c.card_type == "0" ? "遞減" : "遞增",
                                                            enable = c.enable == "0" ? "停用" : "可用",
@@ -198,6 +199,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialCardRepoDTO Get(string column, string value, string operation)
         {
             tb_card result = _db.tb_card.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            result.user_id = (result.user_id ?? "").Trim();
             return _mapper.Map<tb_card, InitialCardRepoDTO>(result);
         }
 

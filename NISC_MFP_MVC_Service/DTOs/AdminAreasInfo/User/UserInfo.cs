@@ -1,4 +1,4 @@
-﻿namespace NISC_MFP_MVC_Service.DTOs.Info.User
+﻿namespace NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User
 {
     public class UserInfo
     {

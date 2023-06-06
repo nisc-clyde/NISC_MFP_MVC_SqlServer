@@ -2,13 +2,11 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels.CardReader;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
-using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.CardReader;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.MultiFunctionPrint;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
-using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
@@ -187,7 +185,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     multiFunctionPrintService.Insert(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
                     multiFunctionPrintService.SaveChanges();
-                    NLogHelper.Instance.Logging("新增事務機管理", $"控制編號：{data.printer_id??"0"}<br/>IP位置：{data.mfp_ip??"1"}");
+                    NLogHelper.Instance.Logging("新增事務機管理", $"控制編號：{data.printer_id ?? "0"}<br/>IP位置：{data.mfp_ip ?? "1"}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }

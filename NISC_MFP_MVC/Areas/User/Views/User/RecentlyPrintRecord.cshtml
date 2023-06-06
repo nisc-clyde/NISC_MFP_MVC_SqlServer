@@ -1,0 +1,37 @@
+﻿
+<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+        @using (Html.BeginForm("RecentlyPrintRecord", "User", FormMethod.Post, new { @id = "recentlyPrintRecordForm", @class = "overflow-auto" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">@ViewBag.formTitle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="recentlyPrintRecordDataTable" class="table table-striped table-bordered w-100 fs-6 nowrap table-hover">
+                        <thead>
+                            <tr>
+                                <th>事務機</th>
+                                <th>影列印</th>
+                                <th>顏色</th>
+                                <th>使用點數</th>
+                                <th>文件名稱</th>
+                                <th>列印時間</th>
+                                <th>serial</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
+        }
+    </div>
+</div>

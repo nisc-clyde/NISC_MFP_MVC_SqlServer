@@ -4,16 +4,15 @@ using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.Card;
 using NISC_MFP_MVC.ViewModels.User.AdminAreas;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Service.DTOs.Info.Card;
-using NISC_MFP_MVC_Service.DTOs.Info.Department;
-using NISC_MFP_MVC_Service.DTOs.Info.User;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Card;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
 using System.Web;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
@@ -195,7 +194,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             departmentDatas = departmentDatas.DistinctBy(p => p.dept_id).ToList();
             userDatas = userDatas.DistinctBy(p => p.user_id).ToList();
             cardDatas = cardDatas.DistinctBy(p => p.card_id).ToList();
-            
+
             departmentService.InsertBulkData(mapper.Map<List<DepartmentInfo>>(departmentDatas));
             userService.InsertBulkData(mapper.Map<List<UserInfo>>(userDatas));
             cardService.InsertBulkData(mapper.Map<List<CardInfo>>(cardDatas));

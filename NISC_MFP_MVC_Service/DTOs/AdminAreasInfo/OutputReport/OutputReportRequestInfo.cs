@@ -1,4 +1,4 @@
-﻿namespace NISC_MFP_MVC.ViewModels.OutputReport
+﻿namespace NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.OutputReport
 {
     public class OutputReportRequestInfo
     {

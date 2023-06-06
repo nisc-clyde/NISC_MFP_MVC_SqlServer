@@ -1,4 +1,4 @@
-﻿namespace NISC_MFP_MVC_Service.DTOs.Info.History
+﻿namespace NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.History
 {
     public class HistoryInfo
     {

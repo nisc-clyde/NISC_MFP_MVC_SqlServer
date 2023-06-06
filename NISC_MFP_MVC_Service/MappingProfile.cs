@@ -8,15 +8,15 @@ using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
-using NISC_MFP_MVC_Service.DTOs.Info.Card;
-using NISC_MFP_MVC_Service.DTOs.Info.Department;
-using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
-using NISC_MFP_MVC_Service.DTOs.Info.History;
-using NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint;
-using NISC_MFP_MVC_Service.DTOs.Info.Print;
-using NISC_MFP_MVC_Service.DTOs.Info.User;
-using NISC_MFP_MVC_Service.DTOs.Info.Watermark;
-using NISC_MFP_MVC_Service.DTOsI.Info.CardReader;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Card;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.CardReader;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Deposit;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.History;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.MultiFunctionPrint;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Print;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Watermark;
 
 namespace NISC_MFP_MVC_Service.Implement
 {

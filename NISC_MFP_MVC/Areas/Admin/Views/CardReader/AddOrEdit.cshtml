@@ -33,7 +33,7 @@
                                 <div class="input-group">
                                     @Html.LabelFor(d => d.cr_ip, new { @class = "form-label fw-semibold me-2" })
                                 </div>
-                                @Html.TextBoxFor(d => d.cr_ip, new { placeholder = "255.255.255.255", @class = "form-control", @type = "number" })
+                                @Html.TextBoxFor(d => d.cr_ip, new { placeholder = "255.255.255.255", @class = "form-control" })
                                 @Html.ValidationMessageFor(d => d.cr_ip, "", new { @class = "text-danger fs-6" })
                             </div>
                         </div>

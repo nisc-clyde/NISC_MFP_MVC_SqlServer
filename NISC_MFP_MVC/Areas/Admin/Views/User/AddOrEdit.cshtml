@@ -101,6 +101,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.e_mail, new { @class = "form-label fw-semibold" })
                                 @Html.TextBoxFor(d => d.e_mail, new { placeholder = "account@example.com", @class = "form-control" })
+                                @Html.ValidationMessageFor(d => d.e_mail, "", new { @class = "text-danger fs-6" })
                             </div>
                         </div>
                     </div>

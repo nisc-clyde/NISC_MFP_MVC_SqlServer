@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
+using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Implement;
-using NISC_MFP_MVC_Service.DTOs.Info.Print;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Print;
+using NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Data.Entity;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -67,83 +70,32 @@ namespace NISC_MFP_MVC_Service.Implement
             return _mapper.Map<InitialPrintRepoDTO, PrintInfo>(dataModel);
         }
 
-        public IQueryable<PrintInfo> GetWithGlobalSearch(IQueryable<PrintInfo> searchData, string searchValue)
+        public List<RecentlyPrintRecord> GetRecentlyPrintRecord(DataTableRequest dataTableRequest, string user_id)
         {
-            if (searchValue == "")
-            {
-                return searchData;
-            }
+            IQueryable<InitialPrintRepoDTO> datamodel = _printRepository.GetAll();
 
-            IQueryable<PrintInfo> resultModel = searchData
-                .Where(p =>
-                    ((!string.IsNullOrEmpty(p.mfp_name)) && p.mfp_name.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.user_name)) && p.user_name.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.dept_name)) && p.dept_name.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.card_id)) && p.card_id.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.card_type)) && p.card_type.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.usage_type)) && p.usage_type.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.page_color)) && p.page_color.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((p.page != null) && p.page.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((p.value != null) && p.value.ToString().ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.print_date)) && p.print_date.ToUpper().Contains(searchValue.ToUpper())) ||
-                    ((!string.IsNullOrEmpty(p.document_name)) && p.document_name.ToUpper().Contains(searchValue.ToUpper())));
+            DateTime startDate = DateTime.Now.AddMonths(-6);
+            IQueryable<RecentlyPrintRecord> resultDataModel = datamodel
+                .Where(d => d.user_id == user_id && d.print_date >= startDate)
+                .Select(d => new RecentlyPrintRecord
+                {
+                    mfp_name = d.mfp_name,
+                    usage_type = d.usage_type == "C" ? "影印" : d.usage_type == "P" ? "列印" : d.usage_type == "S" ? "掃描" : d.usage_type == "F" ? "傳真" : "",
+                    page_color = d.page_color,
+                    value = d.value,
+                    document_name = d.document_name,
+                    print_date = d.print_date,
+                    file_path = d.file_path.ToUpper() == "NULL" ? null : d.file_path,
+                    file_name = d.file_name.ToUpper() == "NULL" ? null : d.file_name,
+                    serial = d.serial,
+                });
 
-            return resultModel;
-        }
+            dataTableRequest.RecordsFilteredGet = resultDataModel.Count();
+            resultDataModel = resultDataModel.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
+            resultDataModel = resultDataModel.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
+            List<RecentlyPrintRecord> topTenRecord = resultDataModel.ToList();
 
-        public IQueryable<PrintInfo> GetWithColumnSearch(IQueryable<PrintInfo> searchData, string column, string searchValue)
-        {
-            if (column == "print_date")
-            {
-                if (searchValue.Contains("~"))
-                {
-                    string[] postDateRange = searchValue.Split('~');
-                    DateTime startDate = Convert.ToDateTime(postDateRange[0]);
-                    DateTime endDate = Convert.ToDateTime(postDateRange[1]);
-                    searchData = searchData.Where(print => DateTime.Parse(print.print_date) >= startDate && DateTime.Parse(print.print_date) <= endDate);
-                }
-                else
-                {
-                    searchData = searchData.Where(print => print.print_date.ToString().Contains(searchValue));
-                }
-            }
-            else if (column == "usage_type")
-            {
-                if (searchValue == "AdvancedEmpty")
-                {
-                    searchData = Enumerable.Empty<PrintInfo>().AsQueryable();
-                }
-                else
-                {
-                    List<string> operationList = searchValue.Split(',').ToList();
-                    searchData = operationList.Count == 1 ?
-                        searchData.Where(print => print.usage_type.Contains(searchValue)) :
-                        searchData.AsQueryable().Where("@0.Contains(usage_type)", operationList);
-                }
-            }
-            else if (column == "dept_name")
-            {
-                if (searchValue == "AdvancedEmpty")
-                {
-                    searchData = Enumerable.Empty<PrintInfo>().AsQueryable();
-                }
-                else
-                {
-                    List<string> departmentList = searchValue.Split(',').ToList();
-                    searchData = departmentList.Count == 1 ?
-                        searchData.Where(print => print.dept_name.Contains(searchValue)) :
-                        searchData.AsQueryable().Where("@0.Contains(dept_name)", departmentList);
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    searchData = searchData.Where(column + "!=null &&" + column + ".ToString().ToUpper().Contains" + "(\"" + searchValue.ToString().ToUpper() + "\")");
-                }
-            }
-
-            return searchData;
+            return topTenRecord;
         }
 
         public void Update(PrintInfo instance)

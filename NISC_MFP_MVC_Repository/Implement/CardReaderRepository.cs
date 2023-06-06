@@ -34,9 +34,9 @@ namespace NISC_MFP_MVC_Repository.Implement
             IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
                 .Select(p => new InitialCardReaderRepoDTONeed
                 {
-                    cr_id = p.cr_id,
+                    cr_id = p.cr_id.Trim(),
                     cr_ip = p.cr_ip,
-                    cr_port = p.cr_port,
+                    cr_port = p.cr_port.Trim(),
                     cr_type = p.cr_type == "M" ? "事務機" : p.cr_type == "F" ? "影印機" : "印表機",
                     cr_mode = p.cr_mode == "F" ? "離線" : "連線",
                     cr_card_switch = p.cr_card_switch == "F" ? "關閉" : "開啟",
@@ -73,9 +73,9 @@ namespace NISC_MFP_MVC_Repository.Implement
             IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
                 .Select(p => new InitialCardReaderRepoDTONeed
                 {
-                    cr_id = p.cr_id,
+                    cr_id = p.cr_id.Trim(),
                     cr_ip = p.cr_ip,
-                    cr_port = p.cr_port,
+                    cr_port = p.cr_port.Trim(),
                     cr_type = p.cr_type == "M" ? "事務機" : p.cr_type == "F" ? "影印機" : "印表機",
                     cr_mode = p.cr_mode == "F" ? "離線" : "連線",
                     cr_card_switch = p.cr_card_switch == "F" ? "關閉" : "開啟",
@@ -129,6 +129,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialCardReaderRepoDTO Get(string column, string value, string operation)
         {
             tb_cardreader result = db.tb_cardreader.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            result.cr_id = result.cr_id.Trim();
+            result.cr_ip=(result.cr_ip??"").Trim();
+            result.cr_port = result.cr_port.Trim();
+            
             return mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
         }
 

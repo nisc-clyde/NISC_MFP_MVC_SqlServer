@@ -2,12 +2,17 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
+using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.Info.Deposit;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Deposit;
+using NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print;
 using NISC_MFP_MVC_Service.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
+using System.Linq.Dynamic.Core;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -20,6 +25,13 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             _depositRepository = new DepositRepository();
             _mapper = InitializeAutomapper();
+        }
+
+        public void Insert(DepositInfo instance)
+        {
+            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+
+            _depositRepository.Insert(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
         }
 
         public IQueryable<DepositInfo> GetAll()
@@ -57,13 +69,31 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             return _mapper.Map<InitialDepositRepoDTO, DepositInfo>(dataModel);
         }
-
-        public void Insert(DepositInfo instance)
+        public List<RecentlyDepositRecord> GetRecentlyDepositRecord(DataTableRequest dataTableRequest, string user_id)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            IQueryable<InitialDepositRepoDTO> datamodel = _depositRepository.GetAll();
 
-            _depositRepository.Insert(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
+            DateTime startDate = DateTime.Now.AddMonths(-6);
+            IQueryable<RecentlyDepositRecord> resultDataModel = datamodel
+                .Where(d => d.user_id == user_id && d.deposit_date >= startDate)
+                .Select(d => new RecentlyDepositRecord
+                {
+                    user_id = d.user_id,
+                    user_name = d.user_name,
+                    pbalance = d.pbalance,
+                    deposit_value = d.deposit_value,
+                    final_value = d.final_value,
+                    deposit_date = d.deposit_date.ToString(),
+                });
+
+            dataTableRequest.RecordsFilteredGet = resultDataModel.Count();
+            resultDataModel = resultDataModel.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
+            resultDataModel = resultDataModel.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
+            List<RecentlyDepositRecord> topTenRecord = resultDataModel.ToList();
+
+            return topTenRecord;
         }
+
 
         public void Delete(DepositInfo instance)
         {

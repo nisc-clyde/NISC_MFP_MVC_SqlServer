@@ -1,4 +1,4 @@
-﻿namespace NISC_MFP_MVC_Service.DTOs.Info.Department
+﻿namespace NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department
 {
     public class DepartmentInfo
     {

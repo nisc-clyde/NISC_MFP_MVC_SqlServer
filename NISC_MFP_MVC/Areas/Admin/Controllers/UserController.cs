@@ -1,19 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.Controllers;
 using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC.ViewModels.User.AdminAreas;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Service.DTOs.Info.Department;
-using NISC_MFP_MVC_Service.DTOs.Info.User;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
-using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 

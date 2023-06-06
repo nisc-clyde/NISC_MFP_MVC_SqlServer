@@ -105,17 +105,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTOs\Info\Card\CardInfo.cs" />
-    <Compile Include="DTOs\Info\Deposite\DepositInfo.cs" />
-    <Compile Include="DTOs\Info\CardReader\CardReaderInfo.cs" />
-    <Compile Include="DTOs\Info\Department\DepartmentInfo.cs" />
-    <Compile Include="DTOs\Info\History\HistoryInfo.cs" />
-    <Compile Include="DTOs\Info\MultiFunctionPrint\MultiFunctionPrintInfo.cs" />
-    <Compile Include="DTOs\Info\OutputReport\OutputReportRequestInfo.cs" />
-    <Compile Include="DTOs\Info\OutputReport\OutputReportUsageInfo.cs" />
-    <Compile Include="DTOs\Info\Print\PrintInfo.cs" />
-    <Compile Include="DTOs\Info\User\UserInfo.cs" />
-    <Compile Include="DTOs\Info\Watermark\WatermarkInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\Card\CardInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\Deposite\DepositInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\CardReader\CardReaderInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\Department\DepartmentInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\History\HistoryInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\MultiFunctionPrint\MultiFunctionPrintInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\OutputReport\OutputReportRequestInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\OutputReport\OutputReportUsageInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\Print\PrintInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\User\UserInfo.cs" />
+    <Compile Include="DTOs\AdminAreasInfo\Watermark\WatermarkInfo.cs" />
+    <Compile Include="DTOs\UserAreasInfo\Print\RecentlyDepositRecord.cs" />
+    <Compile Include="DTOs\UserAreasInfo\Print\RecentlyPrintRecord.cs" />
     <Compile Include="Implement\CardReaderService.cs" />
     <Compile Include="Implement\CardService.cs" />
     <Compile Include="Implement\DepartmentService.cs" />
@@ -162,6 +164,7 @@
       <Link>SonarLint.xml</Link>
     </AdditionalFiles>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

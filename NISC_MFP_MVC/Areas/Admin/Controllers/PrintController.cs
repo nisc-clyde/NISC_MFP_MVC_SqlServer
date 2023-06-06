@@ -2,20 +2,14 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels.Print;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Service.DTOs.Info.Department;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http;
 using System.Web.Mvc;
-using WebGrease.Activities;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
-using System.Diagnostics;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace NISC_MFP_MVC_Service.DTOs.Info.MultiFunctionPrint
+﻿namespace NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.MultiFunctionPrint
 {
     public class MultiFunctionPrintInfo
     {

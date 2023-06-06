@@ -61,6 +61,9 @@ namespace NISC_MFP_MVC
 
             bundles.Add(new StyleBundle("~/lib/sweetalert2-css").Include("~/lib/sweetalert2/dist/sweetalert2.min.css"));
             bundles.Add(new Bundle("~/lib/sweetalert2-js").Include("~/lib/sweetalert2/dist/sweetalert2.all.min.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/moment-js").Include("~/Scripts/moment.min.js"));
+
         }
     }
 }

@@ -1,18 +1,10 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Microsoft.Build.Evaluation;
-using NISC_MFP_MVC_Common;
+﻿using NISC_MFP_MVC_Common;
 using NLog;
 using NLog.Targets;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
-using System.Web.Services.Description;
-using System.Windows.Markup;
 
 namespace NISC_MFP_MVC
 {

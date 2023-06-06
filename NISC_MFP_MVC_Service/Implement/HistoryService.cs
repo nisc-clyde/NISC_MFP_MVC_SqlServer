@@ -4,7 +4,7 @@ using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.Info.History;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.History;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using NISC_MFP_MVC_Service.DTOs.Info.History;
+﻿using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.History;
 
 namespace NISC_MFP_MVC_Service.Interface
 {

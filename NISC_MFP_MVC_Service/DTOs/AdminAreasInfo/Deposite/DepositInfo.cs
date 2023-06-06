@@ -1,4 +1,4 @@
-﻿namespace NISC_MFP_MVC_Service.DTOs.Info.Deposit
+﻿namespace NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Deposit
 {
     public class DepositInfo
     {

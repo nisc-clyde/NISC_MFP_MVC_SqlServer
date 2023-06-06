@@ -1,8 +1,6 @@
-﻿
-using NISC_MFP_MVC.ViewModels.OutputReport;
-using NISC_MFP_MVC_Service.DTOs.Info.OutputReport;
-using NISC_MFP_MVC_Service.DTOs.Info.Print;
-using NISC_MFP_MVC_Service.DTOs.Info.User;
+﻿using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.OutputReport;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Print;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
 using System.Collections.Generic;
 using System.Linq;
 

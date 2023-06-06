@@ -19,14 +19,14 @@ namespace NISC_MFP_MVC
             routes.MapRoute(
                 name: "AdminRoute",
                 url: "Admin/{controller}/{action}",
-                defaults: new { controller = "Print", action = "Index"},
+                defaults: new { controller = "Print", action = "Index" },
                 namespaces: new string[] { "NISC_MFP_MVC.Areas.Admin.Controllers" }
                 );
 
             routes.MapRoute(
                 name: "UserRoute",
                 url: "User/{controller}/{action}",
-                defaults: new { controller = "User", action = "Index"},
+                defaults: new { controller = "User", action = "Index" },
                 namespaces: new string[] { "NISC_MFP_MVC.Areas.User.Controllers" }
                 );
         }
