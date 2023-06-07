@@ -4,6 +4,8 @@ using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
@@ -34,6 +36,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
+            depositService.Dispose();
             return View();
         }
 
@@ -46,7 +49,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchPrintDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<DepositViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
+            IList<DepositViewModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
+            depositService.Dispose();
 
             return Json(new
             {

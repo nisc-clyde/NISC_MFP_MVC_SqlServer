@@ -26,11 +26,12 @@ namespace NISC_MFP_MVC_Repository.Implement
         public void Insert(InitialHistoryRepoDTO instance)
         {
             db.tb_logs_history.Add(mapper.Map<tb_logs_history>(instance));
+            db.SaveChanges();
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetAll()
         {
-            return db.tb_logs_history.ProjectTo<InitialHistoryRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_logs_history.AsNoTracking().ProjectTo<InitialHistoryRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -65,7 +66,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Logs_History = tb_Logs_History.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
 
-            return tb_Logs_History.AsQueryable().AsNoTracking();
+            return tb_Logs_History;
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetWithGlobalSearch(IQueryable<InitialHistoryRepoDTO> source, string search)

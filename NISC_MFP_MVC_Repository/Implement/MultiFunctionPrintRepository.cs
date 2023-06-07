@@ -26,16 +26,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Insert(InitialMultiFunctionPrintRepoDTO instance)
         {
-
-            //MySqlConnection conn = new MySqlConnection(@"Server=localhost;Database=mywebni1_managerc;Uid=root;Pwd=root;");
-            //conn.Open();
-            //string insertQuery = $"insert into tb_mfp(printer_id,mfp_ip,mfp_name,mfp_color,driver_number,cr_id,mfp_status)values('{instance.printer_id}','{instance.mfp_ip}','{instance.mfp_name}','{instance.mfp_color}','{instance.driver_number.ToString()}','{instance.cr_id.ToString()}','{instance.mfp_status}')";
-            //MySqlCommand sqlCommand = new MySqlCommand(insertQuery, conn);
-            //sqlCommand.ExecuteNonQuery();
-            //conn.Close();
-
             db.tb_mfp.Add(mapper.Map<tb_mfp>(instance));
-            this.SaveChanges();
+            db.SaveChanges();
         }
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetAll()
@@ -90,18 +82,21 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             var dataModel = mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
             db.Entry(dataModel).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(InitialMultiFunctionPrintRepoDTO instance)
         {
             var dataModel = mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
         }
 
         public void DeleteMFPById(string cr_id)
         {
             IQueryable<tb_mfp> mfps = db.tb_mfp.Where(d => d.cr_id.Equals(cr_id));
             db.tb_mfp.RemoveRange(mfps);
+            db.SaveChanges();
         }
 
         public void SaveChanges()
@@ -134,7 +129,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         private Mapper InitializeAutomapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            
+
             return new Mapper(config);
         }
     }

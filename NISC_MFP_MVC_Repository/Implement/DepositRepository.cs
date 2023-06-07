@@ -74,7 +74,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Logs_Deposit = tb_Logs_Deposit.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
 
-            return tb_Logs_Deposit.AsQueryable().AsNoTracking();
+            return tb_Logs_Deposit;
         }
 
         public IQueryable<InitialDepositRepoDTO> GetWithGlobalSearch(IQueryable<InitialDepositRepoDTO> source, string search)

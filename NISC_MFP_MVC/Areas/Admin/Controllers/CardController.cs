@@ -39,6 +39,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
+            cardService.Dispose();
             return View();
         }
 
@@ -48,7 +49,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<CardViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
+            IList<CardViewModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
+            cardService.Dispose();
 
             return Json(new
             {
@@ -90,6 +92,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
                 initialCardDTO = mapper.Map<CardViewModel>(instance);
             }
+
+            cardService.Dispose();
             ViewBag.formTitle = formTitle;
             return PartialView(initialCardDTO);
         }
@@ -103,6 +107,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     cardService.Insert(mapper.Map<CardViewModel, CardInfo>(card));
+                    cardService.Dispose();
                     NLogHelper.Instance.Logging("新增卡片", $"卡號：{card.card_id}<br/>使用者帳號：{card.user_id}");
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -115,6 +120,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
                 cardService.Update(mapper.Map<CardViewModel, CardInfo>(card));
                 cardService.SaveChanges();
+                cardService.Dispose();
 
                 logMessage += $"(修改後)卡號：{card.card_id}, 使用者帳號：{card.user_id}";
                 NLogHelper.Instance.Logging("修改卡片", logMessage);
@@ -129,6 +135,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
             CardViewModel cardViewModel = mapper.Map<CardViewModel>(instance);
+            cardService.Dispose();
 
             return PartialView(cardViewModel);
         }
@@ -138,6 +145,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             cardService.Delete(mapper.Map<CardViewModel, CardInfo>(card));
             cardService.SaveChanges();
+            cardService.Dispose();
             NLogHelper.Instance.Logging("刪除卡片", $"卡號：{card.card_id}<br/>使用者帳號：{card.user_id}");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -151,9 +159,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult SearchUser(string prefix)
         {
-            UserService cardServiceObject = new UserService();
-            IEnumerable<UserInfo> searchResult = cardServiceObject.SearchByIdAndName(prefix);
+            IUserService userService = new UserService();
+            IEnumerable<UserInfo> searchResult = userService.SearchByIdAndName(prefix);
             List<UserViewModel> resultViewModel = mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserViewModel>>(searchResult).ToList();
+            userService.Dispose();
 
             return Json(resultViewModel, JsonRequestBehavior.AllowGet);
         }
@@ -166,6 +175,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult ResetCardFreePoint(string formTitle)
         {
+            cardService.Dispose();
             ViewBag.formTitle = formTitle;
             return PartialView();
         }
@@ -182,6 +192,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             cardService.UpdateResetFreeValue(resetFreeValueViewModel.freevalue);
             cardService.SaveChanges();
             NLogHelper.Instance.Logging("重設免費點數", $"{resetFreeValueViewModel.freevalue}");
+            cardService.Dispose();
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
@@ -197,6 +208,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             CardInfo instance = cardService.Get("serial", serial.ToString(), "Equals");
             CardViewModel cardViewModel = mapper.Map<CardViewModel>(instance);
+            cardService.Dispose();
             ViewBag.formTitle = formTitle;
 
             return PartialView(cardViewModel);
@@ -233,6 +245,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             //更新卡片儲值後點數 - Start
             cardService.UpdateDepositValue(value, serial);
+            cardService.Dispose();
             //更新卡片儲值後點數 - End
 
             logMessage += $"(修改後)卡號：{originalCard.card_id}, 點數：{value}";

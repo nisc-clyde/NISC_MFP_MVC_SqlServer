@@ -33,7 +33,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialPrintRepoDTO> GetAll()
         {
-            return db.tb_logs_print.ProjectTo<InitialPrintRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_logs_print.AsNoTracking().ProjectTo<InitialPrintRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialPrintRepoDTONeed> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO)
@@ -159,25 +159,6 @@ namespace NISC_MFP_MVC_Repository.Implement
                     ((p.value != null) && p.value.ToString().Contains(search)) ||
                     ((!string.IsNullOrEmpty(p.print_date.ToString())) && p.print_date.ToString().Contains(search)) ||
                     ((!string.IsNullOrEmpty(p.document_name)) && p.document_name.Contains(search)));
-
-            //---------------------Dynamic Linq---------------------
-            //string[] columns = {
-            //    "mfp_name",
-            //    "user_name",
-            //    "dept_name",
-            //    "card_id",
-            //    "card_type",
-            //    "usage_type",
-            //    "page_color",
-            //    "page",
-            //    "value",
-            //    "print_date",
-            //    "document_name"
-            //};
-            //string query = string.Join(" or ", columns.Select(c => $"{c.ToUpper()}.ToString().ToUpper().Contains(\"{search.ToUpper()}\")"));
-            //---------------------Dynamic Linq---------------------
-
-            //source = source.AsQueryable().Where(query);
 
             return source;
         }

@@ -116,7 +116,9 @@
       <Link>nisc_mfp_mvccsharp.ruleset</Link>
     </None>
     <None Include="app.config" />
-    <Content Include="connection_string.json" />
+    <None Include="connection_string.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

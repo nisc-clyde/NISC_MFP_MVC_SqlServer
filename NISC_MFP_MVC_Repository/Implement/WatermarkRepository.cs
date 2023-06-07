@@ -25,12 +25,13 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Insert(InitialWatermarkRepoDTO instance)
         {
-            this.db.tb_watermark.Add(mapper.Map<tb_watermark>(instance));
+            db.tb_watermark.Add(mapper.Map<tb_watermark>(instance));
+            db.SaveChanges();
         }
 
         public IQueryable<InitialWatermarkRepoDTO> GetAll()
         {
-            return db.tb_watermark.ProjectTo<InitialWatermarkRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_watermark.AsNoTracking().ProjectTo<InitialWatermarkRepoDTO>(mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialWatermarkRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -104,7 +105,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Watermarks = tb_Watermarks.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
 
-            return tb_Watermarks.AsQueryable().AsNoTracking();
+            return tb_Watermarks;
         }
 
         public IQueryable<InitialWatermarkRepoDTO> GetWithGlobalSearch(IQueryable<InitialWatermarkRepoDTO> source, string search)

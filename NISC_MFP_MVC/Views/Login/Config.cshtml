@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" href="~/favicon.ico" sizes="64x64">
     <title>@ViewBag.Title</title>
 
-    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssbundle")
     @Styles.Render("~/lib/sweetalert2-css")
 
 </head>
@@ -37,10 +37,14 @@
                 </p>
 
                 <div class="text-center my-3">
-                    <input type="radio" class="btn-check" name="options-outlined" id="btnWindowsAuth" checked>
-                    <label class="btn btn-outline-info" for="btnWindowsAuth">Windows驗證</label>
+                    
+                    @if (HttpContext.Current.IsDebuggingEnabled)
+                    {
+                        <input type="radio" class="btn-check" name="options-outlined" id="btnWindowsAuth">
+                        <label class="btn btn-outline-danger" for="btnWindowsAuth">Windows驗證<br />(此僅作為開發用途，請勿使用)</label>
+                    }
 
-                    <input type="radio" class="btn-check" name="options-outlined" id="btnSqlServerAuth">
+                    <input type="radio" class="btn-check" name="options-outlined" id="btnSqlServerAuth" checked>
                     <label class="btn btn-outline-info" for="btnSqlServerAuth">SQL Server驗證</label>
                 </div>
 
@@ -56,11 +60,11 @@
                         @Html.Label("資料庫名稱", new { @class = "form-label" })
                         @Html.TextBoxFor(d => d.connectionModel.InitialCatalog, new { Name = "InitialCatalog", @Value = "mywebni1_managerc", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>
-                    <div class="mb-3" id="databaseAccountDiv" style="display: none;">
+                    <div class="mb-3" id="databaseAccountDiv">
                         @Html.Label("資料庫登入帳號", new { @class = "form-label" })
                         @Html.TextBoxFor(d => d.connectionModel.UserID, new { Name = "UserID", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>
-                    <div class="mb-3" id="databasePasswordDiv" style="display: none;">
+                    <div class="mb-3" id="databasePasswordDiv">
                         @Html.Label("資料庫登入密碼", new { @class = "form-label" })
                         @Html.TextBoxFor(d => d.connectionModel.Password, new { Name = "Password", @class = "form-control bg-opacity-10 border border-primary" })
                     </div>

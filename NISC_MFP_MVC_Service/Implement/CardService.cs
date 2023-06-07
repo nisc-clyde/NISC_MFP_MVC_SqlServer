@@ -16,14 +16,12 @@ namespace NISC_MFP_MVC_Service.Implement
 {
     public class CardService : ICardService
     {
-        private readonly IUserRepository _userRepository;
         private readonly ICardRepository _cardRepository;
         private readonly Mapper _mapper;
 
         public CardService()
         {
             _cardRepository = new CardRepository();
-            _userRepository = new UserRepository();
             _mapper = InitializeAutomapper();
         }
 

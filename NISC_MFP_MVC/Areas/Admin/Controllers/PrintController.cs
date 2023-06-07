@@ -20,7 +20,6 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     public class PrintController : Controller, IDataTableController<PrintViewModel>
     {
         private readonly IPrintService printService;
-        private readonly IDepartmentService departmentService;
         private readonly Mapper mapper;
 
         /// <summary>
@@ -29,9 +28,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public PrintController()
         {
             printService = new PrintService();
-            departmentService = new DepartmentService();
             mapper = InitializeAutomapper();
-
         }
 
         /// <summary>
@@ -42,7 +39,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             AdvancedPrintViewModel advancedPrintViewModel = new AdvancedPrintViewModel();
 
+            IDepartmentService departmentService = new DepartmentService();
             List<DepartmentInfo> getAllDepartment = departmentService.GetAll().ToList();
+            departmentService.Dispose();
+            printService.Dispose();
 
             foreach (var item in getAllDepartment)
             {
@@ -61,7 +61,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<PrintViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
+            IList<PrintViewModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
+            printService.Dispose();
 
             return Json(new
             {

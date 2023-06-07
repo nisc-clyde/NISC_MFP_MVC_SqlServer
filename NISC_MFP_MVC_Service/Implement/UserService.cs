@@ -5,6 +5,7 @@ using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
+using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Card;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
 using NISC_MFP_MVC_Service.Interface;
@@ -45,33 +46,8 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public IQueryable<UserInfo> GetAll()
         {
-            IQueryable<InitialUserRepoDTO> userDatamodel = _userRepository.GetAll();
-            IQueryable<InitialDepartmentRepoDTO> departmentDatamodel = _departmentRepository.GetAll();
-
-            List<InitialUserRepoDTO> userDatamodelList = userDatamodel.ToList();
-            List<InitialDepartmentRepoDTO> departmentDatamodelList = departmentDatamodel.ToList();
-
-            IQueryable<UserInfo> datamodel = (from u in userDatamodelList
-                                              join d in departmentDatamodelList on u.dept_id equals d.dept_id into gj
-                                              from subd in gj.DefaultIfEmpty(new InitialDepartmentRepoDTO())
-                                              select new UserInfo
-                                              {
-                                                  serial = u.serial,
-                                                  user_id = u.user_id,
-                                                  user_password = u.user_password,
-                                                  work_id = u.work_id,
-                                                  user_name = u.user_name,
-                                                  dept_id = u.dept_id,
-                                                  dept_name = subd.dept_name,
-                                                  color_enable_flag = u.color_enable_flag,
-                                                  copy_enable_flag = u.copy_enable_flag,
-                                                  print_enable_flag = u.print_enable_flag,
-                                                  scan_enable_flag = u.scan_enable_flag,
-                                                  fax_enable_flag = u.fax_enable_flag,
-                                                  e_mail = u.e_mail
-                                              }).AsQueryable();
-
-            return datamodel;
+            IQueryable<InitialUserRepoDTO> datamodel = _userRepository.GetAll();
+            return datamodel.ProjectTo<UserInfo>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<UserInfo> GetAll(DataTableRequest dataTableRequest)

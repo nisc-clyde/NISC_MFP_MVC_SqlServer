@@ -116,6 +116,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                            e_mail = u.e_mail
                                                        })
                                                        .AsQueryable()
+                                                       .AsNoTracking()
                                                        .ProjectTo<InitialUserRepoDTO>(mapper.ConfigurationProvider);
             return tb_Users;
         }
@@ -165,6 +166,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                            e_mail = u.e_mail
                                                        })
                                                        .AsQueryable()
+                                                       .AsNoTracking()
                                                        .ProjectTo<InitialUserRepoDTO>(mapper.ConfigurationProvider);
 
             //GlobalSearch
@@ -179,7 +181,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             tb_Users = tb_Users.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
-            return tb_Users.AsQueryable().AsNoTracking();
+            return tb_Users;
         }
 
         public IQueryable<InitialUserRepoDTO> GetWithGlobalSearch(IQueryable<InitialUserRepoDTO> source, string search)

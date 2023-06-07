@@ -34,7 +34,7 @@ namespace NISC_MFP_MVC_Service.Implement
             }
             else
             {
-                return userService.GetAll().Where(u => u.dept_id.Equals(departmentId));
+                return userService.GetAll().Where(u => u.dept_id == departmentId);
             }
         }
 
@@ -95,6 +95,11 @@ namespace NISC_MFP_MVC_Service.Implement
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             var mapper = new Mapper(config);
             return mapper;
+        }
+
+        public void Dispose()
+        {
+            _printRepository.Dispose();
         }
     }
 }

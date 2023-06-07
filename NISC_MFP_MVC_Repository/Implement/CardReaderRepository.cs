@@ -14,7 +14,6 @@ namespace NISC_MFP_MVC_Repository.Implement
 {
     public class CardReaderRepository : ICardReaderRepository
     {
-
         protected MFP_DB db { get; private set; }
         private Mapper mapper;
 
@@ -27,25 +26,30 @@ namespace NISC_MFP_MVC_Repository.Implement
         public void Insert(InitialCardReaderRepoDTO instance)
         {
             db.tb_cardreader.Add(mapper.Map<tb_cardreader>(instance));
+            db.SaveChanges();
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll()
         {
-            IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
-                .Select(p => new InitialCardReaderRepoDTONeed
-                {
-                    cr_id = p.cr_id.Trim(),
-                    cr_ip = p.cr_ip,
-                    cr_port = p.cr_port.Trim(),
-                    cr_type = p.cr_type == "M" ? "事務機" : p.cr_type == "F" ? "影印機" : "印表機",
-                    cr_mode = p.cr_mode == "F" ? "離線" : "連線",
-                    cr_card_switch = p.cr_card_switch == "F" ? "關閉" : "開啟",
-                    cr_status = p.cr_status == "Online" ? "線上" : "離線",
-                    serial = p.serial
-                })
-                .AsNoTracking().ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+            using (db = new MFP_DB())
+            {
+                IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
+                    .AsNoTracking()
+                    .Select(p => new InitialCardReaderRepoDTONeed
+                    {
+                        cr_id = p.cr_id.Trim(),
+                        cr_ip = p.cr_ip,
+                        cr_port = p.cr_port.Trim(),
+                        cr_type = p.cr_type == "M" ? "事務機" : p.cr_type == "F" ? "影印機" : "印表機",
+                        cr_mode = p.cr_mode == "F" ? "離線" : "連線",
+                        cr_card_switch = p.cr_card_switch == "F" ? "關閉" : "開啟",
+                        cr_status = p.cr_status == "Online" ? "線上" : "離線",
+                        serial = p.serial
+                    })
+                    .ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
 
-            return tb_CardReaders;
+                return tb_CardReaders;
+            }
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -71,6 +75,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             };
 
             IQueryable<InitialCardReaderRepoDTO> tb_CardReaders = db.tb_cardreader
+                .AsNoTracking()
                 .Select(p => new InitialCardReaderRepoDTONeed
                 {
                     cr_id = p.cr_id.Trim(),
@@ -82,7 +87,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     cr_status = p.cr_status == "Online" ? "線上" : "離線",
                     serial = p.serial
                 })
-                .AsNoTracking().ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+                .ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_CardReaders = GetWithGlobalSearch(tb_CardReaders, dataTableRequest.GlobalSearchValue);
@@ -94,9 +99,9 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_CardReaders.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_CardReaders = tb_CardReaders.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_CardReaders = tb_CardReaders.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
-            return tb_CardReaders.AsQueryable().AsNoTracking();
+            return tb_CardReaders;
         }
 
         public IQueryable<InitialCardReaderRepoDTO> GetWithGlobalSearch(IQueryable<InitialCardReaderRepoDTO> source, string search)
@@ -129,10 +134,11 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialCardReaderRepoDTO Get(string column, string value, string operation)
         {
             tb_cardreader result = db.tb_cardreader.Where(column + operation, value).AsNoTracking().FirstOrDefault();
+            result = result ?? new tb_cardreader();
             result.cr_id = result.cr_id.Trim();
-            result.cr_ip=(result.cr_ip??"").Trim();
+            result.cr_ip = (result.cr_ip ?? "").Trim();
             result.cr_port = result.cr_port.Trim();
-            
+
             return mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
         }
 
@@ -140,12 +146,14 @@ namespace NISC_MFP_MVC_Repository.Implement
         {
             var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
             db.Entry(dataModel).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(InitialCardReaderRepoDTO instance)
         {
             var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
+            db.SaveChanges();
         }
 
         public void SaveChanges()

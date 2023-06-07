@@ -28,5 +28,8 @@ namespace NISC_MFP_MVC_Service.Interface
         /// <param name="outputReportRequestInfo">Filter</param>
         /// <returns></returns>
         List<OutputReportUsageInfo> GetUsage(OutputReportRequestInfo outputReportRequestInfo);
+
+        void Dispose();
+
     }
 }

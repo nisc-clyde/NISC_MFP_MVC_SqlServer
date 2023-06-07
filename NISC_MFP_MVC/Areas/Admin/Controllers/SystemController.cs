@@ -199,6 +199,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             userService.InsertBulkData(mapper.Map<List<UserInfo>>(userDatas));
             cardService.InsertBulkData(mapper.Map<List<CardInfo>>(cardDatas));
 
+            departmentService.Dispose();
+            userService.Dispose();
+            cardService.Dispose();
+
             NLogHelper.Instance.Logging("人事資料匯入", $"匯入總筆數：{employees.Count}");
 
             return Json(new { success = true, message = "Post Success" }, JsonRequestBehavior.AllowGet);

@@ -72,10 +72,6 @@ namespace NISC_MFP_MVC_Repository.Implement
                 }
 
                 //Merge temp table to target
-                //SqlCommand mergeTable = new SqlCommand(
-                //    "merge mywebni1_managerc.tb_department as target\r\nusing mywebni1_managerc.tb_department_temp as source\r\non (target.dept_id=source.dept_id)\r\nwhen not matched then insert(serial,dept_id,dept_name,dept_value,dept_month_sum,dept_usable,dept_email,if_deleted)\r\n\t\t\t\t\t　values(source.serial,source.dept_id,source.dept_name,source.dept_value,source.dept_month_sum,source.dept_usable,source.dept_email,source.if_deleted);",
-                //    conn);
-                //mergeTable.ExecuteNonQuery();
                 SqlCommand mergeTable = new SqlCommand(
                     $"merge {databaseName}.tb_department as target " +
                     $"using {databaseName}.tb_department_temp as source " +
@@ -100,7 +96,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialDepartmentRepoDTO> GetAll()
         {
-            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department.AsNoTracking()
+            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department
+                .AsNoTracking()
                 .Select(p => new InitialDepartmentRepoDTONeed
                 {
                     dept_id = p.dept_id,
@@ -136,7 +133,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_5
             };
 
-            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department.AsNoTracking()
+            IQueryable<InitialDepartmentRepoDTO> tb_Departments = db.tb_department
+                .AsNoTracking()
                 .Select(p => new InitialDepartmentRepoDTONeed
                 {
                     dept_id = p.dept_id,
@@ -147,7 +145,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_email = p.dept_email,
                     serial = p.serial
                 })
-                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider).AsQueryable();
+                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Departments = GetWithGlobalSearch(tb_Departments, dataTableRequest.GlobalSearchValue);

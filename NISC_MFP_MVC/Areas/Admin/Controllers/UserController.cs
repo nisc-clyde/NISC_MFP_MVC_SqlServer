@@ -36,6 +36,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
+            userService.Dispose();
             return View();
         }
 
@@ -44,7 +45,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<UserViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
+            IList<UserViewModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
+            userService.Dispose();
 
             return Json(new
             {
@@ -79,6 +81,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             DepartmentService departmentService = new DepartmentService();
             IEnumerable<DepartmentInfo> searchResult = departmentService.SearchByIdAndName(prefix);
             List<DepartmentViewModel> resultViewModel = mapper.Map<IEnumerable<DepartmentInfo>, IEnumerable<DepartmentViewModel>>(searchResult).ToList();
+            departmentService.Dispose();
 
             return Json(resultViewModel, JsonRequestBehavior.AllowGet);
         }
@@ -101,6 +104,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
                 userViewModel = mapper.Map<UserViewModel>(instance);
             }
+
+            userService.Dispose();
             ViewBag.formTitle = formTitle;
             return PartialView(userViewModel);
         }
@@ -115,11 +120,13 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     if (userService.Get("user_id", user.user_id, "Equals") != null)
                     {
+                        userService.Dispose();
                         return Json(new { success = false, message = "此帳號已存在，請使用其他帳號" }, JsonRequestBehavior.AllowGet);
                     }
 
                     userService.Insert(mapper.Map<UserViewModel, UserInfo>(user));
                     userService.SaveChanges();
+                    userService.Dispose();
                     NLogHelper.Instance.Logging("新增使用者", $"帳號：{user.user_id}<br/>姓名：{user.user_name}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
@@ -133,6 +140,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
                 userService.Update(mapper.Map<UserViewModel, UserInfo>(user));
                 userService.SaveChanges();
+                userService.Dispose();
 
                 logMessage += $"(修改後)帳號：{user.user_id}, 姓名：{user.user_name}";
                 NLogHelper.Instance.Logging("修改使用者", logMessage);
@@ -152,6 +160,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             if (serial == 1)
             {
+                userService.Dispose();
+
                 return Json(new
                 {
                     success = false,
@@ -161,6 +171,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             UserInfo instance = userService.Get("serial", serial.ToString(), "Equals");
             UserViewModel userViewModel = mapper.Map<UserViewModel>(instance);
+            userService.Dispose();
 
             return PartialView(userViewModel);
         }
@@ -170,6 +181,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             userService.Delete(mapper.Map<UserViewModel, UserInfo>(user));
             userService.SaveChanges();
+            userService.Dispose();
             NLogHelper.Instance.Logging("刪除使用者", $"帳號：{user.user_id}<br/>姓名：{user.user_name}");
 
             return Json(new
@@ -195,6 +207,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 userViewModel = mapper.Map<UserViewModel>(instance);
             }
+            userService.Dispose();
             ViewBag.formTitle = formTitle;
 
             return PartialView(userViewModel);
@@ -211,6 +224,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             userService.setUserPermission(authority, user_id);
             NLogHelper.Instance.Logging("修改使用者權限", $"帳號：{user_id}");
+            userService.Dispose();
 
             return Json(new { success = true, message = "權限已修改" });
         }

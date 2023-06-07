@@ -34,6 +34,9 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
                 .ToList();
             userViewModel.cards = cards;
 
+            userService.Dispose();
+            cardService.Dispose();
+
             return View(userViewModel);
         }
 
@@ -43,6 +46,10 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
         {
             UserEditViewModel userAreasUserViewModel = new UserEditViewModel();
             userAreasUserViewModel.user_id = user_id;
+
+            userService.Dispose();
+            cardService.Dispose();
+
             return PartialView(userAreasUserViewModel);
         }
 
@@ -59,12 +66,18 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
                     instance.user_password = user.new_user_password;
                     userService.Update(instance);
                     userService.SaveChanges();
+                    userService.Dispose();
+                    cardService.Dispose();
                     NLogHelper.Instance.Logging("使用者修改資料", "");
 
                     return Json(new { success = true, message = "密碼修改成功" }, JsonRequestBehavior.AllowGet);
                 }
+                userService.Dispose();
+                cardService.Dispose();
                 return Json(new { success = false, message = "目前密碼錯誤" }, JsonRequestBehavior.AllowGet);
             }
+            userService.Dispose();
+            cardService.Dispose();
             return RedirectToAction("Index");
         }
 
@@ -72,6 +85,8 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
         [AjaxOnly]
         public ActionResult RecentlyPrintRecord(string user_id, string formTitle)
         {
+            userService.Dispose();
+            cardService.Dispose();
             ViewBag.formTitle = formTitle + "（僅顯示近6個月內之紀錄）";
             return PartialView();
         }
@@ -84,6 +99,8 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
             string user_id = dataTableRequest.PostPageFrom;
             IPrintService printService = new PrintService();
             List<RecentlyPrintRecord> searchPrintResultDetail = printService.GetRecentlyPrintRecord(dataTableRequest, user_id);
+            userService.Dispose();
+            cardService.Dispose();
 
             return Json(new
             {
@@ -97,6 +114,9 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
         [AjaxOnly]
         public ActionResult RecentlyDepositRecord(string user_id, string formTitle)
         {
+            userService.Dispose();
+            cardService.Dispose();
+
             ViewBag.formTitle = formTitle + "（僅顯示近6個月內之紀錄）";
             return PartialView();
         }
@@ -109,6 +129,8 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
             string user_id = dataTableRequest.PostPageFrom;
             IDepositService depositService = new DepositService();
             List<RecentlyDepositRecord> searchDepositResultDetail = depositService.GetRecentlyDepositRecord(dataTableRequest, user_id);
+            userService.Dispose();
+            cardService.Dispose();
 
             return Json(new
             {

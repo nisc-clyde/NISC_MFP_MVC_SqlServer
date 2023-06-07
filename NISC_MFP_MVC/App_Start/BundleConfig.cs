@@ -26,11 +26,12 @@ namespace NISC_MFP_MVC
                       "~/Scripts/bootstrap.bundle.min.js"
                       ));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/Content/cssbundle").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css",
-                      "~/lib/font-awesome/css/all.css"
+                      "~/Content/site.css"
                       ));
+
+            //"~/lib/font-awesome/css/all.css"
 
             bundles.Add(new StyleBundle("~/Content/LoginCSS").Include(
                       "~/Content/bootstrap.css",
@@ -55,9 +56,9 @@ namespace NISC_MFP_MVC
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include("~/Scripts/jquery-ui-{version}.js"));
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include("~/Content/themes/base/all.css"));
 
-            bundles.Add(new StyleBundle("~/lib/animate.css").Include("~/lib/animate.css/animate.min.css"));
+            bundles.Add(new StyleBundle("~/lib/animate-css").Include("~/lib/animate.css/animate.min.css"));
 
-            bundles.Add(new ScriptBundle("~/lib/popperjs").Include("~/lib/popperjs/core/lib/popper-lite.js"));
+            bundles.Add(new ScriptBundle("~/lib/popper-js").Include("~/lib/popperjs/core/lib/popper-lite.js"));
 
             bundles.Add(new StyleBundle("~/lib/sweetalert2-css").Include("~/lib/sweetalert2/dist/sweetalert2.min.css"));
             bundles.Add(new Bundle("~/lib/sweetalert2-js").Include("~/lib/sweetalert2/dist/sweetalert2.all.min.js"));

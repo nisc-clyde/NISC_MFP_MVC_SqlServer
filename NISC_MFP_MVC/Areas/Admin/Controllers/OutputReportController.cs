@@ -51,9 +51,11 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             OutputReportViewModel outputReportViewModel = new OutputReportViewModel();
 
-            List<DepartmentInfo> departmentInfos = new DepartmentService().GetAll().ToList();
+            IDepartmentService departmentService = new DepartmentService();
+            List<DepartmentInfo> departmentInfos = departmentService.GetAll().ToList();
 
-            List<MultiFunctionPrintInfo> multiFunctionPrintInfos = new MultiFunctionPrintService().GetAll().ToList();
+            IMultiFunctionPrintService multiFunctionPrintService = new MultiFunctionPrintService();
+            List<MultiFunctionPrintInfo> multiFunctionPrintInfos = multiFunctionPrintService.GetAll().ToList();
 
             foreach (SelectListItem item in departmentInfos.Select(i => new SelectListItem { Text = i.dept_name, Value = i.dept_id }))
             {
@@ -64,6 +66,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 outputReportViewModel.multiFunctionPrints.Add(item);
             }
+            departmentService.Dispose();
+            multiFunctionPrintService.Dispose();
 
             return outputReportViewModel;
         }
@@ -89,13 +93,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             IEnumerable<UserInfo> users = _outputReportService.GetAllUserByDepartmentId(departmentId);
             List<SelectListItem> result = new List<SelectListItem>();
-            if (result.Any())
+            if (users.Any())
             {
                 foreach (var user in users)
                 {
-                    result.Add(new SelectListItem { Text = user.user_name, Value = user.user_id });
+                    result.Add(new SelectListItem { Text = user.user_name??"(未知名稱)", Value = user.user_id });
                 }
             }
+            _outputReportService.Dispose();
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -148,6 +153,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             outputReportRequestInfo.date = outputReportRequest.date;
             IQueryable<PrintInfo> prints = _outputReportService.GetRecord(outputReportRequestInfo);
             Session["DataSet"] = prints.ProjectTo<PrintViewModel>(_mapper.ConfigurationProvider).ToList();
+            _outputReportService.Dispose();
 
             NLogHelper.Instance.Logging("產生紀錄報表", "");
 
@@ -165,6 +171,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             dataTableRequest.RecordsFilteredGet = prints.Count;
             List<OutputReportUsageInfo> topLengthResult = prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+
             return Json(new
             {
                 data = topLengthResult,
@@ -184,6 +191,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             dataTableRequest.RecordsFilteredGet = prints.Count;
             List<PrintViewModel> topLengthResult = prints.Skip(dataTableRequest.Start).Take(dataTableRequest.Length).ToList();
+
             return Json(new
             {
                 data = topLengthResult,

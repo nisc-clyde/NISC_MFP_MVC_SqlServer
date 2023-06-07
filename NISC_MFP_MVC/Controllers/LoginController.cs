@@ -6,6 +6,8 @@ using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -25,6 +27,7 @@ namespace NISC_MFP_MVC.Controllers
         [HttpGet]
         public ActionResult User()
         {
+            userService.Dispose();
             return View();
         }
 
@@ -62,6 +65,7 @@ namespace NISC_MFP_MVC.Controllers
                             HttpOnly = true
                         };
                         Response.Cookies.Add(authCookie);
+                        userService.Dispose();
 
                         NLogHelper.Instance.Logging("使用者登入", loginUser.account);
 
@@ -71,6 +75,7 @@ namespace NISC_MFP_MVC.Controllers
                     }
                     else
                     {
+                        userService.Dispose();
                         ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                     }
                 }
@@ -87,6 +92,7 @@ namespace NISC_MFP_MVC.Controllers
         [HttpGet]
         public ActionResult Admin()
         {
+            userService.Dispose();
             return View();
         }
 
@@ -131,6 +137,7 @@ namespace NISC_MFP_MVC.Controllers
                             //取得第一個擁有權限並Redirect之蓋管理頁面
                             string firstAuthority = userInfo.authority.Split(',')[0];
                             TempData["ActiveNav"] = firstAuthority;
+                            userService.Dispose();
 
                             NLogHelper.Instance.Logging("管理者登入", loginUser.account);
 
@@ -140,11 +147,13 @@ namespace NISC_MFP_MVC.Controllers
                         }
                         else
                         {
+                            userService.Dispose();
                             ModelState.AddModelError("ErrorMessage", "您尚未擁有任何管理相關的權限");
                         }
                     }
                     else
                     {
+                        userService.Dispose();
                         ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                     }
                 }
@@ -161,6 +170,7 @@ namespace NISC_MFP_MVC.Controllers
         [HttpGet]
         public ActionResult Config()
         {
+            userService.Dispose();
             return View();
         }
 
@@ -196,11 +206,13 @@ namespace NISC_MFP_MVC.Controllers
                         serial = 1//Not Working
                     };
                     userService.Insert(adminInfo);
+                    userService.Dispose();
 
                     return Json(new { success = true, message = "註冊成功" });
                 }
                 else
                 {
+                    userService.Dispose();
                     return Json(new { success = false, message = "此帳號已存在" });
                 }
             }
@@ -224,21 +236,26 @@ namespace NISC_MFP_MVC.Controllers
         [HttpPost]
         public ActionResult TestConnection(SqlConnectionStringBuilder connectionModel)
         {
+            
             string connectionString = connectionModel.ToString();
             SqlConnection sqlConnection = new SqlConnection();
+            
             try
             {
                 sqlConnection.ConnectionString = connectionString;
+                SqlConnection.ClearPool(sqlConnection);
                 sqlConnection.Open();
                 return Json(new { success = true, message = "連線成功" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                logger.Error($"發生Controller：Login\n發生Action：User\n錯誤訊息：{e}", "Exception End");
                 return Json(new { success = false, message = "連線失敗，請重新輸入" });
             }
             finally
             {
                 sqlConnection.Close();
+                sqlConnection.Dispose();
             }
         }
     }

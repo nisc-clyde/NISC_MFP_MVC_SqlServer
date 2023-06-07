@@ -22,7 +22,7 @@ namespace NISC_MFP_MVC_Common
         private string connectionString = null;
 
         //Server.MapPath()之根目錄為起始專案之目錄，回上層兩次後指到Common Library的conneciton_string.json
-        private static readonly string PATH = Path.GetDirectoryName(Path.GetDirectoryName(HttpContext.Current.Server.MapPath("~"))) + @"\NISC_MFP_MVC_Common\connection_string.json";
+        private static readonly string PATH = HttpContext.Current.Server.MapPath(@"~\bin\") + @"\connection_string.json";
 
         private DatabaseConnectionHelper()
         {

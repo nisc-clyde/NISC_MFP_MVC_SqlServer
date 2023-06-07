@@ -5,6 +5,8 @@ using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
@@ -36,6 +38,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
+            departmentService.Dispose();
+
             return View();
         }
 
@@ -43,7 +47,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<DepartmentViewModel> searchResultDetail = InitialData(dataTableRequest);
+            IList<DepartmentViewModel> searchResultDetail = InitialData(dataTableRequest).ToList();
+            departmentService.Dispose();
 
             return Json(new
             {
@@ -85,6 +90,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
             }
 
+            departmentService.Dispose();
             ViewBag.formTitle = formTitle;
             return PartialView(departmentViewModel);
         }
@@ -98,7 +104,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     departmentService.Insert(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                    departmentService.SaveChanges();
+                    departmentService.Dispose();
                     NLogHelper.Instance.Logging("新增部門", $"部門編號：{department.dept_id}<br/>部門名稱：{department.dept_name}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
@@ -110,7 +116,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 string logMessage = $"(修改前)部門編號：{originalDepartment.dept_id}, 部門名稱：{originalDepartment.dept_name}<br/>";
 
                 departmentService.Update(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-                departmentService.SaveChanges();
+                departmentService.Dispose();
 
                 logMessage += $"(修改後)部門編號：{department.dept_id}, 部門名稱：{department.dept_name}";
                 NLogHelper.Instance.Logging("修改部門", logMessage);
@@ -125,6 +131,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             DepartmentInfo instance = departmentService.Get("serial", serial.ToString(), "Equals");
             DepartmentViewModel departmentViewModel = mapper.Map<DepartmentViewModel>(instance);
+            departmentService.Dispose();
 
             return PartialView(departmentViewModel);
         }
@@ -133,7 +140,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult Delete(DepartmentViewModel department)
         {
             departmentService.Delete(mapper.Map<DepartmentViewModel, DepartmentInfo>(department));
-            departmentService.SaveChanges();
+            departmentService.Dispose();
             NLogHelper.Instance.Logging("刪除部門", $"部門編號：{department.dept_id}<br/>部門名稱：{department.dept_name}");
 
             return Json(new { success = true, message = "刪除成功" }, JsonRequestBehavior.AllowGet);

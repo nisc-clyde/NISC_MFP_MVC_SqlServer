@@ -5,6 +5,8 @@ using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Watermark;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
@@ -33,6 +35,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <returns>reutrn Index View</returns>
         public ActionResult Index()
         {
+            watermarkService.Dispose();
             return View();
         }
 
@@ -41,7 +44,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult SearchDataTable()
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IQueryable<WatermarkViewModel> searchPrintResultDetail = InitialData(dataTableRequest);
+            IList<WatermarkViewModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
+            watermarkService.Dispose();
 
             return Json(new
             {
@@ -85,6 +89,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
                 initialWatermarkDTO = mapper.Map<WatermarkViewModel>(instance);
             }
+            watermarkService.Dispose();
             ViewBag.formTitle = formTitle;
 
             return PartialView(initialWatermarkDTO);
@@ -101,6 +106,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 {
                     watermarkService.Insert(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
                     watermarkService.SaveChanges();
+                    watermarkService.Dispose();
                     NLogHelper.Instance.Logging("新增浮水印", $"");
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -110,6 +116,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 watermarkService.Update(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
                 watermarkService.SaveChanges();
+                watermarkService.Dispose();
                 NLogHelper.Instance.Logging("修改浮水印", $"");
 
                 return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -123,6 +130,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             WatermarkInfo instance = watermarkService.Get("id", serial.ToString(), "Equals");
             WatermarkViewModel watermarkViewModel = mapper.Map<WatermarkViewModel>(instance);
+            watermarkService.Dispose();
 
             return PartialView(watermarkViewModel);
         }
@@ -132,6 +140,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             watermarkService.Delete(mapper.Map<WatermarkViewModel, WatermarkInfo>(watermark));
             watermarkService.SaveChanges();
+            watermarkService.Dispose();
             NLogHelper.Instance.Logging("刪除浮水印", $"");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
