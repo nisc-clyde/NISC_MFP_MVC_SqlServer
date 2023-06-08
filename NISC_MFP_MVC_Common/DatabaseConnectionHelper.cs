@@ -54,7 +54,7 @@ namespace NISC_MFP_MVC_Common
                 IntegratedSecurity = integrated_security,
                 UserID = user_id,
                 Password = password,
-                ConnectTimeout = 7,
+                ConnectTimeout = 15,
             };
 
             string output = JsonConvert.SerializeObject(sqlConnectionStringBuilder, Formatting.Indented);
