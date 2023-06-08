@@ -17,23 +17,27 @@ namespace NISC_MFP_MVC_Common
 {
     public class DatabaseConnectionHelper
     {
-        private static DatabaseConnectionHelper instance = null;
-        private string connectionString = null;
+        private static readonly DatabaseConnectionHelper instance=new DatabaseConnectionHelper();
+        private static string connectionString = null;
 
         //Server.MapPath()之根目錄為起始專案之目錄，回上層兩次後指到Common Library的conneciton_string.json
         private static readonly string PATH = HttpContext.Current.Server.MapPath(@"~\bin\") + @"\connection_string.json";
+
+        static DatabaseConnectionHelper()
+        {
+
+        }
 
         private DatabaseConnectionHelper()
         {
         }
 
-        public static DatabaseConnectionHelper GetInstance()
+        public static DatabaseConnectionHelper Instance
         {
-            if (instance == null)
+            get
             {
-                instance = new DatabaseConnectionHelper();
+                return instance;
             }
-            return instance;
         }
 
         /// <summary>

@@ -20,13 +20,11 @@ namespace NISC_MFP_MVC_Service.Implement
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IDepartmentRepository _departmentRepository;
         private readonly Mapper _mapper;
 
         public UserService()
         {
             _userRepository = new UserRepository();
-            _departmentRepository = new DepartmentRepository();
             _mapper = InitializeAutomapper();
         }
 

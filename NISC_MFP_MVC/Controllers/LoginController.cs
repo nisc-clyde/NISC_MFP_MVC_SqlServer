@@ -222,21 +222,20 @@ namespace NISC_MFP_MVC.Controllers
         [HttpPost]
         public ActionResult SetWindowsAuthConnection(SqlConnectionStringBuilder connectionModel)
         {
-            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog);
+            DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog);
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 
         [HttpPost]
         public ActionResult SetSqlServerAuthConnection(SqlConnectionStringBuilder connectionModel)
         {
-            DatabaseConnectionHelper.GetInstance().SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog, false, connectionModel.UserID, connectionModel.Password);
+            DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog, false, connectionModel.UserID, connectionModel.Password);
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 
         [HttpPost]
         public ActionResult TestConnection(SqlConnectionStringBuilder connectionModel)
         {
-            
             string connectionString = connectionModel.ToString();
             SqlConnection sqlConnection = new SqlConnection();
             

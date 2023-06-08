@@ -134,7 +134,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             tb_Logs_Prints = GetWithColumnSearch(tb_Logs_Prints, columns, searches);//0~1
 
             //-----------------Performance BottleNeck-----------------
-            dataTableRequest.RecordsFilteredGet = tb_Logs_Prints.Where(p => p.serial > 0).Count();
+            dataTableRequest.RecordsFilteredGet = tb_Logs_Prints.Count();
             //-----------------Performance BottleNeck-----------------
 
             tb_Logs_Prints = tb_Logs_Prints.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);//0
