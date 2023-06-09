@@ -280,47 +280,6 @@ function DateRangePickerColumnHeight() {
     $("#dateRangePickerRow").css("height", $("#operationRow").outerHeight());
 }
 
-/**
- * 下載留存之檔案，若權限不足檔案打開失敗
- */
-function DocumentDownload() {
-    $("#searchPrintDataTable").DataTable().on("click", "a", function (e) {
-        /**
-         * 該Row資料
-         */
-        let currentRow;
-        if ($(this).parents("tr").prev().hasClass("dt-hasChild")) {
-            //Is In Responsiveness
-            currentRow = $(this).parents("tr").prev();
-        } else {
-            //Not In Responsiveness
-            currentRow = $(this).closest("tr");
-        }
-        const rowData = dataTable.row(currentRow).data();
-        console.log(rowData);
-        /**
-         * 提交下載，後端傳回BLOB檔案(二進制之PDF)
-         */
-        $.ajax({
-            url: '/Admin/Print/DownloadDocument',
-            type: 'GET',
-            data: { filePath: rowData["file_path"], fileName: rowData["file_name"] },
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (response) {
-                if (response != null) {
-                    var blob = new Blob([response], { type: 'application/pdf' });
-                    var fileURL = URL.createObjectURL(blob);
-                    window.open(fileURL, '_blank');
-                } else {
-                    CustomSweetAlert2.SweetAlertTemplateError("發生錯誤，檔案不存在可能已刪除");
-                }
-            }
-        });
-    });
-}
-
 $(function () {
     DateRangePicker_Initial();
     DateRangePickerColumnHeight();
@@ -328,5 +287,4 @@ $(function () {
     FormSelect_Select();
     FormSelect_UnSelect();
     ColumnSearch();
-    DocumentDownload();
 });

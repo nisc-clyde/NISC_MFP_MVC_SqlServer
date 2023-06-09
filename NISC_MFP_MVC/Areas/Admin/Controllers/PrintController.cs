@@ -89,11 +89,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 }
                 if (System.IO.File.Exists(Path.Combine(@"C:/CMImgs/", printViewModel.file_name)))
                 {
-                    //Working on Non Virtual Directory
-                    printViewModel.document_name = $@"<a href='{printViewModel.file_path ?? @"C:/CMImgs/"}/{printViewModel.file_name}'>{printViewModel.document_name ?? ""}</a>";
-
                     //Working on Virtual Directory - Reference:https://www.ozkary.com/2018/07/aspnet-mvc-apps-on-virtual-dir-iisexpress.html
-                    //printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}'>{printViewModel.document_name ?? ""}</a>";
+                    printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}' target='_blank'>{printViewModel.document_name ?? ""}</a>";
                 }
             }
 
@@ -116,18 +113,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [Authorize(Roles = "view")]
         public ActionResult DownloadDocument(string filePath, string fileName)
         {
-            string path = "";
-
-            //Only Working on Non Virtual Directory
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                path = Path.Combine(@"C:/CMImgs/", fileName);
-            }
-            else
-            {
-                path = Path.Combine(filePath, fileName);
-            }
-
+            string path = Path.Combine(filePath, fileName);
 
             if (System.IO.File.Exists(path))
             {
