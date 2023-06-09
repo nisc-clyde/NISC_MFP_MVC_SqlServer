@@ -75,9 +75,5 @@ _[Ss]cripts
 *.dot[Cc]over
 NISC_MFP_MVC/Properties/
 
-NISC_MFP_MVC/.vs/NISC_MFP_MVC/FileContentIndex/0123eb64-8342-46da-949a-8992c165cad0.vsidx
-NISC_MFP_MVC/.vs/NISC_MFP_MVC/FileContentIndex/2bf11781-af14-4d26-94ca-f5b2938a38ba.vsidx
-NISC_MFP_MVC/.vs/NISC_MFP_MVC/FileContentIndex/4513c85b-0e9f-45fd-8ffd-180bf56cfdde.vsidx
-NISC_MFP_MVC/.vs/NISC_MFP_MVC/FileContentIndex/f88d7fb6-b228-4bc7-ae32-e181f04f664c.vsidx
-NISC_MFP_MVC/.vs/NISC_MFP_MVC/FileContentIndex/read.lock
+NISC_MFP_MVC/.vs/NISC_MFP_MVC/FileContentIndex/*
 NISC_MFP_MVC/.vs/NISC_MFP_MVC/v17/fileList.bin
