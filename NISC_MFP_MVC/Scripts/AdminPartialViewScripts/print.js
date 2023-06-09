@@ -6,22 +6,22 @@ var dateStart;
 var dateEnd;
 //Global Variable - End
 
-//dateStart = "2005/01/01";
-dateStart = moment().subtract(365, 'days').format("YYYY-MM-DD");
+dateStart = moment().subtract(0.5, 'years').format("YYYY-MM-DD");
 dateEnd = moment().format("YYYY-MM-DD");
 
 function DateRangePicker_Initial() {
     var dateRangePicker = $('#dateRangePicker').daterangepicker({
         "showDropdowns": true,
         ranges: {
+            '預設': [moment().subtract(0.5, 'years'), moment()],
             '今天': [moment(), moment()],
             '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
             '7天前': [moment().subtract(6, 'days'), moment()],
             '30天前': [moment().subtract(29, 'days'), moment()],
-            '1年前': [moment().subtract(365, 'days'), moment()],
             '當月': [moment().startOf('month'), moment().endOf('month')],
-            '歷年紀錄': ["2005/01/01", moment()],
             '上個月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            '1年前': [moment().subtract(365, 'days'), moment()],
+            '歷年紀錄': ["2005/01/01", moment()],
         },
         "drops": "auto",
         "showCustomRangeLabel": true,
@@ -201,18 +201,12 @@ function SearchPrintDataTableInitial() {
         { visible: false, target: 12 },
     ];
     const order = [9, "desc"];
-    const rowCallback = function (row, data) {
-        (data.card_type == "遞增") ? $('td:eq(4)', row).html("<b class='text-success'>遞增</b>") : $('td:eq(4)', row).html("<b class='text-danger'>遞減</b>");
-        (data.page_color == "C(彩色)") ? $('td:eq(6)', row).html("<b class='rainbow-text'>C(彩色)</b>") : $('td:eq(6)', row).html("<b>M(單色)</b>");
-        (data.file_path != null && data.file_name != null) ? $('td:eq(10)', row).html('<a href="' + data.file_path + data.file_name + '">' + data.document_name + '</a>')
-            : data.document_name;
-    };
-
-    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback);
-    dataTable.columns(9).search(moment().subtract(365, 'days').format("YYYY-MM-DD") + "~" + moment().format("YYYY-MM-DD"));
+    
+    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, null);
+    //預設日期區間半年
+    dataTable.columns(9).search(moment().subtract(0.5, 'years').format("YYYY-MM-DD") + "~" + moment().format("YYYY-MM-DD"));
+    //Render DataTable
     dataTable.draw();
-
-    //dateStart + "~" + dateEnd
 };
 
 /**
@@ -287,11 +281,10 @@ function DateRangePickerColumnHeight() {
 }
 
 /**
- * 下載留存之檔案，若權限不足檔案無法打開，由後端決定
+ * 下載留存之檔案，若權限不足檔案打開失敗
  */
 function DocumentDownload() {
     $("#searchPrintDataTable").DataTable().on("click", "a", function (e) {
-
         /**
          * 該Row資料
          */
@@ -304,7 +297,7 @@ function DocumentDownload() {
             currentRow = $(this).closest("tr");
         }
         const rowData = dataTable.row(currentRow).data();
-
+        console.log(rowData);
         /**
          * 提交下載，後端傳回BLOB檔案(二進制之PDF)
          */
@@ -319,7 +312,7 @@ function DocumentDownload() {
                 if (response != null) {
                     var blob = new Blob([response], { type: 'application/pdf' });
                     var fileURL = URL.createObjectURL(blob);
-                    window.open(fileURL);
+                    window.open(fileURL, '_blank');
                 } else {
                     CustomSweetAlert2.SweetAlertTemplateError("發生錯誤，檔案不存在可能已刪除");
                 }

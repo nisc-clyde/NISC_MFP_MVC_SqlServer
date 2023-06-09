@@ -5,10 +5,13 @@ using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using System.Windows.Markup;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
@@ -62,6 +65,38 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         {
             DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
             IList<PrintViewModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
+
+            //Check File Exists
+            foreach (PrintViewModel printViewModel in searchPrintResultDetail)
+            {
+                printViewModel.card_type = (printViewModel.card_type == "遞增") ? "<b class='text-success'>遞增</b>" : "<b class='text-danger'>遞減</b>";
+                printViewModel.page_color = (printViewModel.page_color == "C(彩色)") ? "<b class='rainbow-text'>C(彩色)</b>" : "<b>M(單色)</b>";
+
+                if (string.IsNullOrWhiteSpace(printViewModel.file_name))
+                {
+                    printViewModel.file_name = "NON";
+                    break;
+                }
+
+                string prefixTopTen = "";
+                if (printViewModel.file_name.Length >= 10) prefixTopTen = printViewModel.file_name.Substring(0, 10);
+                else prefixTopTen = printViewModel.file_name;
+
+                string path = Path.Combine("C:/CMImgs/", prefixTopTen, "/", printViewModel.file_name);
+                if (System.IO.File.Exists(path))
+                {
+                    printViewModel.file_name = prefixTopTen + @"/" + printViewModel.file_name;
+                }
+                if (System.IO.File.Exists(Path.Combine(@"C:/CMImgs/", printViewModel.file_name)))
+                {
+                    //Working on Non Virtual Directory
+                    printViewModel.document_name = $@"<a href='{printViewModel.file_path ?? @"C:/CMImgs/"}/{printViewModel.file_name}'>{printViewModel.document_name ?? ""}</a>";
+
+                    //Working on Virtual Directory - Reference:https://www.ozkary.com/2018/07/aspnet-mvc-apps-on-virtual-dir-iisexpress.html
+                    //printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}'>{printViewModel.document_name ?? ""}</a>";
+                }
+            }
+
             printService.Dispose();
 
             return Json(new
@@ -81,14 +116,26 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [Authorize(Roles = "view")]
         public ActionResult DownloadDocument(string filePath, string fileName)
         {
-            string path = Path.Combine(filePath, fileName);
+            string path = "";
+
+            //Only Working on Non Virtual Directory
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                path = Path.Combine(@"C:/CMImgs/", fileName);
+            }
+            else
+            {
+                path = Path.Combine(filePath, fileName);
+            }
+
+
             if (System.IO.File.Exists(path))
             {
                 byte[] fileBytes = System.IO.File.ReadAllBytes(path);
                 NLogHelper.Instance.Logging("下載文件", fileName);
                 return File(fileBytes, "application/pdf", fileName);
             }
-            return null;
+            return HttpNotFound();
         }
 
         /// <summary>
