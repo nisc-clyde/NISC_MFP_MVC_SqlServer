@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.Web.Administration;
 using NISC_MFP_MVC.ViewModels.Print;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Windows.Markup;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
@@ -24,6 +26,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     {
         private readonly IPrintService printService;
         private readonly Mapper mapper;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 
         /// <summary>
         /// Service和AutoMapper初始化
@@ -72,26 +76,30 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 printViewModel.card_type = (printViewModel.card_type == "遞增") ? "<b class='text-success'>遞增</b>" : "<b class='text-danger'>遞減</b>";
                 printViewModel.page_color = (printViewModel.page_color == "C(彩色)") ? "<b class='rainbow-text'>C(彩色)</b>" : "<b>M(單色)</b>";
 
-                if (string.IsNullOrWhiteSpace(printViewModel.file_name))
+                if (User.IsInRole("view"))
                 {
-                    printViewModel.file_name = "NON";
-                    break;
+                    printViewModel.document_name = DownloadDocument(printViewModel);
                 }
+                //if (string.IsNullOrWhiteSpace(printViewModel.file_name))
+                //{
+                //    printViewModel.file_name = "NON";
+                //    break;
+                //}
 
-                string prefixTopTen = "";
-                if (printViewModel.file_name.Length >= 10) prefixTopTen = printViewModel.file_name.Substring(0, 10);
-                else prefixTopTen = printViewModel.file_name;
+                //string prefixTopTen = "";
+                //if (printViewModel.file_name.Length >= 10) prefixTopTen = printViewModel.file_name.Substring(0, 10);
+                //else prefixTopTen = printViewModel.file_name;
 
-                string path = Path.Combine("C:/CMImgs/", prefixTopTen, "/", printViewModel.file_name);
-                if (System.IO.File.Exists(path))
-                {
-                    printViewModel.file_name = prefixTopTen + @"/" + printViewModel.file_name;
-                }
-                if (System.IO.File.Exists(Path.Combine(@"C:/CMImgs/", printViewModel.file_name)))
-                {
-                    //Working on Virtual Directory - Reference:https://www.ozkary.com/2018/07/aspnet-mvc-apps-on-virtual-dir-iisexpress.html
-                    printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}' target='_blank'>{printViewModel.document_name ?? ""}</a>";
-                }
+                //string path = Path.Combine("C:/CMImgs/", prefixTopTen, "/", printViewModel.file_name);
+                //if (System.IO.File.Exists(path))
+                //{
+                //    printViewModel.file_name = prefixTopTen + @"/" + printViewModel.file_name;
+                //}
+                //if (System.IO.File.Exists(Path.Combine(@"C:/CMImgs/", printViewModel.file_name)))
+                //{
+                //    //Working on Virtual Directory - Reference:https://www.ozkary.com/2018/07/aspnet-mvc-apps-on-virtual-dir-iisexpress.html
+                //    printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}' target='_blank'>{printViewModel.document_name ?? ""}</a>";
+                //}
             }
 
             printService.Dispose();
@@ -110,10 +118,70 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return printService.GetAll(dataTableRequest).ProjectTo<PrintViewModel>(mapper.ConfigurationProvider);
         }
 
+
+        [Authorize(Roles = "view")]
+        private string DownloadDocument(PrintViewModel printViewModel)
+        {
+            if (string.IsNullOrWhiteSpace(printViewModel.file_name))
+            {
+                printViewModel.file_name = "NON";
+                return printViewModel.document_name;
+            }
+
+            string prefixTopTen = "";
+            if (printViewModel.file_name.Length >= 10) prefixTopTen = printViewModel.file_name.Substring(0, 10);
+            else prefixTopTen = printViewModel.file_name;
+
+            string path = Path.Combine("C:/CMImgs/", prefixTopTen, "/", printViewModel.file_name);
+            if (System.IO.File.Exists(path))
+            {
+                printViewModel.file_name = prefixTopTen + @"/" + printViewModel.file_name;
+            }
+            if (System.IO.File.Exists(Path.Combine(@"C:/CMImgs/", printViewModel.file_name)))
+            {
+                //Working on Virtual Directory - Reference:https://www.ozkary.com/2018/07/aspnet-mvc-apps-on-virtual-dir-iisexpress.html
+                //printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}' target='_blank'>{printViewModel.document_name ?? ""}</a>";
+                printViewModel.document_name = $@"<a href='#' target='_blank'>{printViewModel.document_name ?? ""}</a>";
+
+            }
+            return printViewModel.document_name;
+        }
+
+        /// <summary>
+        /// AJAX Request檔案之Path和Name，若存在則以二進位讀取檔案再Return
+        /// </summary>
+        /// <param name="filePath">檔案路徑，對應tb_logs_print.file_path</param>
+        /// <param name="fileName">檔案名稱，對應tb_logs_print.file_name</param>
+        /// <returns>PDF二進制檔案</returns>
         [Authorize(Roles = "view")]
         public ActionResult DownloadDocument(string filePath, string fileName)
         {
-            string path = Path.Combine(filePath, fileName);
+            //自動到.vs/config/applicationhost.config找到<site name="NISC_MFP_MVC" id="2">並Mapping到指定之Virtual Directory
+            //Microsoft.Web.Administration
+            ServerManager iisManager = new ServerManager();
+            Site mySite = iisManager.Sites.Where(p => p.Name.ToUpper() == "NISC_MFP_MVC").FirstOrDefault();
+#if !DEBUG
+            if (mySite!=null && !mySite.Applications[0].VirtualDirectories.Any(p => p.Path == "/CMImgs"))
+            {
+                mySite.Applications[0].VirtualDirectories.Add(@"/CMImgs", @"C:\CMImgs");
+                iisManager.CommitChanges();
+            }
+#endif
+
+#if DEBUG
+            mySite = iisManager.Sites["WebSite1"];
+
+            if (!mySite.Applications[0].VirtualDirectories.Any(p => p.Path == "/CMImgs"))
+            {
+                mySite.Applications[0].VirtualDirectories.Add(@"/CMImgs", @"C:\CMImgs");
+                iisManager.CommitChanges();
+            }
+#endif
+
+            //string path = Server.MapPath($@"/CMImgs/{fileName}");
+            string path = $@"{mySite.Applications[0].VirtualDirectories.Where(p => p.Path == "/CMImgs").FirstOrDefault().PhysicalPath}/{fileName}";
+
+            logger.Error($"發生Controller：Print\n發生Action：DownloadDocument\n錯誤訊息：{path}", "Exception End");
 
             if (System.IO.File.Exists(path))
             {

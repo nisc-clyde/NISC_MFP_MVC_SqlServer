@@ -47,7 +47,10 @@
                         <div>
                             @Html.ValidationMessage("ErrorMessage", new { @class = "text-danger fs-6" })
                         </div>
-                        <button type="submit" id="btnLogin" class="btn btn-outline-secondary">Log In</button>
+                        <button type="submit" id="btnLogin" class="btn btn-outline-secondary">
+                            Log In
+                            <span id="btnLoginSpinner" class="spinner-border spinner-border-sm" style="display:none" role="status"></span>
+                        </button>
                     </div>
                 </div>
             }
@@ -57,3 +60,12 @@
     @Scripts.Render("~/bundles/jqueryvalmin")
 </body>
 </html>
+
+<script>
+    $("#loginForm").on("submit", function (e) {
+        if ($("#loginForm").valid()) {
+            $("#btnLogin").attr("disabled", true);
+            $("#btnLoginSpinner").show();
+        }
+    });
+</script>

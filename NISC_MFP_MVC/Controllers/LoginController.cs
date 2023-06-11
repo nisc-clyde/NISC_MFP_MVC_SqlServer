@@ -1,4 +1,5 @@
-﻿using NISC_MFP_MVC.Models;
+﻿using NISC_MFP_MVC.App_Start;
+using NISC_MFP_MVC.Models;
 using NISC_MFP_MVC.ViewModels.Config;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
@@ -37,6 +38,7 @@ namespace NISC_MFP_MVC.Controllers
         /// <param name="loginUser">欲登入之Usrr</param>
         /// <returns>使用者自我管理頁面</returns>
         [HttpPost]
+        [PreventDuplicateRequest]
         [ValidateAntiForgeryToken]
         public ActionResult User(LoginModel loginUser)
         {
@@ -97,11 +99,15 @@ namespace NISC_MFP_MVC.Controllers
         }
 
         /// <summary>
-        /// 登入成功之User寫入Cookie和Session，同時取得Authority第一個為登入成功後顯示的頁面
+        /// 登入成功之User寫入Cookie和Session，同時取得Authority第一個為登入成功後顯示的頁面        
+        /// FrontEnd提供Button Disabled來防止頻繁請求
+        /// BackEnd檢查__RequestVerificationToken來防止頻繁請求
+        /// 雙重機制
         /// </summary>
         /// <param name="loginUser">欲登入之Usrr</param>
         /// <returns>第一個擁有的權限Admin頁面</returns>
         [HttpPost]
+        [PreventDuplicateRequest]
         [ValidateAntiForgeryToken]
         public ActionResult Admin(LoginModel loginUser)
         {
@@ -180,6 +186,7 @@ namespace NISC_MFP_MVC.Controllers
         /// <param name="admin">欲新增之Admin</param>
         /// <returns></returns>
         [HttpPost]
+        [AjaxOnly]
         public ActionResult ConfigAdminRegister(AdminRegister admin)
         {
             if (ModelState.IsValid)
@@ -220,6 +227,7 @@ namespace NISC_MFP_MVC.Controllers
         }
 
         [HttpPost]
+        [AjaxOnly]
         public ActionResult SetWindowsAuthConnection(SqlConnectionStringBuilder connectionModel)
         {
             DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog);
@@ -227,6 +235,7 @@ namespace NISC_MFP_MVC.Controllers
         }
 
         [HttpPost]
+        [AjaxOnly]
         public ActionResult SetSqlServerAuthConnection(SqlConnectionStringBuilder connectionModel)
         {
             DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog, false, connectionModel.UserID, connectionModel.Password);
@@ -234,6 +243,7 @@ namespace NISC_MFP_MVC.Controllers
         }
 
         [HttpPost]
+        [AjaxOnly]
         public ActionResult TestConnection(SqlConnectionStringBuilder connectionModel)
         {
             string connectionString = connectionModel.ToString();
