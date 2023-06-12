@@ -2,6 +2,7 @@ using NISC_MFP_MVC.App_Start;
 using System;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Reflection;
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -21,6 +22,8 @@ namespace NISC_MFP_MVC
 
             //Add filter for catch exception by NLog
             GlobalFilters.Filters.Add(new CustomErrorFilterAttribute());
+
+            Application["Version"] = "v3.0";
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

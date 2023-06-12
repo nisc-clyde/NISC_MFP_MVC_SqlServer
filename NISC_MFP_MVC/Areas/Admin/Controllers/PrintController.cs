@@ -78,28 +78,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
                 if (User.IsInRole("view"))
                 {
-                    printViewModel.document_name = DownloadDocument(printViewModel);
+                    printViewModel.document_name = CheckHaveFile(printViewModel);
                 }
-                //if (string.IsNullOrWhiteSpace(printViewModel.file_name))
-                //{
-                //    printViewModel.file_name = "NON";
-                //    break;
-                //}
-
-                //string prefixTopTen = "";
-                //if (printViewModel.file_name.Length >= 10) prefixTopTen = printViewModel.file_name.Substring(0, 10);
-                //else prefixTopTen = printViewModel.file_name;
-
-                //string path = Path.Combine("C:/CMImgs/", prefixTopTen, "/", printViewModel.file_name);
-                //if (System.IO.File.Exists(path))
-                //{
-                //    printViewModel.file_name = prefixTopTen + @"/" + printViewModel.file_name;
-                //}
-                //if (System.IO.File.Exists(Path.Combine(@"C:/CMImgs/", printViewModel.file_name)))
-                //{
-                //    //Working on Virtual Directory - Reference:https://www.ozkary.com/2018/07/aspnet-mvc-apps-on-virtual-dir-iisexpress.html
-                //    printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}' target='_blank'>{printViewModel.document_name ?? ""}</a>";
-                //}
             }
 
             printService.Dispose();
@@ -118,9 +98,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             return printService.GetAll(dataTableRequest).ProjectTo<PrintViewModel>(mapper.ConfigurationProvider);
         }
 
-
-        [Authorize(Roles = "view")]
-        private string DownloadDocument(PrintViewModel printViewModel)
+        private string CheckHaveFile(PrintViewModel printViewModel)
         {
             if (string.IsNullOrWhiteSpace(printViewModel.file_name))
             {
@@ -140,9 +118,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             if (System.IO.File.Exists(Path.Combine(@"C:/CMImgs/", printViewModel.file_name)))
             {
                 //Working on Virtual Directory - Reference:https://www.ozkary.com/2018/07/aspnet-mvc-apps-on-virtual-dir-iisexpress.html
-                //printViewModel.document_name = $@"<a href='{HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)}/CMImgs/{printViewModel.file_name}' target='_blank'>{printViewModel.document_name ?? ""}</a>";
                 printViewModel.document_name = $@"<a href='#' target='_blank'>{printViewModel.document_name ?? ""}</a>";
-
             }
             return printViewModel.document_name;
         }
@@ -157,13 +133,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         public ActionResult DownloadDocument(string filePath, string fileName)
         {
             //自動到.vs/config/applicationhost.config找到<site name="NISC_MFP_MVC" id="2">並Mapping到指定之Virtual Directory
-            //Microsoft.Web.Administration
             ServerManager iisManager = new ServerManager();
             Site mySite = iisManager.Sites.Where(p => p.Name.ToUpper() == "NISC_MFP_MVC").FirstOrDefault();
 #if !DEBUG
             if (mySite!=null && !mySite.Applications[0].VirtualDirectories.Any(p => p.Path == "/CMImgs"))
             {
-                mySite.Applications[0].VirtualDirectories.Add(@"/CMImgs", @"C:\CMImgs");
+                mySite.Applications[0].VirtualDirectories.Add(@"/CMImgs", @"C:/CMImgs");
                 iisManager.CommitChanges();
             }
 #endif
@@ -173,15 +148,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
 
             if (!mySite.Applications[0].VirtualDirectories.Any(p => p.Path == "/CMImgs"))
             {
-                mySite.Applications[0].VirtualDirectories.Add(@"/CMImgs", @"C:\CMImgs");
+                mySite.Applications[0].VirtualDirectories.Add(@"/CMImgs", @"C:/CMImgs");
                 iisManager.CommitChanges();
             }
 #endif
-
-            //string path = Server.MapPath($@"/CMImgs/{fileName}");
-            string path = $@"{mySite.Applications[0].VirtualDirectories.Where(p => p.Path == "/CMImgs").FirstOrDefault().PhysicalPath}/{fileName}";
-
-            logger.Error($"發生Controller：Print\n發生Action：DownloadDocument\n錯誤訊息：{path}", "Exception End");
+            Microsoft.Web.Administration.VirtualDirectory vd = mySite.Applications[0].VirtualDirectories.First(p => p.Path == "/CMImgs");
+            string path = $@"{vd.PhysicalPath}/{fileName}";
 
             if (System.IO.File.Exists(path))
             {
@@ -189,6 +161,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 NLogHelper.Instance.Logging("下載文件", fileName);
                 return File(fileBytes, "application/pdf", fileName);
             }
+            logger.Error($"發生Controller：Print\n發生Action：DownloadDocument\nPath：{path}", "Exception End");
             return HttpNotFound();
         }
 

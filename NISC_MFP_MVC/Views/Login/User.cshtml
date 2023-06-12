@@ -55,6 +55,12 @@
             }
         </div>
     </div>
+
+    <div class="position-fixed bottom-0 end-0">
+        <div class="fs-5 text-white fw-bold me-1">
+            Release Version：@HttpContext.Current.Application["Version"]
+        </div>
+    </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryvalmin")
 </body>

@@ -17,7 +17,7 @@ namespace NISC_MFP_MVC_Common
 {
     public class DatabaseConnectionHelper
     {
-        private static readonly DatabaseConnectionHelper instance=new DatabaseConnectionHelper();
+        private static readonly DatabaseConnectionHelper instance = new DatabaseConnectionHelper();
         private static string connectionString = null;
 
         //Server.MapPath()之根目錄為起始專案之目錄，回上層兩次後指到Common Library的conneciton_string.json
@@ -63,7 +63,14 @@ namespace NISC_MFP_MVC_Common
             string output = JsonConvert.SerializeObject(sqlConnectionStringBuilder, Formatting.Indented);
 
             // output will override original json object
-            File.WriteAllText(PATH, output);
+            try
+            {
+                File.WriteAllText(PATH, output);
+            }
+            catch
+            {
+                throw;
+            }
 
             //Update Singleton String Object
             Save(sqlConnectionStringBuilder.ToString());
