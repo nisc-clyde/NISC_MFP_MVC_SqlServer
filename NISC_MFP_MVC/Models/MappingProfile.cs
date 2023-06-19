@@ -37,7 +37,6 @@ namespace NISC_MFP_MVC.Models
             CreateMap<HistoryInfo, HistoryViewModel>().ReverseMap();
 
             CreateMap<MultiFunctionPrintInfo, MultiFunctionPrintModel>().ReverseMap();
-
         }
     }
 }

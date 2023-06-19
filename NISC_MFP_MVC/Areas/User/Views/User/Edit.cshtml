@@ -12,7 +12,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @id = "userEditForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { id = "userEditForm", @class = "overflow-auto" }))
         {
             @Html.AntiForgeryToken()
 

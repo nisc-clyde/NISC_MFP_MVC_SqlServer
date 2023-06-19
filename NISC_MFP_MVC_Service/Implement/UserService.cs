@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
-using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Card;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -25,19 +22,19 @@ namespace NISC_MFP_MVC_Service.Implement
         public UserService()
         {
             _userRepository = new UserRepository();
-            _mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(UserInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _userRepository.Insert(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
         }
 
         public void InsertBulkData(List<UserInfo> instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _userRepository.InsertBulkData(_mapper.Map<List<InitialUserRepoDTO>>(instance));
         }
@@ -55,9 +52,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public UserInfo Get(string column, string value, string operation)
         {
-            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
-            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
-            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
+            column = column ?? throw new ArgumentNullException(nameof(column), "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException(nameof(value), "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException(nameof(operation), "operation - Reference to null instance.");
 
             InitialUserRepoDTO dataModel = null;
             if (operation == "Equals")
@@ -84,10 +81,17 @@ namespace NISC_MFP_MVC_Service.Implement
                         departmentName = departmentInfos.dept_name;
                     }
                 }
-                //相容舊系統以*.php表示權限
-                if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains(".php")) dataModel.authority = dataModel.authority.Replace(".php", "");
-                //若有view權限但沒有print權限，自動補上
-                if (!string.IsNullOrEmpty(dataModel.authority) && dataModel.authority.Contains("view")) dataModel.authority = "print," + dataModel.authority;
+
+                // if true, 表遷移DB後第一次登入，尚未更新Permission Format
+                if (dataModel.authority != null && dataModel.authority.Contains(".php"))
+                {
+                    PermissionHelper permissionHelper = new PermissionHelper(dataModel.authority);
+                    permissionHelper.PermissionString(String.Join(",", permissionHelper.Order(GlobalVariable.ALL_PERMISSION)));
+                    List<string> permissionList = permissionHelper.FillPermission(GlobalVariable.FILL_PERMISSION);
+                    dataModel.authority = String.Join(",", permissionList);
+                    this.Update(_mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel));
+                }
+
 
                 UserInfo resultModel = _mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
                 resultModel.dept_name = departmentName;
@@ -97,14 +101,18 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void setUserPermission(string authority, string user_id)
         {
+            PermissionHelper permissionHelper = new PermissionHelper(authority);
+            Dictionary<string, string> permissionPreCondition = new Dictionary<string, string> {
             //若有view權限但沒有print權限，自動補上
-            if (authority.Contains("view") && !authority.Contains("print"))
-            {
-                authority = "print," + authority;
-            }
+                {"print","view"},
+            //若有manage_permission權限但沒有user權限，自動補上
+                {"user","manage_permission"}
+            };
+            List<string> permissionList = permissionHelper.FillPermission(permissionPreCondition);
+
             //更新User權限
             UserInfo instance = Get("user_id", user_id, "Equals");
-            instance.authority = authority;
+            instance.authority = String.Join(",", permissionList);
             _userRepository.Update(_mapper.Map<InitialUserRepoDTO>(instance));
         }
 
@@ -125,7 +133,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Delete(UserInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _userRepository.Delete(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
         }
@@ -133,7 +141,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(UserInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _userRepository.Update(_mapper.Map<UserInfo, InitialUserRepoDTO>(instance));
         }
@@ -148,7 +156,7 @@ namespace NISC_MFP_MVC_Service.Implement
             _userRepository.SaveChanges();
         }
 
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             var mapper = new Mapper(config);

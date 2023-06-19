@@ -408,7 +408,6 @@
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -1630,6 +1629,7 @@
     <Content Include=".sonarlint\nisc_mfp_mvccsharp.ruleset" />
     <Content Include="Areas\User\Views\User\RecentlyPrintRecord.cshtml" />
     <Content Include="Areas\User\Views\User\RecentlyDepositRecord.cshtml" />
+    <Content Include="Areas\User\Views\User\DeleteJob.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\Configuration\config.js" />

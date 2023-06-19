@@ -1,5 +1,4 @@
-﻿using NISC_MFP_MVC_Repository.DTOs.Department;
-using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
+﻿using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Department;
 using System.Collections.Generic;
 
 namespace NISC_MFP_MVC_Service.Interface

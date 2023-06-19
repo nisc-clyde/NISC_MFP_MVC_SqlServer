@@ -21,7 +21,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("AddOrEdit", "User", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("AddOrEdit", "User", FormMethod.Post, new { id = "addOrEditForm", @class = "overflow-auto" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
@@ -44,7 +44,7 @@
                                         <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                                     </div>
                                 </div>
-                                @if (@ViewBag.formTitle == "修改使用者")
+                                @if (ViewBag.formTitle == "修改使用者")
                                 {
                                     @Html.TextBoxFor(d => d.user_id, new { @class = "form-control bg-light text-dark", @readonly = "readonly" })
                                     @Html.ValidationMessageFor(d => d.user_id, "", new { @class = "text-danger fs-6" })

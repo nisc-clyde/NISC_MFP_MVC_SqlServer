@@ -7,12 +7,9 @@ using NISC_MFP_MVC_Repository.DTOs.Card;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -25,8 +22,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public CardRepository()
         {
-            db=new MFP_DB();
-            _mapper = InitializeAutomapper();
+            db = new MFP_DB();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialCardRepoDTO instance)
@@ -47,34 +44,34 @@ namespace NISC_MFP_MVC_Repository.Implement
                 conn.Open();
                 //Create temp table
                 SqlCommand createTempDataTable = new SqlCommand(
-                    $"if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
-                    $" WHERE TABLE_NAME = N'tb_card_temp' " +
-                    $" AND TABLE_SCHEMA = N'{databaseName}') " +
-                    $"begin " +
+                    "if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
+                    "WHERE TABLE_NAME = N'tb_card_temp' " +
+                    $"AND TABLE_SCHEMA = N'{databaseName}') " +
+                    "begin " +
                     $"select * into {databaseName}.tb_card_temp from {databaseName}.tb_card " +
-                    $"end;",
+                    "end;",
                      conn);
                 createTempDataTable.ExecuteNonQuery();
 
                 //Set Identity On
-                SqlCommand IDENTITY_INSERT_ON = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_card ON;", conn);
-                IDENTITY_INSERT_ON.ExecuteNonQuery();
+                SqlCommand identityInsertOn = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_card ON;", conn);
+                identityInsertOn.ExecuteNonQuery();
 
                 //Bulk insert data to temp table
-                using (SqlBulkCopy sqlBC = new SqlBulkCopy(connectionString))
+                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(connectionString))
                 {
-                    sqlBC.BatchSize = 100;
-                    sqlBC.DestinationTableName = $"{databaseName}.tb_card_temp";
-                    sqlBC.WriteToServer(dataTable);
+                    sqlBulkCopy.BatchSize = 100;
+                    sqlBulkCopy.DestinationTableName = $"{databaseName}.tb_card_temp";
+                    sqlBulkCopy.WriteToServer(dataTable);
                 }
 
                 //Merge temp table to target
                 SqlCommand mergeTable = new SqlCommand(
                     $"merge {databaseName}.tb_card as target " +
                     $"using {databaseName}.tb_card_temp as source " +
-                    $"on (target.card_id=source.card_id) " +
-                    $"when not matched then insert(serial,card_id,card_type,freevalue,enable,user_id) " +
-                    $"values(source.serial,source.card_id,source.card_type,source.freevalue,source.enable,source.user_id);",
+                    "on (target.card_id=source.card_id) " +
+                    "when not matched then insert(serial,card_id,card_type,freevalue,enable,user_id) " +
+                    "values(source.serial,source.card_id,source.card_type,source.freevalue,source.enable,source.user_id);",
                     conn);
                 mergeTable.ExecuteNonQuery();
 
@@ -83,8 +80,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dropTable.ExecuteNonQuery();
 
                 //Set Identity Off
-                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_card OFF;", conn);
-                IDENTITY_INSERT_OFF.ExecuteNonQuery();
+                SqlCommand identityInsertOff = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_card OFF;", conn);
+                identityInsertOff.ExecuteNonQuery();
 
                 conn.Close();
             }
@@ -211,7 +208,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void UpdateDepositValue(int value, int serial)
         {
-            tb_card dest = db.tb_card.Where(d => d.serial.Equals(serial)).FirstOrDefault();
+            tb_card dest = db.tb_card.FirstOrDefault(d => d.serial.Equals(serial));
             if (dest != null)
             {
                 dest.value += value;
@@ -266,7 +263,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
 

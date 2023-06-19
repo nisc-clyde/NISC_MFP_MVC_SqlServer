@@ -50,7 +50,9 @@
         </div>
 
         <div class="col col-xxl border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">顏色</div></div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                <div class="col">顏色</div>
+            </div>
             <div class="row border-bottom border-2">
                 <div class="col py-2">
                     <select id="generateOutputReport_ColorSelect" class="form-select">
@@ -63,16 +65,20 @@
         </div>
 
         <div class="col col-xxl border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">部門</div></div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                <div class="col">部門</div>
+            </div>
             <div class="row border-bottom border-2">
                 <div class="col py-2">
-                    @Html.DropDownListFor(department => department.departmentNames, Model.departmentNames, "全部", new { @id = "generateOutputReport_DepartmentSelect", @class = "form-select" })
+                    @Html.DropDownListFor(department => department.departmentNames, Model.departmentNames, "全部", new { id = "generateOutputReport_DepartmentSelect", @class = "form-select" })
                 </div>
             </div>
         </div>
 
         <div class="col col-xxl border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">使用者</div></div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                <div class="col">使用者</div>
+            </div>
             <div class="row border-bottom border-2">
                 <div class="col py-2">
                     <select class="form-select" id="generateOutputReport_UserSelect" disabled>
@@ -83,16 +89,20 @@
         </div>
 
         <div class="col col-xxl border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">事務機IP</div></div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                <div class="col">事務機IP</div>
+            </div>
             <div class="row border-bottom border-2">
                 <div class="col py-2">
-                    @Html.DropDownListFor(mfp => mfp.multiFunctionPrints, Model.multiFunctionPrints, "全部", new { @id = "generateOutputReport_MachineIPSelect", @class = "form-select" })
+                    @Html.DropDownListFor(mfp => mfp.multiFunctionPrints, Model.multiFunctionPrints, "全部", new { id = "generateOutputReport_MachineIPSelect", @class = "form-select" })
                 </div>
             </div>
         </div>
 
         <div class="col col-xxl border-end border-2 ">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">期間</div></div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                <div class="col">期間</div>
+            </div>
             <div class="row border-bottom border-2">
                 <div class="col py-2">
                     <select id="outputReportPeriodSelect" class="form-select">
@@ -107,12 +117,12 @@
 
                     <div id="outputReportDateRangePickerCustom" class="mt-3" style="display:none">
                         <div class="input-group justify-content-center">
-                            <span class="input-group-text" id="basic-addon1">自</span>
+                            <span class="input-group-text">自</span>
                             <input id="outputReportDateRangePickerStart" type="text" class="form-control text-center customDateRange">
                         </div>
                         <i class="fa-solid fa-arrow-down"></i>
                         <div class="input-group justify-content-center">
-                            <span class="input-group-text" id="basic-addon1">到</span>
+                            <span class="input-group-text">到</span>
                             <input id="outputReportDateRangePickerEnd" type="text" class="form-control text-center customDateRange">
                         </div>
                     </div>
@@ -121,10 +131,12 @@
         </div>
 
         <div class="col col-xxl border-end border-2 w-50">
-            <div class="row justify-content-center border-bottom border-2 fw-semibold"><div class="col">產生報表</div></div>
+            <div class="row justify-content-center border-bottom border-2 fw-semibold">
+                <div class="col">產生報表</div>
+            </div>
             <div class="row g-2 border-bottom border-2">
                 <div class="col py-2">
-                    <div style='display: inline-block; white-space: nowrap;'>
+                    <div style="display: inline-block; white-space: nowrap;">
                         <button type="button" id="btnGenerateUsageReport" class="btn btn-primary">
                             用量報表
                             <span id="btnUsageSpinner" class="spinner-border spinner-border-sm" style="display:none" role="status"></span>
@@ -132,7 +144,7 @@
                     </div>
                 </div>
                 <div class="col py-2">
-                    <div style='display: inline-block; white-space: nowrap;'>
+                    <div style="display: inline-block; white-space: nowrap;">
                         <button type="button" id="btnGenerateRecordReport" class="btn btn-warning">
                             紀錄報表
                             <span id="btnRecordSpinner" class="spinner-border spinner-border-sm" style="display:none" role="status"></span>
@@ -157,4 +169,6 @@
 </div>
 @*報表 - Third Cotainer - End*@
 
-<a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top" role="button"><i class="fa-solid fa-angles-up"></i></a>
+<a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top" role="button">
+    <i class="fa-solid fa-angles-up"></i>
+</a>

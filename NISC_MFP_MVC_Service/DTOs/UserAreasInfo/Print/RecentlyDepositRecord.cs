@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print
+﻿namespace NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print
 {
     public class RecentlyDepositRecord
     {
@@ -14,6 +8,6 @@ namespace NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print
         public int? deposit_value { get; set; }
         public int? final_value { get; set; }
         public string deposit_date { get; set; }
-        
+
     }
 }

@@ -2,7 +2,6 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DB;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.MultiFunctionPrint;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
@@ -16,23 +15,23 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class MultiFunctionPrintRepository : IMultiFunctionPrintRepository
     {
         protected MFP_DB db { get; private set; }
-        private readonly Mapper mapper;
+        private readonly Mapper _mapper;
 
         public MultiFunctionPrintRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialMultiFunctionPrintRepoDTO instance)
         {
-            db.tb_mfp.Add(mapper.Map<tb_mfp>(instance));
+            db.tb_mfp.Add(_mapper.Map<tb_mfp>(instance));
             db.SaveChanges();
         }
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetAll()
         {
-            return db.tb_mfp.ProjectTo<InitialMultiFunctionPrintRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_mfp.ProjectTo<InitialMultiFunctionPrintRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -56,7 +55,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialMultiFunctionPrintRepoDTO Get(string column, string value, string operation)
         {
             tb_mfp result = db.tb_mfp.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return mapper.Map<tb_mfp, InitialMultiFunctionPrintRepoDTO>(result);
+            return _mapper.Map<tb_mfp, InitialMultiFunctionPrintRepoDTO>(result);
         }
 
         public IQueryable<InitialMultiFunctionPrintRepoDTO> GetMultiple(int cr_id)
@@ -74,20 +73,20 @@ namespace NISC_MFP_MVC_Repository.Implement
                     mfp_status = p.mfp_status == "Online" ? "線上" : "離線"
                 })
                 .AsQueryable()
-                .ProjectTo<InitialMultiFunctionPrintRepoDTO>(mapper.ConfigurationProvider);
+                .ProjectTo<InitialMultiFunctionPrintRepoDTO>(_mapper.ConfigurationProvider);
             return result;
         }
 
         public void Update(InitialMultiFunctionPrintRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
+            var dataModel = _mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
             db.Entry(dataModel).State = EntityState.Modified;
             db.SaveChanges();
         }
 
         public void Delete(InitialMultiFunctionPrintRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
+            var dataModel = _mapper.Map<InitialMultiFunctionPrintRepoDTO, tb_mfp>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
             db.SaveChanges();
         }
@@ -126,7 +125,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
 

@@ -1,0 +1,25 @@
+﻿@model NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print.PrintJobsModel
+
+<table id="deleteDataTable" class="table table-striped table-bordered w-100 fs-6">
+    <thead>
+    <tr>
+        <th>時間</th>
+        <th>文件名稱</th>
+        <th>張數</th>
+        <th>紙張尺寸</th>
+        <th>顏色</th>
+        <th>點數</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr id="deleteRowData">
+        <th id="date">@Model.date</th>
+        <th id="document">@Model.document</th>
+        <th id="pages">@Model.pages</th>
+        <th id="size">@Model.size</th>
+        <th id="color">@Html.Raw(Model.color)</th>
+        @*Parse the HTML String*@
+        <th id="value">@Model.value</th>
+    </tr>
+    </tbody>
+</table>

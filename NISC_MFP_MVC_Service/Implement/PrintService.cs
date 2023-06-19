@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Implement;
@@ -10,9 +9,9 @@ using NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Data.Entity;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -24,12 +23,12 @@ namespace NISC_MFP_MVC_Service.Implement
         public PrintService()
         {
             _printRepository = new PrintRepository();
-            _mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(PrintInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _printRepository.Insert(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
         }
@@ -49,9 +48,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public PrintInfo Get(string column, string value, string operation)
         {
-            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
-            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
-            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
+            column = column ?? throw new ArgumentNullException(nameof(column), "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException(nameof(value), "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException(nameof(operation), "operation - Reference to null instance.");
 
             InitialPrintRepoDTO dataModel = null;
             if (operation == "Equals")
@@ -80,7 +79,10 @@ namespace NISC_MFP_MVC_Service.Implement
                 .Select(d => new RecentlyPrintRecord
                 {
                     mfp_name = d.mfp_name,
-                    usage_type = d.usage_type == "C" ? "影印" : d.usage_type == "P" ? "列印" : d.usage_type == "S" ? "掃描" : d.usage_type == "F" ? "傳真" : "",
+                    usage_type = d.usage_type == "C" ? "影印" :
+                        d.usage_type == "P" ? "列印" :
+                        d.usage_type == "S" ? "掃描" :
+                        d.usage_type == "F" ? "傳真" : "",
                     page_color = d.page_color,
                     value = d.value,
                     document_name = d.document_name,
@@ -100,14 +102,14 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(PrintInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _printRepository.Update(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
         }
 
         public void Delete(PrintInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _printRepository.Delete(_mapper.Map<PrintInfo, InitialPrintRepoDTONeed>(instance));
         }
@@ -117,7 +119,7 @@ namespace NISC_MFP_MVC_Service.Implement
             _printRepository.SaveChanges();
         }
 
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             var mapper = new Mapper(config);

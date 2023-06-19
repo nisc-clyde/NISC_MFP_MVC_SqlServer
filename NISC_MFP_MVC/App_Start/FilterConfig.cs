@@ -8,6 +8,5 @@ namespace NISC_MFP_MVC
         {
             filters.Add(new HandleErrorAttribute());
         }
-
     }
 }

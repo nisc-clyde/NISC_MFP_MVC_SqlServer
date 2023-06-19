@@ -1,10 +1,6 @@
 using NISC_MFP_MVC_Common;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Linq;
 
 namespace NISC_MFP_MVC_Repository.DB
 {
@@ -13,6 +9,7 @@ namespace NISC_MFP_MVC_Repository.DB
         public MFP_DB()
         {
             this.Database.Connection.ConnectionString = DatabaseConnectionHelper.Instance.GetConnectionStringFromFile();
+            Debug.WriteLine(this.Database.Connection.ConnectionString);
         }
         //"name=MFPContext"
 

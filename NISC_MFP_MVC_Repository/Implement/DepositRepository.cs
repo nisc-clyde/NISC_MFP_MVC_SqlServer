@@ -5,7 +5,6 @@ using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -15,23 +14,23 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class DepositRepository : IDepositRepository
     {
         protected MFP_DB db { get; private set; }
-        private readonly Mapper mapper;
+        private readonly Mapper _mapper;
 
         public DepositRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialDepositRepoDTO instance)
         {
-            db.tb_logs_deposit.Add(mapper.Map<tb_logs_deposit>(instance));
+            db.tb_logs_deposit.Add(_mapper.Map<tb_logs_deposit>(instance));
             db.SaveChanges();
         }
 
         public IQueryable<InitialDepositRepoDTO> GetAll()
         {
-            return db.tb_logs_deposit.ProjectTo<InitialDepositRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_logs_deposit.ProjectTo<InitialDepositRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialDepositRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -60,7 +59,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_8,
             };
 
-            IQueryable<InitialDepositRepoDTO> tb_Logs_Deposit = db.tb_logs_deposit.AsNoTracking().ProjectTo<InitialDepositRepoDTO>(mapper.ConfigurationProvider);
+            IQueryable<InitialDepositRepoDTO> tb_Logs_Deposit = db.tb_logs_deposit.AsNoTracking().ProjectTo<InitialDepositRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Logs_Deposit = GetWithGlobalSearch(tb_Logs_Deposit, dataTableRequest.GlobalSearchValue);
@@ -72,7 +71,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Logs_Deposit.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Logs_Deposit = tb_Logs_Deposit.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_Logs_Deposit = tb_Logs_Deposit.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
             return tb_Logs_Deposit;
         }
@@ -109,20 +108,20 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialDepositRepoDTO Get(string column, string value, string operation)
         {
             tb_logs_deposit result = db.tb_logs_deposit.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return mapper.Map<tb_logs_deposit, InitialDepositRepoDTO>(result);
+            return _mapper.Map<tb_logs_deposit, InitialDepositRepoDTO>(result);
         }
 
 
         public void Update(InitialDepositRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
+            var dataModel = _mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
             db.Entry(dataModel).State = EntityState.Modified;
             db.SaveChanges();
         }
 
         public void Delete(InitialDepositRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
+            var dataModel = _mapper.Map<InitialDepositRepoDTO, tb_logs_deposit>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
             db.SaveChanges();
         }
@@ -153,10 +152,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            
+
             return new Mapper(config);
         }
     }

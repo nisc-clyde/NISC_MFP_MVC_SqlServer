@@ -2,7 +2,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("AddOrEdit", "Department", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("AddOrEdit", "Department", FormMethod.Post, new { id = "addOrEditForm", @class = "overflow-auto" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
@@ -40,7 +40,7 @@
                                 <div class="input-group">
                                     @Html.LabelFor(d => d.dept_value, new { @class = "form-label fw-semibold me-2" })
                                 </div>
-                                @Html.TextBoxFor(d => d.dept_value, new { @class = "form-control", @type = "number" })
+                                @Html.TextBoxFor(d => d.dept_value, new { @class = "form-control", type = "number" })
                                 @Html.ValidationMessageFor(d => d.dept_value, "", new { @class = "text-danger fs-6" })
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                 <div class="input-group">
                                     @Html.LabelFor(d => d.dept_month_sum, new { @class = "form-label fw-semibold me-2" })
                                 </div>
-                                @Html.TextBoxFor(d => d.dept_month_sum, new { @class = "form-control", @type = "number" })
+                                @Html.TextBoxFor(d => d.dept_month_sum, new { @class = "form-control", type = "number" })
                                 @Html.ValidationMessageFor(d => d.dept_month_sum, "", new { @class = "text-danger fs-6" })
                             </div>
                         </div>

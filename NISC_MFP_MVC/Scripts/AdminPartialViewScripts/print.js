@@ -10,7 +10,7 @@ dateStart = moment().subtract(0.5, 'years').format("YYYY-MM-DD");
 dateEnd = moment().format("YYYY-MM-DD");
 
 function DateRangePicker_Initial() {
-    var dateRangePicker = $('#dateRangePicker').daterangepicker({
+    let dateRangePicker = $('#dateRangePicker').daterangepicker({
         "showDropdowns": true,
         ranges: {
             '預設': [moment().subtract(0.5, 'years'), moment()],
@@ -86,7 +86,7 @@ function DateRangePicker_Initial() {
  * @param {any} dest
  */
 function FormSelect_Move(orign, dest) {
-    var selectedItem = $(orign + " option:selected");
+    let selectedItem = $(orign + " option:selected");
     $(dest).append($(selectedItem).clone());
     $(selectedItem).remove();
 }
@@ -99,7 +99,7 @@ function FormSelect_UnSelect() {
     $("#searchPrint_OperationUnSelect").click(function () {
         FormSelect_Move("#searchPrint_OperationUnSelect", "#searchPrint_OperationSelect");
 
-        var operationString = [];
+        let operationString = [];
         $("#searchPrint_OperationSelect option:not(:first)").each(function () {
             operationString.push($(this).text());
         })
@@ -115,7 +115,7 @@ function FormSelect_UnSelect() {
     $("#searchPrint_DepartmentUnSelect").click(function () {
         FormSelect_Move("#searchPrint_DepartmentUnSelect", "#searchPrint_DepartmentSelect");
 
-        var departmentString = [];
+        let departmentString = [];
         $("#searchPrint_DepartmentSelect option:not(:first)").each(function () {
             departmentString.push($(this).text());
         })
@@ -136,7 +136,7 @@ function FormSelect_Select() {
     $("#searchPrint_OperationSelect").click(function () {
         FormSelect_Move("#searchPrint_OperationSelect", "#searchPrint_OperationUnSelect");
 
-        var operationString = [];
+        let operationString = [];
         $("#searchPrint_OperationSelect option:not(:first)").each(function () {
             operationString.push($(this).text());
         })
@@ -152,7 +152,7 @@ function FormSelect_Select() {
     $("#searchPrint_DepartmentSelect").click(function () {
         FormSelect_Move("#searchPrint_DepartmentSelect", "#searchPrint_DepartmentUnSelect");
 
-        var departmentString = [];
+        let departmentString = [];
         $("#searchPrint_DepartmentSelect option:not(:first)").each(function () {
             departmentString.push($(this).text());
         })
@@ -307,8 +307,8 @@ function DocumentDownload() {
             },
             success: function (response) {
                 if (response != null) {
-                    var blob = new Blob([response], { type: 'application/pdf' });
-                    var fileURL = URL.createObjectURL(blob);
+                    const blob = new Blob([response], { type: 'application/pdf' });
+                    const fileURL = URL.createObjectURL(blob);
                     window.open(fileURL, '_blank');
                 } else {
                     CustomSweetAlert2.SweetAlertTemplateError("發生錯誤，檔案不存在可能已刪除");

@@ -21,7 +21,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("AddOrEdit", "Card", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("AddOrEdit", "Card", FormMethod.Post, new { id = "addOrEditForm", @class = "overflow-auto" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
@@ -44,7 +44,7 @@
                                         <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                                     </div>
                                 </div>
-                                @Html.TextBoxFor(d => d.card_id, new { placeholder = "0000000000 ~ 9999999999", @class = "form-control", @type = "number" })
+                                @Html.TextBoxFor(d => d.card_id, new { placeholder = "0000000000 ~ 9999999999", @class = "form-control", type = "number" })
                                 @Html.ValidationMessageFor(d => d.card_id, "", new { @class = "text-danger fs-6" })
                             </div>
                         </div>

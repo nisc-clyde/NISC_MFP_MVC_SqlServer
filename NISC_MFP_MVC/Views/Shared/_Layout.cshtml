@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/cssbundle")
@@ -10,13 +10,13 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <header>
-        <a href="#" class="logo" data-original-title="">
-            <img src="~/img/logo.png" alt="Logo">
-        </a>
-    </header>
+<header>
+    <a href="#" class="logo" data-original-title="">
+        <img src="~/img/logo.png" alt="Logo">
+    </a>
+</header>
 
-    @*<div class="navbar navbar-inverse navbar-fixed-top">
+@*<div class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -36,24 +36,24 @@
             </div>
         </div>*@
 
-    <div class="container-fluid">
+<div class="container-fluid">
 
+</div>
+
+
+@RenderBody()
+<footer class="bg-light text-center text-lg-start">
+    <!-- Copyright -->
+    <div class="text-left p-3" style="background-color: #3693cf; ">
+        © 2005 Copyright:
+        <a class="text-dark" href="https://www.nisc.com.tw/">新印科技股份有限公司</a>
     </div>
+    <!-- Copyright -->
+</footer>
 
 
-    @RenderBody()
-    <footer class="bg-light text-center text-lg-start">
-        <!-- Copyright -->
-        <div class="text-left p-3" style="background-color: #3693cf; ">
-            © 2005 Copyright:
-            <a class="text-dark" href="https://www.nisc.com.tw/">新印科技股份有限公司</a>
-        </div>
-        <!-- Copyright -->
-    </footer>
-
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", false)
 </body>
 </html>

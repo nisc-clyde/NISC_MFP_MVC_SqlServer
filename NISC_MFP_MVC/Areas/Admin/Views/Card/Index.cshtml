@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "卡片管理";
     ViewBag.ActiveNav = "card";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -136,13 +135,14 @@
             卡片列表&nbsp;<i class="fa-solid fa-list"></i>
             <button id="btnAddCard" type="button" class="ms-3 btn btn-success mb-1">新增卡片</button>
             <button id="btnResetCardFreePoint" type="button" class="ms-3 btn btn-warning mb-1">重設免費點數</button>
-            <div class="modal fade" id="cardForm" role="dialog" data-url='@Url.Action("AddOrEdit","Card")'></div>
+            <div class="modal fade" id="cardForm" role="dialog" data-url='@Url.Action("AddOrEdit", "Card")'></div>
         </div>
     </div>
 
     <div class="row p-2">
-        <table id="searchCardDataTable" class="table table-striped table-bordered w-100 table-hover">
-            <thead>
+        <div class="table-responsive">
+            <table id="searchCardDataTable" class="table table-striped table-bordered w-100 table-hover">
+                <thead>
                 <tr>
                     <th>卡片編號</th>
                     <th>點數</th>
@@ -154,8 +154,9 @@
                     <th>操作</th>
                     <th>serial</th>
                 </tr>
-            </thead>
-        </table>
+                </thead>
+            </table>
+        </div>
     </div>
 
 </div>

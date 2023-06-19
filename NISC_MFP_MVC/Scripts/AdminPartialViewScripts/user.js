@@ -22,40 +22,13 @@ function SearchUserDataTableInitial() {
         { data: "user_name", name: "姓名" },
         { data: "dept_id", name: "部門代碼" },
         { data: "dept_name", name: "部門名稱" },
-        { data: "color_enable_flag", name: "彩色使用權限" },
+        { data: "color_enable_flag", name: "彩色使用權限", width: "10%" },
         { data: "e_mail", name: "信箱" },
-        {
-            data: null,
-            render: function (data, type, row) {
-                return (
-                    "<div class='row row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1 row-cols-xxl-3  g-2'><div class='col'><button type='button' class='btn btn-primary btn-sm btn-permission' data-id='" +
-                    data.serial +
-                    "'><i class='fa-solid fa-circle-info me-1'></i><div style='display: inline-block; white-space: nowrap;'>權限</div></button></div>" +
-                    "<div class='col'><button type='button' class='btn btn-info btn-sm  btn-edit' data-id='" +
-                    data.serial +
-                    "'><i class='fa-solid fa-pen-to-square me-1'></i><div style='display: inline-block; white-space: nowrap;'>修改</div></button></div>" +
-                    "<div class='col'><button type='button' class='btn btn-danger btn-sm btn-sm btn-delete' data-id='" +
-                    data.serial +
-                    "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>"
-                );
-            },
-            orderable: false,
-        },
-        { data: "serial", name: "serial" },
-    ];
-    const columnDefs = [
-        { width: "10%", targets: 6 },
-        { width: "15%", targets: 8 },
-        { visible: false, target: 9 },
+        { data: "operation", name: "操作", orderable: false, width: "15%" },
+        { data: "serial", name: "serial", visible: false },
     ];
     const order = [0, "desc"];
-    const rowCallback = function (row, data) {
-        data.color_enable_flag == "有"
-            ? $("td:eq(6)", row).html("<b class='text-success'>有</b>")
-            : $("td:eq(6)", row).html("<b class='text-danger'>無</b>");
-    };
-
-    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, columnDefs, order, rowCallback).draw();
+    dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, null, order, null).draw();
 }
 
 /**
@@ -144,12 +117,13 @@ function EditUserPermissionConfig() {
             $("#" + modalForm).modal("show");
             PermissionCheckedAll();
             PermissionCheckedClearAll();
+            PermissionBinding_PrintWithView();
+            PermissionBinding_UserWithManagePermission();
 
             /**
              * 提交權限更新
              */
             $("#permissionForm").on("submit", function () {
-
                 /**
                  * 所有勾選之權限加入至Array
                  */
@@ -197,6 +171,42 @@ function PermissionCheckedClearAll() {
         $(".container input[type=checkbox]").each(function () {
             $(this).attr("checked", false);
         });
+    });
+}
+
+function PermissionBinding_PrintWithView() {
+    if ($("#checkBoxPermissionView").prop("checked") == true) {
+        $("#checkBoxPermissionPrint").attr("disabled", true);
+        $("#chainOfPrintWithView").removeClass("fa-link-slash").addClass("fa-link");
+    }
+
+    $("#checkBoxPermissionView").on("click", function () {
+        if ($(this).prop("checked") == true) {
+            $("#checkBoxPermissionPrint").prop("checked", true);
+            $("#checkBoxPermissionPrint").attr("disabled", true);
+            $("#chainOfPrintWithView").removeClass("fa-link-slash").addClass("fa-link");
+        } else {
+            $("#checkBoxPermissionPrint").attr("disabled", false);
+            $("#chainOfPrintWithView").removeClass("fa-link").addClass("fa-link-slash");
+        }
+    });
+}
+
+function PermissionBinding_UserWithManagePermission() {
+    if ($("#checkBoxPermissionManagePermission").prop("checked") == true) {
+        $("#checkBoxPermissionUser").attr("disabled", true);
+        $("#chainOfUserWithManagePermission").removeClass("fa-link-slash").addClass("fa-link");
+    }
+
+    $("#checkBoxPermissionManagePermission").on("click", function () {
+        if ($(this).prop("checked") == true) {
+            $("#checkBoxPermissionUser").prop("checked", true);
+            $("#checkBoxPermissionUser").attr("disabled", true);
+            $("#chainOfUserWithManagePermission").removeClass("fa-link-slash").addClass("fa-link");
+        } else {
+            $("#checkBoxPermissionUser").attr("disabled", false);
+            $("#chainOfUserWithManagePermission").removeClass("fa-link").addClass("fa-link-slash");
+        }
     });
 }
 

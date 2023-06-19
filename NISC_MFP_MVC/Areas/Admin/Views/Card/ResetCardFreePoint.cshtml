@@ -2,9 +2,8 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("ResetCardFreePoint", "Card", FormMethod.Post, new { @id = "resetFreeValueForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("ResetCardFreePoint", "Card", FormMethod.Post, new { id = "resetFreeValueForm", @class = "overflow-auto" }))
         {
-
             @Html.AntiForgeryToken()
 
             <div class="modal-header">

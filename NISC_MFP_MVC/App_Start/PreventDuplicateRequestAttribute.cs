@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace NISC_MFP_MVC.App_Start
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class PreventDuplicateRequestAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (HttpContext.Current.Request["__RequestVerificationToken"] == null)
-            {
-                return;
-            }
+            if (HttpContext.Current.Request["__RequestVerificationToken"] == null) return;
 
-            var currentToken = HttpContext.Current.Request["__RequestVerificationToken"].ToString();
+            var currentToken = HttpContext.Current.Request["__RequestVerificationToken"];
 
             if (HttpContext.Current.Session["LastProcessedToken"] == null)
             {

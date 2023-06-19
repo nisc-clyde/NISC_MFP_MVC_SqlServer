@@ -2,7 +2,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-        @using (Html.BeginForm("AddOrEdit", "CardReader", FormMethod.Post, new { @id = "addOrEditForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("AddOrEdit", "CardReader", FormMethod.Post, new { id = "addOrEditForm", @class = "overflow-auto" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(d => d.serial)
@@ -23,7 +23,7 @@
                                         <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                                     </div>
                                 </div>
-                                @Html.TextBoxFor(d => d.cr_id, new { @class = "form-control", @type = "number" })
+                                @Html.TextBoxFor(d => d.cr_id, new { @class = "form-control", type = "number" })
                                 @Html.ValidationMessageFor(d => d.cr_id, "", new { @class = "text-danger fs-6" })
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                                         <i class="fa-solid fa-star-of-life fa-beat fa-2xs" style="color: #ff0000;"></i>
                                     </div>
                                 </div>
-                                @Html.TextBoxFor(d => d.cr_port, new { placeholder = "0~65535", @class = "form-control", @type = "number" })
+                                @Html.TextBoxFor(d => d.cr_port, new { placeholder = "0~65535", @class = "form-control", type = "number" })
                                 @Html.ValidationMessageFor(d => d.cr_port, "", new { @class = "text-danger fs-6" })
                             </div>
                         </div>
@@ -54,11 +54,12 @@
                         <div class="col">
                             <div class="form-group">
                                 @Html.LabelFor(d => d.cr_type, new { @class = "form-label fw-semibold" })
-                                @Html.DropDownList("cr_type", new List<SelectListItem> {
-                               new SelectListItem{ Text="事務機",Value="M"},
-                               new SelectListItem{ Text="影印機",Value="F"},
-                               new SelectListItem{ Text="印表機",Value="P"}
-                           }, new { @class = "form-control" })
+                                @Html.DropDownList("cr_type", new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "事務機", Value = "M" },
+                                    new SelectListItem { Text = "影印機", Value = "F" },
+                                    new SelectListItem { Text = "印表機", Value = "P" }
+                                }, new { @class = "form-control" })
                             </div>
                         </div>
                     </div>

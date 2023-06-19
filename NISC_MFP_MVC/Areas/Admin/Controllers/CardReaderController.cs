@@ -14,86 +14,41 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 namespace NISC_MFP_MVC.Areas.Admin.Controllers
 {
     [Authorize(Roles = "cardreader")]
-    public class CardReaderController : Controller, IDataTableController<CardReaderModel>, IAddEditDeleteController<CardReaderModel>
+    public class CardReaderController : Controller, IDataTableController<CardReaderModel>,
+        IAddEditDeleteController<CardReaderModel>
     {
-        private readonly ICardReaderService cardReaderService;
-        private readonly IMultiFunctionPrintService multiFunctionPrintService;
-        private readonly Mapper mapper;
+        private readonly ICardReaderService _cardReaderService;
+        private readonly Mapper _mapper;
+        private readonly IMultiFunctionPrintService _multiFunctionPrintService;
 
         /// <summary>
-        /// Service和AutoMapper初始化
+        ///     Service和AutoMapper初始化
         /// </summary>
         public CardReaderController()
         {
-            cardReaderService = new CardReaderService();
-            multiFunctionPrintService = new MultiFunctionPrintService();
-            mapper = InitializeAutomapper();
-        }
-
-        /// <summary>
-        /// CardReader Index View
-        /// </summary>
-        /// <returns>reutrn Index View</returns>
-        public ActionResult Index()
-        {
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
-            return View();
-        }
-
-        [HttpPost]
-        [ActionName("InitialDataTable")]
-        public ActionResult SearchDataTable()
-        {
-            DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
-            IList<CardReaderModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
-
-            return Json(new
-            {
-                data = searchPrintResultDetail,
-                draw = dataTableRequest.Draw,
-                recordsFiltered = dataTableRequest.RecordsFilteredGet
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-
-        [NonAction]
-        public IQueryable<CardReaderModel> InitialData(DataTableRequest dataTableRequest)
-        {
-            return cardReaderService.GetAll(dataTableRequest).ProjectTo<CardReaderModel>(mapper.ConfigurationProvider);
-        }
-
-        /// <summary>
-        /// 建立AutoMapper配置
-        /// </summary>
-        /// <returns></returns>
-        private Mapper InitializeAutomapper()
-        {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-
-            return mapper;
+            _cardReaderService = new CardReaderService();
+            _multiFunctionPrintService = new MultiFunctionPrintService();
+            _mapper = InitializeAutoMapper();
         }
 
         [HttpGet]
         public ActionResult AddOrEdit(string formTitle, int serial)
         {
-            CardReaderModel cardReaderViewModel = new CardReaderModel();
+            var cardReaderViewModel = new CardReaderModel();
             if (serial < 0)
             {
                 cardReaderViewModel.cr_mode = "F";
                 cardReaderViewModel.cr_card_switch = "F";
                 cardReaderViewModel.cr_status = "Online";
             }
-            else if (serial >= 0)
+            else
             {
-                CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
-                cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
+                var instance = _cardReaderService.Get("serial", serial.ToString(), "Equals");
+                cardReaderViewModel = _mapper.Map<CardReaderModel>(instance);
             }
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
+
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
 
             ViewBag.formTitle = formTitle;
 
@@ -108,30 +63,31 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    cardReaderService.Insert(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+                    _cardReaderService.Insert(_mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
                     NLogHelper.Instance.Logging("新增事務機", $"卡機編號：{cardReader.cr_id}<br/>IP位置：{cardReader.cr_ip}");
-                    cardReaderService.Dispose();
-                    multiFunctionPrintService.Dispose();
+                    _cardReaderService.Dispose();
+                    _multiFunctionPrintService.Dispose();
 
                     return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
                 }
             }
             else if (currentOperation == "Edit" && ModelState.IsValid)
             {
-                CardReaderInfo originalCardReader = cardReaderService.Get("serial", cardReader.serial.ToString(), "Equals");
-                string logMessage = $"(修改前)卡機編號：{originalCardReader.cr_id}}}, IP位置：{originalCardReader.cr_ip}<br/>";
+                var originalCardReader = _cardReaderService.Get("serial", cardReader.serial.ToString(), "Equals");
+                var logMessage = $"(修改前)卡機編號：{originalCardReader.cr_id}}}, IP位置：{originalCardReader.cr_ip}<br/>";
 
-                cardReaderService.Update(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
-                cardReaderService.Dispose();
-                multiFunctionPrintService.Dispose();
+                _cardReaderService.Update(_mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+                _cardReaderService.Dispose();
+                _multiFunctionPrintService.Dispose();
 
                 logMessage += $"(修改後)卡機編號：{cardReader.cr_id}}}, IP位置：{cardReader.cr_ip}";
                 NLogHelper.Instance.Logging("修改事務機", logMessage);
 
                 return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
             }
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
+
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
 
             return RedirectToAction("Index");
         }
@@ -140,10 +96,10 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int serial)
         {
-            CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
-            CardReaderModel cardReaderViewModel = mapper.Map<CardReaderModel>(instance);
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
+            var instance = _cardReaderService.Get("serial", serial.ToString(), "Equals");
+            var cardReaderViewModel = _mapper.Map<CardReaderModel>(instance);
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
 
             return PartialView(cardReaderViewModel);
         }
@@ -151,18 +107,65 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(CardReaderModel cardReader)
         {
-            cardReaderService.Delete(mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
-            multiFunctionPrintService.DeleteMFPById(cardReader.cr_id);
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
+            _cardReaderService.Delete(_mapper.Map<CardReaderModel, CardReaderInfo>(cardReader));
+            _multiFunctionPrintService.DeleteMFPById(cardReader.cr_id);
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
 
             NLogHelper.Instance.Logging("刪除事務機", $"卡機編號：{cardReader.cr_id}<br/>IP位置：{cardReader.cr_ip}");
 
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        [ActionName("InitialDataTable")]
+        public ActionResult SearchDataTable()
+        {
+            var dataTableRequest = new DataTableRequest(Request.Form);
+            IList<CardReaderModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
+
+            return Json(new
+            {
+                data = searchPrintResultDetail,
+                draw = dataTableRequest.Draw,
+                recordsFiltered = dataTableRequest.RecordsFilteredGet
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [NonAction]
+        public IQueryable<CardReaderModel> InitialData(DataTableRequest dataTableRequest)
+        {
+            return _cardReaderService.GetAll(dataTableRequest).ProjectTo<CardReaderModel>(_mapper.ConfigurationProvider);
+        }
+
         /// <summary>
-        /// Render CardReader管理的PartialView
+        ///     CardReader Index View
+        /// </summary>
+        /// <returns>return Index View</returns>
+        public ActionResult Index()
+        {
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
+            return View();
+        }
+
+        /// <summary>
+        ///     建立AutoMapper配置
+        /// </summary>
+        /// <returns></returns>
+        private Mapper InitializeAutoMapper()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
+
+            return mapper;
+        }
+
+        /// <summary>
+        ///     Render CardReader管理的PartialView
         /// </summary>
         /// <param name="formTitle">PartialView的Title</param>
         /// <param name="serial">CardReader的serial</param>
@@ -171,22 +174,23 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult CardReaderManagement(string formTitle, int serial, int cardReaderId)
         {
-            MultiFunctionPrintViewModel multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
+            var multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
 
-            CardReaderInfo instance = cardReaderService.Get("serial", serial.ToString(), "Equals");
-            multiFunctionPrintViewModel.cardReaderModel = mapper.Map<CardReaderModel>(instance);
-            cardReaderService.Dispose();
+            var instance = _cardReaderService.Get("serial", serial.ToString(), "Equals");
+            multiFunctionPrintViewModel.cardReaderModel = _mapper.Map<CardReaderModel>(instance);
+            _cardReaderService.Dispose();
 
-            IQueryable<MultiFunctionPrintModel> mfpResultModel = multiFunctionPrintService.GetMultiple(cardReaderId).ProjectTo<MultiFunctionPrintModel>(mapper.ConfigurationProvider);
+            var mfpResultModel = _multiFunctionPrintService.GetMultiple(cardReaderId)
+                .ProjectTo<MultiFunctionPrintModel>(_mapper.ConfigurationProvider);
             multiFunctionPrintViewModel.multiFunctionPrintModels = mfpResultModel.ToList();
-            multiFunctionPrintService.Dispose();
+            _multiFunctionPrintService.Dispose();
 
             ViewBag.formTitle = formTitle;
             return PartialView(multiFunctionPrintViewModel);
         }
 
         /// <summary>
-        /// 新增或修改MFP
+        ///     新增或修改MFP
         /// </summary>
         /// <param name="data">MFP的資料</param>
         /// <param name="cr_id">要新增到哪個CardReader底下</param>
@@ -200,22 +204,25 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    multiFunctionPrintService.Insert(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
-                    cardReaderService.Dispose();
-                    multiFunctionPrintService.Dispose();
-                    NLogHelper.Instance.Logging("新增事務機管理", $"控制編號：{data.printer_id ?? "0"}<br/>IP位置：{data.mfp_ip ?? "1"}");
+                    _multiFunctionPrintService.Insert(_mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data),
+                        cr_id);
+                    _cardReaderService.Dispose();
+                    _multiFunctionPrintService.Dispose();
+                    NLogHelper.Instance.Logging("新增事務機管理",
+                        $"控制編號：{data.printer_id ?? "0"}<br/>IP位置：{data.mfp_ip ?? "1"}");
 
                     return Json(new { success = true, message = "新增成功" }, JsonRequestBehavior.AllowGet);
                 }
             }
             else if (currentOperation == "Edit")
             {
-                MultiFunctionPrintInfo originalMFP = multiFunctionPrintService.Get("serial", data.serial.ToString(), "Equals");
-                string logMessage = $"(修改前)控制編號：{originalMFP.printer_id}, IP位置：{originalMFP.mfp_ip}<br/>";
+                var originalMFP = _multiFunctionPrintService.Get("serial", data.serial.ToString(), "Equals");
+                var logMessage = $"(修改前)控制編號：{originalMFP.printer_id}, IP位置：{originalMFP.mfp_ip}<br/>";
 
-                multiFunctionPrintService.Update(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data), cr_id);
-                cardReaderService.Dispose();
-                multiFunctionPrintService.Dispose();
+                _multiFunctionPrintService.Update(_mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(data),
+                    cr_id);
+                _cardReaderService.Dispose();
+                _multiFunctionPrintService.Dispose();
 
                 logMessage += $"(修改後)控制編號：{data.printer_id}, IP位置：{data.mfp_ip}";
                 NLogHelper.Instance.Logging("修改事務機管理", logMessage);
@@ -227,38 +234,38 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// 刪除MFP
+        ///     刪除MFP
         /// </summary>
         /// <param name="mfp">要刪除的MFP</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult DeleteMFP(MultiFunctionPrintModel mfp)
         {
-            multiFunctionPrintService.Delete(mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(mfp));
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
+            _multiFunctionPrintService.Delete(_mapper.Map<MultiFunctionPrintModel, MultiFunctionPrintInfo>(mfp));
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
             NLogHelper.Instance.Logging("刪除事務機管理", $"控制編號：{mfp.printer_id}<br/>IP位置：{mfp.mfp_ip}");
 
             return Json(new { success = true, message = "刪除成功" }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
-        /// 取回所有CardReader底下的MFP
+        ///     取回所有CardReader底下的MFP
         /// </summary>
         /// <param name="cardReaderId">CardReader的cr_id</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult CardReaderManager(int cardReaderId)
         {
-            MultiFunctionPrintViewModel multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
+            var multiFunctionPrintViewModel = new MultiFunctionPrintViewModel();
 
-            IQueryable<MultiFunctionPrintModel> mfpResultModel = multiFunctionPrintService.GetMultiple(cardReaderId).ProjectTo<MultiFunctionPrintModel>(mapper.ConfigurationProvider);
+            var mfpResultModel = _multiFunctionPrintService.GetMultiple(cardReaderId)
+                .ProjectTo<MultiFunctionPrintModel>(_mapper.ConfigurationProvider);
             multiFunctionPrintViewModel.multiFunctionPrintModels = mfpResultModel.ToList();
-            cardReaderService.Dispose();
-            multiFunctionPrintService.Dispose();
+            _cardReaderService.Dispose();
+            _multiFunctionPrintService.Dispose();
 
             return PartialView("CardReaderManager", multiFunctionPrintViewModel);
         }
-
     }
 }

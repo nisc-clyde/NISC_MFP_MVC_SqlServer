@@ -2,7 +2,6 @@
 {
     public class DepositViewModel : AbstractViewModel
     {
-
         public string user_name { get; set; }
 
         public string user_id { get; set; }

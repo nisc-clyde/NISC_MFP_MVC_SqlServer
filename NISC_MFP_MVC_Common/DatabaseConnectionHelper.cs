@@ -1,17 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Web;
-using System.Web.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace NISC_MFP_MVC_Common
 {
@@ -82,6 +72,9 @@ namespace NISC_MFP_MVC_Common
         /// <returns>Connection String</returns>
         public string GetConnectionString()
         {
+#if DEBUG
+            connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=mywebni1_managerc;Integrated Security=True;";
+#endif
             return connectionString;
         }
 

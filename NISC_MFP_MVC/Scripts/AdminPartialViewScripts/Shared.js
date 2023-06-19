@@ -118,7 +118,7 @@ export const RequestAddOrEdit = (function () {
                                 currentRow.addClass("animate__animated animate__flash animate__faster animate__repeat-2");
                                 currentRow.on("animationend", function () {
                                     currentRow.removeClass("animate__animated animate__flash animate__faster animate__repeat-2");
-                                    dataTable.row(currentRow).data(form).draw();
+                                    dataTable.row(currentRow).draw();
                                 });
                             } else {
                                 //只有對當前登入的User進行資料修改時才執行，在User Page時isCurrentUserUpdate非空

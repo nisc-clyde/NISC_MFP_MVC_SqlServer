@@ -1,10 +1,8 @@
 namespace NISC_MFP_MVC_Repository.DB
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("mywebni1_managerc.tb_cardreader")]
     public partial class tb_cardreader

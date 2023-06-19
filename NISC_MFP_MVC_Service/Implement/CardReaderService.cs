@@ -8,7 +8,6 @@ using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.CardReader;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -20,12 +19,12 @@ namespace NISC_MFP_MVC_Service.Implement
         public CardReaderService()
         {
             _cardRepository = new CardReaderRepository();
-            _mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(CardReaderInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _cardRepository.Insert(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
         }
@@ -43,9 +42,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public CardReaderInfo Get(string column, string value, string operation)
         {
-            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
-            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
-            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
+            column = column ?? throw new ArgumentNullException(nameof(column), "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException(nameof(value), "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException(nameof(operation), "operation - Reference to null instance.");
 
             InitialCardReaderRepoDTO dataModel = null;
             if (operation == "Equals")
@@ -66,14 +65,14 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(CardReaderInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _cardRepository.Update(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
         }
 
         public void Delete(CardReaderInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _cardRepository.Delete(_mapper.Map<CardReaderInfo, InitialCardReaderRepoDTO>(instance));
         }
@@ -87,7 +86,7 @@ namespace NISC_MFP_MVC_Service.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             return new Mapper(config);

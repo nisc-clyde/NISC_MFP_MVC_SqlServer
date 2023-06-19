@@ -1,8 +1,6 @@
-﻿import { CustomSweetAlert2, DataTableTemplate } from "../AdminPartialViewScripts/Shared.js";
+﻿import { CustomSweetAlert2, RequestDelete, DataTableTemplate } from "../AdminPartialViewScripts/Shared.js";
 
-/**
- * 選擇使用者卡片後代入已使用點數之值
- */
+// 選擇使用者卡片後代入已使用點數之值
 function UsedValue() {
     $("#userCardUsedValue").text($("#userCardSelect option:selected").val());
     $("#userCardSelect").on("change", function () {
@@ -10,9 +8,80 @@ function UsedValue() {
     })
 }
 
-/**
- * 載入Edit Partial View並更新User資料
- */
+function PrintJobsDataTableInitial() {
+    const table = $("#printJobsDataTable");
+    const url = "/User/User/PrintJobsInitial";
+    const page = $("#user_idDiv").text();
+    const columns = [
+        { data: "date", name: "時間" },
+        { data: "document", name: "文件名稱" },
+        { data: "pages", name: "張數" },
+        { data: "size", name: "紙張尺寸" },
+        { data: "color", name: "顏色" },
+        { data: "value", name: "點數" },
+        {
+            data: null,
+            // "data.file" is property of PrintJobsModel from backend
+            render: function (data, type, row) {
+                return (
+                    "<div class='row row-cols-sm row-cols-md row-cols-lg row-cols-xl row-cols-xxl g-2'>" +
+                    "<div class='col'><button type='button' class='btn btn-danger btn-sm btn-delete' data-id='" +
+                    data.file +
+                    "'><i class='fa-solid fa-trash me-1'></i><div style='display: inline-block; white-space: nowrap;'>刪除</div></button></div></div>"
+                );
+            },
+            orderable: false,
+        },
+    ];
+    const order = [0, "desc"];
+    let dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, null, order, null);
+    DeleteAlertPopUp(dataTable);
+    dataTable.draw();
+}
+
+function DeleteAlertPopUp(dataTable) {
+
+    dataTable.on("click", ".btn-delete", function (e) {
+        e.preventDefault();
+
+        const uniqueIdProperty = "file";
+        const uniqueId = $(this).data("id");
+        const url = "/User/User/DeleteJob";
+        const currentRow = $(this).closest("tr");
+        const rowData = dataTable.row(currentRow).data();
+
+        $.get(url, { documentUid: uniqueId }, function (data) {
+            var dataTableAsFormSerialize = uniqueIdProperty + "=" + uniqueId;
+            dataTableAsFormSerialize += "&card_id=" + $("#userCardSelect :selected").text();
+            const sweetalertHtml = $.parseHTML(data);
+            const dataTableHtml = $("#deleteRowData", sweetalertHtml);
+            dataTableHtml.find("th").each(function () {
+                dataTableAsFormSerialize += "&" + this.id + "=" + $(this).text();
+            });
+            console.log(dataTableAsFormSerialize);
+
+            CustomSweetAlert2.SweetAlertTemplateHome().fire({
+                html: data,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: dataTableAsFormSerialize,
+                        success: function (data) {
+                            dataTable.row(currentRow).remove().draw();
+                            if (data.success) {
+                                CustomSweetAlert2.SweetAlertTemplateSuccess().fire();
+                            }
+                        },
+                    });
+                }
+            });
+        });
+    });
+}
+
+// 載入Edit Partial View並更新User資料
 function PopupFormForEdit() {
     const modalForm = "generalUserForm";
     const url = $("#" + modalForm).data("url");
@@ -61,10 +130,8 @@ function PopupFormForEdit() {
     });
 }
 
-/**
- * 載入RecentlyPrintRecord Partial View
- */
-function PopupFormForRecentlyRecord() {
+// Render Recently Record Partial View
+function PopupFormForRecentlyRecordPreview() {
     const modalForm = "generalUserForm";
     $("#btnRecentlyPrintRecord").on("click", function (e) {
         e.preventDefault();
@@ -91,10 +158,7 @@ function PopupFormForRecentlyRecord() {
     });
 }
 
-
-/**
- * 預覽資料之DataTable初始化
- */
+// 預覽資料之PrintRecordPreviewDataTable初始化
 function RecentlyPrintRecordPreviewDataTableInitial() {
     const table = $("#recentlyPrintRecordDataTable");
     const url = "/User/User/RecentlyPrintRecordDataTableInitial";
@@ -122,7 +186,7 @@ function RecentlyPrintRecordPreviewDataTableInitial() {
     };
     const order = [5, "desc"];
 
-    var dataTable = DataTableTemplate.DataTableInitial(
+    let dataTable = DataTableTemplate.DataTableInitial(
         table,
         url,
         page,
@@ -132,12 +196,12 @@ function RecentlyPrintRecordPreviewDataTableInitial() {
         rowCallback
     );
 
-    // 移除全部查詢之欄位輸入
+    // 移除GlobalSearch Html輸入
     $("#recentlyPrintRecordDataTable_filter").parent().remove();
-
     dataTable.draw();
 }
 
+// 預覽資料之DepositRecordPreviewDataTable初始化
 function RecentlyDepositRecordPreviewDataTableInitial() {
     const table = $("#recentlyDepositRecordDataTable");
     const url = "/User/User/RecentlyDepositRecordDataTableInitial";
@@ -150,30 +214,20 @@ function RecentlyDepositRecordPreviewDataTableInitial() {
         { data: "final_value", name: "儲值後點數" },
         { data: "deposit_date", name: "儲值時間" },
     ];
-    const rowCallback = function (row, data) {
-        $('td:eq(5)', row).html(moment(data.deposit_dat).format("YYYY-MM-DD hh:mm:ss"));
-    };
+
     const order = [5, "desc"];
 
-    var dataTable = DataTableTemplate.DataTableInitial(
-        table,
-        url,
-        page,
-        columns,
-        null,
-        order,
-        rowCallback
-    );
+    let dataTable = DataTableTemplate.DataTableInitial(table, url, page, columns, null, order, null);
 
-    // 移除全部查詢之欄位輸入
+    // 移除GlobalSearch Html輸入
     $("#recentlyDepositRecordDataTable_filter").parent().remove();
-
     dataTable.draw();
 }
 
 
 $(function () {
     UsedValue();
+    PrintJobsDataTableInitial();
     PopupFormForEdit();
-    PopupFormForRecentlyRecord();
+    PopupFormForRecentlyRecordPreview();
 })

@@ -2,7 +2,6 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DTOs.Deposit;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.Implement;
 using NISC_MFP_MVC_Repository.Interface;
 using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.Deposit;
@@ -10,8 +9,8 @@ using NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print;
 using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data.Entity;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 
 namespace NISC_MFP_MVC_Service.Implement
@@ -24,12 +23,12 @@ namespace NISC_MFP_MVC_Service.Implement
         public DepositService()
         {
             _depositRepository = new DepositRepository();
-            _mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(DepositInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _depositRepository.Insert(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
         }
@@ -49,9 +48,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public DepositInfo Get(string column, string value, string operation)
         {
-            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
-            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
-            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
+            column = column ?? throw new ArgumentNullException(nameof(column), "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException(nameof(value), "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException(nameof(operation), "operation - Reference to null instance.");
 
             InitialDepositRepoDTO dataModel = null;
             if (operation == "Equals")
@@ -97,14 +96,14 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Delete(DepositInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _depositRepository.Delete(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
         }
 
         public void Update(DepositInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _depositRepository.Update(_mapper.Map<DepositInfo, InitialDepositRepoDTO>(instance));
         }
@@ -114,7 +113,7 @@ namespace NISC_MFP_MVC_Service.Implement
             _depositRepository.SaveChanges();
         }
 
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             var mapper = new Mapper(config);

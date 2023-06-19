@@ -10,7 +10,6 @@ using NISC_MFP_MVC_Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -27,7 +26,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Insert(CardInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             instance.card_id = instance.card_id.PadLeft(10, '0');
             _cardRepository.Insert(_mapper.Map<CardInfo, InitialCardRepoDTO>(instance));
@@ -35,7 +34,7 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void InsertBulkData(List<CardInfo> instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _cardRepository.InsertBulkData(_mapper.Map<List<InitialCardRepoDTO>>(instance));
         }
@@ -53,9 +52,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public CardInfo Get(string column, string value, string operation)
         {
-            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
-            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
-            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
+            column = column ?? throw new ArgumentNullException(nameof(column), "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException(nameof(value), "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException(nameof(operation), "operation - Reference to null instance.");
 
             InitialCardRepoDTO dataModel = null;
             if (operation == "Equals")
@@ -92,7 +91,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (freevalue < 0)
             {
-                throw new ArgumentException("freevalue不得小於0", "freevalue");
+                throw new ArgumentException($"{nameof(freevalue)}不得小於0", nameof(freevalue));
             }
             else
             {
@@ -104,7 +103,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (serial < 0)
             {
-                throw new ArgumentNullException("serial", "Reference to null instance.");
+                throw new ArgumentNullException(nameof(serial), "Reference to null instance.");
             }
             else
             {
@@ -116,7 +115,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
+                throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
             }
             else
             {
@@ -128,7 +127,7 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance", "Reference to null instance.");
+                throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
             }
             else
             {

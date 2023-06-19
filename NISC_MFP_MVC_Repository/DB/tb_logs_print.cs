@@ -1,10 +1,8 @@
 namespace NISC_MFP_MVC_Repository.DB
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("mywebni1_managerc.tb_logs_print")]
     public partial class tb_logs_print
@@ -51,7 +49,7 @@ namespace NISC_MFP_MVC_Repository.DB
         [StringLength(10)]
         public string driver_number { get; set; }
 
-        [Range(0,int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int? value { get; set; }
 
         [Range(0, int.MaxValue)]

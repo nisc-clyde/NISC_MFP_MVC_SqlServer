@@ -1,8 +1,7 @@
-﻿
-<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+﻿<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
 
-        @using (Html.BeginForm("RecentlyDepositRecord", "User", FormMethod.Post, new { @id = "recentlyPrintRecordForm", @class = "overflow-auto" }))
+        @using (Html.BeginForm("RecentlyDepositRecord", "User", FormMethod.Post, new { id = "recentlyPrintRecordForm", @class = "overflow-auto" }))
         {
             @Html.AntiForgeryToken()
 
@@ -15,14 +14,14 @@
                 <div class="table-responsive">
                     <table id="recentlyDepositRecordDataTable" class="table table-striped table-bordered w-100 fs-6 nowrap table-hover">
                         <thead>
-                            <tr>
-                                <th>儲值人員帳號</th>
-                                <th>儲值人員姓名</th>
-                                <th>儲值前點數</th>
-                                <th>儲值點數</th>
-                                <th>儲值後點數</th>
-                                <th>儲值時間</th>
-                            </tr>
+                        <tr>
+                            <th>儲值人員帳號</th>
+                            <th>儲值人員姓名</th>
+                            <th>儲值前點數</th>
+                            <th>儲值點數</th>
+                            <th>儲值後點數</th>
+                            <th>儲值時間</th>
+                        </tr>
                         </thead>
                     </table>
                 </div>

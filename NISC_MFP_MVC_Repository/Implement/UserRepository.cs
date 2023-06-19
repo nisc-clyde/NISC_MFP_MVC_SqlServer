@@ -2,44 +2,39 @@
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Repository.DB;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.User;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Reflection;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
     public class UserRepository : IUserRepository
     {
         protected MFP_DB db { get; private set; }
-        private readonly Mapper mapper;
+        private readonly Mapper _mapper;
 
         public UserRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialUserRepoDTO instance)
         {
-            db.tb_user.Add(mapper.Map<tb_user>(instance));
+            db.tb_user.Add(_mapper.Map<tb_user>(instance));
             db.SaveChanges();
         }
 
         public void InsertBulkData(List<InitialUserRepoDTO> instance)
         {
             ListToDataTableConverter converter = new ListToDataTableConverter();
-            DataTable dataTable = converter.ToDataTable(mapper.Map<List<tb_user>>(instance));
+            DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_user>>(instance));
 
             string connectionString = DatabaseConnectionHelper.Instance.GetConnectionString();
             string databaseName = new SqlConnectionStringBuilder(connectionString).InitialCatalog;
@@ -49,35 +44,35 @@ namespace NISC_MFP_MVC_Repository.Implement
 
                 //Create temp table
                 SqlCommand createTempDataTable = new SqlCommand(
-                    $"if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
-                    $" WHERE TABLE_NAME = N'tb_user_temp' " +
+                    "if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
+                    " WHERE TABLE_NAME = N'tb_user_temp' " +
                     $" AND TABLE_SCHEMA = N'{databaseName}') " +
-                    $"begin " +
+                    "begin " +
                     $"select * into {databaseName}.tb_user_temp from {databaseName}.tb_user " +
-                    $"end;",
+                    "end;",
                      conn);
                 createTempDataTable.ExecuteNonQuery();
 
                 //Set Identity On
-                SqlCommand IDENTITY_INSERT_ON = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_user ON;", conn);
-                IDENTITY_INSERT_ON.ExecuteNonQuery();
+                SqlCommand identityInsertOn = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_user ON;", conn);
+                identityInsertOn.ExecuteNonQuery();
 
                 //Bulk insert data to temp table
-                using (SqlBulkCopy sqlBC = new SqlBulkCopy(connectionString))
+                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(connectionString))
                 {
-                    sqlBC.BatchSize = 100;
-                    sqlBC.DestinationTableName = $"{databaseName}.tb_user_temp";
-                    sqlBC.WriteToServer(dataTable);
+                    sqlBulkCopy.BatchSize = 100;
+                    sqlBulkCopy.DestinationTableName = $"{databaseName}.tb_user_temp";
+                    sqlBulkCopy.WriteToServer(dataTable);
                 }
 
                 //Merge temp table to target
                 SqlCommand mergeTable = new SqlCommand(
                     $"merge {databaseName}.tb_user as target " +
                     $"using {databaseName}.tb_user_temp as source " +
-                    $"on (target.user_id = source.user_id) " +
-                    $"when not matched then " +
-                    $"insert(serial,user_id,user_password,work_id,user_name,dept_id,e_mail) " +
-                    $"values(source.serial,source.user_id,source.user_password,source.work_id,source.user_name,source.dept_id,source.e_mail);",
+                    "on (target.user_id = source.user_id) " +
+                    "when not matched then " +
+                    "insert(serial,user_id,user_password,work_id,user_name,dept_id,e_mail) " +
+                    "values(source.serial,source.user_id,source.user_password,source.work_id,source.user_name,source.dept_id,source.e_mail);",
                     conn);
                 mergeTable.ExecuteNonQuery();
 
@@ -86,8 +81,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dropTable.ExecuteNonQuery();
 
                 //Set Identity Off
-                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_user OFF;", conn);
-                IDENTITY_INSERT_OFF.ExecuteNonQuery();
+                SqlCommand identityInsertOff = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_user OFF;", conn);
+                identityInsertOff.ExecuteNonQuery();
 
                 conn.Close();
             }
@@ -117,7 +112,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                        })
                                                        .AsQueryable()
                                                        .AsNoTracking()
-                                                       .ProjectTo<InitialUserRepoDTO>(mapper.ConfigurationProvider);
+                                                       .ProjectTo<InitialUserRepoDTO>(_mapper.ConfigurationProvider);
             return tb_Users;
         }
 
@@ -167,7 +162,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                                                        })
                                                        .AsQueryable()
                                                        .AsNoTracking()
-                                                       .ProjectTo<InitialUserRepoDTO>(mapper.ConfigurationProvider);
+                                                       .ProjectTo<InitialUserRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Users = GetWithGlobalSearch(tb_Users, dataTableRequest.GlobalSearchValue);
@@ -215,12 +210,12 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialUserRepoDTO Get(string column, string value, string operation)
         {
             tb_user result = db.tb_user.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return mapper.Map<tb_user, InitialUserRepoDTO>(result);
+            return _mapper.Map<tb_user, InitialUserRepoDTO>(result);
         }
 
         public void Update(InitialUserRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
+            var dataModel = _mapper.Map<InitialUserRepoDTO, tb_user>(instance);
             var existingEntity = db.tb_user.Find(dataModel.user_id);
             db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
             db.SaveChanges();
@@ -228,7 +223,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Delete(InitialUserRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialUserRepoDTO, tb_user>(instance);
+            var dataModel = _mapper.Map<InitialUserRepoDTO, tb_user>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
             db.SaveChanges();
         }
@@ -265,10 +260,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            
+
             return new Mapper(config);
         }
 

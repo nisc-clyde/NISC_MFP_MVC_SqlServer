@@ -9,9 +9,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     public class LogOutController : Controller
     {
         /// <summary>
-        /// 清除驗證並導向至Admin登入畫面
+        ///     清除驗證並導向至Admin登入畫面
         /// </summary>
-        /// <returns>reutrn to Admin Login View</returns>
+        /// <returns>return to Admin Login View</returns>
         public ActionResult Index()
         {
             // 原本號稱可以清除所有 Cookie 的方法...
@@ -21,12 +21,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             Session.RemoveAll();
 
             // 建立一個同名的 Cookie 來覆蓋原本的 Cookie
-            HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+            var cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
             cookie1.Expires = DateTime.Now.AddYears(-1);
             Response.Cookies.Add(cookie1);
 
             // 建立 ASP.NET 的 Session Cookie 同樣是為了覆蓋
-            HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
+            var cookie2 = new HttpCookie("ASP.NET_SessionId", "");
             cookie2.Expires = DateTime.Now.AddYears(-1);
             Response.Cookies.Add(cookie2);
 
@@ -34,9 +34,9 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// 由JavaScript觸發此Action，清除驗證並導向至Admin登入畫面，Authentication若無驗證則預設自動導向/Login/Admin
+        ///     由JavaScript觸發此Action，清除驗證並導向至Admin登入畫面，Authentication若無驗證則預設自動導向/Login/Admin
         /// </summary>
-        /// <returns>reutrn to Admin Login View</returns>
+        /// <returns>return to Admin Login View</returns>
         [HttpGet]
         public ActionResult LogOutForJavaScript()
         {
@@ -47,12 +47,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
             Session.RemoveAll();
 
             // 建立一個同名的 Cookie 來覆蓋原本的 Cookie
-            HttpCookie cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+            var cookie1 = new HttpCookie(FormsAuthentication.FormsCookieName, "");
             cookie1.Expires = DateTime.Now.AddYears(-1);
             Response.Cookies.Add(cookie1);
 
             // 建立 ASP.NET 的 Session Cookie 同樣是為了覆蓋
-            HttpCookie cookie2 = new HttpCookie("ASP.NET_SessionId", "");
+            var cookie2 = new HttpCookie("ASP.NET_SessionId", "");
             cookie2.Expires = DateTime.Now.AddYears(-1);
             Response.Cookies.Add(cookie2);
 

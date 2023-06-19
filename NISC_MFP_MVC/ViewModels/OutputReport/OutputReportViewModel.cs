@@ -5,12 +5,12 @@ namespace NISC_MFP_MVC.ViewModels.OutputReport
 {
     public class OutputReportViewModel : AbstractViewModel
     {
-
         public OutputReportViewModel()
         {
             departmentNames = new List<SelectListItem>();
             multiFunctionPrints = new List<SelectListItem>();
         }
+
         public int reportType { get; set; }
 
         public int colorType { get; set; }

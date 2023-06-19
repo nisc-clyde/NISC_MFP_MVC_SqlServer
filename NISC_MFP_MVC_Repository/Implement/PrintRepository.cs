@@ -9,7 +9,6 @@ using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -18,12 +17,12 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class PrintRepository : IPrintRepository
     {
         protected MFP_DB db { get; private set; }
-        private readonly Mapper mapper;
+        private readonly Mapper _mapper;
 
         public PrintRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialPrintRepoDTO instance)
@@ -33,7 +32,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public IQueryable<InitialPrintRepoDTO> GetAll()
         {
-            return db.tb_logs_print.AsNoTracking().ProjectTo<InitialPrintRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_logs_print.AsNoTracking().ProjectTo<InitialPrintRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialPrintRepoDTONeed> GetRecord(InitialOutputReportRepoDTO initialOutputReportRepoDTO)
@@ -224,12 +223,12 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialPrintRepoDTO Get(string column, string value, string operation)
         {
             tb_logs_print result = db.tb_logs_print.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
+            return _mapper.Map<tb_logs_print, InitialPrintRepoDTO>(result);
         }
 
         public void Update(InitialPrintRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialPrintRepoDTO, tb_logs_print>(instance);
+            var dataModel = _mapper.Map<InitialPrintRepoDTO, tb_logs_print>(instance);
             this.db.Entry(dataModel).State = EntityState.Modified;
             db.SaveChanges();
         }
@@ -266,7 +265,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             return new Mapper(config);

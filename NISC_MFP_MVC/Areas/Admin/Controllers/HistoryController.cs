@@ -4,7 +4,6 @@ using NISC_MFP_MVC.ViewModels;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -15,35 +14,25 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
     [Authorize(Roles = "history")]
     public class HistoryController : Controller, IDataTableController<HistoryViewModel>
     {
-        private readonly IHistoryService historyService;
-        private readonly Mapper mapper;
+        private readonly IHistoryService _historyService;
+        private readonly Mapper _mapper;
 
         /// <summary>
-        /// Service和AutoMapper初始化
+        ///     Service和AutoMapper初始化
         /// </summary>
         public HistoryController()
         {
-            historyService = new HistoryService();
-            mapper = InitializeAutomapper();
-        }
-
-        /// <summary>
-        /// History Index View
-        /// </summary>
-        /// <returns>reutrn Index View</returns>
-        public ActionResult Index()
-        {
-            historyService.Dispose();
-            return View();
+            _historyService = new HistoryService();
+            _mapper = InitializeAutoMapper();
         }
 
         [HttpPost]
         [ActionName("InitialDataTable")]
         public ActionResult SearchDataTable()
         {
-            DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
+            var dataTableRequest = new DataTableRequest(Request.Form);
             IList<HistoryViewModel> searchPrintResultDetail = InitialData(dataTableRequest).ToList();
-            historyService.Dispose();
+            _historyService.Dispose();
 
             return Json(new
             {
@@ -56,19 +45,28 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         [NonAction]
         public IQueryable<HistoryViewModel> InitialData(DataTableRequest dataTableRequest)
         {
-            return historyService.GetAll(dataTableRequest).ProjectTo<HistoryViewModel>(mapper.ConfigurationProvider);
+            return _historyService.GetAll(dataTableRequest).ProjectTo<HistoryViewModel>(_mapper.ConfigurationProvider);
         }
 
         /// <summary>
-        /// 建立AutoMapper配置
+        ///     History Index View
+        /// </summary>
+        /// <returns>return Index View</returns>
+        public ActionResult Index()
+        {
+            _historyService.Dispose();
+            return View();
+        }
+
+        /// <summary>
+        ///     建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             var mapper = new Mapper(config);
             return mapper;
         }
-
     }
 }

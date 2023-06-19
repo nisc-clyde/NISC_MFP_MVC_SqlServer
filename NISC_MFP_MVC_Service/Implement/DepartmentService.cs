@@ -21,19 +21,19 @@ namespace NISC_MFP_MVC_Service.Implement
         public DepartmentService()
         {
             _departmentRepository = new DepartmentRepository();
-            _mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(DepartmentInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _departmentRepository.Insert(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
         }
 
         public void InsertBulkData(List<DepartmentInfo> instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _departmentRepository.InsertBulkData(_mapper.Map<List<InitialDepartmentRepoDTO>>(instance));
         }
@@ -51,9 +51,9 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public DepartmentInfo Get(string column, string value, string operation)
         {
-            column = column ?? throw new ArgumentNullException("column", "column - Reference to null instance.");
-            value = value ?? throw new ArgumentNullException("value", "value - Reference to null instance.");
-            operation = operation ?? throw new ArgumentNullException("operation", "operation - Reference to null instance.");
+            column = column ?? throw new ArgumentNullException(nameof(column), "column - Reference to null instance.");
+            value = value ?? throw new ArgumentNullException(nameof(value), "value - Reference to null instance.");
+            operation = operation ?? throw new ArgumentNullException(nameof(operation), "operation - Reference to null instance.");
 
             InitialDepartmentRepoDTO dataModel = null;
             if (operation == "Equals")
@@ -89,14 +89,14 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public void Update(DepartmentInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _departmentRepository.Update(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
         }
 
         public void Delete(DepartmentInfo instance)
         {
-            instance = instance ?? throw new ArgumentNullException("instance", "Reference to null instance.");
+            instance = instance ?? throw new ArgumentNullException(nameof(instance), "Reference to null instance.");
 
             _departmentRepository.Delete(_mapper.Map<DepartmentInfo, InitialDepartmentRepoDTO>(instance));
         }
@@ -111,7 +111,7 @@ namespace NISC_MFP_MVC_Service.Implement
             _departmentRepository.SaveChanges();
         }
 
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             var mapper = new Mapper(config);

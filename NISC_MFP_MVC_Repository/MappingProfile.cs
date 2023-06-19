@@ -50,6 +50,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             CreateMap<InitialMultiFunctionPrintRepoDTO, tb_mfp>().ReverseMap();
             CreateMap<InitialMultiFunctionPrintRepoDTONeed, InitialMultiFunctionPrintRepoDTO>().ReverseMap();
 
+            CreateMap<InitialMultiFunctionPrintRepoDTONeed, doc_mng>().ReverseMap();
         }
     }
 }

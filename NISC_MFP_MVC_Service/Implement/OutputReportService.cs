@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC_Repository.DTOs.InitialValue.Print;
 using NISC_MFP_MVC_Repository.DTOs.OutputReport;
 using NISC_MFP_MVC_Repository.DTOs.Print;
 using NISC_MFP_MVC_Repository.Implement;
@@ -22,7 +21,7 @@ namespace NISC_MFP_MVC_Service.Implement
         public OutputReportService()
         {
             _printRepository = new PrintRepository();
-            _mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public IEnumerable<UserInfo> GetAllUserByDepartmentId(string departmentId)
@@ -40,14 +39,16 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public List<OutputReportUsageInfo> GetUsage(OutputReportRequestInfo outputReportRequestInfo)
         {
-            InitialOutputReportRepoDTO initialOutputReportRepoDTO = new InitialOutputReportRepoDTO();
-            initialOutputReportRepoDTO.reportType = outputReportRequestInfo.reportType.Split('_')[0];
-            initialOutputReportRepoDTO.reportColor = outputReportRequestInfo.reportColor;
-            initialOutputReportRepoDTO.deptId = outputReportRequestInfo.deptId;
-            initialOutputReportRepoDTO.usage_type = outputReportRequestInfo.reportType.Split('_')[1];
-            initialOutputReportRepoDTO.userId = outputReportRequestInfo.userId;
-            initialOutputReportRepoDTO.mfpIp = outputReportRequestInfo.mfpIp;
-            initialOutputReportRepoDTO.date = outputReportRequestInfo.date;
+            InitialOutputReportRepoDTO initialOutputReportRepoDTO = new InitialOutputReportRepoDTO
+            {
+                reportType = outputReportRequestInfo.reportType.Split('_')[0],
+                reportColor = outputReportRequestInfo.reportColor,
+                deptId = outputReportRequestInfo.deptId,
+                usage_type = outputReportRequestInfo.reportType.Split('_')[1],
+                userId = outputReportRequestInfo.userId,
+                mfpIp = outputReportRequestInfo.mfpIp,
+                date = outputReportRequestInfo.date
+            };
 
             List<InitialPrintRepoDTONeed> printList = _printRepository.GetRecord(initialOutputReportRepoDTO).ToList();
 
@@ -78,19 +79,21 @@ namespace NISC_MFP_MVC_Service.Implement
 
         public IQueryable<PrintInfo> GetRecord(OutputReportRequestInfo outputReportRequestInfo)
         {
-            InitialOutputReportRepoDTO initialOutputReportRepoDTO = new InitialOutputReportRepoDTO();
-            initialOutputReportRepoDTO.reportType = outputReportRequestInfo.reportType.Split('_')[0];
-            initialOutputReportRepoDTO.reportColor = outputReportRequestInfo.reportColor;
-            initialOutputReportRepoDTO.deptId = outputReportRequestInfo.deptId;
-            initialOutputReportRepoDTO.usage_type = outputReportRequestInfo.reportType.Split('_')[1];
-            initialOutputReportRepoDTO.userId = outputReportRequestInfo.userId;
-            initialOutputReportRepoDTO.mfpIp = outputReportRequestInfo.mfpIp;
-            initialOutputReportRepoDTO.date = outputReportRequestInfo.date;
+            InitialOutputReportRepoDTO initialOutputReportRepoDTO = new InitialOutputReportRepoDTO
+            {
+                reportType = outputReportRequestInfo.reportType.Split('_')[0],
+                reportColor = outputReportRequestInfo.reportColor,
+                deptId = outputReportRequestInfo.deptId,
+                usage_type = outputReportRequestInfo.reportType.Split('_')[1],
+                userId = outputReportRequestInfo.userId,
+                mfpIp = outputReportRequestInfo.mfpIp,
+                date = outputReportRequestInfo.date
+            };
 
             return _printRepository.GetRecord(initialOutputReportRepoDTO).ProjectTo<PrintInfo>(_mapper.ConfigurationProvider);
         }
 
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             var mapper = new Mapper(config);

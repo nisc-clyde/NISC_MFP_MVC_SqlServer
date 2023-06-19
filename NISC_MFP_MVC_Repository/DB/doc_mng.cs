@@ -1,10 +1,8 @@
 namespace NISC_MFP_MVC_Repository.DB
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("mywebni1_managerc.doc_mng")]
     public partial class doc_mng

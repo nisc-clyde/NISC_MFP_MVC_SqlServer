@@ -5,7 +5,6 @@ using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.History;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -15,23 +14,23 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class HistoryRepository : IHistoryRepository
     {
         protected MFP_DB db { get; private set; }
-        private readonly Mapper mapper;
+        private readonly Mapper _mapper;
 
         public HistoryRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialHistoryRepoDTO instance)
         {
-            db.tb_logs_history.Add(mapper.Map<tb_logs_history>(instance));
+            db.tb_logs_history.Add(_mapper.Map<tb_logs_history>(instance));
             db.SaveChanges();
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetAll()
         {
-            return db.tb_logs_history.AsNoTracking().ProjectTo<InitialHistoryRepoDTO>(mapper.ConfigurationProvider);
+            return db.tb_logs_history.AsNoTracking().ProjectTo<InitialHistoryRepoDTO>(_mapper.ConfigurationProvider);
         }
 
         public IQueryable<InitialHistoryRepoDTO> GetAll(DataTableRequest dataTableRequest)
@@ -52,7 +51,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dataTableRequest.ColumnSearch_4,
             };
 
-            IQueryable<InitialHistoryRepoDTO> tb_Logs_History = db.tb_logs_history.AsNoTracking().ProjectTo<InitialHistoryRepoDTO>(mapper.ConfigurationProvider);
+            IQueryable<InitialHistoryRepoDTO> tb_Logs_History = db.tb_logs_history.AsNoTracking().ProjectTo<InitialHistoryRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Logs_History = GetWithGlobalSearch(tb_Logs_History, dataTableRequest.GlobalSearchValue);
@@ -64,7 +63,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Logs_History.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Logs_History = tb_Logs_History.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_Logs_History = tb_Logs_History.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
             return tb_Logs_History;
         }
@@ -97,19 +96,19 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialHistoryRepoDTO Get(string column, string value, string operation)
         {
             tb_logs_history result = db.tb_logs_history.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return mapper.Map<tb_logs_history, InitialHistoryRepoDTO>(result);
+            return _mapper.Map<tb_logs_history, InitialHistoryRepoDTO>(result);
         }
 
         public void Update(InitialHistoryRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
+            var dataModel = _mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
             db.Entry(dataModel).State = EntityState.Modified;
             db.SaveChanges();
         }
 
         public void Delete(InitialHistoryRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
+            var dataModel = _mapper.Map<InitialHistoryRepoDTO, tb_logs_history>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
             db.SaveChanges();
         }
@@ -140,10 +139,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            
+
             return new Mapper(config);
         }
     }

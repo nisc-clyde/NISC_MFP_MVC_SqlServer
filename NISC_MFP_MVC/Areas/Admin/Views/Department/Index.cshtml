@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "部門管理";
     ViewBag.ActiveNav = "department";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -113,7 +112,7 @@
         <div class="col text-start fs-5 fw-bold" style="color: #1565C0">
             部門列表&nbsp;<i class="fa-solid fa-list"></i>
             <button id="btnAddDepartment" type="button" class="ms-3 btn btn-success mb-1">新增部門</button>
-            <div class="modal fade" id="departmentForm" role="dialog" data-url='@Url.Action("AddOrEdit","Department")'></div>
+            <div class="modal fade" id="departmentForm" role="dialog" data-url='@Url.Action("AddOrEdit", "Department")'></div>
         </div>
     </div>
 
@@ -121,16 +120,16 @@
         <div class="table-responsive">
             <table id="searchDepartmentDataTable" class="table table-striped table-bordered w-100 table-hover">
                 <thead>
-                    <tr>
-                        <th>部門編號</th>
-                        <th>部門名稱</th>
-                        <th>可用點數上限</th>
-                        <th>可用遞增餘額</th>
-                        <th>狀態</th>
-                        <th>部門管理者Email</th>
-                        <th>操作</th>
-                        <th>serial</th>
-                    </tr>
+                <tr>
+                    <th>部門編號</th>
+                    <th>部門名稱</th>
+                    <th>可用點數上限</th>
+                    <th>可用遞增餘額</th>
+                    <th>狀態</th>
+                    <th>部門管理者Email</th>
+                    <th>操作</th>
+                    <th>serial</th>
+                </tr>
                 </thead>
             </table>
         </div>
@@ -138,4 +137,3 @@
 
 </div>
 @*部門列表 - Third Cotainer - End*@
-

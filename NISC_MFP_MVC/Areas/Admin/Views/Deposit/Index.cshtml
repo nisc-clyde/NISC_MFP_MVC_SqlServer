@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "儲值紀錄";
     ViewBag.ActiveNav = "deposit";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -151,8 +150,9 @@
     </div>
 
     <div class="row p-2">
-        <table id="searchDepositDataTable" class="table table-striped table-bordered w-100 table-hover">
-            <thead>
+        <div class="table-responsive">
+            <table id="searchDepositDataTable" class="table table-striped table-bordered w-100 table-hover">
+                <thead>
                 <tr>
                     <th>儲值人員</th>
                     <th>儲值帳號</th>
@@ -164,8 +164,9 @@
                     <th>儲值後點數</th>
                     <th>儲值時間</th>
                 </tr>
-            </thead>
-        </table>
+                </thead>
+            </table>
+        </div>
     </div>
 
 </div>

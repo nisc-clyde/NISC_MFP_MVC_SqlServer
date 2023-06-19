@@ -5,7 +5,6 @@ using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.CardReader;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -15,17 +14,17 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class CardReaderRepository : ICardReaderRepository
     {
         protected MFP_DB db { get; private set; }
-        private Mapper mapper;
+        private Mapper _mapper;
 
         public CardReaderRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialCardReaderRepoDTO instance)
         {
-            db.tb_cardreader.Add(mapper.Map<tb_cardreader>(instance));
+            db.tb_cardreader.Add(_mapper.Map<tb_cardreader>(instance));
             db.SaveChanges();
         }
 
@@ -46,7 +45,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                         cr_status = p.cr_status == "Online" ? "線上" : "離線",
                         serial = p.serial
                     })
-                    .ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+                    .ProjectTo<InitialCardReaderRepoDTO>(_mapper.ConfigurationProvider);
 
                 return tb_CardReaders;
             }
@@ -87,7 +86,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     cr_status = p.cr_status == "Online" ? "線上" : "離線",
                     serial = p.serial
                 })
-                .ProjectTo<InitialCardReaderRepoDTO>(mapper.ConfigurationProvider);
+                .ProjectTo<InitialCardReaderRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_CardReaders = GetWithGlobalSearch(tb_CardReaders, dataTableRequest.GlobalSearchValue);
@@ -139,19 +138,19 @@ namespace NISC_MFP_MVC_Repository.Implement
             result.cr_ip = (result.cr_ip ?? "").Trim();
             result.cr_port = result.cr_port.Trim();
 
-            return mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
+            return _mapper.Map<tb_cardreader, InitialCardReaderRepoDTO>(result);
         }
 
         public void Update(InitialCardReaderRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            var dataModel = _mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
             db.Entry(dataModel).State = EntityState.Modified;
             db.SaveChanges();
         }
 
         public void Delete(InitialCardReaderRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
+            var dataModel = _mapper.Map<InitialCardReaderRepoDTO, tb_cardreader>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
             db.SaveChanges();
         }
@@ -182,7 +181,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             return new Mapper(config);

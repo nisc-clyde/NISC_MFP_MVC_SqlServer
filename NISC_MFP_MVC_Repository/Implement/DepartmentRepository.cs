@@ -6,10 +6,8 @@ using NISC_MFP_MVC_Repository.DTOs.Department;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -19,12 +17,12 @@ namespace NISC_MFP_MVC_Repository.Implement
     public class DepartmentRepository : IDepartmentRepository
     {
         protected MFP_DB db { get; private set; }
-        private readonly Mapper mapper;
+        private readonly Mapper _mapper;
 
         public DepartmentRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            _mapper = InitializeAutoMapper();
         }
 
         /// <summary>
@@ -34,14 +32,14 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// <exception cref="ArgumentNullException"></exception>
         public void Insert(InitialDepartmentRepoDTO instance)
         {
-            db.tb_department.Add(mapper.Map<tb_department>(instance));
+            db.tb_department.Add(_mapper.Map<tb_department>(instance));
             SaveChanges();
         }
 
         public void InsertBulkData(List<InitialDepartmentRepoDTO> instance)
         {
             ListToDataTableConverter converter = new ListToDataTableConverter();
-            DataTable dataTable = converter.ToDataTable(mapper.Map<List<tb_department>>(instance));
+            DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_department>>(instance));
 
             string connectionString = DatabaseConnectionHelper.Instance.GetConnectionString();
             string databaseName = new SqlConnectionStringBuilder(connectionString).InitialCatalog;
@@ -50,18 +48,18 @@ namespace NISC_MFP_MVC_Repository.Implement
                 conn.Open();
                 //Create temp table
                 SqlCommand createTempDataTable = new SqlCommand(
-                    $"if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
-                    $" WHERE TABLE_NAME = N'tb_department_temp' " +
+                    "if not exists (SELECT * FROM INFORMATION_SCHEMA.TABLES " +
+                    " WHERE TABLE_NAME = N'tb_department_temp' " +
                     $" AND TABLE_SCHEMA = N'{databaseName}') " +
-                    $"begin " +
+                    "begin " +
                     $"select * into {databaseName}.tb_department_temp from {databaseName}.tb_department " +
-                    $"end;",
+                    "end;",
                      conn);
                 createTempDataTable.ExecuteNonQuery();
 
                 //Set Identity On
-                SqlCommand IDENTITY_INSERT_ON = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_department ON;", conn);
-                IDENTITY_INSERT_ON.ExecuteNonQuery();
+                SqlCommand identityInsertOn = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_department ON;", conn);
+                identityInsertOn.ExecuteNonQuery();
 
                 //Bulk insert data to temp table
                 using (SqlBulkCopy sqlBC = new SqlBulkCopy(connectionString))
@@ -75,10 +73,10 @@ namespace NISC_MFP_MVC_Repository.Implement
                 SqlCommand mergeTable = new SqlCommand(
                     $"merge {databaseName}.tb_department as target " +
                     $"using {databaseName}.tb_department_temp as source " +
-                    $"on (target.dept_id = source.dept_id) " +
-                    $"when not matched then " +
-                    $"insert(serial,dept_id,dept_name) " +
-                    $"values(source.serial,source.dept_id,source.dept_name);",
+                    "on (target.dept_id = source.dept_id) " +
+                    "when not matched then " +
+                    "insert(serial,dept_id,dept_name) " +
+                    "values(source.serial,source.dept_id,source.dept_name);",
                     conn);
                 mergeTable.ExecuteNonQuery();
 
@@ -87,8 +85,8 @@ namespace NISC_MFP_MVC_Repository.Implement
                 dropTable.ExecuteNonQuery();
 
                 //Set Identity Off
-                SqlCommand IDENTITY_INSERT_OFF = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_department OFF;", conn);
-                IDENTITY_INSERT_OFF.ExecuteNonQuery();
+                SqlCommand identityInsertOff = new SqlCommand($"set IDENTITY_INSERT {databaseName}.tb_department OFF;", conn);
+                identityInsertOff.ExecuteNonQuery();
 
                 conn.Close();
             }
@@ -108,7 +106,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_email = p.dept_email,
                     serial = p.serial
                 })
-                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider).AsQueryable();
+                .ProjectTo<InitialDepartmentRepoDTO>(_mapper.ConfigurationProvider).AsQueryable();
 
             return tb_Departments;
         }
@@ -145,7 +143,7 @@ namespace NISC_MFP_MVC_Repository.Implement
                     dept_email = p.dept_email,
                     serial = p.serial
                 })
-                .ProjectTo<InitialDepartmentRepoDTO>(mapper.ConfigurationProvider);
+                .ProjectTo<InitialDepartmentRepoDTO>(_mapper.ConfigurationProvider);
 
             //GlobalSearch
             tb_Departments = GetWithGlobalSearch(tb_Departments, dataTableRequest.GlobalSearchValue);
@@ -192,12 +190,12 @@ namespace NISC_MFP_MVC_Repository.Implement
         public InitialDepartmentRepoDTO Get(string column, string value, string operation)
         {
             tb_department result = db.tb_department.Where(column + operation, value).AsNoTracking().FirstOrDefault();
-            return mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
+            return _mapper.Map<tb_department, InitialDepartmentRepoDTO>(result);
         }
 
         public void Update(InitialDepartmentRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            var dataModel = _mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
             var existingEntity = db.tb_department.Find(dataModel.serial);
             db.Entry(existingEntity).CurrentValues.SetValues(dataModel);
             db.SaveChanges();
@@ -205,7 +203,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Delete(InitialDepartmentRepoDTO instance)
         {
-            var dataModel = mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
+            var dataModel = _mapper.Map<InitialDepartmentRepoDTO, tb_department>(instance);
             db.Entry(dataModel).State = EntityState.Deleted;
             db.SaveChanges();
         }
@@ -244,7 +242,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
 

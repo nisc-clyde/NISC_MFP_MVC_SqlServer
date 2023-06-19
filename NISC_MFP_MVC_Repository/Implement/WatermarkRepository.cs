@@ -5,7 +5,6 @@ using NISC_MFP_MVC_Repository.DB;
 using NISC_MFP_MVC_Repository.DTOs.Watermark;
 using NISC_MFP_MVC_Repository.Interface;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -20,7 +19,7 @@ namespace NISC_MFP_MVC_Repository.Implement
         public WatermarkRepository()
         {
             db = new MFP_DB();
-            mapper = InitializeAutomapper();
+            mapper = InitializeAutoMapper();
         }
 
         public void Insert(InitialWatermarkRepoDTO instance)
@@ -103,7 +102,7 @@ namespace NISC_MFP_MVC_Repository.Implement
             //-----------------Performance BottleNeck-----------------
             dataTableRequest.RecordsFilteredGet = tb_Watermarks.Count();
             //-----------------Performance BottleNeck-----------------
-            tb_Watermarks = tb_Watermarks.Skip(()=> dataTableRequest.Start).Take(()=> dataTableRequest.Length);
+            tb_Watermarks = tb_Watermarks.Skip(() => dataTableRequest.Start).Take(() => dataTableRequest.Length);
 
             return tb_Watermarks;
         }
@@ -167,7 +166,7 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void Delete(InitialWatermarkRepoDTO instance)
         {
-            tb_watermark dataModel = db.tb_watermark.Where(p => p.id.Equals(instance.id)).FirstOrDefault();
+            tb_watermark dataModel = db.tb_watermark.FirstOrDefault(p => p.id.Equals(instance.id));
             this.db.Entry(dataModel).State = EntityState.Deleted;
             this.db.SaveChanges();
         }
@@ -199,10 +198,10 @@ namespace NISC_MFP_MVC_Repository.Implement
         /// 建立AutoMapper配置
         /// </summary>
         /// <returns></returns>
-        private Mapper InitializeAutomapper()
+        private Mapper InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            
+
             return new Mapper(config);
         }
     }

@@ -46,6 +46,8 @@ namespace NISC_MFP_MVC.ViewModels.User.AdminAreas
         [Display(Name = "信箱")]
         public string e_mail { get; set; }
 
+        public string operation { get; set; }
+
         public int serial { get; set; } = 0;
     }
 }

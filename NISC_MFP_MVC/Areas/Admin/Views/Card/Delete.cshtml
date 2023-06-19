@@ -5,35 +5,35 @@
     string enable;
 
     card_type = Model.card_type == "0" ? "遞減" :
-            Model.card_type == "1" ? "遞增" :
+        Model.card_type == "1" ? "遞增" :
             Model.card_type;
 
     enable = Model.enable == "0" ? "停用" :
-            Model.enable == "1" ? "可用" :
+        Model.enable == "1" ? "可用" :
             Model.enable;
 }
 
 <table id="deleteDataTable" class="table table-striped table-bordered w-100 fs-6">
     <thead>
-        <tr>
-            <th>卡片編號</th>
-            <th>點數</th>
-            <th>免費點數</th>
-            <th>使用者帳號</th>
-            <th>使用者姓名</th>
-            <th>屬性</th>
-            <th>使用狀態</th>
-        </tr>
+    <tr>
+        <th>卡片編號</th>
+        <th>點數</th>
+        <th>免費點數</th>
+        <th>使用者帳號</th>
+        <th>使用者姓名</th>
+        <th>屬性</th>
+        <th>使用狀態</th>
+    </tr>
     </thead>
     <tbody>
-        <tr id="deleteRowData">
-            <th id="card_id">@Model.card_id</th>
-            <th id="value">@Model.value</th>
-            <th id="freevalue">@Model.freevalue</th>
-            <th id="user_id">@Model.user_id</th>
-            <th id="user_name">@Model.user_name</th>
-            <th id="card_type" class="@(card_type=="遞增"?"fw-bold text-success":"fw-bold text-danger")">@card_type</th>
-            <th id="enable" class="@(enable=="可用"?"fw-bold text-success":"fw-bold text-danger")">@enable
-        </tr>
+    <tr id="deleteRowData">
+        <th id="card_id">@Model.card_id</th>
+        <th id="value">@Model.value</th>
+        <th id="freevalue">@Model.freevalue</th>
+        <th id="user_id">@Model.user_id</th>
+        <th id="user_name">@Model.user_name</th>
+        <th id="card_type" class="@(card_type == "遞增" ? "fw-bold text-success" : "fw-bold text-danger")">@card_type</th>
+        <th id="enable" class="@(enable == "可用" ? "fw-bold text-success" : "fw-bold text-danger")">@enable
+    </tr>
     </tbody>
 </table>
