@@ -52,19 +52,10 @@ namespace NISC_MFP_MVC_Service.Implement
         /// </summary>
         /// <param name="dataTableRequest">DataTable Request Parameter</param>
         /// <param name="user_id">user_id</param>
-        /// <param name="documentUid">doc_uid</param>
         /// <returns></returns>
-        public List<PrintJobsModel> GetOrDeleteUserPrintJobs(DataTableRequest dataTableRequest, string user_id, string documentUid = "")
+        public List<PrintJobsModel> GetUserPrintJobs(DataTableRequest dataTableRequest, string user_id)
         {
-            // 如果documentUid有值，則此Method則變成Delete Print Jobs
-            if (documentUid != "")
-            {
-
-                if (File.Exists($@"{GlobalVariable.PRINT_TEMP_PATH}/{documentUid}.ps")) File.Delete($@"C:/printfile/{documentUid}.ps");
-                if (File.Exists($@"C:/printfile/{documentUid}.pdf")) File.Delete($@"C:/printfile/{documentUid}.pdf");
-            }
-
-            // Get Print Jobs Life Cycle - Start
+            // 待列印工作有效時間
             int jobsLifeCycle = 0;
             string DATABASE_PATH = GlobalVariable.DATABASE_INI_PATH;
             if (File.Exists(DATABASE_PATH))
@@ -73,9 +64,11 @@ namespace NISC_MFP_MVC_Service.Implement
                 IniData data = fileIniDataParser.ReadFile(DATABASE_PATH);
                 jobsLifeCycle = Convert.ToInt32(TimeSpan.Parse(data["systemSetup"]["printjobAlive"]).TotalSeconds);
             }
-            // Get Print Jobs Life Cycle - End
 
-            List<PrintJobsModel> tempDataModel = new List<PrintJobsModel>();
+            // 欲Render到View的待列印工作，符合所有條件的待列印工作
+            List<PrintJobsModel> jobsDataModel = new List<PrintJobsModel>();
+
+            // 所有在有效時間內的待列印工作
             IList<doc_mng> documents = _documentManagementRepository.GetAll()
                     .Where(d =>
                     d.user_id == user_id &&
@@ -83,6 +76,10 @@ namespace NISC_MFP_MVC_Service.Implement
                     DbFunctions.AddHours((d.ntime ?? DateTime.MinValue), jobsLifeCycle) > DateTime.Now)
                     .ToList();
 
+            // 取得價目表
+            IList<tb_print_price> tableOfPrice = _printPriceRepository.GetAll().ToList();
+
+            // 修改每筆待列印工作需花費之點數
             foreach (doc_mng d in documents)
             {
                 PrintJobsModel model = new PrintJobsModel
@@ -93,20 +90,21 @@ namespace NISC_MFP_MVC_Service.Implement
                     pages = d.page_count ?? 0,
                     color = (d.bc_print ?? 0) == 0 ? "<b>黑白</b>" : "<b class='rainbow-text'>彩色</b>",
                     //此筆列印工作所需點數
-                    value = (d.page_count ?? 0) * (_printPriceRepository.GetAll().FirstOrDefault(p =>
+                    value = (d.page_count ?? 0) * (tableOfPrice.FirstOrDefault(p =>
                             p.color.Equals(((d.bc_print ?? 0) == 0 ? "M" : "C")) &&
                             p.page_size.Equals(d.page_size ?? ""))
                         .price ?? 0),
                     size = d.page_size
                 };
 
+                //若存在*.pcl檔就加入到List，不存在代表該工作已經完成了，所以才出現DB有紀錄但實際沒有*.pcl
                 //TODO
-                if (File.Exists($@"C:/printfile/{d.doc_uid}.ps") || File.Exists($@"C:/printfile/{d.doc_uid}.pcl"))
+                if (File.Exists($@"{GlobalVariable.PRINT_TEMP_PATH}/{d.doc_uid}.ps") || File.Exists($@"{GlobalVariable.PRINT_TEMP_PATH}/{d.doc_uid}.pcl"))
                 {
-                    tempDataModel.Add(model);
+                    jobsDataModel.Add(model);
                 }
             }
-            IQueryable<PrintJobsModel> resultDataModel = tempDataModel.AsQueryable();
+            IQueryable<PrintJobsModel> resultDataModel = jobsDataModel.AsQueryable();
 
             dataTableRequest.RecordsFilteredGet = resultDataModel.Count();
             resultDataModel = resultDataModel.OrderBy(dataTableRequest.SortColumnName + " " + dataTableRequest.SortDirection);
@@ -115,6 +113,17 @@ namespace NISC_MFP_MVC_Service.Implement
 
             return topTenRecord;
         }
+
+        public void DeleteUserPrintJobs(string documentUid)
+        {
+            // 如果documentUid有值，則此Method則變成Delete Print Jobs
+            if (documentUid != "")
+            {
+                if (File.Exists($@"{GlobalVariable.PRINT_TEMP_PATH}/{documentUid}.ps")) File.Delete($@"{GlobalVariable.PRINT_TEMP_PATH}/{documentUid}.ps");
+                if (File.Exists($@"{GlobalVariable.PRINT_TEMP_PATH}/{documentUid}.pcl")) File.Delete($@"{GlobalVariable.PRINT_TEMP_PATH}/{documentUid}.pcl");
+            }
+        }
+        
 
         /// <summary>
         /// 取得或刪除card_id的暫存檔

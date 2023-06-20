@@ -7,7 +7,7 @@ namespace NISC_MFP_MVC_Common
         /// <summary>
         /// v3.0
         /// </summary>
-        public static string VERSION => "v3.0";
+        public static string VERSION => "v3.1.1";
 
         /// <summary>
         /// C:/printFile
@@ -32,7 +32,7 @@ namespace NISC_MFP_MVC_Common
         /// <summary>
         /// C:/printer/databse.ini
         /// </summary>
-        public static string DATABASE_INI_PATH => $@"{PRINTER_PATH}/databse.ini";
+        public static string DATABASE_INI_PATH => $@"{PRINTER_PATH}/database.ini";
 
         /// <summary>
         /// All possible permission in system

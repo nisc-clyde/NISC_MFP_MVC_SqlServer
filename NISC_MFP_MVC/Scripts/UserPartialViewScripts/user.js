@@ -58,7 +58,6 @@ function DeleteAlertPopUp(dataTable) {
             dataTableHtml.find("th").each(function () {
                 dataTableAsFormSerialize += "&" + this.id + "=" + $(this).text();
             });
-            console.log(dataTableAsFormSerialize);
 
             CustomSweetAlert2.SweetAlertTemplateHome().fire({
                 html: data,
@@ -69,8 +68,8 @@ function DeleteAlertPopUp(dataTable) {
                         url: url,
                         data: dataTableAsFormSerialize,
                         success: function (data) {
-                            dataTable.row(currentRow).remove().draw();
                             if (data.success) {
+                                dataTable.row(currentRow).remove().draw();
                                 CustomSweetAlert2.SweetAlertTemplateSuccess().fire();
                             }
                         },

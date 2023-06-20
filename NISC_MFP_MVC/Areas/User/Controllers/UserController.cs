@@ -1,4 +1,6 @@
-﻿using NISC_MFP_MVC.App_Start;
+﻿using System;
+using System.Collections.Generic;
+using NISC_MFP_MVC.App_Start;
 using NISC_MFP_MVC.ViewModels.User.UserAreas;
 using NISC_MFP_MVC_Common;
 using NISC_MFP_MVC_Service.DTOs.UserAreasInfo.Print;
@@ -40,10 +42,10 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
         [AjaxOnly]
         public ActionResult PrintJobsInitial()
         {
-            var dataTableRequest = new DataTableRequest(Request.Form);
-            var user_id = dataTableRequest.PostPageFrom;
-            var printJobService = new PrintJobService();
-            var printJobs = printJobService.GetOrDeleteUserPrintJobs(dataTableRequest, user_id);
+            DataTableRequest dataTableRequest = new DataTableRequest(Request.Form);
+            string user_id = HttpContext.User.Identity.Name;
+            PrintJobService printJobService = new PrintJobService();
+            List<PrintJobsModel> printJobs = printJobService.GetUserPrintJobs(dataTableRequest, user_id);
             printJobService.Dispose();
 
             return Json(new
@@ -57,19 +59,19 @@ namespace NISC_MFP_MVC.Areas.User.Controllers
         [HttpGet]
         public ActionResult DeleteJob(string documentUid) // serial = doc_uid
         {
-            var printJobService = new PrintJobService();
-            var result = printJobService.GetPrintJob(documentUid);
+            PrintJobService printJobService = new PrintJobService();
+            PrintJobsModel result = printJobService.GetPrintJob(documentUid);
             printJobService.Dispose();
 
             return PartialView(result);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("DeleteJob")]
         [AjaxOnly]
-        public ActionResult DeleteJob(PrintJobsModel printJobsModel, string card_id)
+        public ActionResult DeleteJobByUid(PrintJobsModel printJobsModel)
         {
-            var printJobService = new PrintJobService();
-
+            PrintJobService printJobService = new PrintJobService();
+            printJobService.DeleteUserPrintJobs(printJobsModel.file);
             printJobService.Dispose();
             return Json(new { success = true, message = "Success" }, JsonRequestBehavior.AllowGet);
         }
