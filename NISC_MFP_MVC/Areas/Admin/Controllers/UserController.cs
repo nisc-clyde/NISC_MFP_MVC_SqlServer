@@ -161,6 +161,8 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                         : "<b class='text-danger'>無</b>";
                     userViewModel.operation =
                         "<div class='row row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1 row-cols-xxl-3 g-2'>";
+
+                    //此Row為當前登入使用者之Row，無須修改擁有自己權限之按鈕
                     if (userViewModel.user_id != HttpContext.User.Identity.Name)
                         userViewModel.operation +=
                             $"<div class='col'><button type='button' class='btn btn-primary btn-sm btn-permission' data-id='{userViewModel.serial}'>" +

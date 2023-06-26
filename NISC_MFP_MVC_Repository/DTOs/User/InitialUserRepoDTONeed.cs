@@ -6,6 +6,7 @@
         public string user_password { get; set; } = "";
         public string work_id { get; set; } = "";
         public string user_name { get; set; } = "";
+        public string authority { get; set; } = "";
         public string dept_id { get; set; } = null;
         public string dept_name { get; set; } = "";
         public string color_enable_flag { get; set; } = "0";

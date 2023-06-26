@@ -95,6 +95,9 @@ function SaveConnectionStirng() {
     $("#databaseConfigForm").on("submit", function () {
         let url;
 
+        $("#btnSaveConnectionStringSpinner").show();
+        $("#btnSaveConnectionString").attr("disabled", true);
+
         if ($("#btnWindowsAuth").is(":checked")) {
             url = "/Login/SetWindowsAuthConnection";
         } else {
@@ -112,7 +115,10 @@ function SaveConnectionStirng() {
                     CustomSweetAlert2.SweetAlertTemplateError(data.message).fire();
                 }
             }
-        })
+        }).done(function () {
+            $("#btnSaveConnectionStringSpinner").hide();
+            $("#btnSaveConnectionString").attr("disabled", false);
+        });
 
         return false;
     })

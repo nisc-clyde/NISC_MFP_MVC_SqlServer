@@ -1,4 +1,5 @@
-﻿using NISC_MFP_MVC.App_Start;
+﻿using AutoMapper;
+using NISC_MFP_MVC.App_Start;
 using NISC_MFP_MVC.Models;
 using NISC_MFP_MVC.ViewModels.Config;
 using NISC_MFP_MVC_Common;
@@ -7,11 +8,17 @@ using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.Security;
+using AutoMapper.QueryableExtensions;
+using NISC_MFP_MVC.ViewModels.User.AdminAreas;
+using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
+
 
 namespace NISC_MFP_MVC.Controllers
 {
@@ -19,10 +26,19 @@ namespace NISC_MFP_MVC.Controllers
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly IUserService userService;
+        private readonly Mapper _mapper;
 
         public LoginController()
         {
             userService = new UserService();
+            _mapper = InitializeAutoMapper();
+        }
+
+        private Mapper InitializeAutoMapper()
+        {
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var mapper = new Mapper(config);
+            return mapper;
         }
 
         [HttpGet]
@@ -141,9 +157,8 @@ namespace NISC_MFP_MVC.Controllers
                             Response.Cookies.Add(authCookie);
 
                             //取得擁有的主權限當中的第一個
-                            var permissionHelper = new PermissionHelper(userInfo.authority);
-                            var firstAuthority = permissionHelper.Order(GlobalVariable.MAIN_PERMISSION).First();
-                            // 給AdminLayout使用，藉此隱藏或載入Tab
+                            string firstAuthority = userInfo.authority.Split(',').First();
+                            // 給_AdminLayout使用，藉此隱藏或載入Tab
                             TempData["ActiveNav"] = firstAuthority;
                             userService.Dispose();
 
@@ -195,7 +210,7 @@ namespace NISC_MFP_MVC.Controllers
             if (ModelState.IsValid)
             {
                 IUserService userService = new UserService();
-                var adminInfo = userService.Get("user_id", admin.user_id, "Equals");
+                UserInfo adminInfo = userService.Get("user_id", admin.user_id, "Equals");
                 if (adminInfo == null)
                 {
                     //無執行user_id primary key重複之檢查
@@ -213,7 +228,7 @@ namespace NISC_MFP_MVC.Controllers
                         scan_enable_flag = "1",
                         fax_enable_flag = "1",
                         e_mail = "",
-                        serial = 1 //Not Working
+                        serial = 1 //serial has auto increment property, and specify the serial will not working.
                     };
                     userService.Insert(adminInfo);
                     userService.Dispose();
@@ -234,6 +249,24 @@ namespace NISC_MFP_MVC.Controllers
         {
             DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource,
                 connectionModel.InitialCatalog);
+
+            List<UserViewModel> usersInfo = userService
+                .GetAll()
+                .Where(u => !string.IsNullOrWhiteSpace(u.authority) && u.authority.Contains(".php"))
+                .ProjectTo<UserViewModel>(_mapper.ConfigurationProvider).ToList();
+
+            if (usersInfo.Any())
+            {
+                foreach (UserViewModel user in usersInfo)
+                {
+                    PermissionHelper permissionHelper = new PermissionHelper(user.authority);
+                    permissionHelper.PermissionString(String.Join(",", permissionHelper.Order(GlobalVariable.ALL_PERMISSION)));
+                    List<string> permissionList = permissionHelper.FillAllPermission(GlobalVariable.FILL_PERMISSION);
+                    user.authority = String.Join(",", permissionList);
+                    userService.Update(_mapper.Map<UserInfo>(user));
+                }
+            }
+
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 
@@ -243,6 +276,24 @@ namespace NISC_MFP_MVC.Controllers
         {
             DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource,
                 connectionModel.InitialCatalog, false, connectionModel.UserID, connectionModel.Password);
+
+            List<UserViewModel> usersInfo = userService
+                .GetAll()
+                .Where(u => !string.IsNullOrWhiteSpace(u.authority) && u.authority.Contains(".php"))
+                .ProjectTo<UserViewModel>(_mapper.ConfigurationProvider).ToList();
+
+            if (usersInfo.Any())
+            {
+                foreach (UserViewModel user in usersInfo)
+                {
+                    PermissionHelper permissionHelper = new PermissionHelper(user.authority);
+                    permissionHelper.PermissionString(String.Join(",", permissionHelper.Order(GlobalVariable.ALL_PERMISSION)));
+                    List<string> permissionList = permissionHelper.FillAllPermission(GlobalVariable.FILL_PERMISSION);
+                    user.authority = String.Join(",", permissionList);
+                    userService.Update(_mapper.Map<UserInfo>(user));
+                }
+            }
+
             return Json(new { success = true, message = "連線資訊儲存成功" });
         }
 

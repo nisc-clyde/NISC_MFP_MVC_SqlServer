@@ -5,7 +5,7 @@ namespace NISC_MFP_MVC_Common
     public static class GlobalVariable
     {
         /// <summary>
-        /// v3.0
+        /// v3.1.1
         /// </summary>
         public static string VERSION => "v3.1.1";
 
@@ -36,19 +36,19 @@ namespace NISC_MFP_MVC_Common
 
         /// <summary>
         /// All possible permission in system
-        /// EX:print,view,department,user,cardreader,card,deposit,watermark,history,system,outputreport,manage_permission
+        /// <para>EX:print,view,department,user,manage_permission,cardreader,card,deposit,watermark,history,system,outputreport</para>
         /// </summary>
-        public static string ALL_PERMISSION => "print,view,department,user,cardreader,card,deposit,watermark,history,system,outputreport,manage_permission";
+        public static string ALL_PERMISSION => "print,view,department,user,manage_permission,cardreader,card,deposit,watermark,history,system,outputreport";
 
         /// <summary>
         /// All main permission in system that have controller
-        /// EX:print,department,user,cardreader,card,deposit,watermark,history,system,outputreport
+        /// <para>EX:print,department,user,cardreader,card,deposit,watermark,history,system,outputreport</para>
         /// </summary>
         public static string MAIN_PERMISSION => "print,department,user,cardreader,card,deposit,watermark,history,system,outputreport";
 
         /// <summary>
         /// All sub permission in system that is action and without controller
-        /// EX:view,manage_permission
+        /// <para>EX:view,manage_permission</para>
         /// </summary>
         public static string SUB_PERMISSION => "view,manage_permission";
 

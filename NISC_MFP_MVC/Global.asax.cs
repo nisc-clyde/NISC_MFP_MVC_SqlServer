@@ -20,6 +20,7 @@ namespace NISC_MFP_MVC
 
             //Add filter for catch exception by NLog
             GlobalFilters.Filters.Add(new CustomErrorFilterAttribute());
+
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

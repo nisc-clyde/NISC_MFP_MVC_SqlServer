@@ -83,15 +83,21 @@ namespace NISC_MFP_MVC_Service.Implement
                 }
 
                 // if true, 表遷移DB後第一次登入，尚未更新Permission Format
-                if (dataModel.authority != null && dataModel.authority.Contains(".php"))
-                {
-                    PermissionHelper permissionHelper = new PermissionHelper(dataModel.authority);
-                    permissionHelper.PermissionString(String.Join(",", permissionHelper.Order(GlobalVariable.ALL_PERMISSION)));
-                    List<string> permissionList = permissionHelper.FillPermission(GlobalVariable.FILL_PERMISSION);
-                    dataModel.authority = String.Join(",", permissionList);
-                    this.Update(_mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel));
-                }
+                //TODO
+                //if (dataModel.authority != null)
+                //{
+                //    PermissionHelper permissionHelper = new PermissionHelper(dataModel.authority);
+                //    permissionHelper.PermissionString(String.Join(",", permissionHelper.Order(GlobalVariable.ALL_PERMISSION)));
+                //    List<string> permissionList = permissionHelper.FillPermission(GlobalVariable.FILL_PERMISSION);
+                //    dataModel.authority = String.Join(",", permissionList);
+                    
+                //    if (dataModel.user_id == "admin" || dataModel.serial == 1)
+                //    {
+                //        dataModel.authority = GlobalVariable.ALL_PERMISSION;
+                //    }
 
+                //    this.Update(_mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel));
+                //}
 
                 UserInfo resultModel = _mapper.Map<InitialUserRepoDTO, UserInfo>(dataModel);
                 resultModel.dept_name = departmentName;
@@ -108,7 +114,7 @@ namespace NISC_MFP_MVC_Service.Implement
             //若有manage_permission權限但沒有user權限，自動補上
                 {"user","manage_permission"}
             };
-            List<string> permissionList = permissionHelper.FillPermission(permissionPreCondition);
+            List<string> permissionList = permissionHelper.FillMainPermission(permissionPreCondition);
 
             //更新User權限
             UserInfo instance = Get("user_id", user_id, "Equals");
