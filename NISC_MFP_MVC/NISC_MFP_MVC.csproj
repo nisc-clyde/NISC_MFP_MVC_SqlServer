@@ -476,6 +476,10 @@
     <Compile Include="Areas\Admin\Controllers\WatermarkController.cs" />
     <Compile Include="Areas\Admin\IAddEditDeleteController.cs" />
     <Compile Include="Areas\Admin\IDataTableController.cs" />
+    <Compile Include="Areas\Config\ConfigAreaRegistration.cs" />
+    <Compile Include="Areas\Config\Controllers\AdministratorController.cs" />
+    <Compile Include="Areas\Config\Controllers\DatabaseConnectionController.cs" />
+    <Compile Include="Areas\Config\Controllers\GeneralConfigController.cs" />
     <Compile Include="Areas\User\Controllers\LogOutController.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
     <Compile Include="Areas\User\Controllers\UserController.cs" />
@@ -1630,6 +1634,12 @@
     <Content Include="Areas\User\Views\User\RecentlyPrintRecord.cshtml" />
     <Content Include="Areas\User\Views\User\RecentlyDepositRecord.cshtml" />
     <Content Include="Areas\User\Views\User\DeleteJob.cshtml" />
+    <Content Include="Areas\Config\Views\web.config" />
+    <Content Include="Areas\Config\Views\Shared\_ConfigLayout.cshtml" />
+    <Content Include="Areas\Config\Views\DatabaseConnection\Index.cshtml" />
+    <Content Include="Areas\Config\Views\Administrator\Index.cshtml" />
+    <Content Include="Areas\Config\Views\GeneralConfig\Index.cshtml" />
+    <Content Include="Areas\Config\Views\GeneralConfig\Import.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\Configuration\config.js" />
@@ -1676,11 +1686,11 @@
     <Content Include="Areas\Admin\Views\OutputReport\Index.cshtml" />
     <Content Include="Areas\Admin\Views\LogOut\Index.cshtml" />
     <Content Include="Areas\User\Views\Shared\_UserLayout.cshtml" />
-    <Content Include="Views\Login\Config.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Logs\" />
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Config\Data\" />
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Areas\User\Views\LogOut\" />
   </ItemGroup>

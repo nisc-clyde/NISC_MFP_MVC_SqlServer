@@ -81,13 +81,14 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 string inputStreamString;
                 while ((inputStreamString = csvReader.ReadLine()) != null)
                     rowDatas.Add(inputStreamString.Trim().Replace("\n", "").Replace(" ", ""));
-                rowDatas.Remove(rowDatas[0]); //Remove Header
+                // If exists header, remove it.
+                //rowDatas.Remove(rowDatas[0]);
 
                 foreach (var rowData in rowDatas)
                 {
                     var columns = rowData.Split(',');
 
-                    if (columns.Length != 9)
+                    if (columns.Length < 9)
                         return Json(new { success = false, message = "發生錯誤, 無法辨識的格式: " + rowData },
                             JsonRequestBehavior.AllowGet);
                     for (var i = 0; i < 9; i++)
@@ -99,11 +100,12 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                     columns[0] = columns[0].PadLeft(10, '0');
 
                     employees.Add(new EmployeeModel(columns[0], columns[1], columns[2], columns[3], columns[4],
-                        columns[5], columns[6], columns[7], columns[8]));
+                        columns[5], columns[6], columns[7], columns[8],
+                        columns.Length > 9 ? columns[9] : columns[0].Substring(columns[0].Length - 4, 4)));
                 }
 
                 Session["employees"] = employees;
-
+                csvReader.Close();
                 return Json(new { success = true, message = "檔案上傳成功" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -147,8 +149,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
         /// <summary>
         ///     匯入人事資料
         ///     <para>
-        ///         card_id dept_id  dept_name user_name user_id work_id card_type                enable
-        ///         e-mail
+        ///         card_id dept_id  dept_name user_name user_id work_id card_type enable e-mail
         ///     </para>
         ///     <para>卡號    部門編號 部門名稱  姓名      帳號    工號    卡屬性(遞減= 0，遞增= 1) 卡狀態(停用 = 0，啟用 = 1) Email</para>
         ///     <para>Reset : 全部覆蓋，tb_department、tb_card、tb_user先全部刪除再新增</para>
@@ -229,6 +230,7 @@ namespace NISC_MFP_MVC.Areas.Admin.Controllers
                 serial = -1,
                 user_id = employee.user_id,
                 user_name = employee.user_name,
+                user_password = employee.user_password,
                 work_id = employee.work_id,
                 dept_id = employee.dept_id,
                 e_mail = employee.e_mail,

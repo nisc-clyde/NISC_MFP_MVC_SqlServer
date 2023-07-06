@@ -1,25 +1,9 @@
 ﻿import { CustomSweetAlert2 } from "../AdminPartialViewScripts/Shared.js";
 
-function ConfigurationControlButton() {
-    $("#btnNext").on("click", function () {
-        $("#databaseDiv").hide();
-        $("#adminRegisterDiv").show();
-    });
-
-    $("#btnPrevious").on("click", function () {
-        $("#databaseDiv").show();
-        $("#adminRegisterDiv").hide();
-    });
-
-    $("#btnSkip").on("click", function () {
-        window.location.replace("/Login/Admin");
-    });
-}
-
 function RegisterAdmin() {
     $("#adminRegisterForm").on("submit", function () {
         $.ajax({
-            url: "/Login/ConfigAdminRegister",
+            url: "/Config/Administrator/ConfigAdminRegister",
             type: "POST",
             data: $(this).serialize(),
             success: function (data) {
@@ -69,7 +53,7 @@ function TestConnection() {
         }
 
         $.ajax({
-            url: "/Login/TestConnection",
+            url: "/Config/DatabaseConnection/TestConnection",
             type: "POST",
             data: $("#databaseConfigForm").serialize(),
             success: function (data) {
@@ -99,9 +83,9 @@ function SaveConnectionStirng() {
         $("#btnSaveConnectionString").attr("disabled", true);
 
         if ($("#btnWindowsAuth").is(":checked")) {
-            url = "/Login/SetWindowsAuthConnection";
+            url = "/Config/DatabaseConnection/SetWindowsAuthConnection";
         } else {
-            url = "/Login/SetSqlServerAuthConnection";
+            url = "/Config/DatabaseConnection/SetSqlServerAuthConnection";
         }
 
         $.ajax({
@@ -125,7 +109,6 @@ function SaveConnectionStirng() {
 }
 
 $(function () {
-    ConfigurationControlButton();
     RegisterAdmin();
     WindowsOrSqlServerAuth();
     TestConnection();

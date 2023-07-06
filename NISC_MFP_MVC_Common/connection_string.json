@@ -1,8 +1,11 @@
 {
-  "Data Source": ".\\SQLEXPRESS",
-  "Initial Catalog": "mywebni1_managerc",
-  "Integrated Security": "False",
-  "User ID": "root",
-  "Password": "nisc27978831",
-  "Connect Timeout": "15"
+  "connection_string": {
+    "Data Source": ".\\SQLEXPRESS",
+    "Initial Catalog": "mywebni1_managerc",
+    "Integrated Security": "False",
+    "User ID": "root",
+    "Password": "nisc27978831",
+    "Connect Timeout": "15"
+  },
+  "printjobAlive": "01:00:00"
 }

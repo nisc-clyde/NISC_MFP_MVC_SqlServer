@@ -53,14 +53,7 @@ namespace NISC_MFP_MVC_Common
             string output = JsonConvert.SerializeObject(sqlConnectionStringBuilder, Formatting.Indented);
 
             // output will override original json object
-            try
-            {
-                File.WriteAllText(PATH, output);
-            }
-            catch
-            {
-                throw;
-            }
+            File.WriteAllText(PATH, output);
 
             //Update Singleton String Object
             Save(sqlConnectionStringBuilder.ToString());
@@ -95,7 +88,6 @@ namespace NISC_MFP_MVC_Common
 
             return GetConnectionString();
         }
-
 
         /// <summary>
         /// 儲存Connection String

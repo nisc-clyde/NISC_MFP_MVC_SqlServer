@@ -6,7 +6,7 @@ namespace NISC_MFP_MVC.ViewModels
     public class EmployeeModel
     {
         public EmployeeModel(string card_id, string dept_id, string dept_name, string user_name, string user_id,
-            string work_id, string card_type, string enable, string e_mail)
+            string work_id, string card_type, string enable, string e_mail, string user_password)
         {
             this.card_id = card_id;
             this.dept_id = dept_id;
@@ -17,6 +17,7 @@ namespace NISC_MFP_MVC.ViewModels
             this.card_type = card_type;
             this.enable = enable;
             this.e_mail = e_mail;
+            this.user_password = user_password;
         }
 
         [DisplayName("卡片編號")] public string card_id { get; set; }
@@ -37,5 +38,7 @@ namespace NISC_MFP_MVC.ViewModels
         [DisplayName("使用狀態")] public string enable { get; set; }
 
         [Display(Name = "信箱")] public string e_mail { get; set; }
+
+        public string user_password { get; set; }
     }
 }

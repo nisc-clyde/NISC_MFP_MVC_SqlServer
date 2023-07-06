@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+
+@{
+    <script type="module" src="@Url.Content("~/Scripts/Configuration/config.js")"></script>
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="~/favicon.ico" sizes="64x64">
+    <title>@ViewBag.Title</title>
+
+    @Styles.Render("~/Content/cssbundle")
+    @Styles.Render("~/lib/animate-css")
+    <link href="~/lib//font-awesome/css/all.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-2 col-xl-2 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="/" class="d-flex align-items-center pt-3 text-white text-decoration-none">
+                        <img src="~/img/logo.png" class="img-fluid">
+                    </a>
+
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <button class="nav-link align-middle px-0"
+                                    onclick="location.href = '@Url.Action("Index", "DatabaseConnection", new { area = "Config"})'">
+                                <i class="fa-solid fa-database"></i><span class="ms-2 d-none d-sm-inline">資料庫設置</span>
+                            </button>
+                        </li>
+
+                        <li>
+                            <button class="nav-link align-middle px-0"
+                                    onclick="location.href = '@Url.Action("Index", "Administrator", new { area = "Config"})'">
+                                <i class="fa-solid fa-user-plus"></i><span class="ms-2 d-none d-sm-inline">新增管理員</span>
+                            </button>
+                        </li>
+
+                        <li>
+                            <a href="#listGeneralConfig" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-gears"></i><span class="ms-2 d-none d-sm-inline">基本設定</span>
+                            </a>
+
+                            <ul class="collapse nav flex-column ms-5" id="listGeneralConfig">
+                                <li class="w-100">
+                                    <button class="nav-link px-0"
+                                            onclick="location.href = '@Url.Action("Import", "GeneralConfig", new { area = "Config" })'">
+                                        <span class="ms-2 d-none d-sm-inline">人事資料匯入</span>
+
+                                    </button>
+                                </li>
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        @*<li>
+                                <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                    <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span>
+                                </a>
+                                <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                                    <li class="w-100">
+                                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                                    </li>
+                                </ul>
+                            </li>*@
+                    </ul>
+                    <hr>
+                </div>
+            </div>
+            <div class="col p-3">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jqueryvalmin")
+    @Scripts.Render("~/lib/sweetalert2-js")
+
+</body>
+</html>

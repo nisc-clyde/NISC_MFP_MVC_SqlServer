@@ -8,17 +8,11 @@ using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using NLog;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.Security;
-using AutoMapper.QueryableExtensions;
-using NISC_MFP_MVC.ViewModels.User.AdminAreas;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
-
 
 namespace NISC_MFP_MVC.Controllers
 {
@@ -188,139 +182,6 @@ namespace NISC_MFP_MVC.Controllers
             }
 
             return View();
-        }
-
-
-        [HttpGet]
-        public ActionResult Config()
-        {
-            userService.Dispose();
-            return View();
-        }
-
-        /// <summary>
-        ///     自訂Admin帳號，取得所有權限
-        /// </summary>
-        /// <param name="admin">欲新增之Admin</param>
-        /// <returns></returns>
-        [HttpPost]
-        [AjaxOnly]
-        public ActionResult ConfigAdminRegister(AdminRegister admin)
-        {
-            if (ModelState.IsValid)
-            {
-                IUserService userService = new UserService();
-                UserInfo adminInfo = userService.Get("user_id", admin.user_id, "Equals");
-                if (adminInfo == null)
-                {
-                    //無執行user_id primary key重複之檢查
-                    adminInfo = new UserInfo
-                    {
-                        user_id = admin.user_id,
-                        user_password = admin.user_password,
-                        work_id = "work_id_admin",
-                        user_name = admin.user_name,
-                        authority = GlobalVariable.ALL_PERMISSION,
-                        dept_id = "dept_id_1",
-                        color_enable_flag = "1",
-                        copy_enable_flag = "1",
-                        print_enable_flag = "1",
-                        scan_enable_flag = "1",
-                        fax_enable_flag = "1",
-                        e_mail = "",
-                        serial = 1 //serial has auto increment property, and specify the serial will not working.
-                    };
-                    userService.Insert(adminInfo);
-                    userService.Dispose();
-
-                    return Json(new { success = true, message = "註冊成功" });
-                }
-
-                userService.Dispose();
-                return Json(new { success = false, message = "此帳號已存在" });
-            }
-
-            return View();
-        }
-
-        [HttpPost]
-        [AjaxOnly]
-        public ActionResult SetWindowsAuthConnection(SqlConnectionStringBuilder connectionModel)
-        {
-            DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource,
-                connectionModel.InitialCatalog);
-
-            List<UserViewModel> usersInfo = userService
-                .GetAll()
-                .Where(u => !string.IsNullOrWhiteSpace(u.authority) && u.authority.Contains(".php"))
-                .ProjectTo<UserViewModel>(_mapper.ConfigurationProvider).ToList();
-
-            if (usersInfo.Any())
-            {
-                foreach (UserViewModel user in usersInfo)
-                {
-                    PermissionHelper permissionHelper = new PermissionHelper(user.authority);
-                    permissionHelper.PermissionString(String.Join(",", permissionHelper.Order(GlobalVariable.ALL_PERMISSION)));
-                    List<string> permissionList = permissionHelper.FillAllPermission(GlobalVariable.FILL_PERMISSION);
-                    user.authority = String.Join(",", permissionList);
-                    userService.Update(_mapper.Map<UserInfo>(user));
-                }
-            }
-
-            return Json(new { success = true, message = "連線資訊儲存成功" });
-        }
-
-        [HttpPost]
-        [AjaxOnly]
-        public ActionResult SetSqlServerAuthConnection(SqlConnectionStringBuilder connectionModel)
-        {
-            DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource,
-                connectionModel.InitialCatalog, false, connectionModel.UserID, connectionModel.Password);
-
-            List<UserViewModel> usersInfo = userService
-                .GetAll()
-                .Where(u => !string.IsNullOrWhiteSpace(u.authority) && u.authority.Contains(".php"))
-                .ProjectTo<UserViewModel>(_mapper.ConfigurationProvider).ToList();
-
-            if (usersInfo.Any())
-            {
-                foreach (UserViewModel user in usersInfo)
-                {
-                    PermissionHelper permissionHelper = new PermissionHelper(user.authority);
-                    permissionHelper.PermissionString(String.Join(",", permissionHelper.Order(GlobalVariable.ALL_PERMISSION)));
-                    List<string> permissionList = permissionHelper.FillAllPermission(GlobalVariable.FILL_PERMISSION);
-                    user.authority = String.Join(",", permissionList);
-                    userService.Update(_mapper.Map<UserInfo>(user));
-                }
-            }
-
-            return Json(new { success = true, message = "連線資訊儲存成功" });
-        }
-
-        [HttpPost]
-        [AjaxOnly]
-        public ActionResult TestConnection(SqlConnectionStringBuilder connectionModel)
-        {
-            var connectionString = connectionModel.ToString();
-            var sqlConnection = new SqlConnection();
-
-            try
-            {
-                sqlConnection.ConnectionString = connectionString;
-                SqlConnection.ClearPool(sqlConnection);
-                sqlConnection.Open();
-                return Json(new { success = true, message = "連線成功" });
-            }
-            catch (Exception e)
-            {
-                logger.Error($"發生Controller：Login\n發生Action：User\n錯誤訊息：{e}", "Exception End");
-                return Json(new { success = false, message = "連線失敗，請重新輸入" });
-            }
-            finally
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
         }
     }
 }
