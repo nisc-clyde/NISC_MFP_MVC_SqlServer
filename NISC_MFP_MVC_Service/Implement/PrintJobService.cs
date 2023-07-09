@@ -57,13 +57,16 @@ namespace NISC_MFP_MVC_Service.Implement
         {
             // 待列印工作有效時間
             int jobsLifeCycle = 0;
-            string DATABASE_PATH = GlobalVariable.DATABASE_INI_PATH;
-            if (File.Exists(DATABASE_PATH))
-            {
-                FileIniDataParser fileIniDataParser = new FileIniDataParser();
-                IniData data = fileIniDataParser.ReadFile(DATABASE_PATH);
-                jobsLifeCycle = Convert.ToInt32(TimeSpan.Parse(data["systemSetup"]["printjobAlive"]).TotalSeconds);
-            }
+            //string DATABASE_PATH = GlobalVariable.DATABASE_INI_PATH;
+            //if (File.Exists(DATABASE_PATH))
+            //{
+            //    FileIniDataParser fileIniDataParser = new FileIniDataParser();
+            //    IniData data = fileIniDataParser.ReadFile(DATABASE_PATH);
+            //    jobsLifeCycle = Convert.ToInt32(TimeSpan.Parse(data["systemSetup"]["printjobAlive"]).TotalSeconds);
+            //}
+
+            ConfigHelper<string> printJobAliveHelper = PrintJobAliveHelper.Instance;
+            jobsLifeCycle = Convert.ToInt32(TimeSpan.Parse(printJobAliveHelper.Get()).TotalSeconds);
 
             // 欲Render到View的待列印工作，符合所有條件的待列印工作
             List<PrintJobsModel> jobsDataModel = new List<PrintJobsModel>();
@@ -73,7 +76,7 @@ namespace NISC_MFP_MVC_Service.Implement
                     .Where(d =>
                     d.user_id == user_id &&
                     d.data_source == "P" &&
-                    DbFunctions.AddHours((d.ntime ?? DateTime.MinValue), jobsLifeCycle) > DateTime.Now)
+                    DbFunctions.AddSeconds((d.ntime ?? DateTime.MinValue), jobsLifeCycle) > DateTime.Now)
                     .ToList();
 
             // 取得價目表
@@ -123,7 +126,7 @@ namespace NISC_MFP_MVC_Service.Implement
                 if (File.Exists($@"{GlobalVariable.PRINT_TEMP_PATH}/{documentUid}.pcl")) File.Delete($@"{GlobalVariable.PRINT_TEMP_PATH}/{documentUid}.pcl");
             }
         }
-        
+
 
         /// <summary>
         /// 取得或刪除card_id的暫存檔
