@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using NISC_MFP_MVC_Common.Config.Helper;
 
 namespace NISC_MFP_MVC
 {
@@ -17,7 +18,7 @@ namespace NISC_MFP_MVC
         {
             //動態取得connection string
             var databaseTarget = (DatabaseTarget)LogManager.Configuration.FindTargetByName("Db");
-            databaseTarget.ConnectionString = DatabaseConnectionHelper.Instance.GetConnectionStringFromFile();
+            databaseTarget.ConnectionString = DatabaseConnectionHelper.Instance.Get().ToString();
             LogManager.ReconfigExistingLoggers();
         }
 

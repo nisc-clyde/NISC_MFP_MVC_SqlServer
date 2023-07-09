@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
+using NISC_MFP_MVC_Common.Config;
+using NISC_MFP_MVC_Common.Config.Helper;
 
 namespace NISC_MFP_MVC_Service.Implement
 {
@@ -65,7 +67,7 @@ namespace NISC_MFP_MVC_Service.Implement
             //    jobsLifeCycle = Convert.ToInt32(TimeSpan.Parse(data["systemSetup"]["printjobAlive"]).TotalSeconds);
             //}
 
-            ConfigHelper<string> printJobAliveHelper = PrintJobAliveHelper.Instance;
+            ConfigBase<string> printJobAliveHelper = PrintJobAliveHelper.Instance;
             jobsLifeCycle = Convert.ToInt32(TimeSpan.Parse(printJobAliveHelper.Get()).TotalSeconds);
 
             // 欲Render到View的待列印工作，符合所有條件的待列印工作

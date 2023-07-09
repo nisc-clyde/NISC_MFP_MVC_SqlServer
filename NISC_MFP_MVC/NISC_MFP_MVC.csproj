@@ -515,6 +515,7 @@
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".sonarlint\nisc_mfp_mvc\CSharp\SonarLint.xml" />
+    <Content Include="Content\dashboard.css" />
     <Content Include="Error\403.aspx" />
     <Content Include="Error\403.html" />
     <Content Include="Error\404.aspx" />
@@ -1638,7 +1639,6 @@
     <Content Include="Areas\Config\Views\Shared\_ConfigLayout.cshtml" />
     <Content Include="Areas\Config\Views\DatabaseConnection\Index.cshtml" />
     <Content Include="Areas\Config\Views\Administrator\Index.cshtml" />
-    <Content Include="Areas\Config\Views\GeneralConfig\Index.cshtml" />
     <Content Include="Areas\Config\Views\GeneralConfig\Import.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />

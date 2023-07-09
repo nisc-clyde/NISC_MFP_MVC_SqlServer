@@ -103,11 +103,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseConnectionHelper.cs" />
+    <Compile Include="Config\ConfigBase.cs" />
+    <Compile Include="Config\Model\ConfigModel.cs" />
+    <Compile Include="Config\Helper\DatabaseConnectionHelper.cs" />
     <Compile Include="DataTableRequest.cs" />
     <Compile Include="GlobalVariable.cs" />
     <Compile Include="ListToDataTableConverter.cs" />
+    <Compile Include="Config\Model\ConnectionStringModel.cs" />
     <Compile Include="PermissionHelper.cs" />
+    <Compile Include="Config\Helper\PrintJobAliveHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,7 +119,7 @@
       <Link>nisc_mfp_mvccsharp.ruleset</Link>
     </None>
     <None Include="app.config" />
-    <None Include="connection_string.json">
+    <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

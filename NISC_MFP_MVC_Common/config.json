@@ -7,5 +7,5 @@
     "Password": "nisc27978831",
     "Connect Timeout": "15"
   },
-  "printjobAlive": "01:00:00"
+  "print_job_alive": "01:00:00"
 }

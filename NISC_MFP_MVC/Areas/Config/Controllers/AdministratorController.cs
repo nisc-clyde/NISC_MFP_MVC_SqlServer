@@ -33,7 +33,6 @@ namespace NISC_MFP_MVC.Areas.Config.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            userService.Dispose();
             ViewBag.formTitle = "新增管理員";
             return View();
         }
@@ -71,12 +70,10 @@ namespace NISC_MFP_MVC.Areas.Config.Controllers
                         serial = 1 //serial has auto increment property, and specify the serial will not working.
                     };
                     userService.Insert(adminInfo);
-                    userService.Dispose();
 
                     return Json(new { success = true, message = "註冊成功" });
                 }
 
-                userService.Dispose();
                 return Json(new { success = false, message = "此帳號已存在" });
             }
 

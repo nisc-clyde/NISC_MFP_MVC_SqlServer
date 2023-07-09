@@ -12,6 +12,8 @@ using System.Linq;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
 using NISC_MFP_MVC.ViewModels.User.AdminAreas;
+using NISC_MFP_MVC_Common.Config.Helper;
+using NISC_MFP_MVC_Common.Config.Model;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Config.Controllers
@@ -45,9 +47,9 @@ namespace NISC_MFP_MVC.Areas.Config.Controllers
 
         [HttpPost]
         [AjaxOnly]
-        public ActionResult SetWindowsAuthConnection(SqlConnectionStringBuilder connectionModel)
+        public ActionResult SetWindowsAuthConnection(ConnectionStringModel connectionModel)
         {
-            DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource, connectionModel.InitialCatalog);
+            DatabaseConnectionHelper.Instance.Set(connectionModel);
 
             List<UserViewModel> usersInfo = userService
                 .GetAll()
@@ -71,10 +73,9 @@ namespace NISC_MFP_MVC.Areas.Config.Controllers
 
         [HttpPost]
         [AjaxOnly]
-        public ActionResult SetSqlServerAuthConnection(SqlConnectionStringBuilder connectionModel)
+        public ActionResult SetSqlServerAuthConnection(ConnectionStringModel connectionModel)
         {
-            DatabaseConnectionHelper.Instance.SetConnectionString(connectionModel.DataSource,
-                connectionModel.InitialCatalog, false, connectionModel.UserID, connectionModel.Password);
+            DatabaseConnectionHelper.Instance.Set(connectionModel);
 
             List<UserViewModel> usersInfo = userService
                 .GetAll()

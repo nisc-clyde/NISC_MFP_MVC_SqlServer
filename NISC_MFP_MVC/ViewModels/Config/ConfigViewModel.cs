@@ -1,4 +1,4 @@
-﻿using System.Data.SqlClient;
+﻿using NISC_MFP_MVC_Common.Config.Model;
 
 namespace NISC_MFP_MVC.ViewModels.Config
 {
@@ -6,6 +6,6 @@ namespace NISC_MFP_MVC.ViewModels.Config
     {
         public AdminRegister adminRegister { get; set; }
 
-        public SqlConnectionStringBuilder connectionModel { get; set; }
+        public ConnectionStringModel connectionModel { get; set; }
     }
 }

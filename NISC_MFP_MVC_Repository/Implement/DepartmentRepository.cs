@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using NISC_MFP_MVC_Common.Config.Helper;
 
 namespace NISC_MFP_MVC_Repository.Implement
 {
@@ -41,8 +42,9 @@ namespace NISC_MFP_MVC_Repository.Implement
             ListToDataTableConverter converter = new ListToDataTableConverter();
             DataTable dataTable = converter.ToDataTable(_mapper.Map<List<tb_department>>(instance));
 
-            string connectionString = DatabaseConnectionHelper.Instance.GetConnectionString();
-            string databaseName = new SqlConnectionStringBuilder(connectionString).InitialCatalog;
+            string connectionString = DatabaseConnectionHelper.Instance.Get().ToString();
+            string databaseName = DatabaseConnectionHelper.Instance.Get().InitialCatalog;
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -210,7 +212,8 @@ namespace NISC_MFP_MVC_Repository.Implement
 
         public void SoftDelete()
         {
-            string databaseName = new SqlConnectionStringBuilder(DatabaseConnectionHelper.Instance.GetConnectionString()).InitialCatalog;
+            string connectionString = DatabaseConnectionHelper.Instance.Get().ToString();
+            string databaseName = DatabaseConnectionHelper.Instance.Get().InitialCatalog;
 
             db.Database.ExecuteSqlCommand($"DELETE FROM {databaseName}.tb_department");
         }

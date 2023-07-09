@@ -38,7 +38,6 @@ namespace NISC_MFP_MVC.Controllers
         [HttpGet]
         public ActionResult User()
         {
-            userService.Dispose();
             return View();
         }
 
@@ -78,7 +77,6 @@ namespace NISC_MFP_MVC.Controllers
                             HttpOnly = true
                         };
                         Response.Cookies.Add(authCookie);
-                        userService.Dispose();
 
                         NLogHelper.Instance.Logging("使用者登入", loginUser.account);
 
@@ -87,7 +85,6 @@ namespace NISC_MFP_MVC.Controllers
                             new { area = "User" });
                     }
 
-                    userService.Dispose();
                     ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                 }
                 catch (Exception e)
@@ -103,7 +100,6 @@ namespace NISC_MFP_MVC.Controllers
         [HttpGet]
         public ActionResult Admin()
         {
-            userService.Dispose();
             return View();
         }
 
@@ -154,7 +150,6 @@ namespace NISC_MFP_MVC.Controllers
                             string firstAuthority = userInfo.authority.Split(',').First();
                             // 給_AdminLayout使用，藉此隱藏或載入Tab
                             TempData["ActiveNav"] = firstAuthority;
-                            userService.Dispose();
 
                             // Insert Log
                             NLogHelper.Instance.Logging("管理者登入", loginUser.account);
@@ -165,12 +160,10 @@ namespace NISC_MFP_MVC.Controllers
                                 new { area = "Admin" });
                         }
 
-                        userService.Dispose();
                         ModelState.AddModelError("ErrorMessage", "您尚未擁有任何管理相關的權限");
                     }
                     else
                     {
-                        userService.Dispose();
                         ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                     }
                 }
