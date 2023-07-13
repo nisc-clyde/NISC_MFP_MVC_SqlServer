@@ -33,7 +33,6 @@ namespace NISC_MFP_MVC.Areas.Config.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            ViewBag.formTitle = "新增管理員";
             return View();
         }
 

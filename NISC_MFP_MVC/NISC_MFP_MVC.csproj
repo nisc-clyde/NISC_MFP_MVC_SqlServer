@@ -480,7 +480,7 @@
     <Compile Include="Areas\Config\Controllers\AdministratorController.cs" />
     <Compile Include="Areas\Config\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Config\Controllers\ConnectionController.cs" />
-    <Compile Include="Areas\Config\Controllers\GeneralConfigController.cs" />
+    <Compile Include="Areas\Config\Controllers\AdvancedConfigController.cs" />
     <Compile Include="Areas\User\Controllers\LogOutController.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
     <Compile Include="Areas\User\Controllers\UserController.cs" />
@@ -1638,10 +1638,13 @@
     <Content Include="Areas\User\Views\User\DeleteJob.cshtml" />
     <Content Include="Areas\Config\Views\web.config" />
     <Content Include="Areas\Config\Views\Shared\_ConfigLayout.cshtml" />
-    <Content Include="Areas\Config\Views\DatabaseConnection\Index.cshtml" />
+    <Content Include="Areas\Config\Views\Connection\Index.cshtml" />
     <Content Include="Areas\Config\Views\Administrator\Index.cshtml" />
-    <Content Include="Areas\Config\Views\GeneralConfig\Import.cshtml" />
+    <Content Include="Areas\Config\Views\AdvancedConfig\AutoTextImport.cshtml" />
     <Content Include="Areas\Config\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Config\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Config\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Config\Views\AdvancedConfig\PrinterPath.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\Configuration\config.js" />

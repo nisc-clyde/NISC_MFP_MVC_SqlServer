@@ -16,10 +16,6 @@
 
     <style>
 
-        body {
-            margin: 0;
-        }
-
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -60,23 +56,23 @@
             overflow-y: hidden;
         }
 
-        .nav-scroller .nav {
-            display: flex;
-            flex-wrap: nowrap;
-            padding-bottom: 1rem;
-            margin-top: -1px;
-            overflow-x: auto;
-            text-align: center;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
+            .nav-scroller .nav {
+                display: flex;
+                flex-wrap: nowrap;
+                padding-bottom: 1rem;
+                margin-top: -1px;
+                overflow-x: auto;
+                text-align: center;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
 
         #sidebarMenu li > a:hover {
-            background-color: lightgrey;
+            background-color: darkgray;
         }
 
         .sidebar-li-active {
-            background-color: lightgrey;
+            background-color: darkgray;
         }
     </style>
 
@@ -84,36 +80,27 @@
 
 <body>
 
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-
-        @*<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Company name</a>*@
-
+    <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow-lg" style="background-color: #394867; ">
         <a href="/" class="d-flex align-items-center pt-3 text-white text-decoration-none">
             <img src="~/img/logo.png" class="img-fluid">
         </a>
 
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"
-               aria-label="Search">
-        <div class="navbar-nav">
+        @*<div class="navbar-nav">
             <div class="nav-item text-nowrap">
                 <a class="nav-link px-3" href="#">Sign out</a>
-            </div>
+            </div>*@
         </div>
     </header>
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-2 col-lg-2 col-xl-2 col-xxl-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky pt-3 sidebar-sticky">
+            <nav id="sidebarMenu" class="col-md-2 col-lg-2 col-xl-2 col-xxl-2 d-md-block sidebar">
+                <div class="position-sticky pt-3 sidebar-sticky shadow" style="background-color: #394867;">
 
                     <ul class="nav flex-column my-2 fs-6">
                         <li class="nav-item border-2 border-bottom" id="li_dashboard">
                             <a class="nav-link" href="@Url.Action("Index", "Dashboard", new { area = "Config" })">
-                                <div class="row">
+                                <div class="row text-white">
                                     <div class="col-2 fs-5">
                                         <i class="fa-solid fa-gauge-high"></i>
                                     </div>
@@ -125,7 +112,7 @@
                         </li>
                     </ul>
 
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted text-uppercase">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted text-uppercase text-white-50">
                         <span>基本設定</span>
                     </h6>
 
@@ -133,26 +120,26 @@
 
                         <li class="nav-item" id="li_db_connection">
                             <a class="nav-link" href="@Url.Action("Index", "Connection", new { area = "Config" })">
-                                <div class="row">
+                                <div class="row text-white">
                                     <div class="col-2 fs-5">
                                         <i class="fa-solid fa-network-wired"></i>
                                     </div>
                                     <div class="col d-flex align-items-center">
-                                        連線
+                                        連線設定
                                     </div>
                                 </div>
                             </a>
                         </li>
                     </ul>
 
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted text-uppercase">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted text-uppercase text-white-50">
                         <span>進階設定</span>
                     </h6>
 
                     <ul class="nav flex-column mb-2 fs-6">
                         <li class="nav-item" id="li_create_manager">
                             <a class="nav-link" href="@Url.Action("Index", "Administrator", new { area = "Config" })">
-                                <div class="row">
+                                <div class="row text-white">
                                     <div class="col-2 fs-5">
                                         <i class="fa-solid fa-user-tie"></i>
                                     </div>
@@ -164,8 +151,8 @@
                         </li>
 
                         <li class="nav-item" id="li_basic_config">
-                            <a href="#listGeneralConfig" data-bs-toggle="collapse" class="nav-link">
-                                <div class="row">
+                            <a href="#listGeneralConfig" data-bs-toggle="collapse" data-bs-target="#listGeneralConfig" class="nav-link">
+                                <div class="row text-white">
                                     <div class="col-2 fs-5">
                                         <i class="fa-solid fa-gears"></i>
                                     </div>
@@ -175,27 +162,73 @@
                                 </div>
                             </a>
 
-                            <ul class="collapse nav flex-column ms-4" id="listGeneralConfig">
+                            <ul class="collapse flex-column ms-4" id="listGeneralConfig">
+                                <li class="nav-item" id="li_printer_path">
+                                    <a class="nav-link" href="@Url.Action("Index", "Exit", new { area = "Config" })">
+                                        <div class="row text-white">
+                                            <div class="col-2 fs-5">
+                                                <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i>
+                                            </div>
+                                            <div class="col d-flex align-items-center">
+                                                檔案留存/轉檔路徑
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+
                                 <li class="nav-item" id="li_import">
-                                    <a class="nav-link" href="@Url.Action("Import", "GeneralConfig", new { area = "Config" })">
-                                        <div class="row">
+                                    <a class="nav-link" href="@Url.Action("AutoTextImport", "AdvancedConfig", new { area = "Config" })">
+                                        <div class="row text-white">
                                             <div class="col-2 fs-5">
                                                 <i class="fa-solid fa-user-plus"></i>
                                             </div>
                                             <div class="col d-flex align-items-center">
-                                                人事資料匯入
+                                                人事資料自動匯入
                                             </div>
                                         </div>
                                     </a>
                                 </li>
                             </ul>
+
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted text-uppercase text-white-50">
+                        <span>離開</span>
+                    </h6>
+
+                    <ul class="nav flex-column mb-2 fs-6">
+                        <li class="nav-item" id="li_exit_to_admin">
+                            <a class="nav-link" href="@Url.Action("Index", "Exit", new { area = "Config" })">
+                                <div class="row text-white">
+                                    <div class="col-2 fs-5">
+                                        <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        管理者登入
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" id="li_exit_to_user">
+                            <a class="nav-link" href="@Url.Action("Index", "Exit", new { area = "Config" })">
+                                <div class="row text-white">
+                                    <div class="col-2 fs-5">
+                                        <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        使用者登入
+                                    </div>
+                                </div>
+                            </a>
                         </li>
                     </ul>
 
                 </div>
             </nav>
 
-            <main class="ms-sm-auto col-md-10 col-lg-10 col-xl-10 col-xxl-10 px-md-4">
+            <main class="ms-sm-auto col-md-10 col-lg-10 col-xl-10 col-xxl-10">
                 @RenderBody()
             </main>
 
