@@ -53,7 +53,7 @@ function TestConnection() {
         }
 
         $.ajax({
-            url: "/Config/DatabaseConnection/TestConnection",
+            url: "/Config/Connection/TestConnection",
             type: "POST",
             data: $("#databaseConfigForm").serialize(),
             success: function (data) {
@@ -83,9 +83,9 @@ function SaveConnectionStirng() {
         $("#btnSaveConnectionString").attr("disabled", true);
 
         if ($("#btnWindowsAuth").is(":checked")) {
-            url = "/Config/DatabaseConnection/SetWindowsAuthConnection";
+            url = "/Config/Connection/SetWindowsAuthConnection";
         } else {
-            url = "/Config/DatabaseConnection/SetSqlServerAuthConnection";
+            url = "/Config/Connection/SetSqlServerAuthConnection";
         }
 
         $.ajax({

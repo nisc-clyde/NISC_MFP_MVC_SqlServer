@@ -5,63 +5,98 @@
     Layout = "~/Areas/Config/Views/Shared/_ConfigLayout.cshtml";
 }
 
-<div class="vh-100 d-flex justify-content-center align-items-center">
-    <div class="col-4 p-2 shadow-sm border rounded-5 border-primary">
-        <p class="text-center fs-2 mb-0">
-            @ViewBag.formTitle
-            <div class="text-secondary text-center">
-                請輸入欲連接之資料庫帳號及密碼
-            </div>
-        </p>
+<div class="vh-100 d-flex justify-content-around align-items-center">
+    
+        <div class="col-5 p-2 shadow-sm border rounded-5 border-primary">
+            <p class="text-center fs-2 mb-0">
+                伺服器位址設定
+                <div class="text-secondary text-center">
+                    請輸入後端API伺服器URL以提供系統正常運作
+                </div>
+            </p>
 
-        <div class="text-center my-3">
-
-            @if (HttpContext.Current.IsDebuggingEnabled)
+            @using (Html.BeginForm("", "", FormMethod.Post, new { id = "serverAddressConfigForm", @class = "px-5 pb-5 pt-1" }))
             {
-                <input type="radio" class="btn-check" name="options-outlined" id="btnWindowsAuth">
-                <label class="btn btn-outline-danger" for="btnWindowsAuth">Windows驗證<br />(此僅作為開發用途，請勿使用)</label>
-            }
+                <div class="mb-3" id="serverAddress">
+                    @Html.Label("伺服器主機位址", new { @class = "form-label" })
+                    @Html.TextBoxFor(d => d.connectionModel.Password, new { Name = "ServerAddress", @class = "form-control bg-opacity-10 border border-primary" })
+                </div>
 
-            <input type="radio" class="btn-check" name="options-outlined" id="btnSqlServerAuth" checked>
-            <label class="btn btn-outline-info" for="btnSqlServerAuth">SQL Server驗證</label>
+                <div class="my-4 d-grid">
+                    <button id="btnServerTestConnection" class="btn btn-primary" type="submit">
+                        測試連線
+                        <span id="btnServerTestConnectionSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
+                    </button>
+                </div>
+
+                <div class="bg-secondary bg-opacity-50 rounded my-4 mx-5" style="height: 3px;">&nbsp;</div>
+
+                <div class="d-grid">
+                    <button class="btn fs-4 btn-success" type="submit" id="btnSaveServerAddress" disabled>
+                        確定
+                        <span id="btnSaveServerAddressSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
+                    </button>
+                </div>
+            }
         </div>
 
-        @using (Html.BeginForm("", "", FormMethod.Post, new { id = "databaseConfigForm", @class = "overflow-auto px-5 pb-5 pt-1" }))
-        {
-            @Html.HiddenFor(d => d.connectionModel.IntegratedSecurity, new { Name = "IntegratedSecurity" })
+        <div class="col-5 p-2 shadow-sm border rounded-5 border-primary">
+            <p class="text-center fs-2 mb-0">
+                資料庫設定
+                <div class="text-secondary text-center">
+                    請輸入欲連接之資料庫帳號及密碼
+                </div>
+            </p>
 
-            <div class="mb-3">
-                @Html.Label("資料來源", new { @class = "form-label" })
-                @Html.TextBoxFor(d => d.connectionModel.DataSource, new { Name = "DataSource", Value = ".\\NISC_SQLEXPRESS", @class = "form-control bg-opacity-10 border border-primary" })
-            </div>
-            <div class="mb-3">
-                @Html.Label("資料庫名稱", new { @class = "form-label" })
-                @Html.TextBoxFor(d => d.connectionModel.InitialCatalog, new { Name = "InitialCatalog", Value = "mywebni1_managerc", @class = "form-control bg-opacity-10 border border-primary" })
-            </div>
-            <div class="mb-3" id="databaseAccountDiv">
-                @Html.Label("資料庫登入帳號", new { @class = "form-label" })
-                @Html.TextBoxFor(d => d.connectionModel.UserID, new { Name = "UserID", @class = "form-control bg-opacity-10 border border-primary" })
-            </div>
-            <div class="mb-3" id="databasePasswordDiv">
-                @Html.Label("資料庫登入密碼", new { @class = "form-label" })
-                @Html.TextBoxFor(d => d.connectionModel.Password, new { Name = "Password", @class = "form-control bg-opacity-10 border border-primary" })
-            </div>
+            <div class="text-center my-3">
 
-            <div class="my-4 d-grid">
-                <button id="btnTestConnection" class="btn btn-primary" type="submit">
-                    測試連線
-                    <span id="btnTestConnectionSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
-                </button>
+                @if (HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <input type="radio" class="btn-check" name="options-outlined" id="btnWindowsAuth">
+                    <label class="btn btn-outline-danger" for="btnWindowsAuth">Windows驗證<br />(此僅作為開發用途，請勿使用)</label>
+                }
+
+                <input type="radio" class="btn-check" name="options-outlined" id="btnSqlServerAuth" checked>
+                <label class="btn btn-outline-info" for="btnSqlServerAuth">SQL Server驗證</label>
             </div>
 
-            <div class="bg-secondary bg-opacity-50 rounded my-4 mx-5" style="height: 3px;">&nbsp;</div>
+            @using (Html.BeginForm("", "", FormMethod.Post, new { id = "databaseConfigForm", @class = "px-5 pb-5 pt-1" }))
+            {
+                @Html.HiddenFor(d => d.connectionModel.IntegratedSecurity, new { Name = "IntegratedSecurity" })
 
-            <div class="d-grid">
-                <button class="btn fs-4 btn-success" type="submit" id="btnSaveConnectionString" disabled>
-                    確定
-                    <span id="btnSaveConnectionStringSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
-                </button>
-            </div>
-        }
-    </div>
+                <div class="mb-3">
+                    @Html.Label("資料來源", new { @class = "form-label" })
+                    @Html.TextBoxFor(d => d.connectionModel.DataSource, new { Name = "DataSource", Value = ".\\NISC_SQLEXPRESS", @class = "form-control bg-opacity-10 border border-primary" })
+                </div>
+                <div class="mb-3">
+                    @Html.Label("資料庫名稱", new { @class = "form-label" })
+                    @Html.TextBoxFor(d => d.connectionModel.InitialCatalog, new { Name = "InitialCatalog", Value = "mywebni1_managerc", @class = "form-control bg-opacity-10 border border-primary" })
+                </div>
+                <div class="mb-3" id="databaseAccountDiv">
+                    @Html.Label("資料庫登入帳號", new { @class = "form-label" })
+                    @Html.TextBoxFor(d => d.connectionModel.UserID, new { Name = "UserID", @class = "form-control bg-opacity-10 border border-primary" })
+                </div>
+                <div class="mb-3" id="databasePasswordDiv">
+                    @Html.Label("資料庫登入密碼", new { @class = "form-label" })
+                    @Html.TextBoxFor(d => d.connectionModel.Password, new { Name = "Password", @class = "form-control bg-opacity-10 border border-primary" })
+                </div>
+
+                <div class="my-4 d-grid">
+                    <button id="btnTestConnection" class="btn btn-primary" type="submit">
+                        測試連線
+                        <span id="btnTestConnectionSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
+                    </button>
+                </div>
+
+                <div class="bg-secondary bg-opacity-50 rounded my-4 mx-5" style="height: 3px;">&nbsp;</div>
+
+                <div class="d-grid">
+                    <button class="btn fs-4 btn-success" type="submit" id="btnSaveConnectionString" disabled>
+                        確定
+                        <span id="btnSaveConnectionStringSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
+                    </button>
+                </div>
+            }
+        </div>
+
 </div>

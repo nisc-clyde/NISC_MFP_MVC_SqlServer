@@ -18,13 +18,13 @@ using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
 
 namespace NISC_MFP_MVC.Areas.Config.Controllers
 {
-    public class DatabaseConnectionController : Controller
+    public class ConnectionController : Controller
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly IUserService userService;
         private readonly Mapper _mapper;
 
-        public DatabaseConnectionController()
+        public ConnectionController()
         {
             userService = new UserService();
             _mapper = InitializeAutoMapper();
@@ -41,7 +41,6 @@ namespace NISC_MFP_MVC.Areas.Config.Controllers
         public ActionResult Index()
         {
             userService.Dispose();
-            ViewBag.formTitle = "資料庫設置";
             return View();
         }
 

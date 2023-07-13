@@ -478,7 +478,8 @@
     <Compile Include="Areas\Admin\IDataTableController.cs" />
     <Compile Include="Areas\Config\ConfigAreaRegistration.cs" />
     <Compile Include="Areas\Config\Controllers\AdministratorController.cs" />
-    <Compile Include="Areas\Config\Controllers\DatabaseConnectionController.cs" />
+    <Compile Include="Areas\Config\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Config\Controllers\ConnectionController.cs" />
     <Compile Include="Areas\Config\Controllers\GeneralConfigController.cs" />
     <Compile Include="Areas\User\Controllers\LogOutController.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
@@ -1640,6 +1641,7 @@
     <Content Include="Areas\Config\Views\DatabaseConnection\Index.cshtml" />
     <Content Include="Areas\Config\Views\Administrator\Index.cshtml" />
     <Content Include="Areas\Config\Views\GeneralConfig\Import.cshtml" />
+    <Content Include="Areas\Config\Views\Dashboard\Index.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\Configuration\config.js" />

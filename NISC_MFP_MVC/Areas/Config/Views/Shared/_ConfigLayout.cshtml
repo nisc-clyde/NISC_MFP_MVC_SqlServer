@@ -1,23 +1,6 @@
 ﻿<!DOCTYPE html>
 
-@{
-    <script type="module" src="@Url.Content("~/Scripts/Configuration/config.js")"></script>
-}
-
 <html>
-@*<head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/png" href="~/favicon.ico" sizes="64x64">
-        <title>@ViewBag.Title</title>
-
-        @Styles.Render("~/Content/cssbundle")
-        @Styles.Render("~/lib/animate-css")
-        <link href="~/lib//font-awesome/css/all.min.css" rel="stylesheet" />
-
-    </head>*@
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,6 +15,11 @@
     <link href="~/Content/dashboard.css" rel="stylesheet">
 
     <style>
+
+        body {
+            margin: 0;
+        }
+
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -72,16 +60,24 @@
             overflow-y: hidden;
         }
 
-            .nav-scroller .nav {
-                display: flex;
-                flex-wrap: nowrap;
-                padding-bottom: 1rem;
-                margin-top: -1px;
-                overflow-x: auto;
-                text-align: center;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
-            }
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #sidebarMenu li > a:hover {
+            background-color: lightgrey;
+        }
+
+        .sidebar-li-active {
+            background-color: lightgrey;
+        }
     </style>
 
 </head>
@@ -111,116 +107,126 @@
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <nav id="sidebarMenu" class="col-md-2 col-lg-2 col-xl-2 col-xxl-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky pt-3 sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
-                                <span data-feather="home" class="align-text-bottom"></span>
-                                Dashboard
+
+                    <ul class="nav flex-column my-2 fs-6">
+                        <li class="nav-item border-2 border-bottom" id="li_dashboard">
+                            <a class="nav-link" href="@Url.Action("Index", "Dashboard", new { area = "Config" })">
+                                <div class="row">
+                                    <div class="col-2 fs-5">
+                                        <i class="fa-solid fa-gauge-high"></i>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        儀錶板
+                                    </div>
+                                </div>
                             </a>
                         </li>
+                    </ul>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "DatabaseConnection", new { area = "Config" })">
-                                <i class="fa-solid fa-database"></i>
-                                <span data-feather="file" class="align-text-bottom"></span>
-                                資料庫設置
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted text-uppercase">
+                        <span>基本設定</span>
+                    </h6>
+
+                    <ul class="nav flex-column fs-6">
+
+                        <li class="nav-item" id="li_db_connection">
+                            <a class="nav-link" href="@Url.Action("Index", "Connection", new { area = "Config" })">
+                                <div class="row">
+                                    <div class="col-2 fs-5">
+                                        <i class="fa-solid fa-network-wired"></i>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        連線
+                                    </div>
+                                </div>
                             </a>
                         </li>
+                    </ul>
 
-                        <li class="nav-item">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted text-uppercase">
+                        <span>進階設定</span>
+                    </h6>
+
+                    <ul class="nav flex-column mb-2 fs-6">
+                        <li class="nav-item" id="li_create_manager">
                             <a class="nav-link" href="@Url.Action("Index", "Administrator", new { area = "Config" })">
-                                <i class="fa-solid fa-user-plus"></i>
-                                <span data-feather="file" class="align-text-bottom"></span>
-                                新增管理員
+                                <div class="row">
+                                    <div class="col-2 fs-5">
+                                        <i class="fa-solid fa-user-tie"></i>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        新增管理員
+                                    </div>
+                                </div>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item" id="li_basic_config">
                             <a href="#listGeneralConfig" data-bs-toggle="collapse" class="nav-link">
-                                <i class="fa-solid fa-gears"></i><span class="ms-2 d-none d-sm-inline">基本設定</span>
+                                <div class="row">
+                                    <div class="col-2 fs-5">
+                                        <i class="fa-solid fa-gears"></i>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        環境變數
+                                    </div>
+                                </div>
                             </a>
 
-                            <ul class="collapse nav flex-column ms-5" id="listGeneralConfig">
-                                <li class="nav-item">
+                            <ul class="collapse nav flex-column ms-4" id="listGeneralConfig">
+                                <li class="nav-item" id="li_import">
                                     <a class="nav-link" href="@Url.Action("Import", "GeneralConfig", new { area = "Config" })">
-                                        <i class="fa-solid fa-user-plus"></i>
-                                        <span data-feather="file" class="ms-2 align-text-bottom"></span>
-                                        人事資料匯入
+                                        <div class="row">
+                                            <div class="col-2 fs-5">
+                                                <i class="fa-solid fa-user-plus"></i>
+                                            </div>
+                                            <div class="col d-flex align-items-center">
+                                                人事資料匯入
+                                            </div>
+                                        </div>
                                     </a>
                                 </li>
-
-
-                                @*<li class="w-100">
-                                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
-                                    </li>*@
-
                             </ul>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="shopping-cart" class="align-text-bottom"></span>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="users" class="align-text-bottom"></span>
-                                Customers
-                            </a>
-                        </li>
-
                     </ul>
 
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
-                        <span>Saved reports</span>
-                        <a class="link-secondary" href="#" aria-label="Add a new report">
-                            <span data-feather="plus-circle" class="align-text-bottom"></span>
-                        </a>
-                    </h6>
-                    <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Current month
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Last quarter
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Social engagement
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Year-end sale
-                            </a>
-                        </li>
-                    </ul>
                 </div>
             </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="ms-sm-auto col-md-10 col-lg-10 col-xl-10 col-xxl-10 px-md-4">
                 @RenderBody()
             </main>
 
         </div>
     </div>
 
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jqueryvalmin")
     @Scripts.Render("~/lib/sweetalert2-js")
+
+    <script type="module" src="@Url.Content("~/Scripts/Configuration/config.js")"></script>
+    <script>
+        $(document).ready(function () {
+            var selectedolditem = localStorage.getItem('selectedolditem');
+            if (selectedolditem != null) {
+                $('#' + selectedolditem).addClass("sidebar-li-active");
+            }
+
+            $("li").click(function () {
+
+                if ($(this).children("a").attr("href").indexOf("#") < 0) {
+                    var id = $(this).attr("id");
+                    $('#' + id).addClass("sidebar-li-active");
+                    localStorage.setItem("selectedolditem", id);
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

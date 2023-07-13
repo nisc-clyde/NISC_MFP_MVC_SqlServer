@@ -33,7 +33,7 @@ namespace NISC_MFP_MVC
             routes.MapRoute(
                 name: "ConfigRoute",
                 url: "Config/{controller}/{action}",
-                defaults: new { controller = "DatabaseConnection", action = "Index" },
+                defaults: new { controller = "Dashboard", action = "Index" },
                 namespaces: new string[] { "NISC_MFP_MVC.Areas.Config.Controllers" }
             );
         }

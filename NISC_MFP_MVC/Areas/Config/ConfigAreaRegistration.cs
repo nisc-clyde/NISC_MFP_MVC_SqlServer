@@ -15,9 +15,9 @@ namespace NISC_MFP_MVC.Areas.Config
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
-                "Config_DatabaseConnection",
+                "Config_Dashboard",
                 "Config/{controller}/{action}/{id}",
-                new { controller = "DatabaseConnection", action = "Index", id = UrlParameter.Optional }
+                new { controller = "Dashboard", action = "Index", id = UrlParameter.Optional }
             );
         }
     }
