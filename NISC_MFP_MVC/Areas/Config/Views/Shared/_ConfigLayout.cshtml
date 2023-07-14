@@ -84,12 +84,6 @@
         <a href="/" class="d-flex align-items-center pt-3 text-white text-decoration-none">
             <img src="~/img/logo.png" class="img-fluid">
         </a>
-
-        @*<div class="navbar-nav">
-            <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="#">Sign out</a>
-            </div>*@
-        </div>
     </header>
 
     <div class="container-fluid">
@@ -162,9 +156,9 @@
                                 </div>
                             </a>
 
-                            <ul class="collapse flex-column ms-4" id="listGeneralConfig">
+                            <ul class="collapse flex-column ms-4" id="listGeneralConfig" style="list-style: none;">
                                 <li class="nav-item" id="li_printer_path">
-                                    <a class="nav-link" href="@Url.Action("Index", "Exit", new { area = "Config" })">
+                                    <a class="nav-link" href="@Url.Action("PrinterPath", "AdvancedConfig", new { area = "Config" })">
                                         <div class="row text-white">
                                             <div class="col-2 fs-5">
                                                 <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i>
@@ -199,7 +193,7 @@
 
                     <ul class="nav flex-column mb-2 fs-6">
                         <li class="nav-item" id="li_exit_to_admin">
-                            <a class="nav-link" href="@Url.Action("Index", "Exit", new { area = "Config" })">
+                            <a class="nav-link" href="@Url.Action("Admin", "Login", new {area=""})">
                                 <div class="row text-white">
                                     <div class="col-2 fs-5">
                                         <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i>
@@ -212,7 +206,7 @@
                         </li>
 
                         <li class="nav-item" id="li_exit_to_user">
-                            <a class="nav-link" href="@Url.Action("Index", "Exit", new { area = "Config" })">
+                            <a class="nav-link" href="@Url.Action("User", "Login", new {area=""})">
                                 <div class="row text-white">
                                     <div class="col-2 fs-5">
                                         <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i>
@@ -235,7 +229,6 @@
         </div>
     </div>
 
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/modernizr")
@@ -244,7 +237,7 @@
 
     <script type="module" src="@Url.Content("~/Scripts/Configuration/config.js")"></script>
     <script>
-        $(document).ready(function () {
+        $(function () {
             var selectedolditem = localStorage.getItem('selectedolditem');
             if (selectedolditem != null) {
                 $('#' + selectedolditem).addClass("sidebar-li-active");

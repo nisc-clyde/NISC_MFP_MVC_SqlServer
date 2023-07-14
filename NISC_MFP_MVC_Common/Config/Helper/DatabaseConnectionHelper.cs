@@ -27,7 +27,7 @@ namespace NISC_MFP_MVC_Common.Config.Helper
         
         public override ConnectionStringModel Get()
         {
-            ConnectionStringModel model = GetFile().connection_string;
+            ConnectionStringModel model = GetFile().ConnectionString;
 #if DEBUG
             model = new ConnectionStringModel()
             {
@@ -51,12 +51,18 @@ namespace NISC_MFP_MVC_Common.Config.Helper
             ConfigModel originalConfigModel = GetFile();
 
             //修改參數
-            originalConfigModel.connection_string.DataSource = entity.DataSource;
-            originalConfigModel.connection_string.InitialCatalog = entity.InitialCatalog;
-            originalConfigModel.connection_string.IntegratedSecurity = entity.IntegratedSecurity.ToString();
-            originalConfigModel.connection_string.UserID = entity.UserID;
-            originalConfigModel.connection_string.Password = entity.Password;
-            originalConfigModel.connection_string.ConnectTimeout = "15";
+            if (!string.IsNullOrWhiteSpace(entity.DataSource))
+                originalConfigModel.ConnectionString.DataSource = entity.DataSource;
+            if (!string.IsNullOrWhiteSpace(entity.InitialCatalog))
+                originalConfigModel.ConnectionString.InitialCatalog = entity.InitialCatalog;
+            if (!string.IsNullOrWhiteSpace(entity.IntegratedSecurity))
+                originalConfigModel.ConnectionString.IntegratedSecurity = entity.IntegratedSecurity;
+            if (!string.IsNullOrWhiteSpace(entity.UserID))
+                originalConfigModel.ConnectionString.UserID = entity.UserID;
+            if (!string.IsNullOrWhiteSpace(entity.Password))
+                originalConfigModel.ConnectionString.Password = entity.Password;
+            if (!string.IsNullOrWhiteSpace(entity.ConnectTimeout))
+                originalConfigModel.ConnectionString.ConnectTimeout = entity.ConnectTimeout;
 
             //輸出參數
             string output = JsonConvert.SerializeObject(originalConfigModel, Formatting.Indented);

@@ -1,35 +1,23 @@
-﻿using AutoMapper;
+﻿using System.Configuration;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using NISC_MFP_MVC.App_Start;
 using NISC_MFP_MVC.ViewModels.Config;
 using NISC_MFP_MVC_Common;
-using NISC_MFP_MVC_Service.DTOs.AdminAreasInfo.User;
-using NISC_MFP_MVC_Service.Implement;
-using NISC_MFP_MVC_Service.Interface;
 using System.Web.Mvc;
-using Microsoft.Extensions.Logging;
-using NLog;
+using Newtonsoft.Json;
+using NISC_MFP_MVC.ViewModels.User.AdminAreas;
+using NISC_MFP_MVC_Common.Config.Helper;
 
 namespace NISC_MFP_MVC.Areas.Config.Controllers
 {
+    // FINISHED
     public class AdministratorController : Controller
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly IUserService userService;
-        private readonly Mapper _mapper;
-
-        public AdministratorController()
-        {
-            userService = new UserService();
-            _mapper = InitializeAutoMapper();
-        }
-
-        private Mapper InitializeAutoMapper()
-        {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-            var mapper = new Mapper(config);
-            return mapper;
-        }
-
         [HttpGet]
         public ActionResult Index()
         {
@@ -43,40 +31,51 @@ namespace NISC_MFP_MVC.Areas.Config.Controllers
         /// <returns></returns>
         [HttpPost]
         [AjaxOnly]
-        public ActionResult ConfigAdminRegister(AdminRegister admin)
+        public async Task<ActionResult> ConfigAdminRegister(AdminRegister admin)
         {
             if (ModelState.IsValid)
             {
-                IUserService userService = new UserService();
-                UserInfo adminInfo = userService.Get("user_id", admin.user_id, "Equals");
-                if (adminInfo == null)
+                using (var client = new HttpClient())
                 {
-                    //無執行user_id primary key重複之檢查
-                    adminInfo = new UserInfo
+                    #region 取得User
+                    string userGetApi = ServerAddressHelper.Instance.Get().ServerAddress +
+                                        $"/backend/api/Admin/User/GetByCondition?column=user_id&value={admin.user_id}&operation=Equal";
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", ConfigurationManager.AppSettings["permanentToken"]);
+                    var userGetApiResponse = await client.GetAsync(userGetApi);
+                    #endregion
+
+                    #region 若為200則表示有取得否則404找不到，找不到即代表欲新增之管理員還未存在，可新增
+                    if (userGetApiResponse.StatusCode != HttpStatusCode.OK)
                     {
-                        user_id = admin.user_id,
-                        user_password = admin.user_password,
-                        work_id = "work_id_admin",
-                        user_name = admin.user_name,
-                        authority = GlobalVariable.ALL_PERMISSION,
-                        dept_id = "dept_id_1",
-                        color_enable_flag = "1",
-                        copy_enable_flag = "1",
-                        print_enable_flag = "1",
-                        scan_enable_flag = "1",
-                        fax_enable_flag = "1",
-                        e_mail = "",
-                        serial = 1 //serial has auto increment property, and specify the serial will not working.
-                    };
-                    userService.Insert(adminInfo);
+                        UserViewModel userViewModel = new UserViewModel
+                        {
+                            user_id = admin.user_id,
+                            user_password = admin.user_password,
+                            work_id = "work_id_admin",
+                            user_name = admin.user_name,
+                            authority = GlobalVariable.ALL_PERMISSION,
+                            dept_id = "dept_id_1",
+                            color_enable_flag = "1",
+                            copy_enable_flag = "1",
+                            print_enable_flag = "1",
+                            scan_enable_flag = "1",
+                            fax_enable_flag = "1",
+                            e_mail = "",
+                            serial = 1 //serial has auto increment property, and specify the serial will not working.
+                        };
 
-                    return Json(new { success = true, message = "註冊成功" });
+                        // 新增User
+                        string userInsertApi = ServerAddressHelper.Instance.Get().ServerAddress + "/backend/api/Admin/User/Insert";
+                        var userInsertApiBody = new StringContent(JsonConvert.SerializeObject(userViewModel, Formatting.Indented), Encoding.UTF8, "application/json");
+                        var userInsertApiResponse = await client.PostAsync(userInsertApi, userInsertApiBody);
+                        return Json(new { success = true, message = "註冊成功" });
+                    }
+                    return Json(new { success = false, message = "此帳號已存在" });
+                    #endregion
                 }
-
-                return Json(new { success = false, message = "此帳號已存在" });
             }
-
-            return View();
+            return Json(new { success = false, message = "欄位資料有誤" });
         }
 
 

@@ -104,8 +104,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\ConfigBase.cs" />
+    <Compile Include="Config\Helper\ServerAddressHelper.cs" />
     <Compile Include="Config\Model\ConfigModel.cs" />
     <Compile Include="Config\Helper\DatabaseConnectionHelper.cs" />
+    <Compile Include="Config\Model\ServerAddressModel.cs" />
     <Compile Include="DataTableRequest.cs" />
     <Compile Include="GlobalVariable.cs" />
     <Compile Include="ListToDataTableConverter.cs" />
@@ -123,6 +125,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="server_address.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\NISC_MFP_MVC\.sonarlint\nisc_mfp_mvc\CSharp\SonarLint.xml">

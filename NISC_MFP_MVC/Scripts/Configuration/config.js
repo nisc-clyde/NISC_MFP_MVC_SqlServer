@@ -40,7 +40,7 @@ function WindowsOrSqlServerAuth() {
     })
 }
 
-function TestConnection() {
+function TestConnectionString() {
     $("#btnTestConnection").on("click", function () {
 
         $("#btnTestConnectionSpinner").show();
@@ -53,7 +53,7 @@ function TestConnection() {
         }
 
         $.ajax({
-            url: "/Config/Connection/TestConnection",
+            url: "/Config/Connection/TestConnectionString",
             type: "POST",
             data: $("#databaseConfigForm").serialize(),
             success: function (data) {
@@ -77,19 +77,12 @@ function TestConnection() {
 
 function SaveConnectionStirng() {
     $("#databaseConfigForm").on("submit", function () {
-        let url;
-
+        
         $("#btnSaveConnectionStringSpinner").show();
         $("#btnSaveConnectionString").attr("disabled", true);
-
-        if ($("#btnWindowsAuth").is(":checked")) {
-            url = "/Config/Connection/SetWindowsAuthConnection";
-        } else {
-            url = "/Config/Connection/SetSqlServerAuthConnection";
-        }
-
+        
         $.ajax({
-            url: url,
+            url: "/Config/Connection/SetConnectionString",
             type: "POST",
             data: $("#databaseConfigForm").serialize(),
             success: function (data) {
@@ -108,9 +101,65 @@ function SaveConnectionStirng() {
     })
 }
 
+function ServerAddressTestConnection() {
+    $("#btnServerAddressTestConnection").on("click",
+        function () {
+            $("#btnServerAddressTestConnectionSpinner").show();
+            $("#btnServerAddressTestConnection").attr("disabled", true);
+
+            $.ajax({
+                url: "/Config/Connection/ServerAddressTestConnection",
+                type: "POST",
+                data: $("#serverAddressConfigForm").serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        CustomSweetAlert2.SweetAlertTemplateSuccess(data.message).fire();
+                        $("#btnSaveServerAddress").attr("disabled", false);
+                        $("#btnServerAddressTestConnectionSpinner").hide();
+                        $("#btnServerAddressTestConnection").attr("disabled", false);
+                    } else {
+                        CustomSweetAlert2.SweetAlertTemplateError(data.message).fire();
+                        $("#btnSaveServerAddress").attr("disabled", true);
+                        $("#btnServerAddressTestConnectionSpinner").hide();
+                        $("#btnServerAddressTestConnection").attr("disabled", false);
+                    }
+                }
+            });
+            return false;
+        });
+}
+
+function SaveServerAddress() {
+    $("#serverAddressConfigForm").on("submit",
+        function () {
+            $("#btnSaveServerAddressSpinner").show();
+            $("#btnSaveServerAddress").attr("disabled", true);
+
+            $.ajax({
+                url: "/Config/Connection/SetServerAddress",
+                type: "POST",
+                data: $("#serverAddressConfigForm").serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        CustomSweetAlert2.SweetAlertTemplateSuccess(data.message).fire();
+                    } else {
+                        CustomSweetAlert2.SweetAlertTemplateError(data.message).fire();
+                    }
+                }
+            }).done(function () {
+                $("#btnSaveServerAddressSpinner").hide();
+                $("#btnSaveServerAddress").attr("disabled", false);
+            });
+
+            return false;
+        });
+}
+
 $(function () {
     RegisterAdmin();
     WindowsOrSqlServerAuth();
-    TestConnection();
+    TestConnectionString();
     SaveConnectionStirng();
+    ServerAddressTestConnection();
+    SaveServerAddress();
 });

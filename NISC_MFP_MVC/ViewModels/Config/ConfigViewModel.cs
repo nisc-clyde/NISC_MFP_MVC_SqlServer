@@ -7,5 +7,7 @@ namespace NISC_MFP_MVC.ViewModels.Config
         public AdminRegister adminRegister { get; set; }
 
         public ConnectionStringModel connectionModel { get; set; }
+
+        public ServerAddressModel serverAddresModel { get; set; }
     }
 }

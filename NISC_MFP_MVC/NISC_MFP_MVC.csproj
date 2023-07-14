@@ -489,6 +489,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\TokenResponseModel.cs" />
     <Compile Include="ViewModels\Config\ConfigViewModel.cs" />
     <Compile Include="NLogHelper.cs" />
     <Compile Include="ViewModels\Config\AdminRegister.cs" />

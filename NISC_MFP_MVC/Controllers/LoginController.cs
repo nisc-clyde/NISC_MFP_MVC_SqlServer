@@ -8,11 +8,23 @@ using NISC_MFP_MVC_Service.Implement;
 using NISC_MFP_MVC_Service.Interface;
 using NLog;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using NISC_MFP_MVC_Common.Config.Helper;
 using MappingProfile = NISC_MFP_MVC.Models.MappingProfile;
+using Newtonsoft.Json;
+using Microsoft.Ajax.Utilities;
+using NISC_MFP_MVC.ViewModels.User.AdminAreas;
+using NISC_MFP_MVC.ViewModels.User.UserAreas;
+using UserViewModel = NISC_MFP_MVC.ViewModels.User.AdminAreas.UserViewModel;
 
 namespace NISC_MFP_MVC.Controllers
 {
@@ -49,42 +61,71 @@ namespace NISC_MFP_MVC.Controllers
         [HttpPost]
         [PreventDuplicateRequest]
         [ValidateAntiForgeryToken]
-        public ActionResult User(LoginModel loginUser)
+        public async Task<ActionResult> User(LoginModel loginUser)
         {
             if (ModelState.IsValid)
             {
                 //Check Connection
-                UserInfo userInfo = null;
+                UserViewModel userViewModel = null;
                 try
                 {
-                    userInfo = userService.Get("user_id", loginUser.account, "Equals");
-                    if (userInfo != null && userInfo.user_password == loginUser.password)
+                    using (var client = new HttpClient())
                     {
-                        //寫入Cookie
-                        var authTicket = new FormsAuthenticationTicket(
-                            1,
-                            loginUser.account,
-                            DateTime.Now,
-                            DateTime.Now.AddMinutes(30),
-                            false,
-                            userInfo.authority + "," + userInfo.user_name, //Save "authority...,user_name" in cookie
-                            FormsAuthentication.FormsCookiePath
-                        );
-                        //Cookie加密且Cookie限定Server存取
-                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName,
-                            FormsAuthentication.Encrypt(authTicket))
+                        #region 取得User Token
+                        string tokenApi = ServerAddressHelper.Instance.Get().ServerAddress + "/GenerateToken";
+                        var tokenApiBody = new StringContent(JsonConvert.SerializeObject(loginUser, Formatting.Indented),Encoding.UTF8,"application/json");
+                        var tokenApiResponse =await client.PostAsync(tokenApi, tokenApiBody);
+                        #endregion
+
+                        // 存在Token
+                        var tokenApiResult = await tokenApiResponse.Content.ReadAsStringAsync();
+                        TokenResponseModel tokenResponseModel = JsonConvert.DeserializeObject<TokenResponseModel>(tokenApiResult);
+
+                        if (!string.IsNullOrWhiteSpace(tokenResponseModel.token))
                         {
-                            HttpOnly = true
-                        };
-                        Response.Cookies.Add(authCookie);
+                            #region 取得登入User的資訊
+                            string userApi = ServerAddressHelper.Instance.Get().ServerAddress + $"/backend/api/Admin/User/GetByCondition?column=user_id&value={loginUser.account}&operation=Equal";
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponseModel.token);
+                            var userApiResponse =await client.GetAsync(userApi);
+                            var userApiResult = await userApiResponse.Content.ReadAsStringAsync();// API回傳的是UserViewModel的Object
+                            userViewModel = JsonConvert.DeserializeObject<List<UserViewModel>>(userApiResult).FirstOrDefault();
+                            
+                            #endregion
 
-                        NLogHelper.Instance.Logging("使用者登入", loginUser.account);
+                            #region 登入驗證及流程
+                            if (userViewModel != null && userViewModel.user_password == loginUser.password)
+                            {
+                                //寫入Cookie
+                                var authTicket = new FormsAuthenticationTicket(
+                                    1,
+                                    loginUser.account,
+                                    DateTime.Now,
+                                    DateTime.Now.AddMinutes(30),
+                                    false,
+                                    userViewModel.authority + "," + userViewModel.user_name + "," + tokenResponseModel.token, //Save "authority...,user_name,{user token}" in cookie
+                                    FormsAuthentication.FormsCookiePath
+                                );
 
-                        return RedirectToAction("Index",
-                            "User",
-                            new { area = "User" });
+                                //Cookie加密且Cookie限定Server存取
+                                var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket))
+                                {
+                                    HttpOnly = true
+                                };
+
+                                // 新增Cookie
+                                Response.Cookies.Add(authCookie);
+
+                                // 新增Log
+                                NLogHelper.Instance.Logging("使用者登入", loginUser.account);
+
+                                // 重導向
+                                return RedirectToAction("Index",
+                                    "User",
+                                    new { area = "User" });
+                            }
+                            #endregion
+                        }
                     }
-
                     ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                 }
                 catch (Exception e)
@@ -114,57 +155,82 @@ namespace NISC_MFP_MVC.Controllers
         [HttpPost]
         [PreventDuplicateRequest]
         [ValidateAntiForgeryToken]
-        public ActionResult Admin(LoginModel loginUser)
+        public async Task<ActionResult> Admin(LoginModel loginUser)
         {
             if (ModelState.IsValid)
             {
-                UserInfo userInfo = null;
+                UserViewModel userViewModel = null;
                 try
                 {
-                    userInfo = userService.Get("user_id", loginUser.account, "Equals");
-
-                    if (userInfo != null && userInfo.user_password == loginUser.password)
+                    using (var client = new HttpClient())
                     {
-                        //寫入Cookie
-                        if (!string.IsNullOrWhiteSpace(userInfo.authority))
+                        #region 取得User Token
+                        string tokenApi = ServerAddressHelper.Instance.Get().ServerAddress + "/GenerateToken";
+                        StringContent tokenApiBody = new StringContent(JsonConvert.SerializeObject(loginUser, Formatting.Indented), Encoding.UTF8, "application/json");
+                        var tokenApiResponse = await client.PostAsync(tokenApi, tokenApiBody);
+                        #endregion
+
+                        // 存在Token
+                        var tokenApiResult = await tokenApiResponse.Content.ReadAsStringAsync();
+                        TokenResponseModel tokenResponseModel = JsonConvert.DeserializeObject<TokenResponseModel>(tokenApiResult);
+
+                        if (!string.IsNullOrWhiteSpace(tokenResponseModel.token))
                         {
-                            var authTicket = new FormsAuthenticationTicket(
-                                1,
-                                loginUser.account,
-                                DateTime.Now,
-                                DateTime.Now.AddMinutes(30),
-                                false,
-                                userInfo.authority + "," + userInfo.user_name, //Save "authority...,user_name" in cookie
-                                FormsAuthentication.FormsCookiePath
-                            );
+                            #region 取得登入User的資訊
+                            string userApi = ServerAddressHelper.Instance.Get().ServerAddress + $"/backend/api/Admin/User/GetByCondition?column=user_id&value={loginUser.account}&operation=Equal";
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponseModel.token);
+                            var userApiResponse = await client.GetAsync(userApi);
+                            var userApiResult = await userApiResponse.Content.ReadAsStringAsync();// API回傳的是UserViewModel的Object
+                            userViewModel = JsonConvert.DeserializeObject<List<UserViewModel>>(userApiResult).FirstOrDefault();
+                            #endregion
 
-                            //Cookie加密且Cookie限定Server存取
-                            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName,
-                                FormsAuthentication.Encrypt(authTicket))
+                            #region 登入驗證及流程
+                            if (userViewModel != null && userViewModel.user_password == loginUser.password)
                             {
-                                HttpOnly = true
-                            };
-                            Response.Cookies.Add(authCookie);
+                                //寫入Cookie
+                                if (!string.IsNullOrWhiteSpace(userViewModel.authority))
+                                {
+                                    var authTicket = new FormsAuthenticationTicket(
+                                        1,
+                                        loginUser.account,
+                                        DateTime.Now,
+                                        DateTime.Now.AddMinutes(30),
+                                        false,
+                                        userViewModel.authority + "," + userViewModel.user_name + "," + tokenApiResponse.Content.ToString(), //Save "authority...,user_name" in cookie
+                                        FormsAuthentication.FormsCookiePath
+                                    );
 
-                            //取得擁有的主權限當中的第一個
-                            string firstAuthority = userInfo.authority.Split(',').First();
-                            // 給_AdminLayout使用，藉此隱藏或載入Tab
-                            TempData["ActiveNav"] = firstAuthority;
+                                    //Cookie加密且Cookie限定Server存取
+                                    var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName,
+                                        FormsAuthentication.Encrypt(authTicket))
+                                    {
+                                        HttpOnly = true
+                                    };
 
-                            // Insert Log
-                            NLogHelper.Instance.Logging("管理者登入", loginUser.account);
+                                    // 新增Cookie
+                                    Response.Cookies.Add(authCookie);
 
-                            //Redirect到管理頁面
-                            return RedirectToAction("Index",
-                                firstAuthority,
-                                new { area = "Admin" });
+                                    //取得擁有的主權限當中的第一個
+                                    string firstAuthority = userViewModel.authority.Split(',').First();
+                                    // 給_AdminLayout使用，藉此隱藏或載入Tab
+                                    TempData["ActiveNav"] = firstAuthority;
+
+                                    // 新增Log
+                                    NLogHelper.Instance.Logging("管理者登入", loginUser.account);
+
+                                    // 重導向
+                                    return RedirectToAction("Index",
+                                        firstAuthority,
+                                        new { area = "Admin" });
+                                }
+                                ModelState.AddModelError("ErrorMessage", "您尚未擁有任何管理相關的權限");
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
+                            }
+                            #endregion
                         }
-
-                        ModelState.AddModelError("ErrorMessage", "您尚未擁有任何管理相關的權限");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("ErrorMessage", "帳號或密碼錯誤");
                     }
                 }
                 catch (Exception e)

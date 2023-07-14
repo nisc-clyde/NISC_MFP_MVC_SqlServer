@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "系統設定 - 資料庫設置";
     Layout = "~/Areas/Config/Views/Shared/_ConfigLayout.cshtml";
-
 }
 
 <div class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-baseline pt-3 mb-3 border-bottom">
@@ -21,14 +20,14 @@
     @using (Html.BeginForm("", "", FormMethod.Post, new { id = "serverAddressConfigForm"}))
     {
         <div class="mb-3" id="serverAddress">
-            @Html.Label("伺服器主機位址", new { @class = "form-label" })
-            @Html.TextBoxFor(d => d.connectionModel.Password, new { Name = "ServerAddress", @class = "form-control bg-opacity-10 border border-primary" })
+            @Html.Label("伺服器主機位址，範例：https://localhost:8080，無須以「/」符號結尾", new { @class = "form-label" })
+            @Html.TextBoxFor(d => d.serverAddresModel.ServerAddress, new { Name = "ServerAddress", @class = "form-control bg-opacity-10 border border-primary" })
         </div>
 
         <div class="my-4 d-grid">
-            <button id="btnServerTestConnection" class="btn btn-primary" type="submit">
+            <button id="btnServerAddressTestConnection" class="btn btn-primary" type="submit">
                 測試連線
-                <span id="btnServerTestConnectionSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
+                <span id="btnServerAddressTestConnectionSpinner" class="spinner-border spinner-border-sm" style="display: none" role="status"></span>
             </button>
         </div>
 
